@@ -1,0 +1,43 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>omega.png</file>
+        <file>d.png</file>
+        <file>D.png</file>
+        <file>L.png</file>
+        <file>t0.png</file>
+        <file>T.png</file>
+        <file>tE.png</file>
+        <file>Vc.png</file>
+        <file>VE.png</file>
+        <file>Itmax.png</file>
+        <file>Itmin.png</file>
+        <file>r0.png</file>
+        <file>RMSmax.png</file>
+        <file>tStart.png</file>
+        <file>tvoid.png</file>
+        <file>tEnd.png</file>
+        <file>dndc.png</file>
+        <file>extCoeff.png</file>
+        <file>lambAbs.png</file>
+        <file>lambLaser.png</file>
+        <file>nSolv.png</file>
+        <file>omegamax.png</file>
+        <file>omegamin.png</file>
+        <file>VF.png</file>
+        <file>visc.png</file>
+        <file>y.png</file>
+        <file>zi.png</file>
+        <file>zPerc.png</file>
+        <file>A2.png</file>
+        <file>b0.png</file>
+        <file>bL.png</file>
+        <file>cMin.png</file>
+        <file>RS.png</file>
+        <file>V0.png</file>
+        <file>V0_ml.png</file>
+        <file>omega_ul.png</file>
+        <file>applIcon.svg</file>
+        <file>ChannelDims.svg</file>
+        <file>ChannelDims.png</file>
+    </qresource>
+</RCC>
