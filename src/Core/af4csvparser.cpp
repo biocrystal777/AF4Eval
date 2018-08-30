@@ -1,4 +1,4 @@
-#include "fffcsvparser.h"
+#include "af4csvparser.h"
 #include <locale>
 
 using std::string;
@@ -7,12 +7,12 @@ using std::stringstream;
 using std::ifstream;
 using std::vector;
 
-FFFCsvParser::FFFCsvParser(const string& filePath, const char sep, const char dec) :
+AF4CsvParser::AF4CsvParser(const string& filePath, const char sep, const char dec) :
    filePath(filePath), sep(sep), dec(dec)
 {
 }
 
-int FFFCsvParser::parseFile(uint *errorInLine)
+int AF4CsvParser::parseFile(uint *errorInLine)
 {
    headLineEntries.clear();
    dataVectorList.clear();
@@ -35,7 +35,7 @@ int FFFCsvParser::parseFile(uint *errorInLine)
 
 }
 
-int FFFCsvParser::parseFileUTF8( ifstream &inpFile)
+int AF4CsvParser::parseFileUTF8( ifstream &inpFile)
 {
    string dataLine;
    std::getline(inpFile, dataLine);
@@ -59,17 +59,17 @@ int FFFCsvParser::parseFileUTF8( ifstream &inpFile)
    return 0;
 }
 
-vector<string> FFFCsvParser::getHeadLines()
+vector<string> AF4CsvParser::getHeadLines() const
 {
    return headLineEntries;
 }
 
-matD FFFCsvParser::getData() const
+matD AF4CsvParser::getData() const
 {
    return dataVectorList;
 }
 
-bool FFFCsvParser::dataIsComplete(matD &data)
+bool AF4CsvParser::dataIsComplete(matD &data)
 {
    if (data.size() <= 1) return false;
    const uint length = data[0].size();
@@ -78,7 +78,7 @@ bool FFFCsvParser::dataIsComplete(matD &data)
    return true;
 }
 
-vector<string> FFFCsvParser::split(const string& s,
+vector<string> AF4CsvParser::split(const string& s,
                                    const char delim,
                                    const bool keepEmpty) const {
    vector<string> result;
@@ -94,7 +94,7 @@ vector<string> FFFCsvParser::split(const string& s,
    return result;
 }
 
-auto FFFCsvParser::findCharPos(std::string::const_iterator start,
+auto AF4CsvParser::findCharPos(std::string::const_iterator start,
                                std::string::const_iterator end,
                                const char c) const -> std::string::const_iterator
 {

@@ -9,7 +9,7 @@
 #include <QCheckBox>
 #include <QSpinBox>
 #include "../smallQDerivates/ffftwoboxwidget.h"
-#include "../../Core/fffparameterstructs.h"
+#include "../../Core/af4parameterstructs.h"
 
 class FFFSLSParameterFrame : public QFrame
 {

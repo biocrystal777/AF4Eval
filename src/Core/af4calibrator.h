@@ -1,45 +1,38 @@
-#ifndef FFFCALIBRATOR_H
-#define FFFCALIBRATOR_H
+#ifndef AF4CALIBRATOR_H
+#define AF4CALIBRATOR_H
 
-#include "fffcalculator.h"
+#include "af4calculator.h"
 
-/**************************************************************
+/*! ***********************************************************
 ***
-***   FFFCalibrator
+***  \class     AF4Calibrator "src/Core/af4calibrator.h"
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018
+***  \copyright CC CC BY-NC-ND 4.0
 ***
 **************************************************************/
 
-/*!
- * \class FFFCalibrator
- * \brief The FFFCalibrator class is used to calculate
- *        omega (channelWidth) from a set of parameters
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
-
-
-class FFFCalibrator final : public FFFCalculator
+class AF4Calibrator final : public AF4Calculator
 {
 
 public:
 
    /*!
     * \brief FFFCalibrator is the standard constructor
-    * \param data can be passed, but is not used at the moment
+    * \param
     */
-   explicit FFFCalibrator();
-   FFFCalibrator(const FFFCalibrator& src) = delete;
-   FFFCalibrator& operator= (const FFFCalibrator& src) = delete;
-   FFFCalibrator(FFFCalibrator&& src) = delete;
-   FFFCalibrator& operator= (FFFCalibrator&& src) = delete;
+   AF4Calibrator(){}
+   AF4Calibrator(const AF4Calibrator& src) = delete;
+   AF4Calibrator& operator= (const AF4Calibrator& src) = delete;
+   AF4Calibrator(AF4Calibrator&& src) = delete;
+   AF4Calibrator& operator= (AF4Calibrator&& src) = delete;
 
 
    /*!
     * \brief ~FFFCalibrator Default destructor
     */
-   ~FFFCalibrator();
+   ~AF4Calibrator(){}
 
    /*!
     * \brief calibrate the actual calibration function
@@ -90,4 +83,4 @@ protected:
    bool isZero(double x, int pos) const;
 };
 
-#endif // FFFCALIBRATOR_H
+#endif // AF4CALIBRATOR_H

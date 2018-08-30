@@ -6,7 +6,7 @@
 #include <QComboBox>
 #include "./fffchannelconfigwidget.h"
 #include "./fffchannelcalibwidget.h"
-#include "../../Core/fffparameterstructs.h"
+#include "../../Core/af4parameterstructs.h"
 #include <QFrame>
 
 class FFFCalibSettingsFrame final : public QFrame {

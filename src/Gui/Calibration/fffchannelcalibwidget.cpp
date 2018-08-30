@@ -307,8 +307,7 @@ void FFFChannelCalibWidget::setPlotDataFromFile()
    }
 
    // Parse File
-   FFFCsvParser parser(calibFileName.toStdString(), ',', '.');
-   bool ok;
+   AF4CsvParser parser(calibFileName.toStdString(), ',', '.');
    int errorCode;
    uint errorInLine;
    errorCode = parser.parseFile(&errorInLine);

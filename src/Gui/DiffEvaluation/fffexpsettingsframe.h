@@ -9,7 +9,7 @@
 #include <QLabel>
 #include <QDebug>
 #include "../GeneralWidgets/ffflog.h"
-#include "../../Core/fffparameterstructs.h"
+#include "../../Core/af4parameterstructs.h"
 
 class FFFExpSettingsFrame final : public QFrame
 {

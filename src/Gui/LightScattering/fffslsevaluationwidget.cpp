@@ -188,7 +188,7 @@ void FFFSLSEvaluationWidget::startEvaluation()
    FFFLog::logText(tr("Data found."));
    // Parse File
    qDebug() << "malls";
-   FFFCsvParser parser(fileName.toStdString(), ',', '.');
+   AF4CsvParser parser(fileName.toStdString(), ',', '.');
    bool ok;
    int errorCode;
    uint errorInLine;
@@ -255,7 +255,7 @@ void FFFSLSEvaluationWidget::startEvaluation()
    // calculation //
    /////////////////
 
-   FFFSLSEvaluator slsEvaluator;
+   AF4SLSEvaluator slsEvaluator;
 
    if(refIndexConc->isChecked())
       slsEvaluator.evalRiMALLS_partZimmplot(
@@ -348,7 +348,7 @@ void FFFSLSEvaluationWidget::startEvaluation()
       resultData.push_back(data.at(mallsIndices.at(i)));
    }
 
-   FFFCsvWriter fileWriter(outFileName.toStdString());
+   AF4CsvWriter fileWriter(outFileName.toStdString());
 
 
    ///// INTERMEDIATE SOLUTION

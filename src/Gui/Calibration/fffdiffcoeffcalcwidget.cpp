@@ -1,5 +1,5 @@
 #include "fffdiffcoeffcalcwidget.h"
-#include "../../Core/fffdatatypes.h"
+#include "../../Core/af4datatypes.h"
 
 FFFDiffCoeffCalcWidget::FFFDiffCoeffCalcWidget(QWidget *parent) :
    QDialog(parent)

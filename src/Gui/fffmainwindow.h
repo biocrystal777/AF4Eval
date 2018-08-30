@@ -8,7 +8,7 @@
 #include "./LightScattering/fffslsevaluationwidget.h"
 #include "./Calibration/fffchannelconfigwidget.h"
 #include "./Calibration/fffchannelcalconfwidget.h"
-#include "../Core/fffcsvwriter.h"
+#include "../Core/af4csvwriter.h"
 
 /**************************************************************
 ***

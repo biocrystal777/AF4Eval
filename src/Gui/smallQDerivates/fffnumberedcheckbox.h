@@ -3,7 +3,7 @@
 
 #include <QCheckBox>
 #include <QSettings>
-#include "../Core/fffconstants.h"
+#include "../Core/af4constants.h"
 
 class FFFNumberedCheckBox : public QCheckBox
 {

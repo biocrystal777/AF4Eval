@@ -1,14 +1,14 @@
-#ifndef FFFCALCULATOR_H
-#define FFFCALCULATOR_H
+#ifndef AF4CALCULATOR_H
+#define AF4CALCULATOR_H
 
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <vector>
 #include <cmath>
-#include "fffconstants.h"
-#include "fffdatatypes.h"
-#include "fffparameterstructs.h"
+#include "./af4constants.h"
+#include "./af4datatypes.h"
+#include "./af4parameterstructs.h"
 #include "../Gui/GeneralWidgets/ffflog.h"
 
 /*! ***********************************************************
@@ -21,27 +21,24 @@
 ***
 **************************************************************/
 
-
-typedef std::vector<vecD*> vectorMatrix;
-
-class FFFCalculator
+class AF4Calculator
 {
 protected:
    /*!
     * \brief FFFCalculator is the standard constructor
     * \param data is the data matrix to be processed by the class
     */
-   explicit FFFCalculator(){}
+   AF4Calculator(){}
 
    /*!
     * \brief Default Destructor
     */
-   virtual ~FFFCalculator(){}
+   virtual ~AF4Calculator(){}
 
-    FFFCalculator(const FFFCalculator& src) = delete;
-    FFFCalculator& operator= (const FFFCalculator& src) = delete;
-    FFFCalculator(FFFCalculator&& src) = delete;
-    FFFCalculator& operator= (FFFCalculator&& src) = delete;
+    AF4Calculator(const AF4Calculator& src) = delete;
+    AF4Calculator& operator= (const AF4Calculator& src) = delete;
+    AF4Calculator(AF4Calculator&& src) = delete;
+    AF4Calculator& operator= (AF4Calculator&& src) = delete;
 
    /*!
     * \brief findIndexFromTime returns the index corresponding to a
@@ -87,4 +84,4 @@ protected:
    inline void logError(const std::string &message) const { FFFLog::logError(message); }
 };
 
-#endif // FFFCALCULATOR_H
+#endif // AF4CALCULATOR_H

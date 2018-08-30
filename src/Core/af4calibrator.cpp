@@ -1,17 +1,10 @@
 #include "af4calibrator.h"
 using std::to_string;
 
-FFFCalibrator::FFFCalibrator()
-{
-}
-
-FFFCalibrator::~FFFCalibrator()
-{
-}
 
 #define IS_ZERO(value, pos) {if(isZero(value, pos)) return false;}
 
-bool FFFCalibrator::calibrate(const ChannelDims &d,
+bool AF4Calibrator::calibrate(const ChannelDims &d,
                               const ParametersForCalibration &p)
 {
 
@@ -80,7 +73,7 @@ bool FFFCalibrator::calibrate(const ChannelDims &d,
    return true;
 }
 
-void FFFCalibrator::calcGeometVolume(const double L1, const double L2, const double L3, const double L, const double b0, const double bL, const double zL)
+void AF4Calibrator::calcGeometVolume(const double L1, const double L2, const double L3, const double L, const double b0, const double bL, const double zL)
 {
 
 }
@@ -88,7 +81,7 @@ void FFFCalibrator::calcGeometVolume(const double L1, const double L2, const dou
 
 #undef IS_ZERO
 
-bool FFFCalibrator::isZero(double x, int pos) const
+bool AF4Calibrator::isZero(double x, int pos) const
 {
    if ((x < 0.0) || (x > 0.0))
       return false;

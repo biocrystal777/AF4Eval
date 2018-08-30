@@ -1,5 +1,5 @@
-#ifndef FFFCsvParser_H
-#define FFFCsvParser_H
+#ifndef AF4CSVPARSER_H
+#define AF4CSVPARSER_H
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -10,51 +10,46 @@
 #include <sstream>
 #include <algorithm>
 #include <stdexcept>
-#include "./fffconstants.h"
-#include "./fffdatatypes.h"
+#include "./af4constants.h"
+#include "./af4datatypes.h"
 #include <algorithm>
 #include <qdebug.h>
 
-/**************************************************************
+/*! ***********************************************************
 ***
-***   FFFCsvParser
+***  \class     AF4CSVParser "src/Core/af4csvparser.h"
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018
+***  \copyright CC CC BY-NC-ND 4.0
 ***
 **************************************************************/
 
-/*! \class FFFCsvParser
-*\brief Class can read a csv file and creates data structures
-* on heap (=> have to be destroyed externally as soon as they are not needed anymore)
-* \author Benedikt Haeusele
-* \version 2.0
-* \date March 2013
-* \copyright GNU General Public License version 3.0
-*/
 
-
-class FFFCsvParser final
+class AF4CsvParser final
 {
 
 public:
    /*!
-    * \brief FFFCsvParser
+    * \brief AF4CsvParser
     * \param filePath absolute path of the file to be read
     */
-   explicit FFFCsvParser(const std::string& filePath,
+   explicit AF4CsvParser(const std::string& filePath,
                          const char sep,
                          const char dec
                          );
 
-   FFFCsvParser() = delete;
-   FFFCsvParser(const FFFCsvParser& src) = delete;
-   FFFCsvParser& operator= (const FFFCsvParser& src) = delete;
-   FFFCsvParser(FFFCsvParser&& src) = delete;
-   FFFCsvParser& operator= (FFFCsvParser&& src) = delete;
+   AF4CsvParser() = delete;
+   AF4CsvParser(const AF4CsvParser& src) = delete;
+   AF4CsvParser& operator= (const AF4CsvParser& src) = delete;
+   AF4CsvParser(AF4CsvParser&& src) = delete;
+   AF4CsvParser& operator= (AF4CsvParser&& src) = delete;
 
 
    /*!
     * \brief ~FFFCsvParser Default Destructor
     */
-   ~FFFCsvParser(){}
+   ~AF4CsvParser(){}
 
    /*!
     * \brief parseFile is used to the parse the file and create the data structures
@@ -72,7 +67,7 @@ public:
     * \return Pointer to the data on heap. Use delete on this address
     *         as soon as you don't need data are not need anymore!
     */
-   std::vector<std::string> getHeadLines();
+   std::vector<std::string> getHeadLines() const;
 
    /*!
     * \brief getHeadLines returns a vector with data columns, which are stored in a vector
@@ -120,4 +115,4 @@ protected:
 
 };
 
-#endif // FFFCsvParser_H
+#endif // AF4CSVPARSER_H

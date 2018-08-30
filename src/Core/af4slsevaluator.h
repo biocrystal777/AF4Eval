@@ -1,44 +1,36 @@
-#ifndef FFFSLSEVALUATOR_H
-#define FFFSLSEVALUATOR_H
-#include "fffcalculator.h"
+#ifndef AF4SLSEVALUATOR_H
+#define AF4SLSEVALUATOR_H
+#include "af4calculator.h"
 #include "../Gui/GeneralWidgets/ffflog.h"
 
-
-/**************************************************************
+/*! ***********************************************************
 ***
-***   FFFSLSEvaluator
+***  \class     AF4SLSEvaluator "src/Core/af4slsevaluator.h"
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018
+***  \copyright CC CC BY-NC-ND 4.0
 ***
 **************************************************************/
 
-/*! \class FFFSLSEvaluator
- * \brief The FFFSLSEvaluator class is used to evaluate data from
- *        a light scattering detector with hard coded angle positions
- *        At the current version, only Zimm-Plot evaluation in combination
- *        with a signal from a RI detector is possible.
- * \author Benedikt Haeusele
- * \version 1.0
- * \date July 2013
- * \copyright GNU General Public License version 3.0
- */
-
-class FFFSLSEvaluator final : public FFFCalculator
+class AF4SLSEvaluator final : public AF4Calculator
 {
 public:
 
    /*!
     * \brief FFFEvaluator default constructor for the class
     */
-  explicit FFFSLSEvaluator();
+   AF4SLSEvaluator(){}
 
    /*!
     * \brief FFFEvaluator default destructor for the class
     */
-   ~FFFSLSEvaluator();
+   ~AF4SLSEvaluator(){}
 
-    FFFSLSEvaluator(const FFFSLSEvaluator& src) = delete;
-    FFFSLSEvaluator& operator= (const FFFSLSEvaluator& src) = delete;
-    FFFSLSEvaluator(FFFSLSEvaluator&& src) = delete;
-    FFFSLSEvaluator& operator= (FFFSLSEvaluator&& src) = delete;
+    AF4SLSEvaluator(const AF4SLSEvaluator& src) = delete;
+    AF4SLSEvaluator& operator= (const AF4SLSEvaluator& src) = delete;
+    AF4SLSEvaluator(AF4SLSEvaluator&& src) = delete;
+    AF4SLSEvaluator& operator= (AF4SLSEvaluator&& src) = delete;
 
 
 
@@ -124,15 +116,7 @@ public:
 
 private:
 
-   vecD angles = {21.47 * PI / 360.0,
-                  34.91 * PI / 360.0,
-                  53.13 * PI / 360.0,
-                  67.70 * PI / 360.0,
-                  88.90 * PI / 360.0,
-                  109.88 * PI / 360.0,
-                  131.30 * PI / 360.0,
-                  149.31 * PI / 360.0
-                 };
+
 
    vecD concentrations;
    bool concetrationsCalculated = false;
@@ -186,7 +170,6 @@ private:
                           vecD &resConcentrations,
                           const double unitFactor = 1.0);
 
-
    /*!
     * \brief calcConcFromRi creates a new vector with concentrations on heap
     * \param riData data from the RI detector
@@ -224,8 +207,6 @@ private:
     * \return error Code
     */
    int setNegativeToZero(vecD &values);
-
-
 
 };
 

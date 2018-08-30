@@ -7,15 +7,15 @@
 #include <QRadioButton>
 #include <QComboBox>
 #include <QCheckBox>
-#include "../GeneralWidgets/ffflog.h"
-#include "../Calibration/fffcalibsettingsframe.h"
 #include "./fffexpsettingsframe.h"
+#include "../Calibration/fffcalibsettingsframe.h"
 #include "../Calibration/fffchannelconfigwidget.h"
 #include "../Calibration/fffchannelcalibwidget.h"
+#include "../GeneralWidgets/ffflog.h"
 #include "../GeneralWidgets/ffffileinoutwidget.h"
-#include "../../Core/fffcsvparser.h"
-#include "../../Core/fffdiffevaluator.h"
-#include "../../Core/fffcsvwriter.h"
+#include "../../Core/af4csvparser.h"
+#include "../../Core/af4diffevaluator.h"
+#include "../../Core/af4csvwriter.h"
 
 class FFFSingleColumnChooseDialog : public QDialog
 {
@@ -135,7 +135,6 @@ public:
 
 protected:
 
-
    QMap<QString, FFFChannelConfigWidget*>                 *channelConfigWidgets   = nullptr;
    QMap<QString, QMap<QString, FFFChannelCalibWidget*>*>  *channelCalibWidgets    = nullptr;
 
@@ -147,7 +146,6 @@ protected:
    QPushButton           *settingsWriter         = nullptr;
    QPushButton           *evalStarter            = nullptr;
    QCheckBox             *displayZeroMessages    = nullptr;
-
 
 protected slots:
 

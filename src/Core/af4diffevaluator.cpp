@@ -1,12 +1,7 @@
-#include "fffdiffevaluator.h"
+#include "./af4diffevaluator.h"
 
 using std::string;
 using std::vector;
-
-FFFDiffEvaluator::FFFDiffEvaluator()
-{
-   displayZeroMessages = false;
-}
 
 #define IS_ZERO(value, errorCode) {\
    if(isZero(value)) {\
@@ -14,7 +9,7 @@ FFFDiffEvaluator::FFFDiffEvaluator()
    }\
    }
 
-int FFFDiffEvaluator::evalDiffCoeffs(vecD& times,
+int AF4DiffEvaluator::evalDiffCoeffs(vecD& times,
                                      double leftOffsetTime,
                                      double voidPeakTime,
                                      double elutionFlow,
@@ -120,12 +115,6 @@ int FFFDiffEvaluator::evalDiffCoeffs(vecD& times,
 
 }
 
-
-
-FFFDiffEvaluator::~FFFDiffEvaluator()
-{
-}
-
 #define CORRECT_FROM_ZERO(value, timeIndex) {\
    if(isZero(value)){\
    value += 0.000000000000001;\
@@ -137,7 +126,7 @@ FFFDiffEvaluator::~FFFDiffEvaluator()
    }\
    }
 
-double FFFDiffEvaluator::calcDiffCoeff(double rMeas, double volume, double crossFlow,
+double AF4DiffEvaluator::calcDiffCoeff(double rMeas, double volume, double crossFlow,
                                        double chWidth, uint maxIterations, double lastResult, uint timeIndex, bool *ok)
 {
    double diffCoeff = lastResult * 1000;
@@ -178,7 +167,7 @@ double FFFDiffEvaluator::calcDiffCoeff(double rMeas, double volume, double cross
    return diffCoeff;
 }
 
-bool FFFDiffEvaluator::isZero(double x) const
+bool AF4DiffEvaluator::isZero(double x) const
 {
    if ((x < 0.0) || (x > 0.0))
       return false;
@@ -191,7 +180,7 @@ bool FFFDiffEvaluator::isZero(double x) const
    }
 }
 
-int FFFDiffEvaluator::calcStokesRadii(vecD& diffCoeffs,
+int AF4DiffEvaluator::calcStokesRadii(vecD& diffCoeffs,
                                       double viscosity,
                                       double temperature)
 {

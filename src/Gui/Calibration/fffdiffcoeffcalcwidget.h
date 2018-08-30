@@ -7,7 +7,7 @@
 #include <QDoubleSpinBox>
 #include <qwt_text_label.h>
 #include "../smallQDerivates/ffftwoboxwidget.h"
-#include "../../Core/fffconstants.h"
+#include "../../Core/af4constants.h"
 
 
 

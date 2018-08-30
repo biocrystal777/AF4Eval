@@ -16,7 +16,7 @@
 #include "../GeneralWidgets/ffflog.h"
 #include "./posPeakPair.h"
 #include "../smallQDerivates/fffnumberedcombobox.h"
-#include "../../Core/fffconstants.h"
+#include "../../Core/af4constants.h"
 
 class FFFAssignDataDialog : public QDialog
 {

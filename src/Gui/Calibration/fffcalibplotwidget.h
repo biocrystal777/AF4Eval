@@ -21,7 +21,7 @@
 #include <qwt_widget_overlay.h>
 #include "../GeneralWidgets/ffflog.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
-#include "../../Core/fffdatatypes.h"
+#include "../../Core/af4datatypes.h"
 
 
 class QwtDynPlotMarker : public QObject, public QwtPlotMarker

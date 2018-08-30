@@ -533,7 +533,7 @@ void FFFChannelCalConfWidget::switchCalibWidget(QString newWidgetKey)
 void FFFChannelCalConfWidget::calibrateChannnel()
 {
    // calculate omega (channel Width) by calibrator
-   FFFCalibrator calibrator;
+   AF4Calibrator calibrator;
    //bool calibSuccess = calibrator.calibrate(currentCalibWidget->getAllCalibrationParameters()
    bool calibSuccess = calibrator.calibrate(currentChConfigWidget->getChannelDimensions(),
                                            currentCalibWidget->getParametersForCalibration());

@@ -1,17 +1,9 @@
-#include "fffslsevaluator.h"
+#include "af4slsevaluator.h"
 
 using std::vector;
 using std::string;
 
-FFFSLSEvaluator::FFFSLSEvaluator()
-{
-}
-
-FFFSLSEvaluator::~FFFSLSEvaluator()
-{
-}
-
-int FFFSLSEvaluator::evalRiMALLS_partZimmplot(const vecD &riData,
+int AF4SLSEvaluator::evalRiMALLS_partZimmplot(const vecD &riData,
                                               matD &rayleighRatios,
                                               const vector<bool> &useDataPoint,
                                               const vecD &dnDcs,
@@ -32,7 +24,7 @@ int FFFSLSEvaluator::evalRiMALLS_partZimmplot(const vecD &riData,
    // Calculate concntrations //
    /////////////////////////////
 
-   qDebug() << "calc1";
+
 
    //concentrations;
    FFFLog::logText(string("Calculate concentrations from RI."));
@@ -102,14 +94,10 @@ int FFFSLSEvaluator::evalRiMALLS_partZimmplot(const vecD &riData,
    molWeightsCalculated = true;
    radGyrsCalculated = true;
 
-
    return 0;
 }
 
-
-
-
-int FFFSLSEvaluator::evalUVVis_MALLS_partZimmplot(const vecD &uvVisData,
+int AF4SLSEvaluator::evalUVVis_MALLS_partZimmplot(const vecD &uvVisData,
                                                   matD &rayleighRatios,
                                                   const vector<bool> &useDataPoint,
                                                   const vecD &epsilon,
@@ -202,12 +190,7 @@ int FFFSLSEvaluator::evalUVVis_MALLS_partZimmplot(const vecD &uvVisData,
    return 0;
 }
 
-
-
-
-
-
-matD FFFSLSEvaluator::calcXForZimmplot(const vecD &concentrations,
+matD AF4SLSEvaluator::calcXForZimmplot(const vecD &concentrations,
                                        const std::vector<bool> &mallsDetectorRelevant,
                                        const std::vector<bool> &useDataPoint,
                                        vecD *secondVirCoeffs,
@@ -258,7 +241,7 @@ matD FFFSLSEvaluator::calcXForZimmplot(const vecD &concentrations,
    return xValues;
 }
 
-matD FFFSLSEvaluator::calcYForZimmplot(
+matD AF4SLSEvaluator::calcYForZimmplot(
       const vecD &concentrations,
       const matD &rayleighRatios,
       const vector<bool> &mallsDetectorRelevant,
@@ -297,7 +280,7 @@ matD FFFSLSEvaluator::calcYForZimmplot(
    return yValues;
 }
 
-int FFFSLSEvaluator::calcRho(const vecD& stokesRadii,
+int AF4SLSEvaluator::calcRho(const vecD& stokesRadii,
                              const vecD& gyrRadii,
                              vecD& rhos)
 {
@@ -311,7 +294,7 @@ int FFFSLSEvaluator::calcRho(const vecD& stokesRadii,
    return 0;
 }
 
-int FFFSLSEvaluator::calcConcFromRi(const vecD &riData,
+int AF4SLSEvaluator::calcConcFromRi(const vecD &riData,
                                     const vector<bool> &useDataPoint,
                                     const vecD &dnDcs,
                                     double calibRiConstant,
@@ -334,7 +317,7 @@ int FFFSLSEvaluator::calcConcFromRi(const vecD &riData,
    return 0;
 }
 
-int FFFSLSEvaluator::calcConcFromUV_Vis(const vecD &absorbanceData,
+int AF4SLSEvaluator::calcConcFromUV_Vis(const vecD &absorbanceData,
                                         const std::vector<bool> &useDataPoint,
                                         const vecD &epsilon,
                                         const double optPathlength,
@@ -351,7 +334,7 @@ int FFFSLSEvaluator::calcConcFromUV_Vis(const vecD &absorbanceData,
    return 0;
 }
 
-int FFFSLSEvaluator::calcTotalRefIndices(const vecD &riData,
+int AF4SLSEvaluator::calcTotalRefIndices(const vecD &riData,
                                          const vector<bool> &useDataPoint,
                                          double calibRiConstant,
                                          double riSolvent,
@@ -369,7 +352,7 @@ int FFFSLSEvaluator::calcTotalRefIndices(const vecD &riData,
    return 0;
 }
 
-int FFFSLSEvaluator::linearRegression(const vecD &xValues,
+int AF4SLSEvaluator::linearRegression(const vecD &xValues,
                                       const vecD &yValues,
                                       const vector<bool> &pointRelevant,
                                       double *slope,
@@ -403,7 +386,7 @@ int FFFSLSEvaluator::linearRegression(const vecD &xValues,
    return 0;
 }
 
-int FFFSLSEvaluator::setNegativeToZero(vecD &values)
+int AF4SLSEvaluator::setNegativeToZero(vecD &values)
 {
    for (uint j = 0; j < values.size(); ++j)
       if( values.at(j) < 0.0)
@@ -411,19 +394,19 @@ int FFFSLSEvaluator::setNegativeToZero(vecD &values)
    return 0;
 }
 
-vecD FFFSLSEvaluator::getMolWeights(bool *exists) const
+vecD AF4SLSEvaluator::getMolWeights(bool *exists) const
 {
    if(exists) *exists = molWeightsCalculated;
    return molWeights;
 }
 
-vecD FFFSLSEvaluator::getRadGyrs(bool *exists) const
+vecD AF4SLSEvaluator::getRadGyrs(bool *exists) const
 {
    if(exists) *exists = radGyrsCalculated;
    return radGyrs;
 }
 
-vecD FFFSLSEvaluator::getConcentrations(bool *exists) const
+vecD AF4SLSEvaluator::getConcentrations(bool *exists) const
 {
    if(exists) *exists = concetrationsCalculated;
    return concentrations;

@@ -1,44 +1,37 @@
-#ifndef FFFDIFFEVALUATOR_H
-#define FFFDIFFEVALUATOR_H
+#ifndef AF4DIFFEVALUATOR_H
+#define AF4DIFFEVALUATOR_H
 
-
-#include "fffcalculator.h"
+#include "af4calculator.h"
 #include <QDebug>
 #include <QObject>
 
-/**************************************************************
+/*! ***********************************************************
 ***
-***   FFFDiffEvaluator
+***  \class     AF4DiffEvaluator "src/Core/af4diffevaluator.h"
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018
+***  \copyright CC CC BY-NC-ND 4.0
 ***
 **************************************************************/
 
-/*! \class FFFDiffEvaluator
- * \brief The FFFEvaluator class is used to find a Diffusion Coefficient corresponding to
- *        the values of the time axis each using a bisection. By this calculation, a conversion
- *        from time to diffusion coefficients is being performed.
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
-
-class FFFDiffEvaluator final : public FFFCalculator
+class AF4DiffEvaluator final : public AF4Calculator
 {
 public:
 
    /*!
     * \brief FFFEvaluator default constructor for the class
     */
-   explicit FFFDiffEvaluator();
+   explicit AF4DiffEvaluator() {}
 
    /*! \brief standard destructor
     */
-   ~FFFDiffEvaluator();
+   ~AF4DiffEvaluator(){}
 
-    FFFDiffEvaluator(const FFFDiffEvaluator& src) = delete;
-    FFFDiffEvaluator& operator= (const FFFDiffEvaluator& src) = delete;
-    FFFDiffEvaluator(FFFDiffEvaluator&& src) = delete;
-    FFFDiffEvaluator& operator= (FFFDiffEvaluator&& src) = delete;
+    AF4DiffEvaluator(const AF4DiffEvaluator& src) = delete;
+    AF4DiffEvaluator& operator= (const AF4DiffEvaluator& src) = delete;
+    AF4DiffEvaluator(AF4DiffEvaluator&& src) = delete;
+    AF4DiffEvaluator& operator= (AF4DiffEvaluator&& src) = delete;
 
 
    /*!
@@ -104,7 +97,7 @@ public:
 
 protected:
 
-   bool displayZeroMessages;
+
 
    /*!
     * \brief calcDiffCoeff calculates a diffusion coefficient by bisection
@@ -129,6 +122,7 @@ protected:
     */
    virtual bool isZero(double x) const;
 
+   bool displayZeroMessages = true;
    bool evaluated = false;
    bool rSCalculated = false;
 
@@ -138,4 +132,4 @@ protected:
    vecD resStokesRadii;
 };
 
-#endif // FFFDIFFEVALUATOR_H
+#endif // AF4DIFFEVALUATOR_H

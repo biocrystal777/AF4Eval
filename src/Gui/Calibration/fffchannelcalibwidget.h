@@ -17,11 +17,11 @@
 #include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
 #include <qwt_text_label.h>
-#include "../Core/fffdatatypes.h"
-#include "../Core/fffparameterstructs.h"
+#include "../Core/af4datatypes.h"
+#include "../Core/af4parameterstructs.h"
 #include "./fffdiffcoeffcalcwidget.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
-#include "../Core/fffcsvparser.h"
+#include "../Core/af4csvparser.h"
 #include "./fffcalibplotwidget.h"
 
 class FFFCalibPlotWidget;

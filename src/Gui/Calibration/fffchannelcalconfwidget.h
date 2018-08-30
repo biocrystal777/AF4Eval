@@ -8,7 +8,7 @@
 #include <vector>
 #include "fffchannelcalibwidget.h"
 #include "./fffchannelconfigwidget.h"
-#include "../../Core/fffcalibrator.h"
+#include "../../Core/af4calibrator.h"
 
 /**************************************************************
 ***

@@ -12,7 +12,7 @@
 #include <QLineEdit>
 #include "../smallQDerivates/ffftwoboxwidget.h"
 #include "../smallQDerivates/fffnumberedtoolbutton.h"
-#include "../../Core/fffparameterstructs.h"
+#include "../../Core/af4parameterstructs.h"
 
 class FFFPeakParameterFrame final : public QFrame
 {

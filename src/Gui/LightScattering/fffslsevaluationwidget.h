@@ -15,11 +15,11 @@
 #include "./fffslscalibrationframe.h"
 #include "./fffpeakparameterframe.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
-#include "../../Core/fffconstants.h"
-#include "../../Core/fffcsvparser.h"
-#include "../../Core/fffslsevaluator.h"
-#include "../../Core/fffcsvwriter.h"
-#include "../../Core/fffparameterstructs.h"
+#include "../../Core/af4constants.h"
+#include "../../Core/af4csvparser.h"
+#include "../../Core/af4slsevaluator.h"
+#include "../../Core/af4csvwriter.h"
+#include "../../Core/af4parameterstructs.h"
 
 class FFFSLSEvaluationWidget : public QWidget
 {

@@ -1,8 +1,9 @@
-#ifndef FFFPARAMETERSTRUCTS_H
-#define FFFPARAMETERSTRUCTS_H
-#include <inttypes.h>
+#ifndef AF4PARAMETERSTRUCTS_H
+#define AF4PARAMETERSTRUCTS_H
+
 #include <QList>
 #include <QString>
+
 struct ExpFFFParameters{
    double temperature;
    double viscosity;
@@ -23,8 +24,6 @@ enum class DeconWriteFreq {
    each1000th,
    last
 };
-
-
 
 struct FFFDiffCorrParameters{
    double leftOffsettime;
@@ -78,7 +77,6 @@ struct AllCalibrationParameters {
    QString additionalNotes;
 };
 
-
 struct ChannelDims {
    double chLength;
    double length1;
@@ -127,8 +125,6 @@ struct SLSCalibrationParameters{
    QList<double> angleConstants;
 };
 
-
-
 struct SampleProperties{
    QList<double> startTimes;
    QList<double> endTimes;
@@ -140,4 +136,4 @@ struct SampleProperties{
    QList<double> waveLengths;
    QList<double> epsilon;
 };
-#endif // FFFPARAMETERSTRUCTS_H
+#endif // AF4PARAMETERSTRUCTS_H

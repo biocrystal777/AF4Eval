@@ -1,11 +1,10 @@
-#include "fffcalculator.h"
+#include "af4calculator.h"
 
 using std::vector;
 using std::string;
 
-uint FFFCalculator::findIndexFromTime(const vecD &timeVector, const double time) const
+uint AF4Calculator::findIndexFromTime(const vecD &timeVector, const double time) const
 {
-
    uint index(0);
    double oldDiff = std::numeric_limits<double>::max();   
    for(uint i = 0; i < timeVector.size(); ++i){
@@ -20,12 +19,12 @@ uint FFFCalculator::findIndexFromTime(const vecD &timeVector, const double time)
    return index;
 }
 
-double FFFCalculator::coth(double x) const
+double AF4Calculator::coth(double x) const
 {
    return (1 / std::tanh(x));
 }
 
-bool FFFCalculator::isZero(double x) const
+bool AF4Calculator::isZero(double x) const
 {
    if ((x < 0.0) || (x > 0.0))
       return false;

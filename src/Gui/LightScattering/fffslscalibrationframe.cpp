@@ -69,8 +69,6 @@ FFFSLSCalibrationFrame::FFFSLSCalibrationFrame(const QString &prefix,
       angleLabels->append(new QLabel(tr("%1 :").arg(k+1), this));
    }
 
-
-
    mallsAngleConstants = new QList<QDoubleSpinBox*>();
    useAngles = new QList<FFFNumberedCheckBox*>();
    for (int i = 0; i < NUMBER_OF_DETECTORS; ++i){
@@ -87,7 +85,7 @@ FFFSLSCalibrationFrame::FFFSLSCalibrationFrame(const QString &prefix,
       mallsAngleConstants->last()->setDecimals(4);
       mallsAngleConstants->last()->setSingleStep(0.001);
       mallsAngleConstants->last()->setMaximum(10.0);
-      mallsAngleConstants->last()->setToolTip(tr("Calibration Constant %1 of MALLS at %2 degrees").arg(i).arg(::__slsAngles.at(i)));
+      mallsAngleConstants->last()->setToolTip(tr("Calibration Constant %1 of MALLS at %2 degrees").arg(i).arg(::anglesDeg.at(i)));
       mallsAngleConstants->last()->setMaximumHeight(35);
       lay->addWidget(mallsAngleConstants->at(i), 4+i, 3, 1, 2, Qt::AlignRight);
    }

@@ -1,54 +1,47 @@
-#ifndef FFFCSVWRITER_H
-#define FFFCSVWRITER_H
+#ifndef AF4CSVWRITER_H
+#define AF4CSVWRITER_H
 #include <string>
 #include <fstream>
 #include <list>
 #include <iostream>
 #include <vector>
-#include "../Gui/GeneralWidgets/ffflog.h"
 #include <stdlib.h>
 #include <sstream>
 #include <iomanip>
-#include "./fffconstants.h"
-#include "./fffdatatypes.h"
+#include "./af4constants.h"
+#include "./af4datatypes.h"
+#include "../Gui/GeneralWidgets/ffflog.h"
 
-/**************************************************************
+/*! ***********************************************************
 ***
-***   FFFCsvWriter
+***  \class     AF4CSVWriter "src/Core/af4csvwriter.h"
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018
+***  \copyright CC CC BY-NC-ND 4.0
 ***
 **************************************************************/
 
-
-/*!
- * \class FFFCsvWriter
- * \brief The FFFCsvWriter class is used to write a file in csv format with headLines
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
-
-class FFFCsvWriter final
+class AF4CsvWriter final
 {
-
 public:
 
    /*!
     * \brief FFFCsvWriter is the constructor of the class.
     * \param filePath path of the file. A file that already exists will be overwritten
     */
-   explicit FFFCsvWriter(const std::string& filePath);
-
+   explicit AF4CsvWriter(const std::string& filePath) :
+   filePath(filePath), sep(','), dec('.'), lineSep('\n'){}
 
    /*!
     * \brief FFFCsvWriter Default destructor
     */
-   ~FFFCsvWriter();
+   ~AF4CsvWriter(){}
 
-    FFFCsvWriter(const FFFCsvWriter& src) = delete;
-    FFFCsvWriter& operator= (const FFFCsvWriter& src) = delete;
-    FFFCsvWriter(FFFCsvWriter&& src) = delete;
-    FFFCsvWriter& operator= (FFFCsvWriter&& src) = delete;
+    AF4CsvWriter(const AF4CsvWriter& src) = delete;
+    AF4CsvWriter& operator= (const AF4CsvWriter& src) = delete;
+    AF4CsvWriter(AF4CsvWriter&& src) = delete;
+    AF4CsvWriter& operator= (AF4CsvWriter&& src) = delete;
 
    /*!
     * \brief writeFile The function has to be called to write the file to the path stated above
@@ -74,24 +67,8 @@ protected:
    const char sep;
    const char dec;
    const char lineSep;
-
    std::vector<std::string>* headLineEntries;
    std::vector<vecD*>* data;
-
-   /*!
-    * \brief to_string converts an int to a std::string using a stringstream
-    * \param number integer to be converted
-    * \return std::string
-    */
-   std::string to_string(int number) const;
-
-   /*!
-    * \brief to_string converts a double to a std::string using a stringstream
-    * \param number
-    * \return std::string
-    */
-   std::string to_string(double number) const;
-
 };
 
-#endif // FFFCSVWRITER_H
+#endif // AF4CSVWRITER_H

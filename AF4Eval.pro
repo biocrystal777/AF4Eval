@@ -39,8 +39,6 @@ linux {
 include ( /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qwt.prf )
 }
 
-
-
 INCLUDEPATH += ./src/Gui \
                ./src/Gui/Calibration \
                ./src/Gui/Deconvolution \
@@ -56,13 +54,13 @@ DEPENDPATH += ./src/Gui \
               ./src/Core
 
 SOURCES += ./src/Core/main.cpp\
-    ./src/Core/fffcalibrator.cpp \
-    ./src/Core/fffcalculator.cpp \
-    ./src/Core/fffcsvwriter.cpp \
-    ./src/Core/fffslsevaluator.cpp \
-    ./src/Core/fffdiffevaluator.cpp \
-    ./src/Gui/fffmainwindow.cpp \
-    ./src/Core/fffcsvparser.cpp \
+    ./src/Core/af4calibrator.cpp \
+    ./src/Core/af4calculator.cpp \
+    ./src/Core/af4csvparser.cpp \
+    ./src/Core/af4csvwriter.cpp \
+    ./src/Core/af4diffevaluator.cpp \
+    ./src/Core/af4slsevaluator.cpp \
+    ./src/Gui/fffmainwindow.cpp \    
     ./src/Gui/DiffEvaluation/fffdiffevaluationwidget.cpp \
     ./src/Gui/DiffEvaluation/fffexpsettingsframe.cpp \
     ./src/Gui/Calibration/fffdiffcoeffcalcwidget.cpp \
@@ -84,14 +82,16 @@ SOURCES += ./src/Core/main.cpp\
     ./src/Gui/smallQDerivates/fffnumberedcombobox.cpp \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.cpp
 
-
-HEADERS  += ./src/Core/fffparameterstructs.h \
-    ./src/Core/fffconstants.h \
-    ./src/Core/fffcalibrator.h  \
-    ./src/Core/fffcalculator.h \
-    ./src/Core/fffcsvwriter.h \
-    ./src/Core/fffslsevaluator.h \
-    ./src/Core/fffdiffevaluator.h \
+HEADERS  += ./src/Core/af4parameterstructs.h \
+    ./src/Core/af4constants.h \
+    ./src/Core/af4calibrator.h \
+    ./src/Core/af4calculator.h \
+    ./src/Core/af4csvparser.h \
+    ./src/Core/af4csvwriter.h \
+    ./src/Core/af4datatypes.h \
+    ./src/Core/af4diffevaluator.h \
+    ./src/Core/af4slsevaluator.h \
+    ./src/Core/omp_qvector.h \
     ./src/Gui/fffmainwindow.h \
     ./src/Gui/DiffEvaluation/fffdiffevaluationwidget.h \
     ./src/Gui/DiffEvaluation/fffexpsettingsframe.h \
@@ -113,10 +113,8 @@ HEADERS  += ./src/Core/fffparameterstructs.h \
     ./src/Gui/smallQDerivates/fffnumberedcombobox.h \
     ./src/Gui/smallQDerivates/fffnumberedcheckbox.h \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.h \
-    ./src/Gui/Calibration/fffdiffcoeffcalcwidget.h \
-    ./src/Core/fffcsvparser.h \
-    ./src/Core/omp_qvector.h \
-    ./src/Core/fffdatatypes.h
+    ./src/Gui/Calibration/fffdiffcoeffcalcwidget.h
+
 
 RESOURCES += \
     ./Resources/images.qrc

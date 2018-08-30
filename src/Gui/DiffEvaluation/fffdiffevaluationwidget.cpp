@@ -71,7 +71,7 @@ void FFFDiffEvaluationWidget::startEvaluation()
       return;
    }
    // Parse File
-   FFFCsvParser parser(fileName.toStdString(), ',', '.');
+   AF4CsvParser parser(fileName.toStdString(), ',', '.');
 
    bool ok;
    int errorCode;
@@ -97,7 +97,7 @@ void FFFDiffEvaluationWidget::startEvaluation()
    double progress = 0;
    uint currentLine = 0;   
 
-   FFFDiffEvaluator evaluator;
+   AF4DiffEvaluator evaluator;
 
 
    errorCode = evaluator.evalDiffCoeffs(data.at(timeIndex),                                        
@@ -138,7 +138,7 @@ void FFFDiffEvaluationWidget::startEvaluation()
    ///////////////
    // write data
    ///////////////
-   FFFCsvWriter writer(outFileName.toStdString());
+   AF4CsvWriter writer(outFileName.toStdString());
    matD writeResults;
    // copy "used" times from data to result matrix
    uint startTimeIndex = evaluator.getEvaluationStart();

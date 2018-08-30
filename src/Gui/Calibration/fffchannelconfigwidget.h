@@ -9,7 +9,7 @@
 #include <QSvgRenderer>
 #include <QPainter>
 #include <qwt_text_label.h>
-#include "../Core/fffparameterstructs.h"
+#include "../Core/af4parameterstructs.h"
 #include "../GeneralWidgets/ffflog.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
 #include <qwt_mathml_text_engine.h>

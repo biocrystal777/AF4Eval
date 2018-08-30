@@ -1,4 +1,4 @@
-#include "fffcsvwriter.h"
+#include "af4csvwriter.h"
 
 using std::string;
 using std::stringstream;
@@ -7,16 +7,8 @@ using std::vector;
 using std::setprecision;
 using std::ios_base;
 
-FFFCsvWriter::FFFCsvWriter(const std::string &filePath) :
-   filePath(filePath), sep(','), dec('.'), lineSep('\n')
-{
-}
 
-FFFCsvWriter::~FFFCsvWriter()
-{
-}
-
-bool FFFCsvWriter::writeFile(const matD& data, const vector<string>& headLineEntries)
+bool AF4CsvWriter::writeFile(const matD& data, const vector<string>& headLineEntries)
 {
    // check inputs
    if(data.size() != headLineEntries.size()){
@@ -62,7 +54,7 @@ bool FFFCsvWriter::writeFile(const matD& data, const vector<string>& headLineEnt
    return true;
 }
 
-uint FFFCsvWriter::maxElementIndex(const vector<uint>& searchData, uint startIndex, uint EndIndex, uint *maxElementValue) const
+uint AF4CsvWriter::maxElementIndex(const vector<uint>& searchData, uint startIndex, uint EndIndex, uint *maxElementValue) const
 {
    uint resultingIndex = startIndex;
    uint elementValue = searchData.at(startIndex);
@@ -76,16 +68,3 @@ uint FFFCsvWriter::maxElementIndex(const vector<uint>& searchData, uint startInd
    return resultingIndex;
 }
 
-string FFFCsvWriter::to_string(int number) const
-{
-   std::stringstream ss;      //create a stringstream
-   ss << number;              //add number to the stream
-   return ss.str();           //return a string with the contents of the stream
-}
-
-string FFFCsvWriter::to_string(double number) const
-{
-   std::stringstream ss;      //create a stringstream
-   ss << number;              //add number to the stream
-   return ss.str();           //return a string with the contents of the stream
-}

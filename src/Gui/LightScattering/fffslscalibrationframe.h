@@ -1,10 +1,11 @@
 #ifndef FFFSLSCALIBRATIONFRAME_H
 #define FFFSLSCALIBRATIONFRAME_H
 
+#include "../Core/af4constants.h"
 #include <QGridLayout>
 #include "../smallQDerivates/ffftwoboxwidget.h"
 #include "../smallQDerivates/fffnumberedcheckbox.h"
-#include "../../Core/fffparameterstructs.h"
+#include "../../Core/af4parameterstructs.h"
 #include <QGroupBox>
 #include <QRadioButton>
 
@@ -13,7 +14,7 @@ class FFFSLSCalibrationFrame : public QFrame{
     Q_OBJECT
 public:
     explicit FFFSLSCalibrationFrame(const QString &prefix,
-                                    int id,
+                                    int id,                                    
                                     QWidget *parent = nullptr);
     ~FFFSLSCalibrationFrame();
 
