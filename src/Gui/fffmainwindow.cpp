@@ -43,7 +43,7 @@ FFFMainWindow::FFFMainWindow(QWidget *parent)
    ///////////////////////////
 
    funcTabWidget = new QTabWidget(this);
-   channelCalConfWidget = new FFFChannelCalConfWidget(funcTabWidget);
+   channelCalConfWidget = new AF4ChannelConfigurationWidget(funcTabWidget);
    funcTabWidget->addTab(channelCalConfWidget, "Channel Calibration");
 
    layout = new QGridLayout(this);
@@ -80,7 +80,15 @@ void FFFMainWindow::writeSettings() const
    settings.setValue("window/xpos", this->pos().y());
 }
 
-FFFChannelNameDialog::FFFChannelNameDialog(QString *name, bool first, const QString nameSuggestion, bool rename)
+
+
+
+
+
+
+
+
+AF4ChannelNameDialog::AF4ChannelNameDialog(QString *name, bool first, const QString nameSuggestion, bool rename)
 {
    channelName = name;
    setFixedSize(250, 120);

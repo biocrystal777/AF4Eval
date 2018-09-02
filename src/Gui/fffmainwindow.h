@@ -6,7 +6,7 @@
 #include "./GeneralWidgets/ffflog.h"
 #include "./DiffEvaluation/fffdiffevaluationwidget.h"
 #include "./LightScattering/fffslsevaluationwidget.h"
-#include "./Calibration/fffchannelconfigwidget.h"
+#include "./Calibration/af4channeldimswidget.h"
 #include "./Calibration/fffchannelcalconfwidget.h"
 #include "../Core/af4csvwriter.h"
 
@@ -68,7 +68,7 @@ protected:
    QTabWidget *funcTabWidget;
    QGridLayout *funcLayout;
 
-   FFFChannelCalConfWidget *channelCalConfWidget;
+   AF4ChannelConfigurationWidget *channelCalConfWidget;
    FFFDiffEvaluationWidget *diffEvaluationWidget;
 
 

@@ -1,6 +1,6 @@
-#include "fffchannelcalibwidget.h"
+#include "af4channelcalibwidget.h"
 
-FFFChannelCalibWidget::FFFChannelCalibWidget(const int channelId,
+AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
                                              const int calibId,
                                              const QString channelName,
                                              const QString calibName,
@@ -242,7 +242,7 @@ FFFChannelCalibWidget::FFFChannelCalibWidget(const int channelId,
 
 
 
-   plotWidget = new FFFCalibPlotWidget(QString("Calibration signal (t_void region)"), this);
+   plotWidget = new AF4CalibPlotWidget(QString("Calibration signal (t_void region)"), this);
    plotWidget->setMinimumWidth(screenWidth/10*4);
    plotWidget->setMaximumWidth(screenWidth/10*4);
    plotWidget->setMinimumHeight(screenHeight/20*5);
@@ -250,7 +250,7 @@ FFFChannelCalibWidget::FFFChannelCalibWidget(const int channelId,
    frameLayout->addWidget(plotWidget,0,15,8,4);
 
 
-   plotWidget2 = new FFFCalibPlotWidget(QString("Calibration signal (t_e region)"), this);
+   plotWidget2 = new AF4CalibPlotWidget(QString("Calibration signal (t_e region)"), this);
    plotWidget2->setMinimumWidth(screenWidth/10*4);
    plotWidget2->setMaximumWidth(screenWidth/10*4);
    plotWidget2->setMinimumHeight(screenHeight/20*5);
@@ -274,13 +274,13 @@ FFFChannelCalibWidget::FFFChannelCalibWidget(const int channelId,
 
 }
 
-FFFChannelCalibWidget::~FFFChannelCalibWidget()
+AF4ChannelCalibWidget::~AF4ChannelCalibWidget()
 {
-   writeSettings();
+   saveParameters();
 }
 
 
-bool FFFChannelCalibWidget::setDiffCoefficient(double value)
+bool AF4ChannelCalibWidget::setDiffCoefficient(double value)
 {
    int valExponent;
    double valSignificand = FFFTwoBoxWidget::calcSignificand(value, &valExponent);
@@ -292,12 +292,12 @@ bool FFFChannelCalibWidget::setDiffCoefficient(double value)
    }
 }
 
-void FFFChannelCalibWidget::callCalibrateChannel()
+void AF4ChannelCalibWidget::callCalibrateChannel()
 {
    calibrateChannelCalled();
 }
 
-void FFFChannelCalibWidget::setPlotDataFromFile()
+void AF4ChannelCalibWidget::setPlotDataFromFile()
 {
 
    QString calibFileName = this->getInputFilePath(false);
@@ -361,7 +361,7 @@ void FFFChannelCalibWidget::setPlotDataFromFile()
 
 }
 
-bool FFFChannelCalibWidget::setChannelWidth(double value)
+bool AF4ChannelCalibWidget::setChannelWidth(double value)
 {
    int valExponent;
    double valSignificand = FFFTwoBoxWidget::calcSignificand(value, &valExponent);
@@ -374,7 +374,7 @@ bool FFFChannelCalibWidget::setChannelWidth(double value)
 }
 
 
-bool FFFChannelCalibWidget::setInputFileName(QString path, bool quoted)
+bool AF4ChannelCalibWidget::setInputFileName(QString path, bool quoted)
 {
    bool ok(true);
    QString testPath = path;
@@ -394,7 +394,7 @@ bool FFFChannelCalibWidget::setInputFileName(QString path, bool quoted)
 }
 
 
-void FFFChannelCalibWidget::loadSettings()
+void AF4ChannelCalibWidget::loadSettings()
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
@@ -494,7 +494,7 @@ void FFFChannelCalibWidget::loadSettings()
 #undef CHECK_SETTINGS_CONVERSION //
 }
 
-void FFFChannelCalibWidget::writeSettings()
+void AF4ChannelCalibWidget::saveParameters()
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
@@ -517,7 +517,7 @@ void FFFChannelCalibWidget::writeSettings()
    settings.setValue(tr("channels/%1/calib/%2/calibFileName").arg(channelId).arg(calibId), QVariant(this->getInputFilePath(true)));
 }
 
-QString FFFChannelCalibWidget::getInputFilePath(bool quoted)
+QString AF4ChannelCalibWidget::getInputFilePath(bool quoted)
 {
    QString path = inputFileName->text();
    if(quoted)
@@ -527,7 +527,7 @@ QString FFFChannelCalibWidget::getInputFilePath(bool quoted)
    return path;
 }
 
-void FFFChannelCalibWidget::callDiffCoeffDialog()
+void AF4ChannelCalibWidget::callDiffCoeffDialog()
 {
    if(diffCoeffCalcWidget){
       delete diffCoeffCalcWidget; diffCoeffCalcWidget = nullptr;
@@ -541,13 +541,13 @@ void FFFChannelCalibWidget::callDiffCoeffDialog()
    }
 }
 
-void FFFChannelCalibWidget::finishDiffCoeffDialog()
+void AF4ChannelCalibWidget::finishDiffCoeffDialog()
 {
    diffCoeffCalculator->setDown(false);
    diffCoeffCalcWidget = nullptr;
 }
 
-void FFFChannelCalibWidget::chooseInputFile()
+void AF4ChannelCalibWidget::chooseInputFile()
 {
    QString s;
    QString oldInputFile = inputFileName->text();
@@ -566,7 +566,7 @@ void FFFChannelCalibWidget::chooseInputFile()
 }
 
 
-QString FFFChannelCalibWidget::chopStringsQuotMarksToOne(QString & string) const
+QString AF4ChannelCalibWidget::chopStringsQuotMarksToOne(QString & string) const
 {
    chopStringsQuotMarksEntirely(string);
    string.prepend('\"');
@@ -574,7 +574,7 @@ QString FFFChannelCalibWidget::chopStringsQuotMarksToOne(QString & string) const
    return string;
 }
 
-QString FFFChannelCalibWidget::chopStringsQuotMarksEntirely(QString & string) const
+QString AF4ChannelCalibWidget::chopStringsQuotMarksEntirely(QString & string) const
 {
    const QChar quotMark('\"');
    while(!string.isEmpty() && string.at(0) == quotMark)
@@ -584,4 +584,3 @@ QString FFFChannelCalibWidget::chopStringsQuotMarksEntirely(QString & string) co
 
    return string;
 }
-

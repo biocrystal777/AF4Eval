@@ -53,22 +53,22 @@ DEPENDPATH += ./src/Gui \
               ./src/Gui/smallQDerivates \
               ./src/Core
 
-SOURCES += ./src/Core/main.cpp\
+SOURCES += ./src/Core/main.cpp \
     ./src/Core/af4calibrator.cpp \
     ./src/Core/af4calculator.cpp \
     ./src/Core/af4csvparser.cpp \
     ./src/Core/af4csvwriter.cpp \
     ./src/Core/af4diffevaluator.cpp \
     ./src/Core/af4slsevaluator.cpp \
-    ./src/Gui/fffmainwindow.cpp \    
-    ./src/Gui/DiffEvaluation/fffdiffevaluationwidget.cpp \
-    ./src/Gui/DiffEvaluation/fffexpsettingsframe.cpp \
+    ./src/Gui/fffmainwindow.cpp \
+    ./src/Gui/Calibration/af4calibsettingsframe.cpp \
     ./src/Gui/Calibration/fffdiffcoeffcalcwidget.cpp \
     ./src/Gui/Calibration/fffchannelcalconfwidget.cpp \
-    ./src/Gui/Calibration/fffchannelconfigwidget.cpp \
-    ./src/Gui/Calibration/fffchannelcalibwidget.cpp \
-    ./src/Gui/Calibration/fffcalibsettingsframe.cpp \
-    ./src/Gui/Calibration/fffcalibplotwidget.cpp \
+    ./src/Gui/Calibration/af4channeldimswidget.cpp \
+    ./src/Gui/Calibration/af4channelcalibwidget.cpp \
+    ./src/Gui/Calibration/af4calibplotwidget.cpp \
+    ./src/Gui/DiffEvaluation/fffdiffevaluationwidget.cpp \
+    ./src/Gui/DiffEvaluation/fffexpsettingsframe.cpp \ 
     ./src/Gui/GeneralWidgets/ffflog.cpp \
     ./src/Gui/GeneralWidgets/ffffileinoutwidget.cpp \
     ./src/Gui/GeneralWidgets/fffmultiplefilewidget.cpp \
@@ -93,13 +93,14 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4slsevaluator.h \
     ./src/Core/omp_qvector.h \
     ./src/Gui/fffmainwindow.h \
+    ./src/Gui/Calibration/af4calibsettingsframe.h \
+    ./src/Gui/Calibration/af4calibplotwidget.h \
+    ./src/Gui/Calibration/af4channelcalibwidget.h \
+    ./src/Gui/Calibration/af4channeldimswidget.h \
+    ./src/Gui/Calibration/fffchannelcalconfwidget.h \
+    ./src/Gui/Calibration/fffdiffcoeffcalcwidget.h \
     ./src/Gui/DiffEvaluation/fffdiffevaluationwidget.h \
     ./src/Gui/DiffEvaluation/fffexpsettingsframe.h \
-    ./src/Gui/Calibration/fffchannelcalconfwidget.h \
-    ./src/Gui/Calibration/fffchannelconfigwidget.h \
-    ./src/Gui/Calibration/fffchannelcalibwidget.h \
-    ./src/Gui/Calibration/fffcalibsettingsframe.h \
-    ./src/Gui/Calibration/fffcalibplotwidget.h \
     ./src/Gui/GeneralWidgets/ffflog.h \
     ./src/Gui/GeneralWidgets/ffffileinoutwidget.h \
     ./src/Gui/GeneralWidgets/fffmultiplefilewidget.h \
@@ -112,8 +113,7 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/smallQDerivates/ffftwoboxwidget.h \
     ./src/Gui/smallQDerivates/fffnumberedcombobox.h \
     ./src/Gui/smallQDerivates/fffnumberedcheckbox.h \
-    ./src/Gui/smallQDerivates/fffnumberedtoolbutton.h \
-    ./src/Gui/Calibration/fffdiffcoeffcalcwidget.h
+    ./src/Gui/smallQDerivates/fffnumberedtoolbutton.h
 
 
 RESOURCES += \

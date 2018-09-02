@@ -1,6 +1,6 @@
-#include "./fffcalibplotwidget.h"
+#include "./af4calibplotwidget.h"
 
-FFFCalibPlotWidget::FFFCalibPlotWidget(const QString& title, QWidget *parent) : QWidget(parent)
+AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : QWidget(parent)
 {
    lay = new QGridLayout(this);
 
@@ -110,7 +110,7 @@ FFFCalibPlotWidget::FFFCalibPlotWidget(const QString& title, QWidget *parent) : 
    lay->addWidget(autoScaleY2Button, 3, 6, Qt::AlignLeft);
 }
 
-FFFCalibPlotWidget::~FFFCalibPlotWidget()
+AF4CalibPlotWidget::~AF4CalibPlotWidget()
 {
 
    if(grid) {delete grid; grid = nullptr;}
@@ -119,7 +119,7 @@ FFFCalibPlotWidget::~FFFCalibPlotWidget()
 
 
 
-void FFFCalibPlotWidget::initPlot()
+void AF4CalibPlotWidget::initPlot()
 {
    if(!signal1Curve){
       signal1Curve = new QwtPlotCurve(QString("Measured"));
@@ -142,7 +142,7 @@ void FFFCalibPlotWidget::initPlot()
    this->updatePlot();
 }
 
-void FFFCalibPlotWidget::addPlotVLine(QDoubleSpinBox *ctrlBox, const QColor &color)
+void AF4CalibPlotWidget::addPlotVLine(QDoubleSpinBox *ctrlBox, const QColor &color)
 {
    qDebug() << "Here";
    plotMarkers.append(new QwtDynPlotMarker());
@@ -156,19 +156,19 @@ void FFFCalibPlotWidget::addPlotVLine(QDoubleSpinBox *ctrlBox, const QColor &col
    marker->setSymbol(symbol);
    marker->setXValue(ctrlBox->value());
    marker->attach(plot);
-   QObject::connect(ctrlBox, SIGNAL(valueChanged(double)), marker, SLOT(setXValueSlot(double)));
+   QObject::connect(ctrlBox, SIGNAL(valueChanged(double)), marker, SLOT(setXValueEmit(double)));
    QObject::connect(marker, SIGNAL(posChanged()), plot, SLOT(replot()));
    plot->replot();
 }
 
-void FFFCalibPlotWidget::updatePlot()
+void AF4CalibPlotWidget::updatePlot()
 {
    signal1Curve->setSamples(plotXData, plotYData[signal1Ch]);
    signal2Curve->setSamples(plotXData, plotYData[signal2Ch]);
    plot->repaint();
 }
 
-void FFFCalibPlotWidget::setSignal1Channels(const QStringList &strs)
+void AF4CalibPlotWidget::setSignal1Channels(const QStringList &strs)
 {
    signal1Switch->blockSignals(true);
    signal1Switch->clear();
@@ -182,13 +182,13 @@ void FFFCalibPlotWidget::setSignal1Channels(const QStringList &strs)
    signal1Switch->blockSignals(false);
 }
 
-void FFFCalibPlotWidget::adaptSignal1Switch(int sig1Ch)
+void AF4CalibPlotWidget::adaptSignal1Switch(int sig1Ch)
 {
    signal1Switch->setToolTip(signal1Switch->currentData().toString());
 }
 
 
-void FFFCalibPlotWidget::setSignal2Channels(const QStringList &strs)
+void AF4CalibPlotWidget::setSignal2Channels(const QStringList &strs)
 {
    signal2Switch->blockSignals(true);
    signal2Switch->clear();
@@ -202,7 +202,7 @@ void FFFCalibPlotWidget::setSignal2Channels(const QStringList &strs)
    signal2Switch->blockSignals(false);
 }
 
-void FFFCalibPlotWidget::adaptSignal2Switch(int sig1Ch)
+void AF4CalibPlotWidget::adaptSignal2Switch(int sig1Ch)
 {
    signal1Switch->setToolTip(signal2Switch->currentData().toString());
 }
@@ -210,39 +210,39 @@ void FFFCalibPlotWidget::adaptSignal2Switch(int sig1Ch)
 
 
 
-void FFFCalibPlotWidget::adaptXScaleMinBoxLimit(double maxOfMin)
+void AF4CalibPlotWidget::adaptXScaleMinBoxLimit(double maxOfMin)
 {
    this->scaleXRangeMin->setMaximum(maxOfMin - 1 );
 }
 
-void FFFCalibPlotWidget::adaptXScaleMaxBoxLimit(double minOfMax)
+void AF4CalibPlotWidget::adaptXScaleMaxBoxLimit(double minOfMax)
 {
    this->scaleXRangeMax->setMinimum(minOfMax + 1) ;
 }
 
 
-void FFFCalibPlotWidget::reScaleXAxis(double dummy)
+void AF4CalibPlotWidget::reScaleXAxis(double dummy)
 {
    this->plot->setAxisScale(QwtPlot::xBottom, this->scaleXRangeMin->value(), this->scaleXRangeMax->value());
    this->plot->replot();
 }
 
-void FFFCalibPlotWidget::adaptY1ScaleMinBoxLimit(double maxOfMin)
+void AF4CalibPlotWidget::adaptY1ScaleMinBoxLimit(double maxOfMin)
 {
 }
 
-void FFFCalibPlotWidget::adaptY1ScaleMaxBoxLimit(double minOfMax)
+void AF4CalibPlotWidget::adaptY1ScaleMaxBoxLimit(double minOfMax)
 {
    //this->scaleY1RangeMax->setMinimum(minOfMax);
 }
 
-void FFFCalibPlotWidget::reScaleY1Axis(double dummy)
+void AF4CalibPlotWidget::reScaleY1Axis(double dummy)
 {
    this->plot->setAxisScale(QwtPlot::yLeft, this->scaleY1RangeMin->value(), this->scaleY1RangeMax->value());
    this->plot->replot();
 }
 
-void FFFCalibPlotWidget::autoScaleY1Axis()
+void AF4CalibPlotWidget::autoScaleY1Axis()
 {
    // find range
 
@@ -266,7 +266,7 @@ void FFFCalibPlotWidget::autoScaleY1Axis()
 
 }
 
-void FFFCalibPlotWidget::redrawSignal1(int signalInt)
+void AF4CalibPlotWidget::redrawSignal1(int signalInt)
 {
    signal1Ch = signalInt;
    signal1Curve->setSamples(plotXData, plotYData[signal1Ch]);
@@ -274,23 +274,23 @@ void FFFCalibPlotWidget::redrawSignal1(int signalInt)
 
 }
 
-void FFFCalibPlotWidget::adaptY2ScaleMinBoxLimit(double maxOfMin)
+void AF4CalibPlotWidget::adaptY2ScaleMinBoxLimit(double maxOfMin)
 {
    //this->scaleY1RangeMin->setMaximum(maxOfMin);
 }
 
-void FFFCalibPlotWidget::adaptY2ScaleMaxBoxLimit(double minOfMax)
+void AF4CalibPlotWidget::adaptY2ScaleMaxBoxLimit(double minOfMax)
 {
    //this->scaleY1RangeMax->setMinimum(minOfMax);
 }
 
-void FFFCalibPlotWidget::reScaleY2Axis(double dummy)
+void AF4CalibPlotWidget::reScaleY2Axis(double dummy)
 {
    this->plot->setAxisScale(QwtPlot::yRight, this->scaleY2RangeMin->value(), this->scaleY2RangeMax->value());   
    this->plot->replot();
 }
 
-void FFFCalibPlotWidget::autoScaleY2Axis()
+void AF4CalibPlotWidget::autoScaleY2Axis()
 {
    // find range
    double minX = scaleXRangeMin->value();
@@ -311,7 +311,7 @@ void FFFCalibPlotWidget::autoScaleY2Axis()
    scaleY2RangeMax->blockSignals(false);
 }
 
-void FFFCalibPlotWidget::setXScale(double minX, double maxX)
+void AF4CalibPlotWidget::setXScale(double minX, double maxX)
 {
    this->scaleXRangeMin->blockSignals(true);
    this->scaleXRangeMax->blockSignals(true);
@@ -325,7 +325,7 @@ void FFFCalibPlotWidget::setXScale(double minX, double maxX)
 
 
 
-void FFFCalibPlotWidget::redrawSignal2(int signalInt)
+void AF4CalibPlotWidget::redrawSignal2(int signalInt)
 {
    signal2Ch = signalInt;
    signal2Switch->setToolTip(signal2Switch->currentText());
@@ -333,8 +333,3 @@ void FFFCalibPlotWidget::redrawSignal2(int signalInt)
    autoScaleY2Axis();
 }
 
-void QwtDynPlotMarker::setXValueSlot(double xValue)
-{
-   setXValue(xValue);   
-   emit posChanged();
-}

@@ -1,67 +1,131 @@
-#ifndef FFFCALIBSETTINGSFRAME_H
-#define FFFCALIBSETTINGSFRAME_H
+#ifndef AF4CALIBSETTINGSFRAME_H
+#define AF4CALIBSETTINGSFRAME_H
 
+#include <QFrame>
 #include <QLabel>
 #include <QLayout>
 #include <QComboBox>
-#include "./fffchannelconfigwidget.h"
-#include "./fffchannelcalibwidget.h"
+#include "./af4channeldimswidget.h"
+#include "./af4channelcalibwidget.h"
 #include "../../Core/af4parameterstructs.h"
-#include <QFrame>
 
-class FFFCalibSettingsFrame final : public QFrame {
+/*! ***************************************************************************************
+***
+***  \class     AF4CalibSettingsFrame "src/Gui/Calibration/af4calibsettingsframe.h"
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018
+***  \copyright CC CC BY-NC-ND 4.0
+***
+********************************************************************************************/
+
+class AF4CalibSettingsFrame final : public QFrame {
     Q_OBJECT
 public:
-    explicit FFFCalibSettingsFrame(QMap<QString, FFFChannelConfigWidget*>* channelConfigWidgets,
-                                   QMap<QString, QMap<QString, FFFChannelCalibWidget*>*>* channelCalibWidgets,
+    explicit AF4CalibSettingsFrame(QMap<QString, AF4ChannelDimsWidget*>* channelConfigWidgets,
+                                   QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets,
                                    const QString &prefix,
                                    QWidget *parent = nullptr);
 
-    ~FFFCalibSettingsFrame();
+    ~AF4CalibSettingsFrame();
 
-    FFFCalibSettingsFrame(const FFFCalibSettingsFrame& src) = delete;
-    FFFCalibSettingsFrame& operator= (FFFCalibSettingsFrame& src) = delete;
-    FFFCalibSettingsFrame(FFFCalibSettingsFrame&& src) = delete;
-    FFFCalibSettingsFrame& operator= (FFFCalibSettingsFrame&& src) = delete;
+    AF4CalibSettingsFrame(const AF4CalibSettingsFrame& src) = delete;
+    AF4CalibSettingsFrame& operator= (AF4CalibSettingsFrame& src) = delete;
+    AF4CalibSettingsFrame(AF4CalibSettingsFrame&& src) = delete;
+    AF4CalibSettingsFrame& operator= (AF4CalibSettingsFrame&& src) = delete;
 
+    /*!
+     * \brief getChLength
+     * \return
+     */
     inline double getChLength() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getChLength();
     }
+
+    /*!
+     * \brief getLength1
+     * \return
+     */
     inline double getLength1() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getLength1();
     }
+
+    /*!
+     * \brief getLength2
+     * \return
+     */
     inline double getLength2() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getLength2();
     }
+
+    /*!
+     * \brief getLength3
+     * \return
+     */
     inline double getLength3() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getLength3();
     }
 
-
-
+    /*!
+     * \brief getB0
+     * \return
+     */
     inline double getB0() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getB0();
     }
+
+    /*!
+     * \brief getBL
+     * \return
+     */
     inline double getBL() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getBL();
     }
+
+    /*!
+     * \brief getChWidth
+     * \return
+     */
     inline double getChWidth() const {
        return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getChannelWidth();
     }
+
+    /*!
+     * \brief getHydrodynVolume
+     * \return
+     */
     inline double getHydrodynVolume() const {
        return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getHydrodynVolume();
     }
+
+    /*!
+     * \brief getGeometVolume
+     * \return
+     */
     inline double getGeometVolume() const {
        return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getGeometVolume();
     }
+
+    /*!
+     * \brief getChannelDimensions
+     * \return
+     */
     ChannelDims getChannelDimensions() const;
+
+    /*!
+     * \brief getChannelDimsFromCalib
+     * \return
+     */
     ChannelDimsFromCalib getChannelDimsFromCalib() const;
 
+    /*!
+     * \brief saveParameters
+     */
     void saveParameters();
 
 private:
-    QMap<QString, FFFChannelConfigWidget*>* const channelConfigWidgets;
-    QMap<QString, QMap<QString, FFFChannelCalibWidget*>*>* const channelCalibWidgets;
+    QMap<QString, AF4ChannelDimsWidget*>* const channelConfigWidgets;
+    QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* const channelCalibWidgets;
 
     QGridLayout *layout                         = nullptr;
     QList<QString> *channelKeyList              = nullptr;
@@ -85,6 +149,9 @@ private:
 
     const QString prefix;
 
+    /*!
+     * \brief loadParameters
+     */
     void loadParameters();
 
 
@@ -112,8 +179,6 @@ public slots:
     */
    void adaptCalibValues(QString calibKey);
 
-
-
    /*!
     * \brief adaptChannelParameters adapts the comboboxes according
     *        to the internal structures (QMaps) that contain
@@ -123,8 +188,12 @@ public slots:
     */
    void adaptChannelParameters();
 
+   /*!
+    * \brief enableVolume
+    * \param enable
+    */
    void enableVolume(bool enable);
 
 
 };
-#endif // FFFCALIBSETTINGSFRAME_H
+#endif // AF4CALIBSETTINGSFRAME_H

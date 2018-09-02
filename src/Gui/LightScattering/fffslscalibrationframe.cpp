@@ -124,9 +124,9 @@ FFFSLSCalibrationFrame::FFFSLSCalibrationFrame(const QString &prefix,
 FFFSLSCalibrationFrame::~FFFSLSCalibrationFrame()
 {
    writeSettings();
-   if(useAngles) delete useAngles; useAngles = nullptr;
-   if(angleLabels) delete angleLabels; angleLabels = nullptr;
-   if(mallsAngleConstants) delete mallsAngleConstants; mallsAngleConstants = nullptr;
+   if(useAngles)           {delete useAngles;           useAngles = nullptr;}
+   if(angleLabels)         {delete angleLabels;         angleLabels = nullptr;}
+   if(mallsAngleConstants) {delete mallsAngleConstants; mallsAngleConstants = nullptr;}
 }
 
 void FFFSLSCalibrationFrame::writeSettings()

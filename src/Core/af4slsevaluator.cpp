@@ -311,9 +311,6 @@ int AF4SLSEvaluator::calcConcFromRi(const vecD &riData,
          resConcentrations[j] = -1.0;      
    }
 
-   for(uint i = 870; i < 875; ++i){
-      qDebug() << resConcentrations[i] << riData[i];
-   }
    return 0;
 }
 

@@ -7,7 +7,7 @@
    }\
    };
 
-FFFChannelCalConfWidget::FFFChannelCalConfWidget(QWidget *parent) :
+AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QWidget(parent)
 {
 
@@ -30,7 +30,7 @@ FFFChannelCalConfWidget::FFFChannelCalConfWidget(QWidget *parent) :
    calibrationFrameLayout = new QGridLayout(calibrationFrame);
    calibrationFrameLayout->addWidget(new QLabel("<b>Calibration</b>", calibrationFrame), 0, 0, Qt::AlignLeft);
    allCalibSelections = new QMap<QString, QComboBox*>();
-   channelCalibWidgets = new QMap<QString, QMap<QString, FFFChannelCalibWidget*>*>();
+   channelCalibWidgets = new QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>();
 
    ///////////////////////////////////
    //Constant channel configuration //
@@ -59,7 +59,7 @@ FFFChannelCalConfWidget::FFFChannelCalConfWidget(QWidget *parent) :
    // initialize channels with values from QSettings //
    ////////////////////////////////////////////////////
 
-   channelConfigWidgets = new QMap<QString, FFFChannelConfigWidget*>();
+   channelConfigWidgets = new QMap<QString, AF4ChannelDimsWidget*>();
 
    // make all channel widgets, add them to the QMap
    // of ChannelWidgets and insert them
@@ -72,7 +72,7 @@ FFFChannelCalConfWidget::FFFChannelCalConfWidget(QWidget *parent) :
    for(uint i = 0; i < numberOfChannels; i++){
       // double channelValue;
       QString newChannelName = settings.value(tr("channels/%1/name").arg(i), tr("New Channel %1").arg(i)).toString();
-      currentChConfigWidget = new FFFChannelConfigWidget(i, newChannelName, channelConfigFrame);
+      currentChConfigWidget = new AF4ChannelDimsWidget(i, newChannelName, channelConfigFrame);
       channelConfigWidgets->insert(newChannelName, currentChConfigWidget);
       channelSelection->addItem(newChannelName);
       channelSelection->setCurrentIndex(channelSelection->count()-1);
@@ -103,11 +103,11 @@ FFFChannelCalConfWidget::FFFChannelCalConfWidget(QWidget *parent) :
       allCalibSelections->insert(channelSelection->itemText(i), currentCalibSelection);
 
       channelName = channelSelection->itemText(i);
-      channelCalibWidgets->insert(channelName, new QMap<QString, FFFChannelCalibWidget*>);
+      channelCalibWidgets->insert(channelName, new QMap<QString, AF4ChannelCalibWidget*>);
 
       for(uint j=0; j < numberOfCalibrations; j++){
          calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();
-         currentCalibWidget = new FFFChannelCalibWidget(i, j, channelName, calibName, calibrationFrame);
+         currentCalibWidget = new AF4ChannelCalibWidget(i, j, channelName, calibName, calibrationFrame);
          QObject::connect(currentCalibWidget, SIGNAL(calibrateChannelCalled()), this, SLOT(calibrateChannnel()));
          currentCalibSelection->addItem(calibName);
          channelCalibWidgets->value(channelName)->insert(calibName, currentCalibWidget);
@@ -159,7 +159,7 @@ FFFChannelCalConfWidget::FFFChannelCalConfWidget(QWidget *parent) :
 
 }
 
-FFFChannelCalConfWidget::~FFFChannelCalConfWidget()
+AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
 {
    writeSettings();
    delete channelConfigWidgets;
@@ -167,43 +167,43 @@ FFFChannelCalConfWidget::~FFFChannelCalConfWidget()
    delete allCalibSelections;
 }
 
-QMap<QString, FFFChannelConfigWidget *> *FFFChannelCalConfWidget::getChannelConfigWidgets() const
+QMap<QString, AF4ChannelDimsWidget *> *AF4ChannelConfigurationWidget::getChannelConfigWidgets() const
 {
    return channelConfigWidgets;
 }
 
-QMap<QString, QMap<QString, FFFChannelCalibWidget*>*>* FFFChannelCalConfWidget::getChannelCalibWidgets() const
+QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* AF4ChannelConfigurationWidget::getChannelCalibWidgets() const
 {
    return channelCalibWidgets;
 }
 
-void FFFChannelCalConfWidget::adaptConfigWidgetIds()
+void AF4ChannelConfigurationWidget::adaptConfigWidgetIds()
 {
    int i = 0;
    for(const QString &key : channelCalibWidgets->keys()){
-      FFFChannelConfigWidget *configWidget = channelConfigWidgets->value(key);
+      AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
       configWidget->setConfigId(i);
       adaptCalibWidgetIds(key, i, "adaptConfigWidgetIds");
       ++i;
    }
 }
 
-void FFFChannelCalConfWidget::adaptConfigWidgetNames()
+void AF4ChannelConfigurationWidget::adaptConfigWidgetNames()
 {
    for(const QString &key : channelCalibWidgets->keys()){
-      FFFChannelConfigWidget *configWidget = channelConfigWidgets->value(key);
+      AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
       configWidget->setChannelName(key);
       adaptCalibWidgetNames(key);
    }
 }
 
-bool FFFChannelCalConfWidget::askChannelRenaming(QString &newName, const QString &oldName)
+bool AF4ChannelConfigurationWidget::askChannelRenaming(QString &newName, const QString &oldName)
 {
    bool nameIsOk;
    bool firstDialog = true;
    do {
       if(!firstDialog) FFFLog::logWarning(tr("Other Name has to be entered"));
-      FFFChannelNameDialog chNameDialog(&newName, firstDialog, oldName, true);
+      AF4ChannelNameDialog chNameDialog(&newName, firstDialog, oldName, true);
       firstDialog = false;
       if(chNameDialog.exec()){
          // check if the entered name is already used
@@ -220,13 +220,13 @@ bool FFFChannelCalConfWidget::askChannelRenaming(QString &newName, const QString
    return true;
 }
 
-void FFFChannelCalConfWidget::renameChannel()
+void AF4ChannelConfigurationWidget::renameChannel()
 {
    QString newName;
    QString oldName = QString(channelSelection->currentText());
    if(askChannelRenaming(newName, oldName)){
       // add a new Channel here:
-      FFFChannelConfigWidget *oldConfWidget = channelConfigWidgets->value(oldName, nullptr);
+      AF4ChannelDimsWidget *oldConfWidget = channelConfigWidgets->value(oldName, nullptr);
       channelConfigWidgets->remove(oldName);
       channelConfigWidgets->insert(newName, oldConfWidget);
       channelSelection->setItemText(channelSelection->currentIndex(), newName);
@@ -236,19 +236,19 @@ void FFFChannelCalConfWidget::renameChannel()
       QComboBox *renamedCalibSelection = allCalibSelections->value(oldName);
       allCalibSelections->remove(oldName);
       allCalibSelections->insert(newName, renamedCalibSelection);
-      QMap<QString, FFFChannelCalibWidget*>* renamedCalibWidgets = channelCalibWidgets->value(oldName);
+      QMap<QString, AF4ChannelCalibWidget*>* renamedCalibWidgets = channelCalibWidgets->value(oldName);
       channelCalibWidgets->remove(oldName);
       channelCalibWidgets->insert(newName, renamedCalibWidgets);
       saveParameters();
    }
 }
 
-bool FFFChannelCalConfWidget::askChannelAdding(QString &newName){
+bool AF4ChannelConfigurationWidget::askChannelAdding(QString &newName){
    bool nameIsOk;
    bool firstDialog = true;
    do {
       if(!firstDialog) FFFLog::logWarning(tr("Other Name has to be entered"));
-      FFFChannelNameDialog chNameDialog(&newName, firstDialog);
+      AF4ChannelNameDialog chNameDialog(&newName, firstDialog);
       firstDialog = false;
       if(chNameDialog.exec()){
          // check if the entered name is already used
@@ -265,12 +265,12 @@ bool FFFChannelCalConfWidget::askChannelAdding(QString &newName){
    return true;
 }
 
-bool FFFChannelCalConfWidget::addChannel()
+bool AF4ChannelConfigurationWidget::addChannel()
 {
    QString newName;
    if(askChannelAdding(newName)){
       // add a new Channel here:
-      FFFChannelConfigWidget* newChannel = new FFFChannelConfigWidget(channelConfigWidgets->size(), newName, channelConfigFrame);
+      AF4ChannelDimsWidget* newChannel = new AF4ChannelDimsWidget(channelConfigWidgets->size(), newName, channelConfigFrame);
       channelConfigWidgets->insert(newName, newChannel);
       if(currentChConfigWidget) currentChConfigWidget->hide();
       currentChConfigWidget = newChannel;
@@ -287,7 +287,7 @@ bool FFFChannelCalConfWidget::addChannel()
       calibrationFrameLayout->addWidget(currentCalibSelection, 0, 4);
       allCalibSelections->insert(newName, currentCalibSelection);
 
-      channelCalibWidgets->insert(newName, new  QMap<QString, FFFChannelCalibWidget*>());
+      channelCalibWidgets->insert(newName, new  QMap<QString, AF4ChannelCalibWidget*>());
 
       channelSelection->addItem(newName);
       channelSelection->setCurrentIndex(channelSelection->count() - 1);
@@ -316,10 +316,10 @@ bool FFFChannelCalConfWidget::addChannel()
 }
 
 
-void FFFChannelCalConfWidget::deleteChannel()
+void AF4ChannelConfigurationWidget::deleteChannel()
 {
    if(channelSelection->count() > 1){
-      FFFDeleteChannelDialog deleteChDialog;
+      AF4DeleteChannelDialog deleteChDialog;
       if(deleteChDialog.exec()){
          const QString channelToRemove = channelSelection->currentText();
          int indexToRemove = channelSelection->currentIndex();
@@ -338,7 +338,7 @@ void FFFChannelCalConfWidget::deleteChannel()
          delete selectionToRemove;
          currentCalibWidget = channelCalibWidgets->value(newChannelName)->value(currentCalibSelection->currentText());
          currentCalibWidget->show();
-         QMap<QString, FFFChannelCalibWidget*>* calWidgetsToRemove = channelCalibWidgets->value(channelToRemove);
+         QMap<QString, AF4ChannelCalibWidget*>* calWidgetsToRemove = channelCalibWidgets->value(channelToRemove);
          calWidgetsToRemove->clear();
          channelCalibWidgets->remove(channelToRemove);
          delete calWidgetsToRemove;
@@ -350,7 +350,7 @@ void FFFChannelCalConfWidget::deleteChannel()
 
 }
 
-void FFFChannelCalConfWidget::switchChannelWidget(QString newWidgetKey)
+void AF4ChannelConfigurationWidget::switchChannelWidget(QString newWidgetKey)
 {
    currentChConfigWidget->hide();
    currentChConfigWidget = channelConfigWidgets->value(newWidgetKey);
@@ -378,35 +378,35 @@ void FFFChannelCalConfWidget::switchChannelWidget(QString newWidgetKey)
    currentChConfigWidget->show();
 }
 
-void FFFChannelCalConfWidget::adaptCalibWidgetIds(const QString &channelName, int newChannelId, const QString caller)
+void AF4ChannelConfigurationWidget::adaptCalibWidgetIds(const QString &channelName, int newChannelId, const QString caller)
 {
    int i = 0;
    for(const QString &key: channelCalibWidgets->value(channelName)->keys()){
-      FFFChannelCalibWidget *calibWidget = channelCalibWidgets->value(channelName)->value(key);
+      AF4ChannelCalibWidget *calibWidget = channelCalibWidgets->value(channelName)->value(key);
       calibWidget->setCalibId(i);
       calibWidget->setChannelId(newChannelId);
       ++i;
    }
 }
 
-void FFFChannelCalConfWidget::adaptCalibWidgetNames(const QString &channelName)
+void AF4ChannelConfigurationWidget::adaptCalibWidgetNames(const QString &channelName)
 {
    int i = 0;
    for(const QString &key: channelCalibWidgets->value(channelName)->keys()){
-      FFFChannelCalibWidget *calibWidget = channelCalibWidgets->value(channelName)->value(key);
+      AF4ChannelCalibWidget *calibWidget = channelCalibWidgets->value(channelName)->value(key);
       calibWidget->setCalibName(key);
       calibWidget->setChannelName(channelName);
       ++i;
    }
 }
 
-bool FFFChannelCalConfWidget::askCalibRenaming(QString &newName, const QString &oldName)
+bool AF4ChannelConfigurationWidget::askCalibRenaming(QString &newName, const QString &oldName)
 {
    bool nameIsOk;
    bool firstDialog = true;
    do {
       if(!firstDialog) FFFLog::logWarning(tr("Other Name has to be entered"));
-      FFFCalibNameDialog calibNameDialog(&newName, firstDialog, oldName, true);
+      AF4CalibNameDialog calibNameDialog(&newName, firstDialog, oldName, true);
       firstDialog = false;
       if(calibNameDialog.exec()){
          // check if the entered name is already used
@@ -423,7 +423,7 @@ bool FFFChannelCalConfWidget::askCalibRenaming(QString &newName, const QString &
    return true;
 }
 
-void FFFChannelCalConfWidget::renameCalibration()
+void AF4ChannelConfigurationWidget::renameCalibration()
 {
    QString newName;
    QString oldCalibName = QString(currentCalibSelection->currentText());
@@ -433,7 +433,7 @@ void FFFChannelCalConfWidget::renameCalibration()
       // remove the old calibration here and inset it under its new key:
       QString channelName = channelSelection->currentText();
 
-      FFFChannelCalibWidget *oldCalibWidget = channelCalibWidgets->value(channelName)->value(oldCalibName);
+      AF4ChannelCalibWidget *oldCalibWidget = channelCalibWidgets->value(channelName)->value(oldCalibName);
       channelCalibWidgets->value(channelName)->remove(oldCalibName);
       channelCalibWidgets->value(channelName)->insert(newName, oldCalibWidget);
 
@@ -445,13 +445,13 @@ void FFFChannelCalConfWidget::renameCalibration()
    }
 }
 
-bool FFFChannelCalConfWidget::askCalibAdding(QString &newName)
+bool AF4ChannelConfigurationWidget::askCalibAdding(QString &newName)
 {
    bool nameIsOk;
    bool firstDialog = true;
    do {
       if(!firstDialog) FFFLog::logWarning(tr("Other Name has to be entered"));
-      FFFCalibNameDialog calibNameDialog(&newName, firstDialog);
+      AF4CalibNameDialog calibNameDialog(&newName, firstDialog);
       firstDialog = false;
       if(calibNameDialog.exec()){
          // check if the entered name is already used
@@ -468,7 +468,7 @@ bool FFFChannelCalConfWidget::askCalibAdding(QString &newName)
    return true;
 }
 
-bool FFFChannelCalConfWidget::addCalibration()
+bool AF4ChannelConfigurationWidget::addCalibration()
 {
    QString newName;
    if(askCalibAdding(newName)){
@@ -477,7 +477,7 @@ bool FFFChannelCalConfWidget::addCalibration()
       //bool copyValues{false};
      // CalibrationParameters params;
 
-      FFFChannelCalibWidget* newCalibration = new FFFChannelCalibWidget(channelConfigWidgets->size(), channelCalibWidgets->value(currentChConfigWidget->getChannelName())->size(),
+      AF4ChannelCalibWidget* newCalibration = new AF4ChannelCalibWidget(channelConfigWidgets->size(), channelCalibWidgets->value(currentChConfigWidget->getChannelName())->size(),
                                                                         currentChConfigWidget->getChannelName(), newName, calibrationFrame);      
       if(currentCalibWidget) newCalibration->setAllCalibrationParameters(currentCalibWidget->getAllCalibrationParameters());
       QObject::connect(newCalibration, SIGNAL(calibrateChannelCalled()), this, SLOT(calibrateChannnel()));
@@ -498,10 +498,10 @@ bool FFFChannelCalConfWidget::addCalibration()
    else return false;
 }
 
-void FFFChannelCalConfWidget::deleteCalibration()
+void AF4ChannelConfigurationWidget::deleteCalibration()
 {
    if(currentCalibSelection->count() > 1){
-      FFFDeleteCalibDialog* deleteCalibDialog = new FFFDeleteCalibDialog();
+      AF4DeleteCalibDialog* deleteCalibDialog = new AF4DeleteCalibDialog();
       if(deleteCalibDialog->exec()){
          const QString calibrationToRemove = currentCalibSelection->currentText();
          const QString channelName = channelSelection->currentText();
@@ -521,7 +521,7 @@ void FFFChannelCalConfWidget::deleteCalibration()
 
 }
 
-void FFFChannelCalConfWidget::switchCalibWidget(QString newWidgetKey)
+void AF4ChannelConfigurationWidget::switchCalibWidget(QString newWidgetKey)
 {
    currentCalibWidget->hide();
    QString channelName = channelSelection->currentText();
@@ -530,7 +530,7 @@ void FFFChannelCalConfWidget::switchCalibWidget(QString newWidgetKey)
    currentCalibWidget->show();
 }
 
-void FFFChannelCalConfWidget::calibrateChannnel()
+void AF4ChannelConfigurationWidget::calibrateChannnel()
 {
    // calculate omega (channel Width) by calibrator
    AF4Calibrator calibrator;
@@ -562,19 +562,19 @@ void FFFChannelCalConfWidget::calibrateChannnel()
    }
 }
 
-void FFFChannelCalConfWidget::saveParameters() const
+void AF4ChannelConfigurationWidget::saveParameters() const
 {
    FFFLog::logText(tr("Parameters saved of Channel Calibrations saved."));
    writeSettings();
    for(const QString &configWidgetKey : channelConfigWidgets->keys()){
       channelConfigWidgets->value(configWidgetKey)->writeSettings();
       for(const QString &calibWidgetKey : channelCalibWidgets->value(configWidgetKey)->keys()){
-         channelCalibWidgets->value(configWidgetKey)->value(calibWidgetKey)->writeSettings();
+         channelCalibWidgets->value(configWidgetKey)->value(calibWidgetKey)->saveParameters();
       }
    }
 }
 
-void FFFChannelCalConfWidget::writeSettings() const
+void AF4ChannelConfigurationWidget::writeSettings() const
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
@@ -588,7 +588,7 @@ void FFFChannelCalConfWidget::writeSettings() const
    }
 }
 
-QString FFFChannelCalConfWidget::chopStringsQuotMarksToOne(QString string)
+QString AF4ChannelConfigurationWidget::chopStringsQuotMarksToOne(QString string)
 {
    QChar compChar = QChar('\"');
    uint stringLength = string.length();
@@ -608,7 +608,7 @@ QString FFFChannelCalConfWidget::chopStringsQuotMarksToOne(QString string)
    return string;
 }
 
-QString FFFChannelCalConfWidget::chopStringsQuotMarksEntirely(QString string)
+QString AF4ChannelConfigurationWidget::chopStringsQuotMarksEntirely(QString string)
 {
    QChar compChar = QChar('\"');
    uint stringLength = string.length();
@@ -630,14 +630,14 @@ QString FFFChannelCalConfWidget::chopStringsQuotMarksEntirely(QString string)
 //-//////////////////////////// Dialogs /////////////////////////////////////////
 
 
-void FFFCalibNameDialog::acceptName()
+void AF4CalibNameDialog::acceptName()
 {
    *calibName = QString(calibNameInput->text());
    accept();
 }
 
 
-FFFCalibNameDialog::FFFCalibNameDialog(QString *name, bool first, const QString nameSuggestion, bool rename)
+AF4CalibNameDialog::AF4CalibNameDialog(QString *name, bool first, const QString nameSuggestion, bool rename)
 {
    calibName = name;
    setFixedSize(250, 120);
@@ -666,13 +666,13 @@ FFFCalibNameDialog::FFFCalibNameDialog(QString *name, bool first, const QString 
    calibNameInput->setFocus();
 }
 
-void FFFChannelNameDialog::acceptName()
+void AF4ChannelNameDialog::acceptName()
 {
    *channelName = QString(channelNameInput->text());
    accept();
 }
 
-FFFDeleteCalibDialog::FFFDeleteCalibDialog()
+AF4DeleteCalibDialog::AF4DeleteCalibDialog()
 {
    layout = new QGridLayout(this);
    layout->addWidget(new QLabel("Do you really want to delete the current Calibration?"), 0, 0, 1, 2, Qt::AlignLeft);
@@ -684,7 +684,7 @@ FFFDeleteCalibDialog::FFFDeleteCalibDialog()
    layout->addWidget(decliner, 1, 1);
 }
 
-FFFDeleteChannelDialog::FFFDeleteChannelDialog()
+AF4DeleteChannelDialog::AF4DeleteChannelDialog()
 {
    layout = new QGridLayout(this);
    layout->addWidget(new QLabel("Do you really want to delete the displayed channel\n and its assigned calibrations?"), 0, 0, 1, 2, Qt::AlignLeft);
@@ -695,3 +695,4 @@ FFFDeleteChannelDialog::FFFDeleteChannelDialog()
    QObject::connect(decliner, SIGNAL(clicked()), this, SLOT(reject()));
    layout->addWidget(decliner, 1, 1);
 }
+#undef CHECK_SETTINGS_CONVERSION

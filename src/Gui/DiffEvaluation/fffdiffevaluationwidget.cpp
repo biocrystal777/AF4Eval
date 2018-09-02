@@ -11,8 +11,8 @@ using std::vector;
    };
 
 
-FFFDiffEvaluationWidget::FFFDiffEvaluationWidget(QMap<QString, FFFChannelConfigWidget *> *channelConfigWidgets,
-                                                 QMap<QString, QMap<QString, FFFChannelCalibWidget *> *> *channelCalibWidgets,
+FFFDiffEvaluationWidget::FFFDiffEvaluationWidget(QMap<QString, AF4ChannelDimsWidget *> *channelConfigWidgets,
+                                                 QMap<QString, QMap<QString, AF4ChannelCalibWidget *> *> *channelCalibWidgets,
                                                  QWidget *parent)
    : QFrame(parent), channelConfigWidgets(channelConfigWidgets), channelCalibWidgets(channelCalibWidgets)
 {
@@ -21,7 +21,7 @@ FFFDiffEvaluationWidget::FFFDiffEvaluationWidget(QMap<QString, FFFChannelConfigW
    fileWidget = new FFFFileInOutWidget(QString("diffEvaluation"), "_eval", this);
    widgetLayout->addWidget(fileWidget, 0, 0, 5, 15);
 
-   calibSettingsFrame = new FFFCalibSettingsFrame(channelConfigWidgets, channelCalibWidgets, QString("diffEval"), this);
+   calibSettingsFrame = new AF4CalibSettingsFrame(channelConfigWidgets, channelCalibWidgets, QString("diffEval"), this);
    widgetLayout->addWidget(calibSettingsFrame, 5, 0, 5, 5);
 
    settingsWriter = new QPushButton("Save Parameters", this);

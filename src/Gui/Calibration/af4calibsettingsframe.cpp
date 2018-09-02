@@ -1,7 +1,7 @@
-#include "fffcalibsettingsframe.h"
+#include "af4calibsettingsframe.h"
 
-FFFCalibSettingsFrame::FFFCalibSettingsFrame(QMap<QString, FFFChannelConfigWidget *> *channelConfigWidgets,
-                                             QMap<QString, QMap<QString, FFFChannelCalibWidget *> *> *channelCalibWidgets,
+AF4CalibSettingsFrame::AF4CalibSettingsFrame(QMap<QString, AF4ChannelDimsWidget *> *channelConfigWidgets,
+                                             QMap<QString, QMap<QString, AF4ChannelCalibWidget *> *> *channelCalibWidgets,
                                              const QString &prefix,
                                              QWidget *parent) :
     QFrame(parent),    
@@ -126,7 +126,7 @@ FFFCalibSettingsFrame::FFFCalibSettingsFrame(QMap<QString, FFFChannelConfigWidge
    loadParameters();
 }
 
-FFFCalibSettingsFrame::~FFFCalibSettingsFrame()
+AF4CalibSettingsFrame::~AF4CalibSettingsFrame()
 {
    saveParameters();
    if(channelKeyList) {delete channelKeyList; channelKeyList = nullptr;}
@@ -136,7 +136,7 @@ FFFCalibSettingsFrame::~FFFCalibSettingsFrame()
    }
 }
 
-void FFFCalibSettingsFrame::updateChannelValues(QString channelKey)
+void AF4CalibSettingsFrame::updateChannelValues(QString channelKey)
 {
    // choose new calibChooser:
     currentChannelKey = channelKey;
@@ -149,7 +149,7 @@ void FFFCalibSettingsFrame::updateChannelValues(QString channelKey)
       currentCalibChooser->show();
    }
    // update values:
-   FFFChannelConfigWidget* configWidget = channelConfigWidgets->value(channelKey);
+   AF4ChannelDimsWidget* configWidget = channelConfigWidgets->value(channelKey);
    chLength->setText(QString::number(configWidget->getChLength(), 'E'));
    length1->setText( QString::number(configWidget->getLength1(), 'E')  );
    length2->setText( QString::number(configWidget->getLength2(), 'E')  );
@@ -158,22 +158,22 @@ void FFFCalibSettingsFrame::updateChannelValues(QString channelKey)
    bL->setText(QString::number(configWidget->getBL(), 'E'));
 }
 
-void FFFCalibSettingsFrame::updateCalibValues(QString calibKey)
+void AF4CalibSettingsFrame::updateCalibValues(QString calibKey)
 {
    currentCalibKey = calibKey;
-   FFFChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText())->value(calibKey);
+   AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText())->value(calibKey);
    channelWidth->setText(QString::number(calibWidget->getChannelWidth(), 'E'));
    channelVolume->setText(QString::number(calibWidget->getHydrodynVolume(), 'E'));
 }
 
-void FFFCalibSettingsFrame::adaptCalibValues(QString calibKey)
+void AF4CalibSettingsFrame::adaptCalibValues(QString calibKey)
 {
-    FFFChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText())->value(calibKey);
+    AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText())->value(calibKey);
     channelWidth->setText(QString::number(calibWidget->getChannelWidth(), 'E'));
     channelVolume->setText(QString::number(calibWidget->getHydrodynVolume(), 'E'));
 }
 
-void FFFCalibSettingsFrame::adaptChannelParameters()
+void AF4CalibSettingsFrame::adaptChannelParameters()
 {
     // adapt key Lists
    delete channelKeyList;
@@ -224,14 +224,14 @@ void FFFCalibSettingsFrame::adaptChannelParameters()
    updateChannelValues(currentChannelKey);
 }
 
-void FFFCalibSettingsFrame::enableVolume(bool enable)
+void AF4CalibSettingsFrame::enableVolume(bool enable)
 {
    this->channelVolumeDef->setEnabled(enable);
    this->channelVolume->setEnabled(enable);
 }
 
 
-ChannelDims FFFCalibSettingsFrame::getChannelDimensions() const
+ChannelDims AF4CalibSettingsFrame::getChannelDimensions() const
 {
    ChannelDims p;
    p.length1 = this->getLength1();
@@ -243,7 +243,7 @@ ChannelDims FFFCalibSettingsFrame::getChannelDimensions() const
    return p;
 }
 
-ChannelDimsFromCalib FFFCalibSettingsFrame::getChannelDimsFromCalib() const
+ChannelDimsFromCalib AF4CalibSettingsFrame::getChannelDimsFromCalib() const
 {
    ChannelDimsFromCalib dims;
    dims.chWidth        = this->getChWidth();
@@ -253,7 +253,7 @@ ChannelDimsFromCalib FFFCalibSettingsFrame::getChannelDimsFromCalib() const
 }
 
 
-void FFFCalibSettingsFrame::saveParameters()
+void AF4CalibSettingsFrame::saveParameters()
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
@@ -261,7 +261,7 @@ void FFFCalibSettingsFrame::saveParameters()
    settings.setValue(tr("%1/channelCalibs/calibIndex").arg(prefix), currentCalibChooser->currentIndex());
 }
 
-void FFFCalibSettingsFrame::loadParameters()
+void AF4CalibSettingsFrame::loadParameters()
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");

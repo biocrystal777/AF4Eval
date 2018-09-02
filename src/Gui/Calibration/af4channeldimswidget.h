@@ -1,5 +1,5 @@
-#ifndef FFFCHANNELCONFIGWIDGET_H
-#define FFFCHANNELCONFIGWIDGET_H
+#ifndef AF4CHANNELDIMSWIDGET_H
+#define AF4CHANNELDIMSWIDGET_H
 
 #include <QSettings>
 #include <QFrame>
@@ -9,51 +9,86 @@
 #include <QSvgRenderer>
 #include <QPainter>
 #include <qwt_text_label.h>
+//#include <qwt_mathml_text_engine.h>     renderer too slow, unfortunately
 #include "../Core/af4parameterstructs.h"
 #include "../GeneralWidgets/ffflog.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
-#include <qwt_mathml_text_engine.h>
-/**************************************************************
-***
-***  FFFChannelConfigWidget
-***      (using Qt 4.8.2)
-**************************************************************/
 
-/*!
- * \brief The FFFChannelConfigWidget class is the first parameter input widget
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
-class FFFChannelConfigWidget : public QWidget
+/*! ***************************************************************************************
+***
+***  \class     AF4ChannelDimsWidget "src/Gui/Calibration/af4channeldimswidget.h"
+***  \brief     AF4ChannelDimsWidget enables the input of channel calibrations
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
+***
+********************************************************************************************/
+
+class AF4ChannelDimsWidget : public QWidget
 {
    Q_OBJECT
 public:
-   explicit FFFChannelConfigWidget(const int channelId,
+   explicit AF4ChannelDimsWidget(const int channelId,
                                    const QString &channelName,
                                    const bool loadParameters,
                                    QWidget *parent = nullptr);
 
-    ~FFFChannelConfigWidget();
+    ~AF4ChannelDimsWidget();
 
-    FFFChannelConfigWidget(const FFFChannelConfigWidget& src) = delete;
-    FFFChannelConfigWidget& operator= (FFFChannelConfigWidget& src) = delete;
-    FFFChannelConfigWidget(FFFChannelConfigWidget&& src) = delete;
-    FFFChannelConfigWidget& operator= (FFFChannelConfigWidget&& src) = delete;
+    AF4ChannelDimsWidget(const AF4ChannelDimsWidget& src) = delete;
+    AF4ChannelDimsWidget& operator= (AF4ChannelDimsWidget& src) = delete;
+    AF4ChannelDimsWidget(AF4ChannelDimsWidget&& src) = delete;
+    AF4ChannelDimsWidget& operator= (AF4ChannelDimsWidget&& src) = delete;
 
     inline double getChLength() const {return (length1->value() + length2->value() + length3->value());}
 
+    /*!
+    * \brief getLength1
+    * \return
+    */
    inline double getLength1() const {return length1->value();}
+
+   /*!
+    * \brief getLength2
+    * \return
+    */
    inline double getLength2() const {return length2->value();}
+
+   /*!
+    * \brief getLength3
+    * \return
+    */
    inline double getLength3() const {return length3->value();}
 
+   /*!
+    * \brief getB0
+    * \return
+    */
    inline double getB0() const { return b0->value(); }
+
+   /*!
+    * \brief getBL
+    * \return
+    */
    inline double getBL() const { return bL->value(); }
 
+   /*!
+    * \brief getChannelName
+    * \return
+    */
    inline QString getChannelName() const {return channelName;}
+
+   /*!
+    * \brief getChannelId
+    * \return
+    */
    inline int getChannelId() const { return channelId;}
 
+   /*!
+    * \brief getChannelDimensions
+    * \return
+    */
    inline ChannelDims getChannelDimensions(){
       ChannelDims dims;
       dims.length1  = this->getLength1();
@@ -66,8 +101,7 @@ public:
    }
 
 
-
-#define SET_MACRO(function, boxPtr) \
+#define SET_MACRO(function, boxPtr)\
    bool function(double value){\
          if(value < boxPtr->minimum()){\
             boxPtr->setValue(boxPtr->minimum());\
@@ -81,18 +115,54 @@ public:
             boxPtr->setValue(value);\
             return true;\
          }\
-   };
-
-SET_MACRO(setLength1, length1)
-SET_MACRO(setLength2, length2)
-SET_MACRO(setLength3, length3)
-SET_MACRO(setB0, b0)
-SET_MACRO(setBL, bL)
+};
+   /*!
+   * \brief setLength1
+   * \param value
+   * \return
+   */
+   SET_MACRO(setLength1, length1)
+   /*!
+    * \brief setLength2
+    * \param value
+    * \return
+    */
+   SET_MACRO(setLength2, length2)
+   /*!
+   * \brief setLength3
+   * \param value
+   * \return
+   */
+   SET_MACRO(setLength3, length3)
+   /*!
+   * \brief setB0
+   * \param value
+   * \return
+   */
+   SET_MACRO(setB0, b0)
+   /*!
+   * \brief setB0
+   * \param value
+   * \return
+   */
+   SET_MACRO(setBL, bL)
 #undef SET_MACRO
 
+   /*!
+    * \brief setChannelName
+    * \param newName
+    */
    inline void setChannelName(const QString &newName){ channelName = newName; }
+
+   /*!
+    * \brief setConfigId
+    * \param newId
+    */
    inline void setConfigId(int newId){ channelId = newId; }
 
+   /*!
+    * \brief writeSettings
+    */
    void writeSettings();
 
 protected:
@@ -107,11 +177,18 @@ protected:
    QDoubleSpinBox *length2   = nullptr;
    QDoubleSpinBox *length3   = nullptr;
 
-    int channelId;
-    QString channelName;
+   int channelId;
+   QString channelName;
 
+   /*!
+    * \brief loadSettings
+    */
    void loadSettings();
+
+   /*!
+    * \brief defaultInit
+    */
    void defaultInit();
 };
 
-#endif // FFFCHANNELCONFIGWIDGET_H
+#endif // AF4CHANNELCONFIGWIDGET_H

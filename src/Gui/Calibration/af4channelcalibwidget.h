@@ -1,5 +1,5 @@
-#ifndef FFFCHANNELCALIBWIDGET_H
-#define FFFCHANNELCALIBWIDGET_H
+#ifndef AF4CHANNELCALIBWIDGET_H
+#define AF4CHANNELCALIBWIDGET_H
 
 #include <QWidget>
 #include <QToolButton>
@@ -17,38 +17,29 @@
 #include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
 #include <qwt_text_label.h>
+#include "./af4calibplotwidget.h"
+#include "./fffdiffcoeffcalcwidget.h"
 #include "../Core/af4datatypes.h"
 #include "../Core/af4parameterstructs.h"
-#include "./fffdiffcoeffcalcwidget.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
 #include "../Core/af4csvparser.h"
-#include "./fffcalibplotwidget.h"
 
-class FFFCalibPlotWidget;
-
-/**************************************************************
+/*! ***************************************************************************************
 ***
-***  FFFChannelCalibWidget
-***     (using Qt 4.8.2)
+***  \class     AF4ChannelCalibWidget "src/Gui/Calibration/af4channelcalibwidget.h"
+***  \brief     AF4ChannelCalibWidget enables input of channel dimensions
+***  \details   The FFFChannelCalibWidget contains the physical dimensions of the AF4 channel
+***             and enables the input via QDoublespinboxes.
+***             Each calibration has its own
+***          widget
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
 ***
-**************************************************************/
+********************************************************************************************/
 
-/*!
- * \brief The FFFChannelCalibWidget class is the second parameter input widget
- *
- * \details The FFFChannelCalibWidget contains different input parameters
- *          to enter parameters specific to a certain calibration
- *          profile a button enables a user to calculate the channel width
- *          from these parameters by emitting a signal that is connected to
- *          an exterior calculation slot function. Each calibration has its own
- *          widget
- *
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
-class FFFChannelCalibWidget : public QWidget
+class AF4ChannelCalibWidget : public QWidget
 {
    Q_OBJECT
 
@@ -58,7 +49,7 @@ public:
     * \brief FFFChannelCalibWidget constructor of this class
     * \param parent parent widget
     */
-   explicit FFFChannelCalibWidget(
+   explicit AF4ChannelCalibWidget(
          const int channelId,
          const int calibId,
          const QString channelName,
@@ -69,12 +60,12 @@ public:
    /*!
     * \brief destructor of this class
     */
-   ~FFFChannelCalibWidget();
+   ~AF4ChannelCalibWidget();
 
-   FFFChannelCalibWidget(const FFFChannelCalibWidget& src)        = delete;
-   FFFChannelCalibWidget& operator= (FFFChannelCalibWidget& src)  = delete;
-   FFFChannelCalibWidget(FFFChannelCalibWidget&& src)             = delete;
-   FFFChannelCalibWidget& operator= (FFFChannelCalibWidget&& src) = delete;
+   AF4ChannelCalibWidget(const AF4ChannelCalibWidget& src)        = delete;
+   AF4ChannelCalibWidget& operator= (AF4ChannelCalibWidget& src)  = delete;
+   AF4ChannelCalibWidget(AF4ChannelCalibWidget&& src)             = delete;
+   AF4ChannelCalibWidget& operator= (AF4ChannelCalibWidget&& src) = delete;
 
    /*!
     * \brief getDiffCoefficient Returns the diffusion Coefficient shown in the
@@ -184,16 +175,25 @@ public:
     */
    inline QString getNotesDescr() const { return notesDescr->toPlainText(); }
 
-
+   /*!
+    * \brief getInputFilePath
+    * \param quoted
+    * \return
+    */
    QString getInputFilePath(bool quoted = false);
 
+   /*!
+    * \brief setInputFilePath
+    * \param path
+    * \param quoted
+    * \return
+    */
    bool setInputFilePath(QString path, bool quoted = true);
 
    /*!
     * \brief setDiffCoefficient set value of the diffusion Coefficient
     * \return bool if value could be set
     */
-
    bool setDiffCoefficient(double value);
 
 
@@ -212,58 +212,47 @@ public:
             return true;\
          }\
    };
-
-
-
-
    /*!
     * \brief setCrossFlow set value of the crossflow
     * \return bool if value could be set
     */
    SET_MACRO(setCrossFlow, crossFlow)
- //  bool setCrossFlow(double value);
 
    /*!
     * \brief setCrossFlow set value of the crossflow
     * \return bool if value could be set
     */
    SET_MACRO(setRelFocusPoint, relFocusPoint)
-   //bool setRelFocusPoint(double relFocusPoint);
 
    /*!
     * \brief setTemperature set value of the temperature
     * \return bool if value could be set
     */
    SET_MACRO(setTemperature, temperature)
-   //bool setTemperature(double value);
 
    /*!
     * \brief setVoidPeakTime set value of the voidPeakTime
     * \return bool if value could be set
     */
    SET_MACRO(setVoidPeakTime, voidPeakTime)
-   //bool setVoidPeakTime(double value);
 
    /*!
     * \brief setLeftOffsetTime set value of the leftOffsetTime
     * \return bool if value could be set
     */
    SET_MACRO(setLeftOffsetTime, leftOffsetTime)
-   //bool setLeftOffsetTime(double value);
 
    /*!
     * \brief setElutionTime set value of the elutionTime
     * \return bool if value could be set
     */
    SET_MACRO(setElutionTime, elutionTime)
-   //bool setElutionTime(double value);
 
    /*!
     * \brief setElutionFlow set value of the elutionFlow
     * \return bool if value could be set
     */
    SET_MACRO(setElutionFlow, elutionFlow)
-   //bool setElutionFlow(double value);
 
 
    /*!
@@ -271,15 +260,14 @@ public:
     * \return bool if value could be set
     */
    SET_MACRO(setHydrodynVolume, hydrodynVolume)
-   //bool setHydrodynVolume(double value);
 
    /*!
     * \brief hydrodynVolume set value of the channelWidth
     * \return bool if value could be set
     */
    SET_MACRO(setGeometVolume, geometVolume)
-   //bool setGeometVolume(double value);
 
+#undef SET_MACRO
    /*!
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
@@ -293,23 +281,58 @@ public:
     **/
    bool setInputFileName(QString value, bool quoted = false);
 
-
-
+   /*!
+    * \brief setDateDescr
+    * \param text
+    */
    inline void setDateDescr(const QString   &text)   {dateDescr->setText(text); }
+
+   /*!
+    * \brief setBufferDescr
+    * \param text
+    */
    inline void setBufferDescr(const QString &text) {bufferDescr->setText(text);}
+
+   /*!
+    * \brief setSampleDescr
+    * \param text
+    */
    inline void setSampleDescr(const QString &text) {sampleDescr->setText(text);}
+
+   /*!
+    * \brief setNotesDescr
+    * \param text
+    */
    inline void setNotesDescr(const QString  &text)  {notesDescr->setText(text);}
 
-
-   void writeSettings();
+   /*!
+    * \brief setChannelName
+    * \param newName
+    */
    inline void setChannelName(const QString &newName){ channelName = newName; }
+
+   /*!
+    * \brief setChannelId
+    * \param newId
+    */
    inline void setChannelId(int newId){ channelId = newId; }
+
+   /*!
+    * \brief setCalibName
+    * \param newName
+    */
    inline void setCalibName(const QString &newName){ calibName = newName; }
+
+   /*!
+    * \brief setCalibId
+    * \param newId
+    */
    inline void setCalibId(int newId){ calibId = newId; }
 
-
-
-
+   /*!
+    * \brief getParametersForCalibration
+    * \return
+    */
    inline ParametersForCalibration getParametersForCalibration () {
       ParametersForCalibration p;
       p.elutionFlow    = this->getElutionFlow();
@@ -322,6 +345,10 @@ public:
       return p;
    }
 
+   /*!
+    * \brief getAllCalibrationParameters
+    * \return
+    */
    inline  AllCalibrationParameters getAllCalibrationParameters() {
       AllCalibrationParameters p;
       p.temperature     = this->getTemperature();
@@ -342,6 +369,10 @@ public:
       return p;
    }
 
+   /*!
+    * \brief setAllCalibrationParameters
+    * \param p
+    */
    void setAllCalibrationParameters(const AllCalibrationParameters &p){
       this->setTemperature(p.temperature);
       this->setElutionFlow(p.elutionFlow);
@@ -360,9 +391,16 @@ public:
       this->setNotesDescr(p.additionalNotes);
    }
 
+   /*!
+    * \brief saveParameters
+    */
+   void saveParameters();
+
 private:
 
    //void defaultInit();
+
+
    void loadSettings();
 
    QFrame *widgetFrame                         = nullptr;
@@ -398,8 +436,8 @@ private:
    QLineEdit *bufferDescr                      = nullptr;
    QTextEdit *notesDescr                       = nullptr;
 
-   FFFCalibPlotWidget *plotWidget              = nullptr;
-   FFFCalibPlotWidget *plotWidget2              = nullptr;
+   AF4CalibPlotWidget *plotWidget              = nullptr;
+   AF4CalibPlotWidget *plotWidget2              = nullptr;
 
    int channelId;
    int calibId;
@@ -432,8 +470,14 @@ signals:
 
 protected slots:
 
-
+   /*!
+    * \brief callDiffCoeffDialog
+    */
    void callDiffCoeffDialog();
+
+   /*!
+    * \brief finishDiffCoeffDialog
+    */
    void finishDiffCoeffDialog();
 
    /*!
@@ -449,18 +493,10 @@ protected slots:
     */
    void callCalibrateChannel();
 
-
+   /*!
+    * \brief setPlotDataFromFile
+    */
    void setPlotDataFromFile();
-
-
-
-
 };
 
-
-
-
-
-
-
-#endif // FFFCHANNELCALIBWIDGET_H
+#endif // AF4CHANNELCALIBWIDGET_H

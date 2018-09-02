@@ -50,7 +50,6 @@ public:
                                      vecD *thirdVirCoeffs = nullptr
                                      );
 
-
    /*!
     * \brief FFFEvaluator evaluates data, concentration determination
     *        via RI detector, partial Zimm-Plot.
@@ -125,6 +124,17 @@ private:
    vecD radGyrs;
    bool radGyrsCalculated = false;
 
+   /*!
+    * \brief calcXForZimmplot returns a matrix angles x time, containing the respective values for the linear regression for
+    * \param concentrations
+    * \param mallsDetectorRelevant
+    * \param useDataPoint
+    * \param secondVirCoeffs
+    * \param thirdVirCoeffs
+    * \param errorCode
+    * \return matrix with
+    */
+
    matD calcXForZimmplot(
          const vecD &concentrations,
          const std::vector<bool> &mallsDetectorRelevant,
@@ -156,6 +166,8 @@ private:
     * \param calibRIConstant calibration constant of the RI detector
     * \param resConcentrations pointer to the vector of concentrations after calculation
     * \return error Code
+    *
+    * \todo make resConcentrations return value!
     */
    int calcConcFromRi(const vecD &riData,
                       const std::vector<bool> &useDataPoint,
@@ -171,14 +183,18 @@ private:
                           const double unitFactor = 1.0);
 
    /*!
-    * \brief calcConcFromRi creates a new vector with concentrations on heap
+    * \brief calcConcFromRi creates a new vector with concentrations;
     * \param riData data from the RI detector
     * \param useDataPoint useDataPoint indicates the parts on the time axis
     *        from the data set that shall be evaluated
     * \param calibRIConstant calibration constant of the RI detector
     * \param riSolvent refractive index of the solvent
-    * \param resRefIndices pointer to the vector of refractive indices after calculation
+    * \param resRefIndices vector of refractive indices after calculation
     * \return error Code
+    *
+    * \todo make the vector resrRefIndices return value!
+    *
+    *
     */
    int calcTotalRefIndices(const vecD &riData,
                            const std::vector<bool> &useDataPoint,
@@ -194,6 +210,9 @@ private:
     * \param slope of the regression line
     * \param offset pffest of the regression line
     * \return error Code
+    *
+    * \todo return slope and offset as tuple with structured binding when changing to C++17!
+    *
     */
    int linearRegression(const vecD &xValues,
                         const vecD &yValues,

@@ -8,9 +8,9 @@
 #include <QComboBox>
 #include <QCheckBox>
 #include "./fffexpsettingsframe.h"
-#include "../Calibration/fffcalibsettingsframe.h"
-#include "../Calibration/fffchannelconfigwidget.h"
-#include "../Calibration/fffchannelcalibwidget.h"
+#include "../Calibration/af4calibsettingsframe.h"
+#include "../Calibration/af4channeldimswidget.h"
+#include "../Calibration/af4channelcalibwidget.h"
 #include "../GeneralWidgets/ffflog.h"
 #include "../GeneralWidgets/ffffileinoutwidget.h"
 #include "../../Core/af4csvparser.h"
@@ -73,8 +73,8 @@ public:
     * \param parent
     */
    explicit FFFDiffEvaluationWidget(
-         QMap<QString, FFFChannelConfigWidget*>* channelConfigWidgets,
-         QMap<QString, QMap<QString, FFFChannelCalibWidget*>*>* channelCalibWidgets,
+         QMap<QString, AF4ChannelDimsWidget*>* channelConfigWidgets,
+         QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets,
          QWidget *parent = nullptr);
    ~FFFDiffEvaluationWidget();
 
@@ -135,12 +135,12 @@ public:
 
 protected:
 
-   QMap<QString, FFFChannelConfigWidget*>                 *channelConfigWidgets   = nullptr;
-   QMap<QString, QMap<QString, FFFChannelCalibWidget*>*>  *channelCalibWidgets    = nullptr;
+   QMap<QString, AF4ChannelDimsWidget*>                 *channelConfigWidgets   = nullptr;
+   QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>  *channelCalibWidgets    = nullptr;
 
    QGridLayout           *widgetLayout           = nullptr;
    FFFFileInOutWidget    *fileWidget             = nullptr;
-   FFFCalibSettingsFrame *calibSettingsFrame     = nullptr;
+   AF4CalibSettingsFrame *calibSettingsFrame     = nullptr;
    FFFExpSettingsFrame   *expSettingsFrame       = nullptr;
    QFrame                *parameterSettingsFrame = nullptr;
    QPushButton           *settingsWriter         = nullptr;

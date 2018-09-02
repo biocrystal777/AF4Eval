@@ -1,6 +1,6 @@
-#include "fffchannelconfigwidget.h"
+#include "af4channeldimswidget.h"
 
-FFFChannelConfigWidget::FFFChannelConfigWidget(const int channelId,
+AF4ChannelDimsWidget::AF4ChannelDimsWidget(const int channelId,
                                                const QString &channelName,
                                                const bool loadParameters,
                                                QWidget *parent) :
@@ -88,12 +88,12 @@ FFFChannelConfigWidget::FFFChannelConfigWidget(const int channelId,
    else defaultInit();
 }
 
-FFFChannelConfigWidget::~FFFChannelConfigWidget()
+AF4ChannelDimsWidget::~AF4ChannelDimsWidget()
 {
    writeSettings();
 }
 
-void FFFChannelConfigWidget::loadSettings()
+void AF4ChannelDimsWidget::loadSettings()
 {
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
@@ -140,11 +140,11 @@ void FFFChannelConfigWidget::loadSettings()
 #undef CHECK_SETTINGS_CONVERSION
 }
 
-void FFFChannelConfigWidget::defaultInit()
+void AF4ChannelDimsWidget::defaultInit()
 {
 }
 
-void FFFChannelConfigWidget::writeSettings()
+void AF4ChannelDimsWidget::writeSettings()
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
