@@ -1,4 +1,4 @@
-#include "fffchannelcalconfwidget.h"
+#include "af4channelconfigurationwidget.h"
 
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
@@ -474,11 +474,12 @@ bool AF4ChannelConfigurationWidget::addCalibration()
    if(askCalibAdding(newName)){
       // add a new Calibration here:
       if(currentCalibWidget) currentCalibWidget->hide();
-      //bool copyValues{false};
      // CalibrationParameters params;
 
-      AF4ChannelCalibWidget* newCalibration = new AF4ChannelCalibWidget(channelConfigWidgets->size(), channelCalibWidgets->value(currentChConfigWidget->getChannelName())->size(),
-                                                                        currentChConfigWidget->getChannelName(), newName, calibrationFrame);      
+      AF4ChannelCalibWidget* newCalibration = new AF4ChannelCalibWidget(channelConfigWidgets->size(),
+                                                                        channelCalibWidgets->value(currentChConfigWidget->getChannelName())->size(),
+                                                                        currentChConfigWidget->getChannelName(),
+                                                                        newName, calibrationFrame);
       if(currentCalibWidget) newCalibration->setAllCalibrationParameters(currentCalibWidget->getAllCalibrationParameters());
       QObject::connect(newCalibration, SIGNAL(calibrateChannelCalled()), this, SLOT(calibrateChannnel()));
       QString channelName = channelSelection->currentText();
@@ -536,18 +537,7 @@ void AF4ChannelConfigurationWidget::calibrateChannnel()
    AF4Calibrator calibrator;
    //bool calibSuccess = calibrator.calibrate(currentCalibWidget->getAllCalibrationParameters()
    bool calibSuccess = calibrator.calibrate(currentChConfigWidget->getChannelDimensions(),
-                                           currentCalibWidget->getParametersForCalibration());
-            /*
-            currentCalibWidget->getLeftOffsetTime(),
-                                            currentCalibWidget->getVoidPeakTime(),
-                                            currentCalibWidget->getElutionFlow(),
-                                            currentCalibWidget->getElutionTime(),
-                                            currentCalibWidget->getCrossFlow(),
-                                            currentCalibWidget->getDiffCoefficient(),
-                                            currentCalibWidget->getRelFocusPoint(),
-                                            currentChConfigWidget->getChLength(),
-                                            //&calibHasFinished
-                                            );*/
+                                            currentCalibWidget->getParametersForCalibration());
 
    double newChWidth = calibrator.getChWidth();
    double newChVolume = calibrator.getHydrodynVolume();
@@ -627,7 +617,7 @@ QString AF4ChannelConfigurationWidget::chopStringsQuotMarksEntirely(QString stri
 }
 
 
-//-//////////////////////////// Dialogs /////////////////////////////////////////
+//\/////////////////////////// Dialogs /////////////////////////////////////////
 
 
 void AF4CalibNameDialog::acceptName()

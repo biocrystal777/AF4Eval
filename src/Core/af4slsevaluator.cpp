@@ -24,8 +24,6 @@ int AF4SLSEvaluator::evalRiMALLS_partZimmplot(const vecD &riData,
    // Calculate concntrations //
    /////////////////////////////
 
-
-
    //concentrations;
    FFFLog::logText(string("Calculate concentrations from RI."));
    if(calcConcFromRi(riData, useDataPoint, dnDcs, calibRi, concentrations)){

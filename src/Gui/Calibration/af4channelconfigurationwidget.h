@@ -10,6 +10,17 @@
 #include "./af4channeldimswidget.h"
 #include "../../Core/af4calibrator.h"
 
+/*! **************************************************************************************************************
+***
+***  \class     AF4CalibNameDialog "src/Gui/Calibration/af4channelconfigurationwidget.h"
+***  \brief     AF4CalibNameDialog isused to delete the current channel
+***             as well as its assigned calibration profiles and adapt the internal data structures
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
+***
+*****************************************************************************************************************/
 class AF4CalibNameDialog : public QDialog
 {
    Q_OBJECT
@@ -19,9 +30,9 @@ public:
    /*!
     * \brief FFFCalibNameDialog constructor of this class
     * \param name pointer that has to be passed that assigns the place,
-    *             where the name entered by user will be written
+    *        where the name entered by user will be written
     * \param first if the dialog is called repeatedly, this flag can
-    *              the text of the dialog
+    *        the text of the dialog
     * \param nameSuggestion default name that is shown before the user enters something
     * \param rename has to be set true if the dialog is called by the rename function. Changes
     *        the text of the dialog
@@ -53,20 +64,17 @@ protected slots:
    void acceptName();
 };
 
-
-/**************************************************************
+/*! **************************************************************************************************************
 ***
-***  FFFDeleteCalibDialog (utility dialog)
+***  \class     AF4DeleteCalibDialog "src/Gui/Calibration/af4channelconfigurationwidget.h"
+***  \brief     AF4DeleteCalibDialog isused to delete the current channel
+***             as well as its assigned calibration profiles and adapt the internal data structures
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
 ***
-**************************************************************/
-/*!
- * \brief The FFFDeleteCalibDialog is used do delete the current calibration
- *        profile and adapt the internal data structures
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
+*****************************************************************************************************************/
 class AF4DeleteCalibDialog : public QDialog
 {
    Q_OBJECT
@@ -85,19 +93,19 @@ protected:
    QPushButton *decliner = nullptr;
 };
 
-/**************************************************************
+
+/*! **************************************************************************************************************
 ***
-***  FFFDeleteChannelDialog (utility dialog)
+***  \class     AF4DeleteChannelDialog "src/Gui/Calibration/af4channelconfigurationwidget.h"
+***  \brief     AF4DeleteChannelDialog isused do delete the current channel with its dimension profile
+***             as well as its assigned calibration profiles and adapt the internal data structures
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
 ***
-**************************************************************/
-/*!
- * \brief The FFFDeleteChannelDialog is used do delete the current channel
- *        as well as its assigned calibration profiles and adapt the internal data structures
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
+*****************************************************************************************************************/
+
 class AF4DeleteChannelDialog : public QDialog{
 
    Q_OBJECT
@@ -117,29 +125,26 @@ public:
     AF4DeleteChannelDialog(AF4DeleteChannelDialog&& src) = delete;
     AF4DeleteChannelDialog& operator= (AF4DeleteChannelDialog&& src) = delete;
 
-
-
 protected:
    QGridLayout *layout   = nullptr;
    QPushButton *accepter = nullptr;
    QPushButton *decliner = nullptr;
 };
 
-/**************************************************************
+/*! **************************************************************************************************************
 ***
-***  FFFChannelNameDialog (utility dialog)
+***  \class     AF4ChannelNameDialog "src/Gui/Calibration/af4channelconfigurationwidget.h"
+***  \brief     AF4ChannelNameDialog
+***  \details   AF4ChannelNameDialog offers to enter a name for a channel***
+***             If the dialog has been accepted, the name will be written to the pointer that has to be
+***             passed to the constructor
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
 ***
-**************************************************************/
-/*!
- * \brief The FFFChannelNameDialog class is used to create a dialog to enter channel names
- * \details The Dialog offers to enter a name for a channel
- *          If the dialog has been accepted, the name will be written to the pointer that has to be
- *          passed to the constructor
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
+*****************************************************************************************************************/
+
 class AF4ChannelNameDialog : public QDialog
 {
    Q_OBJECT
@@ -181,42 +186,23 @@ protected slots:
    void acceptName();
 };
 
-
-
-// ================================ Main class ==============================
-
-/**************************************************************
+/*! **************************************************************************************************************
 ***
-***  FFFChannelCalConfWidget (main widget of this module)
-***
-**************************************************************/
-/*!
- * \brief The FFFChannelCalConfWidget class
- * \details The FFFChannelCalConfWidget contains space for a fffchannelconfigwidget and
- *          a fffchannelcalibwidget; Each fffchannelconfigwidget represents a FFF channel profile
- *          and its specific properties. A comboBox is used to switch between the different channels.
- *          Each channel can have a various number of calibration profiles depending on the measurements,
- *          choosable by a comboBox as well. The information about all existing channels and calibrations
- *          is stored on QMaps. Pointers to those QMaps are used to update widgets in other tabs when
- *          the user adds, renames or deletes channels and calibration profiles.
- *
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
-
-
-/*! ***************************************************************************************
-***
-***  \class     AF4Calibplotwidget "src/Gui/Calibration/af4calibsettingsframe.h"
+***  \class     AF4ChannelConfigurationWidget "src/Gui/Calibration/af4channelconfigurationwidget.h"
 ***  \brief
+***  \details   FFChannelCalConfWidget contains space for a fffchannelconfigwidget and
+***             a fffchannelcalibwidget; Each fffchannelconfigwidget represents a FFF channel profile
+***             and its specific properties. A comboBox is used to switch between the different channels.
+***             Each channel can have a various number of calibration profiles depending on the measurements,
+***             choosable by a comboBox as well. The information about all existing channels and calibrations
+***             is stored on QMaps. Pointers to those QMaps are used to update widgets in other tabs when
+***             the user adds, renames or deletes channels and calibration profiles.
 ***  \author    Benedikt Häusele
 ***  \version   1.0
 ***  \date      2018-08-31
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
-********************************************************************************************/
+*****************************************************************************************************************/
 
 
 class AF4ChannelConfigurationWidget : public QWidget {
@@ -236,8 +222,8 @@ public:
     */
    ~AF4ChannelConfigurationWidget();
 
-    AF4ChannelConfigurationWidget(const AF4DeleteChannelDialog& src)         = delete;
-    AF4ChannelConfigurationWidget& operator= (AF4DeleteChannelDialog& src)   = delete;
+    AF4ChannelConfigurationWidget(const AF4ChannelConfigurationWidget& src)         = delete;
+    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget& src)   = delete;
     AF4ChannelConfigurationWidget(AF4ChannelConfigurationWidget&& src)             = delete;
     AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget&& src) = delete;
 
@@ -250,24 +236,45 @@ public:
    QMap<QString, AF4ChannelDimsWidget*>* getChannelConfigWidgets() const;
    QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* getChannelCalibWidgets() const;
 
-   ///////////////////
+   //\////////////////
    // channel Frame //
-   ///////////////////
+   //\////////////////
 
 private:
 
    QGridLayout *layout                                          = nullptr;
    QFrame *channelConfigFrame                                   = nullptr;
    QGridLayout *channelConfigFrameLayout                        = nullptr;
-   QMap<QString, AF4ChannelDimsWidget*> *channelConfigWidgets = nullptr;
-   AF4ChannelDimsWidget *currentChConfigWidget                = nullptr;
+   QMap<QString, AF4ChannelDimsWidget*> *channelConfigWidgets   = nullptr;
+   AF4ChannelDimsWidget *currentChConfigWidget                  = nullptr;
    QComboBox *channelSelection                                  = nullptr;
    QToolButton *addChButton                                     = nullptr;
    QToolButton *renameChButton                                  = nullptr;
    QToolButton *deleteChButton                                  = nullptr;
+
+   /*!
+    * \brief adaptConfigWidgetIds
+    */
    void adaptConfigWidgetIds();
+
+   /*!
+    * \brief adaptConfigWidgetNames
+    */
    void adaptConfigWidgetNames();
+
+   /*!
+    * \brief askChannelRenaming
+    * \param newName
+    * \param oldName
+    * \return
+    */
    bool askChannelRenaming(QString &newName, const QString &oldName);
+
+   /*!
+    * \brief askChannelAdding
+    * \param newName
+    * \return
+    */
    bool askChannelAdding(QString &newName);
 
 private slots:
@@ -301,9 +308,9 @@ private slots:
     */
    void switchChannelWidget(QString newWidgetKey);
 
-   ///////////////////////
+   //\////////////////////
    // calibration Frame //
-   ///////////////////////
+   //\////////////////////
 
 private:
 
@@ -317,10 +324,34 @@ private:
    QToolButton *renameCalibButton                                              = nullptr;
    QToolButton *deleteCalibButton                                              = nullptr;
    QPushButton *settingsWriter                                                 = nullptr;
+
+   /*!
+    * \brief adaptCalibWidgetIds
+    * \param channelName
+    * \param newChannelId
+    * \param caller
+    */
    void adaptCalibWidgetIds(const QString &channelName, int newChannelId = -1, const QString caller = "no");
+
+   /*!
+    * \brief adaptCalibWidgetNames
+    * \param channelName
+    */
    void adaptCalibWidgetNames(const QString &channelName);
 
+   /*!
+    * \brief askCalibRenaming
+    * \param newName
+    * \param oldName
+    * \return
+    */
    bool askCalibRenaming(QString &newName, const QString &oldName);
+
+   /*!
+    * \brief askCalibAdding
+    * \param newName
+    * \return
+    */
    bool askCalibAdding(QString &newName);
 
 private slots:

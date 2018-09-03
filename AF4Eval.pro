@@ -34,7 +34,6 @@ win32|win64 {
 QWTDIR  = C:/Qwt-6.1.2
 }
 
-
 linux {
 include ( /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qwt.prf )
 }
@@ -62,8 +61,8 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Core/af4slsevaluator.cpp \
     ./src/Gui/fffmainwindow.cpp \
     ./src/Gui/Calibration/af4calibsettingsframe.cpp \
-    ./src/Gui/Calibration/fffdiffcoeffcalcwidget.cpp \
-    ./src/Gui/Calibration/fffchannelcalconfwidget.cpp \
+    ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.cpp \
+    ./src/Gui/Calibration/af4channelconfigurationwidget.cpp \
     ./src/Gui/Calibration/af4channeldimswidget.cpp \
     ./src/Gui/Calibration/af4channelcalibwidget.cpp \
     ./src/Gui/Calibration/af4calibplotwidget.cpp \
@@ -97,8 +96,8 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/Calibration/af4calibplotwidget.h \
     ./src/Gui/Calibration/af4channelcalibwidget.h \
     ./src/Gui/Calibration/af4channeldimswidget.h \
-    ./src/Gui/Calibration/fffchannelcalconfwidget.h \
-    ./src/Gui/Calibration/fffdiffcoeffcalcwidget.h \
+    ./src/Gui/Calibration/af4channelconfigurationwidget.h \
+    ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.h \
     ./src/Gui/DiffEvaluation/fffdiffevaluationwidget.h \
     ./src/Gui/DiffEvaluation/fffexpsettingsframe.h \
     ./src/Gui/GeneralWidgets/ffflog.h \

@@ -535,7 +535,7 @@ void AF4ChannelCalibWidget::callDiffCoeffDialog()
    }
    else {
       diffCoeffCalculator->setDown(true);
-      diffCoeffCalcWidget = new FFFDiffCoeffCalcWidget(this);
+      diffCoeffCalcWidget = new AF4StokesEinsteinCalculatorWidget(this);
       diffCoeffCalcWidget->show();
       QObject::connect(diffCoeffCalcWidget, SIGNAL(destroyed()), this, SLOT(finishDiffCoeffDialog()));
    }

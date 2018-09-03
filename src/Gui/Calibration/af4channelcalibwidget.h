@@ -18,7 +18,7 @@
 #include <qwt_plot_curve.h>
 #include <qwt_text_label.h>
 #include "./af4calibplotwidget.h"
-#include "./fffdiffcoeffcalcwidget.h"
+#include "./af4stokeseinsteincalculatorwidget.h"
 #include "../Core/af4datatypes.h"
 #include "../Core/af4parameterstructs.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
@@ -429,7 +429,7 @@ private:
    QDoubleSpinBox *geometVolume               = nullptr;
 
    QToolButton *diffCoeffCalculator            = nullptr;
-   FFFDiffCoeffCalcWidget *diffCoeffCalcWidget = nullptr;
+   AF4StokesEinsteinCalculatorWidget *diffCoeffCalcWidget = nullptr;
 
    QLineEdit *dateDescr                        = nullptr;
    QLineEdit *sampleDescr                      = nullptr;

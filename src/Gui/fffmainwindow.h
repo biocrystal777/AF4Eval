@@ -7,7 +7,7 @@
 #include "./DiffEvaluation/fffdiffevaluationwidget.h"
 #include "./LightScattering/fffslsevaluationwidget.h"
 #include "./Calibration/af4channeldimswidget.h"
-#include "./Calibration/fffchannelcalconfwidget.h"
+#include "./Calibration/af4channelconfigurationwidget.h"
 #include "../Core/af4csvwriter.h"
 
 /**************************************************************
