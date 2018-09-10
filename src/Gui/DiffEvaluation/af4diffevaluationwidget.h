@@ -1,5 +1,5 @@
-#ifndef FFFDIFFEVALUATIONWIDGET_H
-#define FFFDIFFEVALUATIONWIDGET_H
+#ifndef AF4DIFFEVALUATIONWIDGET_H
+#define AF4DIFFEVALUATIONWIDGET_H
 
 #include <vector>
 #include <QApplication>
@@ -7,7 +7,7 @@
 #include <QRadioButton>
 #include <QComboBox>
 #include <QCheckBox>
-#include "./fffexpsettingsframe.h"
+#include "./af4expsettingsframe.h"
 #include "../Calibration/af4calibsettingsframe.h"
 #include "../Calibration/af4channeldimswidget.h"
 #include "../Calibration/af4channelcalibwidget.h"
@@ -17,51 +17,19 @@
 #include "../../Core/af4diffevaluator.h"
 #include "../../Core/af4csvwriter.h"
 
-class FFFSingleColumnChooseDialog : public QDialog
-{
-   Q_OBJECT
-public:
-   explicit FFFSingleColumnChooseDialog(const std::vector<std::string>& columnDelimiters,
-                                        uint *timeIndex,
-                                        QWidget* parent = nullptr);
-   ~FFFSingleColumnChooseDialog(){}
-
-   FFFSingleColumnChooseDialog(const FFFSingleColumnChooseDialog& src) = delete;
-   FFFSingleColumnChooseDialog& operator= (FFFSingleColumnChooseDialog& src) = delete;
-   FFFSingleColumnChooseDialog(FFFSingleColumnChooseDialog&& src) = delete;
-   FFFSingleColumnChooseDialog& operator= (FFFSingleColumnChooseDialog&& src) = delete;
-
-protected:
-   QList<QRadioButton*> columnNames;
-   uint *timeIndex                        = nullptr;
-   QGridLayout *layout                    = nullptr;
-   QGroupBox* groupBox                    = nullptr;
-   QGridLayout *boxLayout                 = nullptr;
-   QPushButton *accepter                  = nullptr;
-   QPushButton *decliner                  = nullptr;
-
-protected slots:
-   void acceptAndgetIndex();
-};
-
-
-/**************************************************************
+/*! **********************************************************************************************
 ***
-***  FFFEvaluationWidget
-***      (using Qt 4.8.2)
+***  \class     AF4DiffEvaluationWidget "src/Gui/Calibration/af4diffevaluationwidget.h"
+***  \brief     AF4DiffEvaluationWidget Small GUI for quick estimations of Dvia classical
+***                                               Stokes Einstein equation
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
 ***
-**************************************************************/
+*************************************************************************************************/
 
-/*!
- * \brief The FFFEvaluationWidget class
- * \details
- * \author Benedikt Haeusele
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
-
-class FFFDiffEvaluationWidget : public QFrame {
+class AF4DiffEvaluationWidget : public QFrame {
 
    Q_OBJECT
 public:
@@ -72,16 +40,16 @@ public:
     * \param channelCalibWidgets Pointer to the map of existing channelCalibWidgets
     * \param parent
     */
-   explicit FFFDiffEvaluationWidget(
+   explicit AF4DiffEvaluationWidget(
          QMap<QString, AF4ChannelDimsWidget*>* channelConfigWidgets,
          QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets,
          QWidget *parent = nullptr);
-   ~FFFDiffEvaluationWidget();
+   ~AF4DiffEvaluationWidget(){}
 
-   FFFDiffEvaluationWidget(const FFFDiffEvaluationWidget& src) = delete;
-   FFFDiffEvaluationWidget& operator= (FFFDiffEvaluationWidget& src) = delete;
-   FFFDiffEvaluationWidget(FFFDiffEvaluationWidget&& src) = delete;
-   FFFDiffEvaluationWidget& operator= (FFFDiffEvaluationWidget&& src) = delete;
+   AF4DiffEvaluationWidget(const AF4DiffEvaluationWidget& src) = delete;
+   AF4DiffEvaluationWidget& operator= (AF4DiffEvaluationWidget& src) = delete;
+   AF4DiffEvaluationWidget(AF4DiffEvaluationWidget&& src) = delete;
+   AF4DiffEvaluationWidget& operator= (AF4DiffEvaluationWidget&& src) = delete;
 
    /*!
     * \brief getTemperatureVal returns the displayed temmperature
@@ -119,8 +87,6 @@ public:
     */
    inline double getLeftOffsetTimeVal() const { return expSettingsFrame->getLeftOffsetTimeVal(); }
 
-
-
    /*!
     * \brief adaptExpParameters adapts the required parameters.
     * \param tempVal temperature
@@ -141,7 +107,7 @@ protected:
    QGridLayout           *widgetLayout           = nullptr;
    FFFFileInOutWidget    *fileWidget             = nullptr;
    AF4CalibSettingsFrame *calibSettingsFrame     = nullptr;
-   FFFExpSettingsFrame   *expSettingsFrame       = nullptr;
+   AF4ExpSettingsFrame   *expSettingsFrame       = nullptr;
    QFrame                *parameterSettingsFrame = nullptr;
    QPushButton           *settingsWriter         = nullptr;
    QPushButton           *evalStarter            = nullptr;
@@ -154,6 +120,9 @@ protected slots:
     */
    void startEvaluation();
 
+   /*!
+    * \brief saveParameters
+    */
    void saveParameters() const;
 
 public slots:
@@ -168,5 +137,5 @@ public slots:
 
 };
 
-#endif // FFFDIFFEVALUATIONWIDGET_H
+#endif // AF4DIFFEVALUATIONWIDGET_H
 

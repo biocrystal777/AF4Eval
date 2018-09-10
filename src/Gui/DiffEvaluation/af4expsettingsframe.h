@@ -1,5 +1,5 @@
-#ifndef FFFEXPSETTINGSFRAME_H
-#define FFFEXPSETTINGSFRAME_H
+#ifndef AF4EXPSETTINGSFRAME_H
+#define AF4EXPSETTINGSFRAME_H
 
 #include <QFrame>
 #include <QSettings>
@@ -11,20 +11,32 @@
 #include "../GeneralWidgets/ffflog.h"
 #include "../../Core/af4parameterstructs.h"
 
-class FFFExpSettingsFrame final : public QFrame
-{
-    Q_OBJECT
-public:
-    explicit FFFExpSettingsFrame(const QString& prefix,int id, QWidget* parent = nullptr);
-    ~FFFExpSettingsFrame();
+/*! **********************************************************************************************
+***
+***  \class     AF4ExpSettingsFrame "src/Gui/Calibration/af4expsettingsframe.h"
+***  \brief     AF4ExpSettingsFrame
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
+***
+*************************************************************************************************/
 
-    FFFExpSettingsFrame(const FFFExpSettingsFrame& src) = delete;
-    FFFExpSettingsFrame& operator= (FFFExpSettingsFrame& src) = delete;
-    FFFExpSettingsFrame(FFFExpSettingsFrame&& src) = delete;
-    FFFExpSettingsFrame& operator= (FFFExpSettingsFrame&& src) = delete;
+class AF4ExpSettingsFrame final : public QFrame
+{   
+    Q_OBJECT
+
+public:
+    explicit AF4ExpSettingsFrame(const QString& prefix,int id, QWidget* parent = nullptr);
+
+   ~AF4ExpSettingsFrame(){writeSettings();}
+
+    AF4ExpSettingsFrame(const AF4ExpSettingsFrame& src)        = delete;
+    AF4ExpSettingsFrame& operator= (AF4ExpSettingsFrame& src)  = delete;
+    AF4ExpSettingsFrame(AF4ExpSettingsFrame&& src)             = delete;
+    AF4ExpSettingsFrame& operator= (AF4ExpSettingsFrame&& src) = delete;
 
     ExpFFFParameters getExpFFFParameters();
-
 
     inline void setId(int newId) { id = newId; }
 
@@ -33,7 +45,11 @@ public:
      * \return temperature
      */
      inline double getTemperatureVal() const { return temperature->value(); }
-
+     /*!
+      * \brief setTemperatureVal
+      * \param val
+      * \return
+      */
      bool setTemperatureVal(double val) const;
 
      /*!
@@ -41,7 +57,11 @@ public:
      * \return viscosity
      */
      inline double getViscosityVal() const { return viscosity->value(); }
-
+     /*!
+      * \brief setViscosity
+      * \param val
+      * \return
+      */
      bool setViscosity(double val) const;
 
     /*!
@@ -49,7 +69,11 @@ public:
      * \return voidPeakTime
      */
     inline double getVoidPeakTimeVal() const {return voidPeakTime->value(); }
-
+    /*!
+     * \brief setVoidPeakTimeVal
+     * \param val
+     * \return
+     */
     bool setVoidPeakTimeVal(double val) const;
 
     /*!
@@ -57,7 +81,11 @@ public:
      * \return relFocusPoint
      */
     inline double getRelFocusPointVal() const { return relFocusPoint->value(); }
-
+    /*!
+     * \brief setRelFocusPointVal
+     * \param val
+     * \return
+     */
     bool setRelFocusPointVal(double val) const;
 
     /*!
@@ -65,7 +93,11 @@ public:
      * \return elutionFlow
      */
     inline double getElutionFlowVal() const { return elutionFlow->value(); }
-
+    /*!
+     * \brief setElutionFlowVal
+     * \param val
+     * \return
+     */
     bool setElutionFlowVal(double val) const;
 
     /*!
@@ -73,6 +105,11 @@ public:
      * \return crossFlow
      */
     inline double getCrossFlowVal() const { return crossFlow->value(); }
+    /*!
+     * \brief setCrossFlowVal
+     * \param val
+     * \return
+     */
     bool setCrossFlowVal(double val) const;
 
 
@@ -81,13 +118,31 @@ public:
      * \return leftOffsetTime
      */
     inline double getLeftOffsetTimeVal() const {return leftOffsetTime->value(); }
+    /*!
+     * \brief setLeftOffsetTimeVal
+     * \param val
+     * \return
+     */
     bool setLeftOffsetTimeVal(double val) const;
-
+    /*!
+     * \brief getRecalcVolume
+     * \return
+     */
     inline bool getRecalcVolume() const { return useVoidPeakBox->isChecked(); }
+    /*!
+     * \brief setRecalcVolume
+     * \param setValue
+     */
     void setRecalcVolume(bool setValue);
 
-
+    /*!
+     * \brief loadSettings
+     */
     void loadSettings();
+
+    /*!
+     * \brief writeSettings
+     */
     void writeSettings();
 
 private:
@@ -107,13 +162,18 @@ private:
     QDoubleSpinBox *viscosity        = nullptr;
     QDoubleSpinBox *temperature      = nullptr;
 
-
 signals:
+    /*!
+     * \brief callEnableVolume
+     * \param enable
+     */
     void callEnableVolume(bool enable);
 
 private slots:
-
+    /*!
+     * \brief enableVoidPeakTime
+     * \param checked
+     */
     void enableVoidPeakTime(bool checked);
 };
-
-#endif // FFFEXPSETTINGSFRAME_H
+#endif // AF4EXPSETTINGSFRAME_H

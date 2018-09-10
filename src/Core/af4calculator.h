@@ -52,11 +52,11 @@ public:
 protected:
 
    /*!
-    * \brief coth returns the Hyperbolic Cotangent of the passed argument x
+    * \brief coth returns the hyperbolic cotangent of the passed argument x
     * \param x passed argument x
     * \returns return value
     */
-   double coth(double x) const;
+   inline double coth(double x)  const {  return (1.0 / std::tanh(x)); }
 
    /*!
     * \brief isZero checks if a double x is Zero and return a corresponding bool

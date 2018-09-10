@@ -4,7 +4,7 @@
 #include <QtGui>
 #include <QDesktopWidget>
 #include "./GeneralWidgets/ffflog.h"
-#include "./DiffEvaluation/fffdiffevaluationwidget.h"
+#include "./DiffEvaluation/af4diffevaluationwidget.h"
 #include "./LightScattering/fffslsevaluationwidget.h"
 #include "./Calibration/af4channeldimswidget.h"
 #include "./Calibration/af4channelconfigurationwidget.h"
@@ -69,7 +69,7 @@ protected:
    QGridLayout *funcLayout;
 
    AF4ChannelConfigurationWidget *channelCalConfWidget;
-   FFFDiffEvaluationWidget *diffEvaluationWidget;
+   AF4DiffEvaluationWidget *diffEvaluationWidget;
 
 
    FFFSLSEvaluationWidget *slsEvaluationWidget;

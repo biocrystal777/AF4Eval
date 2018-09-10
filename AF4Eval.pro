@@ -66,8 +66,8 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/Calibration/af4channeldimswidget.cpp \
     ./src/Gui/Calibration/af4channelcalibwidget.cpp \
     ./src/Gui/Calibration/af4calibplotwidget.cpp \
-    ./src/Gui/DiffEvaluation/fffdiffevaluationwidget.cpp \
-    ./src/Gui/DiffEvaluation/fffexpsettingsframe.cpp \ 
+    ./src/Gui/DiffEvaluation/af4diffevaluationwidget.cpp \
+    ./src/Gui/DiffEvaluation/af4expsettingsframe.cpp \
     ./src/Gui/GeneralWidgets/ffflog.cpp \
     ./src/Gui/GeneralWidgets/ffffileinoutwidget.cpp \
     ./src/Gui/GeneralWidgets/fffmultiplefilewidget.cpp \
@@ -98,8 +98,8 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/Calibration/af4channeldimswidget.h \
     ./src/Gui/Calibration/af4channelconfigurationwidget.h \
     ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.h \
-    ./src/Gui/DiffEvaluation/fffdiffevaluationwidget.h \
-    ./src/Gui/DiffEvaluation/fffexpsettingsframe.h \
+    ./src/Gui/DiffEvaluation/af4diffevaluationwidget.h \
+    ./src/Gui/DiffEvaluation/af4expsettingsframe.h \
     ./src/Gui/GeneralWidgets/ffflog.h \
     ./src/Gui/GeneralWidgets/ffffileinoutwidget.h \
     ./src/Gui/GeneralWidgets/fffmultiplefilewidget.h \

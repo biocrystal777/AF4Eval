@@ -1,8 +1,6 @@
-#include "fffexpsettingsframe.h"
+#include "af4expsettingsframe.h"
 
-
-
-FFFExpSettingsFrame::FFFExpSettingsFrame(const QString &prefix, int id, QWidget *parent) :QFrame(parent), prefix(prefix), id(id)
+AF4ExpSettingsFrame::AF4ExpSettingsFrame(const QString &prefix, int id, QWidget *parent) :QFrame(parent), prefix(prefix), id(id)
 {
     QPixmap pixMap;
     //QString toolTipDescription;
@@ -112,12 +110,8 @@ FFFExpSettingsFrame::FFFExpSettingsFrame(const QString &prefix, int id, QWidget 
     loadSettings();
 }
 
-FFFExpSettingsFrame::~FFFExpSettingsFrame()
-{
-    writeSettings();
-}
 
-void FFFExpSettingsFrame::loadSettings()
+void AF4ExpSettingsFrame::loadSettings()
 {
 #ifndef CHECK_SETTINGS_CONVERSION
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
@@ -167,7 +161,7 @@ void FFFExpSettingsFrame::loadSettings()
 #undef CHECK_SETTINGS_CONVERSION
 }
 
-void FFFExpSettingsFrame::writeSettings()
+void AF4ExpSettingsFrame::writeSettings()
 {
     QSettings settings("AgCoelfen", "FFFEval");
     settings.setIniCodec("UTF-8");
@@ -184,7 +178,7 @@ void FFFExpSettingsFrame::writeSettings()
     settings.setValue(tr("%1/expSettings/%2/useManualVoidPeak").arg(prefix).arg(id), useVoidPeakBox->isChecked());
 }
 
-void FFFExpSettingsFrame::enableVoidPeakTime(bool checked)
+void AF4ExpSettingsFrame::enableVoidPeakTime(bool checked)
 {
    if(voidPeakTime){      
       voidPeakTime->setEnabled(checked);
@@ -194,7 +188,7 @@ void FFFExpSettingsFrame::enableVoidPeakTime(bool checked)
 }
 
 
-bool FFFExpSettingsFrame::setTemperatureVal(double val) const
+bool AF4ExpSettingsFrame::setTemperatureVal(double val) const
 {
    bool ok(false);
    if(0.0<val && val<400.0){
@@ -204,7 +198,7 @@ bool FFFExpSettingsFrame::setTemperatureVal(double val) const
    return ok;
 }
 
-bool FFFExpSettingsFrame::setViscosity(double val) const
+bool AF4ExpSettingsFrame::setViscosity(double val) const
 {
     bool ok(false);
     if(0.0<val && val<400.0){
@@ -214,7 +208,7 @@ bool FFFExpSettingsFrame::setViscosity(double val) const
     return ok;
 }
 
-bool FFFExpSettingsFrame::setVoidPeakTimeVal(double val) const
+bool AF4ExpSettingsFrame::setVoidPeakTimeVal(double val) const
 {
     bool ok(false);
     if(0.0<val){
@@ -224,7 +218,7 @@ bool FFFExpSettingsFrame::setVoidPeakTimeVal(double val) const
     return ok;
 }
 
-bool FFFExpSettingsFrame::setRelFocusPointVal(double val) const
+bool AF4ExpSettingsFrame::setRelFocusPointVal(double val) const
 {
     bool ok(false);
     if(0.0<val&& val<100.0 ){
@@ -234,7 +228,7 @@ bool FFFExpSettingsFrame::setRelFocusPointVal(double val) const
     return ok;
 }
 
-bool FFFExpSettingsFrame::setElutionFlowVal(double val) const
+bool AF4ExpSettingsFrame::setElutionFlowVal(double val) const
 {
     bool ok(false);
     if(0.0<val&& val<100.0 ){
@@ -244,7 +238,7 @@ bool FFFExpSettingsFrame::setElutionFlowVal(double val) const
     return ok;
 }
 
-bool FFFExpSettingsFrame::setCrossFlowVal(double val) const
+bool AF4ExpSettingsFrame::setCrossFlowVal(double val) const
 {
     bool ok(false);
     if(0.0<val&& val<100.0 ){
@@ -254,7 +248,7 @@ bool FFFExpSettingsFrame::setCrossFlowVal(double val) const
     return ok;
 }
 
-bool FFFExpSettingsFrame::setLeftOffsetTimeVal(double val) const
+bool AF4ExpSettingsFrame::setLeftOffsetTimeVal(double val) const
 {
     bool ok(false);
     if(0.0<val&& val<100.0 ){
@@ -264,12 +258,12 @@ bool FFFExpSettingsFrame::setLeftOffsetTimeVal(double val) const
     return ok;
 }
 
-void FFFExpSettingsFrame::setRecalcVolume(bool setValue)
+void AF4ExpSettingsFrame::setRecalcVolume(bool setValue)
 {
    this->enableVoidPeakTime(setValue);
 }
 
-ExpFFFParameters FFFExpSettingsFrame::getExpFFFParameters()
+ExpFFFParameters AF4ExpSettingsFrame::getExpFFFParameters()
 {
    ExpFFFParameters p;
    p.temperature = this->getTemperatureVal();

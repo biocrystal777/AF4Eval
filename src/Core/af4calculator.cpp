@@ -19,10 +19,6 @@ uint AF4Calculator::findIndexFromTime(const vecD &timeVector, const double time)
    return index;
 }
 
-double AF4Calculator::coth(double x) const
-{
-   return (1 / std::tanh(x));
-}
 
 bool AF4Calculator::isZero(double x) const
 {

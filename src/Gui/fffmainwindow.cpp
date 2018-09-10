@@ -51,7 +51,7 @@ FFFMainWindow::FFFMainWindow(QWidget *parent)
    layout->addWidget(logFrame, 1, 0);
    this->show();
 
-   diffEvaluationWidget = new FFFDiffEvaluationWidget(channelCalConfWidget->getChannelConfigWidgets(),
+   diffEvaluationWidget = new AF4DiffEvaluationWidget(channelCalConfWidget->getChannelConfigWidgets(),
                                                       channelCalConfWidget->getChannelCalibWidgets(),
                                                       funcTabWidget);
    funcTabWidget->addTab(diffEvaluationWidget, "Diffusion Coefficients");

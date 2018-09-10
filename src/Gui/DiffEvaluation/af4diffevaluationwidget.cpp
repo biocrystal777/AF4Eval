@@ -1,4 +1,4 @@
-#include "fffdiffevaluationwidget.h"
+#include "af4diffevaluationwidget.h"
 
 using std::string;
 using std::vector;
@@ -11,7 +11,7 @@ using std::vector;
    };
 
 
-FFFDiffEvaluationWidget::FFFDiffEvaluationWidget(QMap<QString, AF4ChannelDimsWidget *> *channelConfigWidgets,
+AF4DiffEvaluationWidget::AF4DiffEvaluationWidget(QMap<QString, AF4ChannelDimsWidget *> *channelConfigWidgets,
                                                  QMap<QString, QMap<QString, AF4ChannelCalibWidget *> *> *channelCalibWidgets,
                                                  QWidget *parent)
    : QFrame(parent), channelConfigWidgets(channelConfigWidgets), channelCalibWidgets(channelCalibWidgets)
@@ -36,19 +36,14 @@ FFFDiffEvaluationWidget::FFFDiffEvaluationWidget(QMap<QString, AF4ChannelDimsWid
    displayZeroMessages->setChecked(true);
    widgetLayout->addWidget(displayZeroMessages, 15, 4, 1, 4, Qt::AlignLeft);
 
-   expSettingsFrame = new FFFExpSettingsFrame(tr("diffEvaluation"), -1, this);
+   expSettingsFrame = new AF4ExpSettingsFrame(tr("diffEvaluation"), -1, this);
    widgetLayout->addWidget(expSettingsFrame, 5, 6, 10, 5);
 
    QObject::connect(expSettingsFrame, SIGNAL(callEnableVolume(bool)), calibSettingsFrame, SLOT(enableVolume(bool)));
-
 }
 
 
-FFFDiffEvaluationWidget::~FFFDiffEvaluationWidget()
-{   
-}
-
-void FFFDiffEvaluationWidget::startEvaluation()
+void AF4DiffEvaluationWidget::startEvaluation()
 {
 
    // Check File Names:
@@ -99,7 +94,6 @@ void FFFDiffEvaluationWidget::startEvaluation()
 
    AF4DiffEvaluator evaluator;
 
-
    errorCode = evaluator.evalDiffCoeffs(data.at(timeIndex),                                        
                                         expSettingsFrame->getLeftOffsetTimeVal(),
                                         expSettingsFrame->getVoidPeakTimeVal(),
@@ -127,9 +121,6 @@ void FFFDiffEvaluationWidget::startEvaluation()
       }
       return;
    }
-
-
-
 
    vecD diffCoeffs = evaluator.getResDiffCoeff();
    evaluator.calcStokesRadii(diffCoeffs, expSettingsFrame->getViscosityVal(), expSettingsFrame->getTemperatureVal());
@@ -176,7 +167,7 @@ void FFFDiffEvaluationWidget::startEvaluation()
    QApplication::restoreOverrideCursor();
 }
 
-void FFFDiffEvaluationWidget::saveParameters() const
+void AF4DiffEvaluationWidget::saveParameters() const
 {
    FFFLog::logText(tr("Parameters for the Calculation of Diffusion Coefficients saved."));   
    expSettingsFrame->writeSettings();
@@ -184,15 +175,12 @@ void FFFDiffEvaluationWidget::saveParameters() const
    calibSettingsFrame->saveParameters();
 }
 
-
-
-
-void FFFDiffEvaluationWidget::adaptChannelParameters()
+void AF4DiffEvaluationWidget::adaptChannelParameters()
 {
     if(calibSettingsFrame) calibSettingsFrame->adaptChannelParameters();
 }
 
-void FFFDiffEvaluationWidget::adaptExpParameters(double tempVal,
+void AF4DiffEvaluationWidget::adaptExpParameters(double tempVal,
                                                  double eluFlowVal,
                                                  double crossFlowVal,
                                                  double voidPeakVal)
@@ -205,40 +193,3 @@ void FFFDiffEvaluationWidget::adaptExpParameters(double tempVal,
    };
 }
 
-FFFSingleColumnChooseDialog::FFFSingleColumnChooseDialog (
-      const vector<string> &columnDelimiters,
-      uint *timeIndex,
-      QWidget *parent) : QDialog(parent), timeIndex(timeIndex)
-{
-   layout = new QGridLayout(this);
-   layout->addWidget(new QLabel("Choose time column:"), 0, 0, 1, 4);
-   groupBox = new QGroupBox(this);
-   boxLayout = new QGridLayout(groupBox);
-
-   for (uint j = 0; j < columnDelimiters.size(); ++j){
-      columnNames.append(new QRadioButton(QString(columnDelimiters.at(j).c_str()), groupBox));
-      boxLayout->addWidget(columnNames.at(j), j + 1, 0, 1, 8, Qt::AlignLeft);
-   }
-   columnNames.at(0)->setChecked(true);
-
-   layout->addWidget(groupBox, 1, 0, 20, 8);
-
-   accepter = new QPushButton("Evaluate", this);
-   QObject::connect(accepter, SIGNAL(clicked()), this, SLOT(acceptAndgetIndex()));
-   layout->addWidget(accepter, 21, 4, 22, 2);
-   decliner = new QPushButton("Abort", this);
-   QObject::connect(decliner, SIGNAL(clicked()), this, SLOT(reject()));
-   layout->addWidget(decliner, 21, 6, 22, 2);
-
-}
-
-void FFFSingleColumnChooseDialog::acceptAndgetIndex()
-{
-   for(int i = 0; i < columnNames.size(); ++i){
-      if(columnNames.at(i)->isChecked()){
-         *timeIndex = i;
-         break;
-      }
-   }
-   accept();
-}
