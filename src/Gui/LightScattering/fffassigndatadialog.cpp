@@ -3,7 +3,7 @@
 using std::vector;
 using std::string;
 
-FFFAssignDataDialog::FFFAssignDataDialog(vector<string> *headLines,
+AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
                                          int numberOfPeaks,
                                          uint *timeIndex,
                                          QList<posPeakPair> *riIndices,
@@ -128,7 +128,7 @@ FFFAssignDataDialog::FFFAssignDataDialog(vector<string> *headLines,
 
 }
 
-FFFAssignDataDialog::~FFFAssignDataDialog()
+AF4AssignDataDialog::~AF4AssignDataDialog()
 {
    if(peakBoxes) delete peakBoxes;
    if(dimensionBoxes) delete dimensionBoxes;
@@ -136,7 +136,7 @@ FFFAssignDataDialog::~FFFAssignDataDialog()
    if(dimensionChecker) delete dimensionChecker;
 }
 
-void FFFAssignDataDialog::checkDimConfiguration(int id, int index)
+void AF4AssignDataDialog::checkDimConfiguration(int id, int index)
 {
    bool activateConfirmerLater = true;
    QList<int> timeBoxIndices = QList<int>();
@@ -279,7 +279,7 @@ void FFFAssignDataDialog::checkDimConfiguration(int id, int index)
 
 }
 
-void FFFAssignDataDialog::checkPeakConfiguration(int /* id */, int /* index */)
+void AF4AssignDataDialog::checkPeakConfiguration(int /* id */, int /* index */)
 {
    bool activateConfirmerLater = true;
    QList<bool> checkedFalse;
@@ -317,7 +317,7 @@ void FFFAssignDataDialog::checkPeakConfiguration(int /* id */, int /* index */)
    confirmer->setEnabled(activateConfirmerLater);
 }
 
-void FFFAssignDataDialog::writeUserOptionAndAccept()
+void AF4AssignDataDialog::writeUserOptionAndAccept()
 {
 
    posPeakPair ppPair;

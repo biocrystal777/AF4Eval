@@ -18,11 +18,26 @@
 #include "../smallQDerivates/fffnumberedcombobox.h"
 #include "../../Core/af4constants.h"
 
-class FFFAssignDataDialog : public QDialog
+/*! **********************************************************************************************
+***
+***  \class   AF4Log "src/Gui/Calibration/af4log.h"
+***  \brief   Logging widget
+***  \details The class is implemented as singleton and public static functions can be
+***           accessed. All functions can be called globally.
+***
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
+***
+*************************************************************************************************/
+
+
+class AF4AssignDataDialog : public QDialog
 {
    Q_OBJECT
 public:
-   explicit FFFAssignDataDialog(std::vector<std::string> *headLines,
+   explicit AF4AssignDataDialog(std::vector<std::string> *headLines,
                                 int numberOfPeaks,
                                 uint *timeIndex,
                                 QList<posPeakPair>* riIndices,
@@ -34,12 +49,12 @@ public:
                                 uint *sedCoeffIndex = nullptr,
                                 QWidget *parent = nullptr
                                 );
-   ~FFFAssignDataDialog();
+   ~AF4AssignDataDialog();
 
-    FFFAssignDataDialog(const FFFAssignDataDialog& src) = delete;
-    FFFAssignDataDialog& operator= (const FFFAssignDataDialog& src) = delete;
-    FFFAssignDataDialog(FFFAssignDataDialog&& src) = delete;
-    FFFAssignDataDialog& operator= (FFFAssignDataDialog&& src) = delete;
+    AF4AssignDataDialog(const AF4AssignDataDialog& src) = delete;
+    AF4AssignDataDialog& operator= (const AF4AssignDataDialog& src) = delete;
+    AF4AssignDataDialog(AF4AssignDataDialog&& src) = delete;
+    AF4AssignDataDialog& operator= (AF4AssignDataDialog&& src) = delete;
 
 protected:
    QGridLayout *layout;
