@@ -1,7 +1,7 @@
 #ifndef AF4SLSEVALUATOR_H
 #define AF4SLSEVALUATOR_H
 #include "af4calculator.h"
-#include "../Gui/GeneralWidgets/ffflog.h"
+#include "../Gui/GeneralWidgets/af4log.h"
 
 /*! ***********************************************************
 ***

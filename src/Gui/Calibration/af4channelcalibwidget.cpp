@@ -312,10 +312,10 @@ void AF4ChannelCalibWidget::setPlotDataFromFile()
    uint errorInLine;
    errorCode = parser.parseFile(&errorInLine);
    if(errorCode){
-      FFFLog::logError(tr("Error %1").arg(errorCode), true);
-         FFFLog::logError(tr("Diffusion Evaluation Aborted while reading the input file."), true);
+      AF4Log::logError(tr("Error %1").arg(errorCode), true);
+         AF4Log::logError(tr("Diffusion Evaluation Aborted while reading the input file."), true);
          return;
-   } else FFFLog::logText(tr("File %1 read").arg(calibFileName));
+   } else AF4Log::logText(tr("File %1 read").arg(calibFileName));
    parser.getData();
    std::vector<std::string> headLines = parser.getHeadLines();
    matD data = parser.getData();
@@ -404,7 +404,7 @@ void AF4ChannelCalibWidget::loadSettings()
 
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
-   FFFLog::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
    .arg(keyName).arg(defaultValueName)); \
 }\
 };
@@ -412,49 +412,49 @@ void AF4ChannelCalibWidget::loadSettings()
    calibValue = settings.value(tr("channels/%1/calib/%2/diffCoefficient").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../diffCoefficient", "0.0e0");
    if(!(this->setDiffCoefficient(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (diffusion Coefficient, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (diffusion Coefficient, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/crossFlow").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../crossFlow", "0.0e0");
    if(!(this->setCrossFlow(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (crossFlow, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (crossFlow, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/relFocusPoint").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../relFocusPoint", "0.0e0");
    if(!(this->setRelFocusPoint(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (relFocusPoint, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (relFocusPoint, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/temperature").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../temperature", "0.0e0");
    if(!(this->setTemperature(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (temperature, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (temperature, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/elutionFlow").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../elutionFlow", "0.0e0");
    if(!(this->setElutionFlow(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (elutionFlow, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (elutionFlow, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/leftOffsetTime").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../leftOffsetTime", "1.0e0");
    if(!(this->setLeftOffsetTime(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (leftOffsetTime t0, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (leftOffsetTime t0, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/voidPeakTime").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../voidPeakTime", "1.0e0");
    if(!(this->setVoidPeakTime(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (voidPeakTime, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (voidPeakTime, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/elutionTime").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../elutionTime", "1.0e0");
    if(!(this->setElutionTime(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (elutionTime, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (elutionTime, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibStringValue = settings.value(tr("channels/%1/calib/%2/dateDescr").arg(channelId).arg(calibId), "").toString();
@@ -472,24 +472,24 @@ void AF4ChannelCalibWidget::loadSettings()
    calibValue = settings.value(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidth", "0.0e0");
    if(!(this->setChannelWidth(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (channelWidth, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (channelWidth, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/hydrodynVolume").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../hydrodynVolume", "0.0e0");
    if(!(this->setHydrodynVolume(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (hydrodynVolume, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (hydrodynVolume, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibValue = settings.value(tr("channels/%1/calib/%2/geometVolume").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../hydrodynVolume", "0.0e0");
    if(!(this->setGeometVolume(calibValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value (geometVolume, %1, %2).")
+      AF4Log::logWarning(tr("Error while setting calib Value (geometVolume, %1, %2).")
                          .arg(channelName).arg(calibName));
 
    calibStringValue = settings.value(tr("channels/%1/calib/%2/calibFileName").arg(channelId).arg(calibId), "").toString();
    if(!(this->setInputFileName(calibStringValue)))
-      FFFLog::logWarning(tr("Error while setting calib Value \"calib FileName\" in Constructor."));
+      AF4Log::logWarning(tr("Error while setting calib Value \"calib FileName\" in Constructor."));
 
 #undef CHECK_SETTINGS_CONVERSION //
 }
@@ -562,7 +562,7 @@ void AF4ChannelCalibWidget::chooseInputFile()
                                       QFileDialog::HideNameFilterDetails )
                                     );
    if(QFile::exists(s)) inputFileName->setText(chopStringsQuotMarksToOne(s));
-   else FFFLog::logWarning(tr("Chosen input file does not exist."));
+   else AF4Log::logWarning(tr("Chosen input file does not exist."));
 }
 
 

@@ -13,7 +13,7 @@
 #include <QLabel>
 #include <vector>
 #include <limits>
-#include "../GeneralWidgets/ffflog.h"
+#include "../GeneralWidgets/af4log.h"
 #include "./posPeakPair.h"
 #include "../smallQDerivates/fffnumberedcombobox.h"
 #include "../../Core/af4constants.h"

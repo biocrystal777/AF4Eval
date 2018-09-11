@@ -3,7 +3,7 @@
 
 #include <QtGui>
 #include <QDesktopWidget>
-#include "./GeneralWidgets/ffflog.h"
+#include "./GeneralWidgets/af4log.h"
 #include "./DiffEvaluation/af4diffevaluationwidget.h"
 #include "./LightScattering/fffslsevaluationwidget.h"
 #include "./Calibration/af4channeldimswidget.h"
@@ -18,7 +18,7 @@
 
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
-   FFFLog::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
    .arg(keyName).arg(defaultValueName)); \
    }\
    };
@@ -83,7 +83,7 @@ protected:
 
    QFrame *logFrame;
    QGridLayout *logFrameLayout;
-   FFFLog *logDevice;
+   AF4Log *logDevice;
 
    /////////////////////////
    // General class tools //

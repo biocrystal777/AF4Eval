@@ -19,7 +19,7 @@
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 #include <qwt_widget_overlay.h>
-#include "../GeneralWidgets/ffflog.h"
+#include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
 #include "../../Core/af4datatypes.h"
 

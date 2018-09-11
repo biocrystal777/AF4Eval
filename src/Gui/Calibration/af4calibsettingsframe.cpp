@@ -269,11 +269,11 @@ void AF4CalibSettingsFrame::loadParameters()
    int index = settings.value(tr("%1/channelCalibs/channelIndex").arg(prefix), 0).toInt(&ok);
 
    if(ok && index < channelChooser->count()) channelChooser->setCurrentIndex(index);
-   else FFFLog::logWarning(tr("Channel profile could not found, set to default entry 0."));
+   else AF4Log::logWarning(tr("Channel profile could not found, set to default entry 0."));
    index = settings.value(tr("%1/channelCalibs/calibIndex").arg(prefix), 0).toInt(&ok);
 
    if(ok && index < currentCalibChooser->count()) currentCalibChooser->setCurrentIndex(index);
-   else FFFLog::logWarning(tr("Calibration profile could not found, set to default entry."));
+   else AF4Log::logWarning(tr("Calibration profile could not found, set to default entry."));
 
 
 }

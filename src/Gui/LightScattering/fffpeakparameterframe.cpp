@@ -3,7 +3,7 @@
 #ifndef CHECK_SETTINGS_CONVERSION
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
-   FFFLog::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
    .arg(keyName).arg(defaultValueName)); \
    }\
    };
@@ -24,7 +24,7 @@ FFFPeakParameterFrame::FFFPeakParameterFrame(const QString &prefix, int id, QWid
    bool ok;
    int numberOfPeaks = settings.value(tr("/%1/peakParameters/%2/numberOfPeaks").arg(prefix).arg(id), 1).toInt(&ok);
    if(numberOfPeaks < 1) numberOfPeaks = 1;
-   if(!ok) FFFLog::logWarning(tr("Could not read number Of Peaks."));
+   if(!ok) AF4Log::logWarning(tr("Could not read number Of Peaks."));
 
    this->setFrameStyle(0x1011);
    lay = new QGridLayout(this);
@@ -69,7 +69,7 @@ FFFPeakParameterFrame::FFFPeakParameterFrame(const QString &prefix, int id, QWid
 
 
    if(!peakParWidgets){
-      FFFLog::logError(tr("Settings could not be loaded, widgets do not exist.."));
+      AF4Log::logError(tr("Settings could not be loaded, widgets do not exist.."));
       return;
    }
 
@@ -206,7 +206,7 @@ void FFFPeakParameterFrame::removePeakParWidget(const int number)
 {
 
    if(peakParWidgets->size() <= 1){
-      FFFLog::logWarning(tr("You cannot remove the last Peak."));
+      AF4Log::logWarning(tr("You cannot remove the last Peak."));
       return;
    }
 

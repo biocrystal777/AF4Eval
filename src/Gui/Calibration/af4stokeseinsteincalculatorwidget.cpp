@@ -94,11 +94,11 @@ void AF4StokesEinsteinCalculatorWidget::loadParameters()
    bool ok;
    double val = settings.value(tr("diffCalculator/RS"), 10.0).toDouble(&ok);
    if(ok) stokesRad->setValue(val);
-   else FFFLog::logWarning(tr("Stokes Radius could not found, set to default"));
+   else AF4Log::logWarning(tr("Stokes Radius could not found, set to default"));
    val = settings.value(tr("diffCalculator/T"), 300.0).toDouble(&ok);
    if(ok) temperature->setValue(val);
-   else FFFLog::logWarning(tr("Temperature could not be found, set to default"));
+   else AF4Log::logWarning(tr("Temperature could not be found, set to default"));
    val = settings.value(tr("diffCalculator/eta"), 10.0).toDouble(&ok);
    if(ok) viscosity->setValue(val);
-   else FFFLog::logWarning(tr("Viscosity could not be found, set to default"));
+   else AF4Log::logWarning(tr("Viscosity could not be found, set to default"));
 }

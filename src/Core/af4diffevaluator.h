@@ -74,13 +74,13 @@ public:
     */
    inline vecD getResDiffCoeff() const
    {
-      if(!evaluated) FFFLog::logError(std::string("Data have to be evaluated before reading is possible!"));
+      if(!evaluated) AF4Log::logError(std::string("Data have to be evaluated before reading is possible!"));
       return resDiffCoeff;
    }
 
    inline vecD getResStokesRadii() const
    {
-      if(!rSCalculated) FFFLog::logError(std::string("Stokes-Radii have to be computed before!"));
+      if(!rSCalculated) AF4Log::logError(std::string("Stokes-Radii have to be computed before!"));
       return resStokesRadii;
    }
 
@@ -91,7 +91,7 @@ public:
     */
    inline uint getEvaluationStart() const
    {
-      if(!evaluated) FFFLog::logError(std::string("Data have to be evaluated before there will be an an evaluation Start!"));
+      if(!evaluated) AF4Log::logError(std::string("Data have to be evaluated before there will be an an evaluation Start!"));
       return evaluationStart;
    }
 

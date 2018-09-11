@@ -61,7 +61,7 @@ int AF4DiffEvaluator::evalDiffCoeffs(vecD& times,
       voidPeakTime = chVolume * volumeFac / crossFlow;      
    }
 
-   FFFLog::logText(string("Used void peak time: ").append(std::to_string(voidPeakTime)));
+   AF4Log::logText(string("Used void peak time: ").append(std::to_string(voidPeakTime)));
 
    double diffCoeff;
    double rMeas;
@@ -119,7 +119,7 @@ int AF4DiffEvaluator::evalDiffCoeffs(vecD& times,
    if(isZero(value)){\
    value += 0.000000000000001;\
    if(displayZeroMessages)\
-   FFFLog::logWarning(\
+   AF4Log::logWarning(\
    QObject::tr(\
    "Forced division by zero was avoided at time index %1 by adjusting the divisor to 0.000000000000001")\
    .arg(timeIndex));\
@@ -175,7 +175,7 @@ bool AF4DiffEvaluator::isZero(double x) const
       string message = string("Division by zero");
       message.append("; Premature Abortion of bisection forced,\n").
             append("while evaluating data point (time = ");
-      FFFLog::logError(message);
+      AF4Log::logError(message);
       return true;
    }
 }

@@ -25,7 +25,7 @@ bool AF4Calculator::isZero(double x) const
    if ((x < 0.0) || (x > 0.0))
       return false;
    else {
-      FFFLog::logError(string("Division by zero; operation aborted."));
+      AF4Log::logError(string("Division by zero; operation aborted."));
       return true;
    }
 }

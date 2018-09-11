@@ -2,7 +2,7 @@
 
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
-   FFFLog::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
    .arg(keyName).arg(defaultValueName)); \
    }\
    };
@@ -202,7 +202,7 @@ bool AF4ChannelConfigurationWidget::askChannelRenaming(QString &newName, const Q
    bool nameIsOk;
    bool firstDialog = true;
    do {
-      if(!firstDialog) FFFLog::logWarning(tr("Other Name has to be entered"));
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
       AF4ChannelNameDialog chNameDialog(&newName, firstDialog, oldName, true);
       firstDialog = false;
       if(chNameDialog.exec()){
@@ -247,7 +247,7 @@ bool AF4ChannelConfigurationWidget::askChannelAdding(QString &newName){
    bool nameIsOk;
    bool firstDialog = true;
    do {
-      if(!firstDialog) FFFLog::logWarning(tr("Other Name has to be entered"));
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
       AF4ChannelNameDialog chNameDialog(&newName, firstDialog);
       firstDialog = false;
       if(chNameDialog.exec()){
@@ -297,7 +297,7 @@ bool AF4ChannelConfigurationWidget::addChannel()
 
       QObject::connect(currentCalibSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchCalibWidget(QString)));
       QObject::connect(channelSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchChannelWidget(QString)));
-      FFFLog::logText(tr("New Channel \"%1\" added.").arg(newName));
+      AF4Log::logText(tr("New Channel \"%1\" added.").arg(newName));
 
 
 
@@ -326,7 +326,7 @@ void AF4ChannelConfigurationWidget::deleteChannel()
          channelSelection->removeItem(indexToRemove);
          delete (channelConfigWidgets->value(channelToRemove));
          channelConfigWidgets->remove(channelToRemove);
-         FFFLog::logText(tr("Channel deleted."));
+         AF4Log::logText(tr("Channel deleted."));
 
          QString newChannelName = channelSelection->currentText();
          // Delete now all assigned Calibration things:
@@ -346,7 +346,7 @@ void AF4ChannelConfigurationWidget::deleteChannel()
          adaptConfigWidgetIds();
       }
    }
-   else FFFLog::logWarning(tr("You cannot remove the last Channel!"));
+   else AF4Log::logWarning(tr("You cannot remove the last Channel!"));
 
 }
 
@@ -405,7 +405,7 @@ bool AF4ChannelConfigurationWidget::askCalibRenaming(QString &newName, const QSt
    bool nameIsOk;
    bool firstDialog = true;
    do {
-      if(!firstDialog) FFFLog::logWarning(tr("Other Name has to be entered"));
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
       AF4CalibNameDialog calibNameDialog(&newName, firstDialog, oldName, true);
       firstDialog = false;
       if(calibNameDialog.exec()){
@@ -450,7 +450,7 @@ bool AF4ChannelConfigurationWidget::askCalibAdding(QString &newName)
    bool nameIsOk;
    bool firstDialog = true;
    do {
-      if(!firstDialog) FFFLog::logWarning(tr("Other Name has to be entered"));
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
       AF4CalibNameDialog calibNameDialog(&newName, firstDialog);
       firstDialog = false;
       if(calibNameDialog.exec()){
@@ -490,7 +490,7 @@ bool AF4ChannelConfigurationWidget::addCalibration()
       int channelId = channelConfigWidgets->value(channelName)->getChannelId();
       adaptCalibWidgetIds(channelName, channelId, "addCalibration");
       adaptCalibWidgetNames(channelName);
-      FFFLog::logText(tr("New Calibration \"%1\" added.").arg(newName));
+      AF4Log::logText(tr("New Calibration \"%1\" added.").arg(newName));
       calibrationFrameLayout->addWidget(currentCalibWidget, 2, 0, 7, 7);
       currentCalibWidget->show();
       saveParameters();
@@ -513,11 +513,11 @@ void AF4ChannelConfigurationWidget::deleteCalibration()
          int channelId = channelConfigWidgets->value(channelName)->getChannelId();
          adaptCalibWidgetIds(channelName, channelId, "deleteCalibration");
          adaptCalibWidgetNames(channelName);
-         FFFLog::logText(tr("Calibration deleted."));
+         AF4Log::logText(tr("Calibration deleted."));
          saveParameters();
       }
    } else {
-      FFFLog::logWarning(tr("You cannot remove the last Calibration!"));
+      AF4Log::logWarning(tr("You cannot remove the last Calibration!"));
    }
 
 }
@@ -546,15 +546,15 @@ void AF4ChannelConfigurationWidget::calibrateChannnel()
    if(calibSuccess){
       currentCalibWidget->setChannelWidth(newChWidth);
       currentCalibWidget->setHydrodynVolume(newChVolume);
-      FFFLog::logText(tr("Calibration Finished. Channel Width set to %1, Channel Volume set to %2.").arg(newChWidth).arg(newChVolume));
+      AF4Log::logText(tr("Calibration Finished. Channel Width set to %1, Channel Volume set to %2.").arg(newChWidth).arg(newChVolume));
    } else {
-      FFFLog::logError(tr("Calibration could not be finished."));
+      AF4Log::logError(tr("Calibration could not be finished."));
    }
 }
 
 void AF4ChannelConfigurationWidget::saveParameters() const
 {
-   FFFLog::logText(tr("Parameters saved of Channel Calibrations saved."));
+   AF4Log::logText(tr("Parameters saved of Channel Calibrations saved."));
    writeSettings();
    for(const QString &configWidgetKey : channelConfigWidgets->keys()){
       channelConfigWidgets->value(configWidgetKey)->writeSettings();

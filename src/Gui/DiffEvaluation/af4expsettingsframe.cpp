@@ -116,7 +116,7 @@ void AF4ExpSettingsFrame::loadSettings()
 #ifndef CHECK_SETTINGS_CONVERSION
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
     if(!ok){ \
-    FFFLog::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+    AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
     .arg(keyName).arg(defaultValueName)); \
 }\
 };

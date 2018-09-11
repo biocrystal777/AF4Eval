@@ -97,7 +97,7 @@ void AF4ChannelDimsWidget::loadSettings()
 {
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
-   FFFLog::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
    .arg(keyName).arg(defaultValueName)); \
 }\
 };
@@ -110,32 +110,32 @@ void AF4ChannelDimsWidget::loadSettings()
    channelValue = settings.value(tr("channels/%1/length1").arg(channelId), 2.0).toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");
    if(!(this->setLength1(channelValue)))
-      FFFLog::logWarning(tr("Error while setting length1, 51.")
+      AF4Log::logWarning(tr("Error while setting length1, 51.")
                          .arg(newChannelName));
 
    channelValue = settings.value(tr("channels/%1/length2").arg(channelId), 2.0).toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");
    if(!(this->setLength2(channelValue)))
-      FFFLog::logWarning(tr("Error while setting length2, 51.")
+      AF4Log::logWarning(tr("Error while setting length2, 51.")
                          .arg(newChannelName));
 
    channelValue = settings.value(tr("channels/%1/length3").arg(channelId), 2.0).toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");
    if(!(this->setLength3(channelValue)))
-      FFFLog::logWarning(tr("Error while setting length3, 51.")
+      AF4Log::logWarning(tr("Error while setting length3, 51.")
                          .arg(newChannelName));
 
 
    channelValue = settings.value(tr("channels/%1/b0").arg(channelId), 2.0).toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");
    if(!(this->setB0(channelValue)))
-      FFFLog::logWarning(tr("Error while setting chLenght, 51.")
+      AF4Log::logWarning(tr("Error while setting chLenght, 51.")
                          .arg(newChannelName));
 
    channelValue = settings.value(tr("channels/%1/bL").arg(channelId), 2.0).toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");   
    if(!(this->setBL(channelValue)))
-      FFFLog::logWarning(tr("Error while setting chLenght, 51.")
+      AF4Log::logWarning(tr("Error while setting chLenght, 51.")
                          .arg(newChannelName));
 #undef CHECK_SETTINGS_CONVERSION
 }

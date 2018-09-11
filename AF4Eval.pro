@@ -1,8 +1,8 @@
-#-------------------------------------------------
+#/-------------------------------------------------
 #
 # AF4 Evaluation software
 #
-#  \author    Benedikt Häusele, Emre Brooks
+#  \author    Benedikt Häusele, (Emre Brooks)
 #  \version   1.0
 #  \date      2018
 #  \copyright CC CC BY-NC-ND 4.0
@@ -68,9 +68,8 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/Calibration/af4calibplotwidget.cpp \
     ./src/Gui/DiffEvaluation/af4diffevaluationwidget.cpp \
     ./src/Gui/DiffEvaluation/af4expsettingsframe.cpp \
-    ./src/Gui/GeneralWidgets/ffflog.cpp \
-    ./src/Gui/GeneralWidgets/ffffileinoutwidget.cpp \
-    ./src/Gui/GeneralWidgets/fffmultiplefilewidget.cpp \
+    ./src/Gui/GeneralWidgets/af4log.cpp \
+    ./src/Gui/GeneralWidgets/af4fileinoutwidget.cpp \
     ./src/Gui/smallQDerivates/ffftwoboxwidget.cpp \
     ./src/Gui/LightScattering/fffpeakparameterframe.cpp \
     ./src/Gui/LightScattering/fffslscalibrationframe.cpp \
@@ -100,9 +99,8 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.h \
     ./src/Gui/DiffEvaluation/af4diffevaluationwidget.h \
     ./src/Gui/DiffEvaluation/af4expsettingsframe.h \
-    ./src/Gui/GeneralWidgets/ffflog.h \
-    ./src/Gui/GeneralWidgets/ffffileinoutwidget.h \
-    ./src/Gui/GeneralWidgets/fffmultiplefilewidget.h \
+    ./src/Gui/GeneralWidgets/af4log.h \
+    ./src/Gui/GeneralWidgets/af4fileinoutwidget.h \
     ./src/Gui/LightScattering/fffassigndatadialog.h \
     ./src/Gui/LightScattering/fffslscalibrationframe.h \
     ./src/Gui/LightScattering/fffslsevaluationwidget.h \
@@ -113,7 +111,6 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/smallQDerivates/fffnumberedcombobox.h \
     ./src/Gui/smallQDerivates/fffnumberedcheckbox.h \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.h
-
 
 RESOURCES += \
     ./Resources/images.qrc

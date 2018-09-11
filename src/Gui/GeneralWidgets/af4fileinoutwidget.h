@@ -1,5 +1,5 @@
-#ifndef FFFFILEINOUTWIDGET_H
-#define FFFFILEINOUTWIDGET_H
+#ifndef AF4FILEINOUTWIDGET_H
+#define AF4FILEINOUTWIDGET_H
 
 #include <QFile>
 #include <QPushButton>
@@ -10,27 +10,68 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QLineEdit>
-#include "ffflog.h"
+#include "./af4log.h"
 
-class FFFFileInOutWidget : public QFrame
+/*! **********************************************************************************************
+***
+***  \class     AF4FileInOutWidget "src/Gui/Calibration/af4diffevaluationwidget.h"
+***  \brief     AF4FileInOutWidget
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
+***
+*************************************************************************************************/
+
+class AF4FileInOutWidget : public QFrame
 {
    Q_OBJECT
 public:
-   explicit FFFFileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent = nullptr);
-   ~FFFFileInOutWidget();
 
-    FFFFileInOutWidget(const FFFFileInOutWidget& src) = delete;
-    FFFFileInOutWidget& operator= (FFFFileInOutWidget& src) = delete;
-    FFFFileInOutWidget(FFFFileInOutWidget&& src) = delete;
-    FFFFileInOutWidget& operator= (FFFFileInOutWidget&& src) = delete;
+   /*!
+    * \brief AF4FileInOutWidget
+    * \param identifier
+    * \param suffix
+    * \param parent
+    */
+   explicit AF4FileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent = nullptr);
+   ~AF4FileInOutWidget();
 
+    AF4FileInOutWidget(const AF4FileInOutWidget& src) = delete;
+    AF4FileInOutWidget& operator= (AF4FileInOutWidget& src) = delete;
+    AF4FileInOutWidget(AF4FileInOutWidget&& src) = delete;
+    AF4FileInOutWidget& operator= (AF4FileInOutWidget&& src) = delete;
 
+    /*!
+    * \brief getOutputFilePath
+    * \param quoted
+    * \return
+    */
    QString getOutputFilePath(bool quoted = false);
+   /*!
+   * \brief getInputFilePath
+   * \param quoted
+   * \return
+   */
    QString getInputFilePath(bool quoted = false);
 
+   /*!
+   * \brief setInputFilePath
+   * \param quoted
+   * \return
+   */
    bool setInputFilePath(QString path, bool quoted = true);
+
+   /*!
+    * \brief setOutputFilePath
+    * \param path
+    * \param quoted
+    */
    void setOutputFilePath(QString path, bool quoted);
 
+   /*!
+    * \brief writeSettings
+    */
    void writeSettings();
 
 private:
@@ -80,9 +121,16 @@ private slots:
     */
    void chooseOutputFile();
 
+   /*!
+    * \brief adoptOutputName
+    */
    void adoptOutputName();
+
+   /*!
+    * \brief autoGenOutputName
+    */
    void autoGenOutputName();
 
 };
 
-#endif // FFFFILEINOUTWIDGET_H
+#endif // AF4FILEINOUTWIDGET_H

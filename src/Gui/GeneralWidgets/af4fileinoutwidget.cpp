@@ -1,6 +1,6 @@
-#include "ffffileinoutwidget.h"
+#include "af4fileinoutwidget.h"
 
-FFFFileInOutWidget::FFFFileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent) :
+AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent) :
    QFrame(parent), identifier(identifier), suffix(suffix)
 {
    QSettings settings("AgCoelfen", "FFFEval");
@@ -46,13 +46,13 @@ FFFFileInOutWidget::FFFFileInOutWidget(const QString &identifier, const QString 
    fileLayout->addWidget(autoGenName, 3, 14, 1, 3, Qt::AlignLeft);
 }
 
-FFFFileInOutWidget::~FFFFileInOutWidget()
+AF4FileInOutWidget::~AF4FileInOutWidget()
 {
     writeSettings();
 }
 
 
-QString FFFFileInOutWidget::getOutputFilePath(bool quoted)
+QString AF4FileInOutWidget::getOutputFilePath(bool quoted)
 {
       QString path = outputFileName->text();
       if(quoted)
@@ -62,7 +62,7 @@ QString FFFFileInOutWidget::getOutputFilePath(bool quoted)
       return path;
 }
 
-QString FFFFileInOutWidget::getInputFilePath(bool quoted)
+QString AF4FileInOutWidget::getInputFilePath(bool quoted)
 {
    QString path = inputFileName->text();
    if(quoted)
@@ -72,7 +72,7 @@ QString FFFFileInOutWidget::getInputFilePath(bool quoted)
    return path;
 }
 
-bool FFFFileInOutWidget::setInputFilePath(QString path, bool quoted)
+bool AF4FileInOutWidget::setInputFilePath(QString path, bool quoted)
 {
    bool ok(true);
    QString testPath = path;
@@ -91,14 +91,14 @@ bool FFFFileInOutWidget::setInputFilePath(QString path, bool quoted)
    return ok;
 }
 
-void FFFFileInOutWidget::setOutputFilePath(QString path, bool quoted)
+void AF4FileInOutWidget::setOutputFilePath(QString path, bool quoted)
 {
    if(quoted) chopStringsQuotMarksToOne(path);
    else chopStringsQuotMarksEntirely(path);
    outputFileName->setText(path);
 }
 
-void FFFFileInOutWidget::writeSettings()
+void AF4FileInOutWidget::writeSettings()
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
@@ -107,7 +107,7 @@ void FFFFileInOutWidget::writeSettings()
    settings.setValue(tr("fileNames/%1/autoGen").arg(identifier), autoGenName->isChecked());
 }
 
-void FFFFileInOutWidget::chooseInputFile()
+void AF4FileInOutWidget::chooseInputFile()
 {
    QString s;
    QString oldInputFile = inputFileName->text();
@@ -122,10 +122,10 @@ void FFFFileInOutWidget::chooseInputFile()
                                       QFileDialog::HideNameFilterDetails )
                                     );
    if(QFile::exists(s)) inputFileName->setText(chopStringsQuotMarksToOne(s));
-   else FFFLog::logWarning(tr("Chosen input file does not exist."));
+   else AF4Log::logWarning(tr("Chosen input file does not exist."));
 }
 
-void FFFFileInOutWidget::chooseOutputFile()
+void AF4FileInOutWidget::chooseOutputFile()
 {
    QString oldOutputFile = outputFileName->text();
 
@@ -140,24 +140,23 @@ void FFFFileInOutWidget::chooseOutputFile()
    outputFileName->setText(s);
 }
 
-void FFFFileInOutWidget::adoptOutputName()
+void AF4FileInOutWidget::adoptOutputName()
 {
    if(autoGenName->isChecked()) autoGenOutputName();
 }
 
-void FFFFileInOutWidget::autoGenOutputName()
+void AF4FileInOutWidget::autoGenOutputName()
 {
    QString outName = inputFileName->text();
    chopStringsQuotMarksEntirely(outName);
    QStringList l = outName.split(".", QString::SkipEmptyParts);
 
-   if(l.empty()) return;
-   else if(l.size() == 1 ){
-     outName.append(suffix);
-   }
-   else if (l.size() == 2) {
+   if(l.empty())
+      return;
+   else if(l.size() == 1 )
+      outName.append(suffix);
+   else if (l.size() == 2)
       outName = l.first().append(suffix).append(".").append(l.last());
-   }
    else {
       outName.clear();
       for(int i = 0; i < l.size() - 2; ++i) outName.append(l[i]).append(".");
@@ -167,7 +166,7 @@ void FFFFileInOutWidget::autoGenOutputName()
    this->setOutputFilePath(outName, true);
 }
 
-QString FFFFileInOutWidget::chopStringsQuotMarksToOne(QString & string) const
+QString AF4FileInOutWidget::chopStringsQuotMarksToOne(QString & string) const
 {
    chopStringsQuotMarksEntirely(string);
    string.prepend('\"');
@@ -175,7 +174,7 @@ QString FFFFileInOutWidget::chopStringsQuotMarksToOne(QString & string) const
    return string;
 }
 
-QString FFFFileInOutWidget::chopStringsQuotMarksEntirely(QString & string) const
+QString AF4FileInOutWidget::chopStringsQuotMarksEntirely(QString & string) const
 {
    const QChar quotMark('\"');
    while(!string.isEmpty() && string.at(0) == quotMark)

@@ -10,7 +10,7 @@
 #include <iomanip>
 #include "./af4constants.h"
 #include "./af4datatypes.h"
-#include "../Gui/GeneralWidgets/ffflog.h"
+#include "../Gui/GeneralWidgets/af4log.h"
 
 /*! ***********************************************************
 ***

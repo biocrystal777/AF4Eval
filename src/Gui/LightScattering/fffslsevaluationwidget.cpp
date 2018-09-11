@@ -14,11 +14,11 @@ FFFSLSEvaluationWidget::FFFSLSEvaluationWidget(QWidget *parent) :
    bool ok;
    int numberOfPeaks = settings.value(tr("/slsEvaluation/peakParameters/numberOfPeaks"), 1).toInt(&ok);
    if(numberOfPeaks < 1) numberOfPeaks = 1;
-   if(!ok) FFFLog::logWarning(tr("Could not read number Of Peaks."));
+   if(!ok) AF4Log::logWarning(tr("Could not read number Of Peaks."));
 
    widgetLayout = new QGridLayout(this);
 
-   fileWidget = new FFFFileInOutWidget("slsEvaluation", "_sls", this);
+   fileWidget = new AF4FileInOutWidget("slsEvaluation", "_sls", this);
 
    evaluationFrame = new QFrame(this);
    evaluationFrame->setFrameStyle(0x1011);
@@ -129,7 +129,7 @@ void FFFSLSEvaluationWidget::writeSettings() const
 #ifndef CHECK_SETTINGS_CONVERSION
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
-   FFFLog::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
    .arg(keyName).arg(defaultValueName)); \
    }\
    };
@@ -168,7 +168,7 @@ void FFFSLSEvaluationWidget::startEvaluation()
    // Check File Names:
    QString fileName = fileWidget->getInputFilePath(false);
    if(!QFile::exists(fileName)){
-      FFFLog::logWarning(tr("Input File %1 does not exist!").arg(fileName));
+      AF4Log::logWarning(tr("Input File %1 does not exist!").arg(fileName));
       return;
    }
 
@@ -180,12 +180,12 @@ void FFFSLSEvaluationWidget::startEvaluation()
    testDirName.chop(1);
    QDir testDir(testDirName);
    if(! testDir.exists()){
-      FFFLog::logWarning(tr("Chosen Directory does not exist!"));
-      FFFLog::logWarning(tr("Evaluation Aborted!"));
+      AF4Log::logWarning(tr("Chosen Directory does not exist!"));
+      AF4Log::logWarning(tr("Evaluation Aborted!"));
       evalStarter->setEnabled(true);
       return;
    }
-   FFFLog::logText(tr("Data found."));
+   AF4Log::logText(tr("Data found."));
    // Parse File
    qDebug() << "malls";
    AF4CsvParser parser(fileName.toStdString(), ',', '.');
@@ -194,16 +194,16 @@ void FFFSLSEvaluationWidget::startEvaluation()
    uint errorInLine;
    errorCode = parser.parseFile(&errorInLine);
    if(errorCode){
-      FFFLog::logError(tr("Error %1").arg(errorCode));
-      FFFLog::logError(tr("Diffusion Evaluation Aborted while reading the input file."));
+      AF4Log::logError(tr("Error %1").arg(errorCode));
+      AF4Log::logError(tr("Diffusion Evaluation Aborted while reading the input file."));
       QApplication::restoreOverrideCursor();
       return;
-   } else FFFLog::logText(tr("File %1 read").arg(fileName));
+   } else AF4Log::logText(tr("File %1 read").arg(fileName));
 
    vector<string> headLines = std::move(parser.getHeadLines());
    matD data = std::move(parser.getData());
 
-   FFFLog::logText(tr("File parsed."));
+   AF4Log::logText(tr("File parsed."));
 
    uint timeIndex(0);
    uint diffCoeffIndex(1);
@@ -292,13 +292,13 @@ void FFFSLSEvaluationWidget::startEvaluation()
 
    vecD gyrRadii = slsEvaluator.getRadGyrs(&ok);
    if(!ok){
-      FFFLog::logError(tr("Rad of gyr vector does not exist."), true);
+      AF4Log::logError(tr("Rad of gyr vector does not exist."), true);
 
       return;
    }
    vecD MWs = slsEvaluator.getMolWeights(&ok);
    if(!ok){
-      FFFLog::logError(tr("Mol weights vector does not exist."), true);
+      AF4Log::logError(tr("Mol weights vector does not exist."), true);
 
 
       return;
@@ -308,7 +308,7 @@ void FFFSLSEvaluationWidget::startEvaluation()
       if(stokesRadiusChosen){
          slsEvaluator.calcRho(stokesRadii, gyrRadii, rhos);
       } else {
-         FFFLog::logWarning(tr("No column with Stokes radii specified. Shape factor rho cannot be calculated."));
+         AF4Log::logWarning(tr("No column with Stokes radii specified. Shape factor rho cannot be calculated."));
       }
    }
 
@@ -378,21 +378,21 @@ void FFFSLSEvaluationWidget::logChosenIndices(uint timeIndex,
                                               bool diffCoeffIndexChosen,
                                               bool rSIndexChosen)
 {
-   FFFLog::logText(tr("time index: %1").arg(timeIndex));
-   if(diffCoeffIndexChosen) FFFLog::logText(tr("diffCoeffIndex: %1").arg(diffCoeffIndex));
-   if(rSIndexChosen) FFFLog::logText(tr("diffCoeffIndex: %1").arg(rSIndex));
+   AF4Log::logText(tr("time index: %1").arg(timeIndex));
+   if(diffCoeffIndexChosen) AF4Log::logText(tr("diffCoeffIndex: %1").arg(diffCoeffIndex));
+   if(rSIndexChosen) AF4Log::logText(tr("diffCoeffIndex: %1").arg(rSIndex));
    for(int i = 0 ; i < riIndices->size(); ++i)
-      FFFLog::logText(tr("riIndices: index %1, peak %2, ").arg(riIndices->at(i).position).arg(riIndices->at(i).position));
+      AF4Log::logText(tr("riIndices: index %1, peak %2, ").arg(riIndices->at(i).position).arg(riIndices->at(i).position));
    for(int k = 0 ; k < mallsIndices->size(); ++k)
       for(int i = 0 ; i < mallsIndices->at(k).size(); ++i)
-         FFFLog::logText(tr("mallsIndices[%1]: index %2, peak %3").arg(k).
+         AF4Log::logText(tr("mallsIndices[%1]: index %2, peak %3").arg(k).
                          arg(mallsIndices->at(k).at(i).position).arg(mallsIndices->at(k).at(i).peak));
 }
 
 void FFFSLSEvaluationWidget::saveParameters() const
 {
    writeSettings();
-   FFFLog::logText(tr("Parameters of SLS Evaluation saved."));
+   AF4Log::logText(tr("Parameters of SLS Evaluation saved."));
 
 }
 

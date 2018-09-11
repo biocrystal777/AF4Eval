@@ -11,8 +11,8 @@
 #include "../Calibration/af4calibsettingsframe.h"
 #include "../Calibration/af4channeldimswidget.h"
 #include "../Calibration/af4channelcalibwidget.h"
-#include "../GeneralWidgets/ffflog.h"
-#include "../GeneralWidgets/ffffileinoutwidget.h"
+#include "../GeneralWidgets/af4log.h"
+#include "../GeneralWidgets/af4fileinoutwidget.h"
 #include "../../Core/af4csvparser.h"
 #include "../../Core/af4diffevaluator.h"
 #include "../../Core/af4csvwriter.h"
@@ -105,7 +105,7 @@ protected:
    QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>  *channelCalibWidgets    = nullptr;
 
    QGridLayout           *widgetLayout           = nullptr;
-   FFFFileInOutWidget    *fileWidget             = nullptr;
+   AF4FileInOutWidget    *fileWidget             = nullptr;
    AF4CalibSettingsFrame *calibSettingsFrame     = nullptr;
    AF4ExpSettingsFrame   *expSettingsFrame       = nullptr;
    QFrame                *parameterSettingsFrame = nullptr;

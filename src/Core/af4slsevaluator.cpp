@@ -25,9 +25,9 @@ int AF4SLSEvaluator::evalRiMALLS_partZimmplot(const vecD &riData,
    /////////////////////////////
 
    //concentrations;
-   FFFLog::logText(string("Calculate concentrations from RI."));
+   AF4Log::logText(string("Calculate concentrations from RI."));
    if(calcConcFromRi(riData, useDataPoint, dnDcs, calibRi, concentrations)){
-      FFFLog::logError(string("Error while calculating concentrations"));
+      AF4Log::logError(string("Error while calculating concentrations"));
       //if(concentrations) delete concentrations;
       return 20;
    }
@@ -118,9 +118,9 @@ int AF4SLSEvaluator::evalUVVis_MALLS_partZimmplot(const vecD &uvVisData,
    /////////////////////////////
 
    //vecD concentrations;
-   FFFLog::logText(string("Calculate concentrations from absorbance."));
+   AF4Log::logText(string("Calculate concentrations from absorbance."));
    if(calcConcFromUV_Vis(uvVisData, useDataPoint, epsilon, calibRi, concentrations)){
-      FFFLog::logError(string("Error while calculating concentrations"));
+      AF4Log::logError(string("Error while calculating concentrations"));
       //if(concentrations) delete concentrations;
       return 20;
    }

@@ -43,8 +43,8 @@ void FFFTwoBoxWidget::setValueS(double signif, int exp, int callID)
       significand->setValue(0.0);
       exponent->setValue(0);
    } else {
-      FFFLog::logWarning(tr("Significand was not adjusted correctly for the TwoBoxWidget:"));
-      FFFLog::logWarning(tr("Significand: %1, Exponent: %2, callID: %3").arg(signif).arg(exp).arg(callID));
+      AF4Log::logWarning(tr("Significand was not adjusted correctly for the TwoBoxWidget:"));
+      AF4Log::logWarning(tr("Significand: %1, Exponent: %2, callID: %3").arg(signif).arg(exp).arg(callID));
    }
 }
 

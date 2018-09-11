@@ -8,7 +8,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QDebug>
-#include "../GeneralWidgets/ffflog.h"
+#include "../GeneralWidgets/af4log.h"
 #include "../../Core/af4parameterstructs.h"
 
 /*! **********************************************************************************************
@@ -27,6 +27,12 @@ class AF4ExpSettingsFrame final : public QFrame
     Q_OBJECT
 
 public:
+   /*!
+     * \brief AF4ExpSettingsFrame
+     * \param prefix
+     * \param id
+     * \param parent
+     */
     explicit AF4ExpSettingsFrame(const QString& prefix,int id, QWidget* parent = nullptr);
 
    ~AF4ExpSettingsFrame(){writeSettings();}
@@ -39,7 +45,6 @@ public:
     ExpFFFParameters getExpFFFParameters();
 
     inline void setId(int newId) { id = newId; }
-
     /*!
      * \brief getTemperatureVal returns the displayed temmperature
      * \return temperature

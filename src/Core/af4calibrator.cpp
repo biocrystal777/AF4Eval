@@ -64,12 +64,12 @@ bool AF4Calibrator::calibrate(const ChannelDims &d,
       ++i;
    }
 
-   FFFLog::logText(std::string("Calibration calculated a channel height w of ").append(to_string(w * 10000)).append(" µm.") );
-   FFFLog::logText(std::string("Geometrically calculated Volume is ").append(to_string(V0)).append(" ml.") );
+   AF4Log::logText(std::string("Calibration calculated a channel height w of ").append(to_string(w * 10000)).append(" µm.") );
+   AF4Log::logText(std::string("Geometrically calculated Volume is ").append(to_string(V0)).append(" ml.") );
 
    calcGeometVolume(d.length1, d.length2, d.length3, d.chLength, d.b0, d.bL, z_perc * d.chLength);
 
-   FFFLog::logText(std::string("Hydrodynamically calculated Volume is ").append(to_string(Vg)).append(" ml.") );
+   AF4Log::logText(std::string("Hydrodynamically calculated Volume is ").append(to_string(Vg)).append(" ml.") );
    return true;
 }
 
@@ -92,7 +92,7 @@ bool AF4Calibrator::isZero(double x, int pos) const
             append(", RMS = ").append(to_string(rmsDiff)).
             append(", delta = ").append(to_string((double)delta)).append(" , Position:").
             append(to_string(pos));
-      FFFLog::logError(message);
+      AF4Log::logError(message);
       return true;
    }
 }

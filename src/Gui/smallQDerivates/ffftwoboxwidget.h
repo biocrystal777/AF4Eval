@@ -7,7 +7,7 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <cmath>
-#include "../GeneralWidgets/ffflog.h"
+#include "../GeneralWidgets/af4log.h"
 
 /**************************************************************
 ***

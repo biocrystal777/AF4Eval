@@ -4,44 +4,44 @@
 #include <QTextEdit>
 #include <QGridLayout>
 #include <QDebug>
+#include <QPushButton>
+#include <QFileDialog>
 #include <string>
 
-/**************************************************************
+/*! **********************************************************************************************
 ***
-***  FFFLog (using Qt 4.8.2)
+***  \class   AF4Log "src/Gui/Calibration/af4log.h"
+***  \brief   Logging widget
+***  \details The class is implemented as singleton and public static functions can be
+***           accessed. All functions can be called globally.
 ***
-**************************************************************/
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
+***
+*************************************************************************************************/
 
-/*!
- * \brief The FFFLog class allows global logging into a central logWidget
- * \author Benedikt Haeusele
- * \details The class is implemented as singleton. For this reason, all loggging
- * functions are globally accessible.
- * \version 1.0
- * \date March 2013
- * \copyright GNU General Public License version 3.0
- */
-
-class FFFLog: public QWidget
+class AF4Log final: public QWidget
 {
    Q_OBJECT
 public:
 
    /*!
-     * \brief FFFLog the constructor of this class
+     * \brief AF4Log the constructor of this class
      * \param parent parent widget
      */
-   explicit FFFLog(QWidget *parent = nullptr);
+   explicit AF4Log(QWidget *parent = nullptr);
 
-    FFFLog(const FFFLog& src) = delete;
-    FFFLog& operator= (FFFLog& src) = delete;
-    FFFLog(FFFLog&& src) = delete;
-    FFFLog& operator= (FFFLog&& src) = delete;
+    AF4Log(const AF4Log& src) = delete;
+    AF4Log& operator= (AF4Log& src) = delete;
+    AF4Log(AF4Log&& src) = delete;
+    AF4Log& operator= (AF4Log&& src) = delete;
 
    /*!
-    * \brief destructor of this
+    * \brief destructor of this class
     */
-   ~FFFLog();
+   ~AF4Log(){}
 
    /*!
      * \brief logText global overloaded logging function, calls the
@@ -85,15 +85,18 @@ public:
       */
    static void logError(QString logMessage, bool qDebugToo = false);
 
+private slots:
    /*!
      * \brief clearLog clears the logWidget from existing text, calls the
-     *        internal logging function
+     *                 internal  function
      */
    static void clearLog();
 
-protected:
-   QGridLayout *layout;
-   QTextEdit *logWidget;
+private:
+
+   QGridLayout   *layout       = nullptr;
+   QTextEdit     *logWidget    = nullptr;
+   QPushButton   *clearButton  = nullptr;
 
    /*!
      * \brief logTextInInstance class internal logging function
@@ -117,7 +120,8 @@ protected:
      * \brief logWarningInInstance class internal logging function
      * \param logMessage message to be logged
      */
-   void clearLogInInstance() const;
+   void clearLogInInstance();
+
 };
 
 #endif // FFFLOGWIDGET_H

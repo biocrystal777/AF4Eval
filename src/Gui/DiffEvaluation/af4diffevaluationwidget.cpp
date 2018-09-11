@@ -5,7 +5,7 @@ using std::vector;
 
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
    if(!ok){ \
-   FFFLog::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
    .arg(keyName).arg(defaultValueName)); \
    }\
    };
@@ -18,7 +18,7 @@ AF4DiffEvaluationWidget::AF4DiffEvaluationWidget(QMap<QString, AF4ChannelDimsWid
 {
    widgetLayout = new QGridLayout(this);
 
-   fileWidget = new FFFFileInOutWidget(QString("diffEvaluation"), "_eval", this);
+   fileWidget = new AF4FileInOutWidget(QString("diffEvaluation"), "_eval", this);
    widgetLayout->addWidget(fileWidget, 0, 0, 5, 15);
 
    calibSettingsFrame = new AF4CalibSettingsFrame(channelConfigWidgets, channelCalibWidgets, QString("diffEval"), this);
@@ -49,7 +49,7 @@ void AF4DiffEvaluationWidget::startEvaluation()
    // Check File Names:
    QString fileName = fileWidget->getInputFilePath(false);
    if(!QFile::exists(fileName)){
-      FFFLog::logWarning(tr("File %1 does not exist!").arg(fileName));
+      AF4Log::logWarning(tr("File %1 does not exist!").arg(fileName));
       return;
    }
    QString outFileName = fileWidget->getOutputFilePath(false);
@@ -60,8 +60,8 @@ void AF4DiffEvaluationWidget::startEvaluation()
    testDirName.chop(1);
    QDir testDir(testDirName);
    if(! testDir.exists()){
-      FFFLog::logWarning(tr("Chosen Directory does not exist!"));
-      FFFLog::logWarning(tr("Evaluation Aborted!"));
+      AF4Log::logWarning(tr("Chosen Directory does not exist!"));
+      AF4Log::logWarning(tr("Evaluation Aborted!"));
       evalStarter->setEnabled(true);
       return;
    }
@@ -73,10 +73,10 @@ void AF4DiffEvaluationWidget::startEvaluation()
    uint errorInLine;
    errorCode = parser.parseFile(&errorInLine);
    if(errorCode){
-      FFFLog::logError(tr("Error %1").arg(errorCode), true);
-      FFFLog::logError(tr("Diffusion Evaluation Aborted while reading the input file."), true);
+      AF4Log::logError(tr("Error %1").arg(errorCode), true);
+      AF4Log::logError(tr("Diffusion Evaluation Aborted while reading the input file."), true);
       return;
-   } else FFFLog::logText(tr("File %1 read").arg(fileName));
+   } else AF4Log::logText(tr("File %1 read").arg(fileName));
    parser.getData();
    std::vector<std::string> headLines = parser.getHeadLines();
    matD data = parser.getData();
@@ -111,13 +111,13 @@ void AF4DiffEvaluationWidget::startEvaluation()
    if(errorCode){
       QApplication::restoreOverrideCursor();
       parentWidget()->parentWidget()->setEnabled(true);
-      FFFLog::logError(tr("Error while evaulating data: Code %1").arg(errorCode));
+      AF4Log::logError(tr("Error while evaulating data: Code %1").arg(errorCode));
       switch(errorCode){
-      case 1: FFFLog::logError(tr("Error code 1: void peakt time must not be 0.")); break;
-      case 2: FFFLog::logError(tr("Error code 2: elution flow must not be 0.")); break;
-      case 3: FFFLog::logError(tr("Error code 3: cross flow must not be 0.")); break;
-      case 4: FFFLog::logError(tr("Error code 4: channel Width must not be 0.")); break;
-      case 5: FFFLog::logError(tr("Error code 5: leftoffsetTime must not be bigger than voidPeak")); break;
+      case 1: AF4Log::logError(tr("Error code 1: void peakt time must not be 0.")); break;
+      case 2: AF4Log::logError(tr("Error code 2: elution flow must not be 0.")); break;
+      case 3: AF4Log::logError(tr("Error code 3: cross flow must not be 0.")); break;
+      case 4: AF4Log::logError(tr("Error code 4: channel Width must not be 0.")); break;
+      case 5: AF4Log::logError(tr("Error code 5: leftoffsetTime must not be bigger than voidPeak")); break;
       }
       return;
    }
@@ -159,8 +159,8 @@ void AF4DiffEvaluationWidget::startEvaluation()
          resultHeadLines.push_back(headLines.at(i));
    ok = writer.writeFile(writeResults, resultHeadLines);
 
-   if(ok) FFFLog::logText(tr("Evaluation results written to %1.").arg(outFileName));
-   else FFFLog::logError(tr("output file could not be written."));
+   if(ok) AF4Log::logText(tr("Evaluation results written to %1.").arg(outFileName));
+   else AF4Log::logError(tr("output file could not be written."));
 
    parentWidget()->parentWidget()->setEnabled(true);
 
@@ -169,7 +169,7 @@ void AF4DiffEvaluationWidget::startEvaluation()
 
 void AF4DiffEvaluationWidget::saveParameters() const
 {
-   FFFLog::logText(tr("Parameters for the Calculation of Diffusion Coefficients saved."));   
+   AF4Log::logText(tr("Parameters for the Calculation of Diffusion Coefficients saved."));   
    expSettingsFrame->writeSettings();
    fileWidget->writeSettings();
    calibSettingsFrame->saveParameters();

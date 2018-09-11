@@ -8,9 +8,9 @@
 #include <vector>
 #include <map>
 #include <limits>
-#include "../GeneralWidgets/ffflog.h"
-#include "../GeneralWidgets/fffmultiplefilewidget.h"
-#include "../GeneralWidgets/ffffileinoutwidget.h"
+#include "../GeneralWidgets/af4log.h"
+//#include "../GeneralWidgets/fffmultiplefilewidget.h"
+#include "../GeneralWidgets/af4fileinoutwidget.h"
 #include "./fffassigndatadialog.h"
 #include "./fffslscalibrationframe.h"
 #include "./fffpeakparameterframe.h"
@@ -36,10 +36,10 @@ public:
 protected:
 
    QGridLayout *widgetLayout              = nullptr;
-   FFFMultipleFileWidget *inputFileWidget = nullptr;
+   //FFFMultipleFileWidget *inputFileWidget = nullptr;
 
-   FFFFileInOutWidget *fileWidget         = nullptr;
-   FFFFileInOutWidget *gsfileWidget       = nullptr;
+   AF4FileInOutWidget *fileWidget         = nullptr;
+   AF4FileInOutWidget *gsfileWidget       = nullptr;
 
    FFFPeakParameterFrame *peakParameterFrame = nullptr;
    FFFSLSCalibrationFrame *calibrationFrame  = nullptr;

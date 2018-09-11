@@ -19,7 +19,7 @@ int AF4CsvParser::parseFile(uint *errorInLine)
    ifstream inpFile;
    inpFile.open(filePath.c_str());
    if(!inpFile.is_open()){
-      FFFLog::logError(string("File could not be opened."), true);
+      AF4Log::logError(string("File could not be opened."), true);
       return 1;
    }
 

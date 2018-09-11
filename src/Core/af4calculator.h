@@ -9,7 +9,7 @@
 #include "./af4constants.h"
 #include "./af4datatypes.h"
 #include "./af4parameterstructs.h"
-#include "../Gui/GeneralWidgets/ffflog.h"
+#include "../Gui/GeneralWidgets/af4log.h"
 
 /*! ***********************************************************
 ***
@@ -69,19 +69,19 @@ protected:
     * \brief logText logging function
     * \param message message to be logged
     */
-   inline void logText(const std::string &message) const { FFFLog::logText(message); }
+   inline void logText(const std::string &message) const { AF4Log::logText(message); }
 
    /*!
     * \brief logWarning logging function
     * \param message message to be logged
     */
-   inline void logWarning(const std::string &message) const { FFFLog::logWarning(message); }
+   inline void logWarning(const std::string &message) const { AF4Log::logWarning(message); }
 
    /*!
     * \brief logError logging function
     * \param message message to be logged
     */
-   inline void logError(const std::string &message) const { FFFLog::logError(message); }
+   inline void logError(const std::string &message) const { AF4Log::logError(message); }
 };
 
 #endif // AF4CALCULATOR_H
