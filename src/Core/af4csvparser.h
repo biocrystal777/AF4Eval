@@ -5,7 +5,6 @@
 #include <fstream>
 #include <list>
 #include <vector>
-#include "../Gui/GeneralWidgets/af4log.h"
 #include <stdlib.h>
 #include <sstream>
 #include <algorithm>
@@ -14,6 +13,7 @@
 #include "./af4datatypes.h"
 #include <algorithm>
 #include <qdebug.h>
+#include "../Gui/GeneralWidgets/af4log.h"
 
 /*! ***********************************************************
 ***

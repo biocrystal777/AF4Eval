@@ -5,7 +5,7 @@ FFFTwoBoxWidget::FFFTwoBoxWidget(const QString &toolTipString, QWidget *parent) 
 {
 
 
-   setToolTip(toolTipString);
+   this->setToolTip(toolTipString);
    layout = new QHBoxLayout(this);
    significand = new QDoubleSpinBox(this);
 

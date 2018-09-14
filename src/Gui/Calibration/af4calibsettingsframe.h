@@ -193,7 +193,5 @@ public slots:
     * \param enable
     */
    void enableVolume(bool enable);
-
-
 };
 #endif // AF4CALIBSETTINGSFRAME_H

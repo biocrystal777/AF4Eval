@@ -145,7 +145,7 @@ public:
    void addPlotVLine(QDoubleSpinBox* ctrlBox, const  QColor &color);
 
 
-private:
+protected:
    /*!
     * \brief destructor of this class
     */
@@ -210,7 +210,7 @@ public slots:
    void setXScale(double minX, double maxX);
 
 
-private slots:
+protected slots:
 
    /*!
     * \brief adaptSignal1Switch

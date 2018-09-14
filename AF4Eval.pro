@@ -25,6 +25,9 @@ QMAKE_CXXFLAGS += -fopenmp
 QMAKE_LFLAGS += -fopenmp
 CONFIG += c++14
 
+QMAKE_CXXFLAGS += -fno-exceptions
+QMAKE_LFLAGS += -fopenmp
+
 linux {
 QWTDIR  = /usr/include/qwt
 GSLDIR = /usr/lib
@@ -71,14 +74,15 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/GeneralWidgets/af4log.cpp \
     ./src/Gui/GeneralWidgets/af4fileinoutwidget.cpp \
     ./src/Gui/smallQDerivates/ffftwoboxwidget.cpp \
-    ./src/Gui/LightScattering/fffpeakparameterframe.cpp \
+    ./src/Gui/LightScattering/af4assigndatadialog.cpp \
+    ./src/Gui/LightScattering/af4peakparameterframe.cpp \
     ./src/Gui/LightScattering/fffslscalibrationframe.cpp \
-    ./src/Gui/LightScattering/fffslsevaluationwidget.cpp \
-    ./src/Gui/LightScattering/fffassigndatadialog.cpp \
+    ./src/Gui/LightScattering/fffslsevaluationwidget.cpp \    
     ./src/Gui/LightScattering/fffslsparameterframe.cpp \
     ./src/Gui/smallQDerivates/fffnumberedcheckbox.cpp \
     ./src/Gui/smallQDerivates/fffnumberedcombobox.cpp \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.cpp
+
 
 HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4constants.h \
@@ -101,10 +105,10 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/DiffEvaluation/af4expsettingsframe.h \
     ./src/Gui/GeneralWidgets/af4log.h \
     ./src/Gui/GeneralWidgets/af4fileinoutwidget.h \
-    ./src/Gui/LightScattering/fffassigndatadialog.h \
+    ./src/Gui/LightScattering/af4assigndatadialog.h \
+    ./src/Gui/LightScattering/af4peakparameterframe.h \
     ./src/Gui/LightScattering/fffslscalibrationframe.h \
-    ./src/Gui/LightScattering/fffslsevaluationwidget.h \
-    ./src/Gui/LightScattering/fffpeakparameterframe.h \
+    ./src/Gui/LightScattering/fffslsevaluationwidget.h \    
     ./src/Gui/LightScattering/posPeakPair.h \
     ./src/Gui/LightScattering/fffslsparameterframe.h \
     ./src/Gui/smallQDerivates/ffftwoboxwidget.h \

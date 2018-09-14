@@ -35,7 +35,7 @@ public:
      * \param toolTipString toolTip that shall be displayed for this widget
      * \param parent parent widget
      */
-   explicit FFFTwoBoxWidget(const QString &toolTipString, QWidget *parent = nullptr);
+   explicit FFFTwoBoxWidget(const QString &toolTipString, QWidget *parent);
 
     FFFTwoBoxWidget(const FFFTwoBoxWidget& src) = delete;
     FFFTwoBoxWidget& operator= (FFFTwoBoxWidget& src) = delete;
@@ -139,8 +139,6 @@ protected:
    int minimumExp;
    double maximumSign;
    int maximumExp;
-
-
 
 protected slots:
 

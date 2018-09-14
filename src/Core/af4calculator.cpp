@@ -5,20 +5,12 @@ using std::string;
 
 uint AF4Calculator::findIndexFromTime(const vecD &timeVector, const double time) const
 {
-   uint index(0);
-   double oldDiff = std::numeric_limits<double>::max();   
-   for(uint i = 0; i < timeVector.size(); ++i){
-      if(timeVector.at(i) > 0.0){
-         double newDiff = std::abs(timeVector.at(i) - time);
-         if(newDiff < oldDiff){
-            index = i;
-            oldDiff  = newDiff;
-         }
-      }
-   }
-   return index;
+   uint index = std::distance( timeVector.begin(), std::lower_bound(timeVector.begin(), timeVector.end(), time) );
+   if( index && std::abs(timeVector[index] - time  ) < std::abs(timeVector[index-1] -time))
+      return index;
+   else
+      return index-1;
 }
-
 
 bool AF4Calculator::isZero(double x) const
 {

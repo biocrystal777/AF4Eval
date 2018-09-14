@@ -94,17 +94,15 @@ FFFSLSEvaluationWidget::FFFSLSEvaluationWidget(QWidget *parent) :
    evaluationLayout->addWidget(evalStarter, 10, 2, 1, 4);
 
    calibrationFrame = new FFFSLSCalibrationFrame("slsEvaluation", -1, this);
-   peakParameterFrame = new FFFPeakParameterFrame("slsEvaluation", -1, this);
-   QObject::connect(this, SIGNAL(concModeChanged(uint)), peakParameterFrame, SLOT(adoptConcentrationMode(uint)));
-
+   //peakParameterFrame = new FFFPeakParameterFrame("slsEvaluation", -1, this);
+   peakParameterFrame = new AF4PeakParameterFrame("slsEvaluation", -1, this);
+   QObject::connect(this, SIGNAL(concModeChanged(SLSConcentrationMode)), peakParameterFrame, SLOT(adoptConcentrationMode(SLSConcentrationMode)));
 
    widgetLayout->addWidget(fileWidget      , 0, 0 );
    widgetLayout->addWidget(peakParameterFrame  , 0, 1 );
-
    widgetLayout->addWidget(evaluationFrame , 1, 0 );
    //widgetLayout->addWidget(gridsearchFrame , 1, 1 );
    widgetLayout->addWidget(calibrationFrame, 1, 1 );
-
    loadSettings();
 }
 
@@ -113,18 +111,14 @@ FFFSLSEvaluationWidget::~FFFSLSEvaluationWidget()
    writeSettings();
 }
 
-
 void FFFSLSEvaluationWidget::writeSettings() const
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
-
    settings.setValue(tr("slsEvaluation/evaluation/n0"), refIndexSolvent->value());
    settings.setValue(tr("slsEvaluation/evaluation/laserWaveLength"), laserWaveLength->value());
    settings.setValue(tr("slsEvaluation/evaluation/concentrationCut"), concentrationCut->value());
 }
-
-
 
 #ifndef CHECK_SETTINGS_CONVERSION
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
@@ -273,7 +267,7 @@ void FFFSLSEvaluationWidget::startEvaluation()
                );
    else if(absorbanceConc->isChecked()){
 
-      vecD epsilon = vecD(riData.size(), peakParameterFrame->getEpsilon().at(0));
+      vecD epsilon = vecD(riData.size(), peakParameterFrame->getEpsilons().at(0));
             slsEvaluator.evalUVVis_MALLS_partZimmplot(
                uvVisData,
                rayleighRatios,
@@ -365,8 +359,8 @@ void FFFSLSEvaluationWidget::startEvaluation()
 
 void FFFSLSEvaluationWidget::emitConcModeChanged(bool dummy)
 {
-   //qDebug() << "dummy";
-   emit concModeChanged(absorbanceConc->isChecked());
+   if(absorbanceConc->isChecked())    emit concModeChanged(SLSConcentrationMode::FromUVVis);
+   else if(refIndexConc->isChecked()) emit concModeChanged(SLSConcentrationMode::FromRI);
 }
 
 
@@ -395,7 +389,6 @@ void FFFSLSEvaluationWidget::saveParameters() const
    AF4Log::logText(tr("Parameters of SLS Evaluation saved."));
 
 }
-
 
 ///////////////////////////
 // Sepearate Grid search //

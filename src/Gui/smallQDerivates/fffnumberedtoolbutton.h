@@ -7,7 +7,7 @@ class FFFNumberedToolButton : public QToolButton
 {
    Q_OBJECT
 public:
-   explicit FFFNumberedToolButton(int id, QWidget *parent = nullptr);
+    FFFNumberedToolButton(int id, QWidget *parent = nullptr);
    ~FFFNumberedToolButton();
 
     FFFNumberedToolButton(const FFFNumberedToolButton& src) = delete;

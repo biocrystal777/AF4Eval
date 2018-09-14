@@ -13,30 +13,42 @@
 #include <QLabel>
 #include <vector>
 #include <limits>
-#include "../GeneralWidgets/af4log.h"
 #include "./posPeakPair.h"
+#include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/fffnumberedcombobox.h"
 #include "../../Core/af4constants.h"
 
 /*! **********************************************************************************************
 ***
-***  \class   AF4Log "src/Gui/Calibration/af4log.h"
-***  \brief   Logging widget
-***  \details The class is implemented as singleton and public static functions can be
-***           accessed. All functions can be called globally.
-***
+***  \class   AF4AssignDataDialog "src/Gui/Calibration/af4assigndatadialog.h"
+***  \brief   Widget to ensure that signals for MALLS, UV and/or RI correspond to the detected signals
+***  \details  xxxx Has to be adapted
 ***  \author    Benedikt Häusele
-***  \version   1.0
+***  \version   0.1
 ***  \date      2018-08-31
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 *************************************************************************************************/
 
 
-class AF4AssignDataDialog : public QDialog
+class AF4AssignDataDialog final : public QDialog
 {
    Q_OBJECT
 public:
+   /*!
+    * \brief AF4AssignDataDialog
+    * \param headLines
+    * \param numberOfPeaks
+    * \param timeIndex
+    * \param riIndices
+    * \param mallsIndices
+    * \param diffCoeffIndex
+    * \param dCIndexChosen
+    * \param rSIndex
+    * \param rSIndexChosen
+    * \param sedCoeffIndex
+    * \param parent
+    */
    explicit AF4AssignDataDialog(std::vector<std::string> *headLines,
                                 int numberOfPeaks,
                                 uint *timeIndex,
@@ -56,7 +68,7 @@ public:
     AF4AssignDataDialog(AF4AssignDataDialog&& src) = delete;
     AF4AssignDataDialog& operator= (AF4AssignDataDialog&& src) = delete;
 
-protected:
+private:
    QGridLayout *layout;
    QScrollArea *scrollArea;
    QWidget *scrollWidget;
@@ -75,18 +87,35 @@ protected:
    QGridLayout *scrolledLayout;
    QList<FFFNumberedComboBox*> *peakBoxes = nullptr;
    QList<FFFNumberedComboBox*> *dimensionBoxes = nullptr;
-   QList<QLabel*> *peakChecker = nullptr;
-   QList<QLabel*> *dimensionChecker = nullptr;
+
+
+   QList<QLabel*> peakChecker;
+   QList<QLabel*> dimensionChecker;
 
    QPushButton* confirmer;
    QPushButton* aborter;
 
-protected slots:
+private slots:
 
+   /*!
+    * \brief checkDimConfiguration
+    * \param id
+    * \param index
+    */
    void checkDimConfiguration(int id, int index); // Rearrange box labels after setting the peak
+
+   /*!
+    * \brief checkPeakConfiguration
+    * \param id
+    * \param index
+    */
    void checkPeakConfiguration(int id, int index); // Rearrange box labels after setting
 
 public slots:
+
+   /*!
+    * \brief writeUserOptionAndAccept
+    */
    void writeUserOptionAndAccept();
 };
 

@@ -11,9 +11,10 @@
 #include "../GeneralWidgets/af4log.h"
 //#include "../GeneralWidgets/fffmultiplefilewidget.h"
 #include "../GeneralWidgets/af4fileinoutwidget.h"
-#include "./fffassigndatadialog.h"
+#include "./af4assigndatadialog.h"
 #include "./fffslscalibrationframe.h"
-#include "./fffpeakparameterframe.h"
+//#include "./fffpeakparameterframe.h"
+#include "./af4peakparameterframe.h"
 #include "../smallQDerivates/ffftwoboxwidget.h"
 #include "../../Core/af4constants.h"
 #include "../../Core/af4csvparser.h"
@@ -41,7 +42,8 @@ protected:
    AF4FileInOutWidget *fileWidget         = nullptr;
    AF4FileInOutWidget *gsfileWidget       = nullptr;
 
-   FFFPeakParameterFrame *peakParameterFrame = nullptr;
+   //FFFPeakParameterFrame *peakParameterFrame = nullptr;
+   AF4PeakParameterFrame *peakParameterFrame = nullptr;
    FFFSLSCalibrationFrame *calibrationFrame  = nullptr;
 
    QFrame* evaluationFrame                   = nullptr;
@@ -81,13 +83,9 @@ protected:
                          bool diffCoeffIndexChosen = false,
                          bool rSIndexChosen = false
          );
-
-
-private:
-
 signals:
 
-   void concModeChanged(uint mode);
+   void concModeChanged(SLSConcentrationMode);
 
 public slots:
 

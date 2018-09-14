@@ -67,20 +67,25 @@ public:
          const double zL
          );
 
-
-protected:
+private:
    double w = 0.0;
    double rmsDiff = 0.0;
    double delta = 0.0;
    double V0 = 0.0;
    double Vg = 0.0;
 
+   bool zeroErrorMessage(double x, int pos) const;
+
    /*!
     * \brief isZero
     * \param x determines whether a double is 0.0 or not
     * \return bool
     */
-   bool isZero(double x, int pos) const;
+   inline bool isZero(double x, int pos) const {
+
+      return !(std::abs(x) >= std::numeric_limits<double>::min()) ? false : zeroErrorMessage(x, pos);
+   }
+
 };
 
 #endif // AF4CALIBRATOR_H

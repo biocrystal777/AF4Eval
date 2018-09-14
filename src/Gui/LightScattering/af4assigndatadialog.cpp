@@ -1,4 +1,4 @@
-#include "fffassigndatadialog.h"
+#include "af4assigndatadialog.h"
 
 using std::vector;
 using std::string;
@@ -32,7 +32,6 @@ AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
    scrollArea = new QScrollArea(this);
 
    QRect screenGeometry = QApplication::desktop()->availableGeometry();
-   qDebug() << "x:" << screenGeometry.width() << "y:" << screenGeometry.height();
    int xScreen = (screenGeometry.width()) * 4 / 5;
    int yScreen = (screenGeometry.height()) * 4 / 5;
    this->setMaximumSize(xScreen, yScreen);
@@ -52,8 +51,8 @@ AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
 
    peakBoxes = new QList<FFFNumberedComboBox*>();
    dimensionBoxes = new QList<FFFNumberedComboBox*>();
-   dimensionChecker = new QList<QLabel*>();
-   peakChecker = new QList<QLabel*>();
+   dimensionChecker.clear();
+   peakChecker.clear();
 
    uint numberOfColumns = headLines->size();
    for(uint i = 0; i < numberOfColumns; ++i){
@@ -72,19 +71,17 @@ AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
       dimensionBoxes->append(newDimensionBox);
       scrolledLayout->addWidget(newDimensionBox, i, 4, 1, 1, Qt::AlignCenter);
       // dimensionChecker
-      dimensionChecker->append(new QLabel(" ", scrollWidget));
-      scrolledLayout->addWidget(dimensionChecker->at(i), i, 6, 1, 1, Qt::AlignCenter);
+      dimensionChecker.append(new QLabel(" ", scrollWidget));
+      scrolledLayout->addWidget(dimensionChecker.at(i), i, 6, 1, 1, Qt::AlignCenter);
       // peakBoxes
       FFFNumberedComboBox *newPeakBox = new FFFNumberedComboBox(i, scrollWidget);
       // content of peakBoxes
       for(int j = 0; j < numberOfPeaks; ++j) newPeakBox->addItem(tr("Peak %1").arg(j+1));
       peakBoxes->append(newPeakBox);
-      qDebug() << i << 4;
-      peakChecker->append(new QLabel(" ", scrollWidget));
-      scrolledLayout->addWidget(peakChecker->at(i), i, 9, 1, 1, Qt::AlignCenter);
+      peakChecker.append(new QLabel(" ", scrollWidget));
+      scrolledLayout->addWidget(peakChecker.at(i), i, 9, 1, 1, Qt::AlignCenter);
       scrolledLayout->addWidget(newPeakBox, i, 7, 1, 2, Qt::AlignCenter);
    }
-   qDebug() << "AssignDialog mark 2";
    confirmer = new QPushButton("Continue ", this);
    QObject::connect(confirmer, SIGNAL(clicked()), this, SLOT(writeUserOptionAndAccept()));
    layout->addWidget(confirmer, 11, 6, 1, 1);
@@ -116,7 +113,7 @@ AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
    for(uint i = 0 ; i < numberOfColumns; ++i){
       peakBoxes->at(i)->setCurrentIndex(i);
       peakBoxes->at(i)->show();
-      peakChecker->at(i)->show();
+      peakChecker.at(i)->show();
    }
 
    checkDimConfiguration(0, 0);
@@ -132,8 +129,8 @@ AF4AssignDataDialog::~AF4AssignDataDialog()
 {
    if(peakBoxes) delete peakBoxes;
    if(dimensionBoxes) delete dimensionBoxes;
-   if(peakChecker) delete peakChecker;
-   if(dimensionChecker) delete dimensionChecker;
+
+
 }
 
 void AF4AssignDataDialog::checkDimConfiguration(int id, int index)
@@ -153,31 +150,31 @@ void AF4AssignDataDialog::checkDimConfiguration(int id, int index)
       if(boxValue == 0){
          timeBoxIndices.append(i);
          peakBoxes->at(i)->hide();
-         peakChecker->at(i)->hide();
+         peakChecker.at(i)->hide();
       }
       else if(boxValue == 1){
          diffCoeffBoxIndices.append(i);
          peakBoxes->at(i)->hide();
-         peakChecker->at(i)->hide();
+         peakChecker.at(i)->hide();
       }
       else if(boxValue == 2){
          hydroDynRadBoxIndices.append(i);
          peakBoxes->at(i)->hide();
-         peakChecker->at(i)->hide();
+         peakChecker.at(i)->hide();
       }
       else if(boxValue == 3){
          riBoxIndices.append(i);
          peakBoxes->at(i)->show();
-         peakChecker->at(i)->show();
+         peakChecker.at(i)->show();
       }
       else if(4 <= boxValue && boxValue <= 11){
          (mallsBoxIndices[boxValue-4]).append(i);
          peakBoxes->at(i)->show();
-         peakChecker->at(i)->show();
+         peakChecker.at(i)->show();
       } else if ( boxValue == 12 ) {
          sedCoeffIndices.append(i);
          peakBoxes->at(i)->hide();
-         peakChecker->at(i)->hide();
+         peakChecker.at(i)->hide();
       }
    }
 
@@ -185,93 +182,93 @@ void AF4AssignDataDialog::checkDimConfiguration(int id, int index)
    // times
    if(timeBoxIndices.size() > 1){
       for(int i = 0; i < timeBoxIndices.size(); ++i)
-         dimensionChecker->at(timeBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
+         dimensionChecker.at(timeBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
       activateConfirmerLater = false;
    }
    else {
       for(int i = 0; i < timeBoxIndices.size(); ++i)
-         dimensionChecker->at(timeBoxIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
+         dimensionChecker.at(timeBoxIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
    }
    for(int i = 0; i < timeBoxIndices.size(); ++i)
-      dimensionChecker->at(timeBoxIndices.at(i))->setText(tr(" %1 / 1 ").arg(timeBoxIndices.size()));
+      dimensionChecker.at(timeBoxIndices.at(i))->setText(tr(" %1 / 1 ").arg(timeBoxIndices.size()));
    // diffusion Coefficients
    if(diffCoeffBoxIndices.size() > 1){
       for(int i = 0; i < diffCoeffBoxIndices.size(); ++i)
-         dimensionChecker->at(diffCoeffBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
+         dimensionChecker.at(diffCoeffBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
       activateConfirmerLater = false;
    }
    else {
       for(int i = 0; i < diffCoeffBoxIndices.size(); ++i)
-         dimensionChecker->at(diffCoeffBoxIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
+         dimensionChecker.at(diffCoeffBoxIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
 
    }
    for(int i = 0; i < diffCoeffBoxIndices.size(); ++i)
-      dimensionChecker->at(diffCoeffBoxIndices.at(i))->setText(tr(" %1 / 1 ").arg(diffCoeffBoxIndices.size()));
+      dimensionChecker.at(diffCoeffBoxIndices.at(i))->setText(tr(" %1 / 1 ").arg(diffCoeffBoxIndices.size()));
 
    // hydrodynamic radii entries
    if(hydroDynRadBoxIndices.size() > 1){
       for(int i = 0; i < hydroDynRadBoxIndices.size(); ++i)
-         dimensionChecker->at(hydroDynRadBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
+         dimensionChecker.at(hydroDynRadBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
       activateConfirmerLater = false;
    }
    else {
       for(int i = 0; i < hydroDynRadBoxIndices.size(); ++i)
-         dimensionChecker->at(hydroDynRadBoxIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
+         dimensionChecker.at(hydroDynRadBoxIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
    }
    for(int i = 0; i < hydroDynRadBoxIndices.size(); ++i)
-      dimensionChecker->at(hydroDynRadBoxIndices.at(i))->setText(tr(" %1 / 1 ").arg(hydroDynRadBoxIndices.size()));
+      dimensionChecker.at(hydroDynRadBoxIndices.at(i))->setText(tr(" %1 / 1 ").arg(hydroDynRadBoxIndices.size()));
 
    // check for multiple occurrences
 
    // ri entries
    if(riBoxIndices.size() > numberOfPeaks){
       for(int i = 0; i < riBoxIndices.size(); ++i)
-         dimensionChecker->at(riBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
+         dimensionChecker.at(riBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
       activateConfirmerLater = false;
    }
    else if(riBoxIndices.size() < numberOfPeaks){
       for(int i = 0; i < riBoxIndices.size(); ++i)
-         dimensionChecker->at(riBoxIndices.at(i))->setStyleSheet("QLabel { background-color : #00BFFF; color : black; }");
+         dimensionChecker.at(riBoxIndices.at(i))->setStyleSheet("QLabel { background-color : #00BFFF; color : black; }");
       activateConfirmerLater = false;
    }
    else {
       for(int i = 0; i < riBoxIndices.size(); ++i)
-         dimensionChecker->at(riBoxIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
+         dimensionChecker.at(riBoxIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
    }
    for(int i = 0; i < riBoxIndices.size(); ++i)
-      dimensionChecker->at(riBoxIndices.at(i))->setText(tr(" %1 / %2 ").arg(riBoxIndices.size()).arg(numberOfPeaks));
+      dimensionChecker.at(riBoxIndices.at(i))->setText(tr(" %1 / %2 ").arg(riBoxIndices.size()).arg(numberOfPeaks));
    // malls entries
    for(int k = 0; k < mallsBoxIndices.size(); ++k){
       if(mallsBoxIndices.at(k).size() > numberOfPeaks){
          for(int i = 0; i < mallsBoxIndices.at(k).size(); ++i){
-            dimensionChecker->at(mallsBoxIndices.at(k).at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
+            dimensionChecker.at(mallsBoxIndices.at(k).at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
          }
          activateConfirmerLater = false;
       }
       else if(mallsBoxIndices.at(k).size() < numberOfPeaks){
          for(int i = 0; i < mallsBoxIndices.at(k).size(); ++i){
-            dimensionChecker->at(mallsBoxIndices.at(k).at(i))->setStyleSheet("QLabel { background-color : #00BFFF; color : black; }");
+            dimensionChecker.at(mallsBoxIndices.at(k).at(i))->setStyleSheet("QLabel { background-color : #00BFFF; color : black; }");
          }
          activateConfirmerLater = false;
       }
       else {
          for(int i = 0; i < mallsBoxIndices.at(k).size(); ++i){
-            dimensionChecker->at(mallsBoxIndices.at(k).at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
+            dimensionChecker.at(mallsBoxIndices.at(k).at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
          }
       }
       for(int i = 0; i < mallsBoxIndices.at(k).size(); ++i)
-         dimensionChecker->at(mallsBoxIndices.at(k).at(i))->setText(tr(" %1 / %2 ").arg(mallsBoxIndices.at(k).size()).arg(numberOfPeaks));
+         dimensionChecker.at(mallsBoxIndices.at(k).at(i))->setText(tr(" %1 / %2 ").arg(mallsBoxIndices.at(k).size()).arg(numberOfPeaks));
    }
 
    // sed coeff
    if(sedCoeffIndices.size() > 1){
       for(int i = 0; i < sedCoeffIndices.size(); ++i)
-         dimensionChecker->at(timeBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
+         dimensionChecker.at(timeBoxIndices.at(i))->setStyleSheet("QLabel { background-color : red; color : black; }");
       activateConfirmerLater = false;
    }
    else {
       for(int i = 0; i < sedCoeffIndices.size(); ++i)
-         dimensionChecker->at(sedCoeffIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
+         dimensionChecker.at(sedCoeffIndices.at(i))->setStyleSheet("QLabel { background-color : green; color : black; }");
    }
 
    confirmer->setEnabled(activateConfirmerLater);
@@ -292,10 +289,10 @@ void AF4AssignDataDialog::checkPeakConfiguration(int /* id */, int /* index */)
                && (dimensionBoxes->at(j)->currentIndex() > 2)){
             if((peakBoxes->at(i)->currentIndex() == peakBoxes->at(j)->currentIndex())
                   && (dimensionBoxes->at(i)->currentIndex() == dimensionBoxes->at(j)->currentIndex())){
-               peakChecker->at(i)->setStyleSheet("QLabel { background-color : red; color : black; }");
-               peakChecker->at(j)->setStyleSheet("QLabel { background-color : red; color : black; }");
-               peakChecker->at(i)->setText(tr(" >1 "));
-               peakChecker->at(j)->setText(tr(" >1 "));
+               peakChecker.at(i)->setStyleSheet("QLabel { background-color : red; color : black; }");
+               peakChecker.at(j)->setStyleSheet("QLabel { background-color : red; color : black; }");
+               peakChecker.at(i)->setText(tr(" >1 "));
+               peakChecker.at(j)->setText(tr(" >1 "));
                if(dimensionBoxes->at(i)->currentIndex() > 4)
                   activateConfirmerLater = false;
                checkedFalse[j] = true;
@@ -303,12 +300,12 @@ void AF4AssignDataDialog::checkPeakConfiguration(int /* id */, int /* index */)
             }
             else {
                if(!checkedFalse.at(i)){
-                  peakChecker->at(i)->setStyleSheet("QLabel { background-color : green; color : black; }");
-                  peakChecker->at(i)->setText(tr(" ok "));
+                  peakChecker.at(i)->setStyleSheet("QLabel { background-color : green; color : black; }");
+                  peakChecker.at(i)->setText(tr(" ok "));
                }
                if(!checkedFalse.at(j)){
-                  peakChecker->at(j)->setStyleSheet("QLabel { background-color : green; color : black; }");
-                  peakChecker->at(j)->setText(tr(" ok "));
+                  peakChecker.at(j)->setStyleSheet("QLabel { background-color : green; color : black; }");
+                  peakChecker.at(j)->setText(tr(" ok "));
                }
             }
          }

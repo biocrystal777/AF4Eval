@@ -21,7 +21,7 @@
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 *****************************************************************************************************************/
-class AF4CalibNameDialog : public QDialog
+class AF4CalibNameDialog final : public QDialog
 {
    Q_OBJECT
 
@@ -49,14 +49,14 @@ public:
    AF4CalibNameDialog(AF4CalibNameDialog&& src)             = delete;
    AF4CalibNameDialog& operator= (AF4CalibNameDialog&& src) = delete;
 
-protected:
+private:
    QString *calibName        = nullptr;
    QGridLayout *layout       = nullptr;
    QLineEdit *calibNameInput = nullptr;
    QPushButton *accepter     = nullptr;
    QPushButton *decliner     = nullptr;
 
-protected slots:
+private slots:
    /*!
     * \brief acceptName writes the name to the pointer passed for the constructor
     *        and calls accept which delivers "true" to exec()
@@ -75,7 +75,7 @@ protected slots:
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 *****************************************************************************************************************/
-class AF4DeleteCalibDialog : public QDialog
+class AF4DeleteCalibDialog final : public QDialog
 {
    Q_OBJECT
 public:
@@ -106,7 +106,7 @@ protected:
 ***
 *****************************************************************************************************************/
 
-class AF4DeleteChannelDialog : public QDialog{
+class AF4DeleteChannelDialog final : public QDialog{
 
    Q_OBJECT
 
@@ -205,7 +205,7 @@ protected slots:
 *****************************************************************************************************************/
 
 
-class AF4ChannelConfigurationWidget : public QWidget {
+class AF4ChannelConfigurationWidget final : public QWidget {
 
    Q_OBJECT
 

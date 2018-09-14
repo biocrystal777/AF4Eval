@@ -14,7 +14,7 @@ struct ExpFFFParameters{
    double leftOffsetTime;
 };
 
-enum class DeconWriteFreq {
+enum struct DeconWriteFreq {
    all,
    each5th,
    each10th,
@@ -44,6 +44,11 @@ struct FFFDiffCorrParameters{
    uint parallelMode;
    uint baseLineCorrMode;
 
+};
+
+enum struct SLSConcentrationMode{
+   FromRI,
+   FromUVVis
 };
 
 struct SLSParameters {
@@ -125,15 +130,62 @@ struct SLSCalibrationParameters{
    QList<double> angleConstants;
 };
 
+/*
+struct Peakproperties{
+
+   Peakproperties(double startTimeP,
+                  double endTimeP,
+                  bool   secondVirUseP,
+                  double secondVirCoeffP,
+                  bool   thirdVirUseP,
+                  double thirdVirCoeffP,
+                  double refIndexIncP,
+                  double waveLengthP,
+                  double epsilonP)
+                : startTime     (startTimeP),
+                  endTime       (endTimeP),
+                  secondVirUse  (secondVirUseP),
+                  secondVirCoeff(secondVirCoeffP),
+                  thirdVirUse   (thirdVirUseP),
+                  thirdVirCoeff (thirdVirCoeffP),
+                  refIndexInc   (refIndexIncP),
+                  waveLength    (waveLengthP),
+                  epsilon       (epsilonP) {}
+
+
+   const double startTime;
+   const double endTime;
+   const bool   secondVirUse;
+   const double secondVirCoeff;
+   const bool   thirdVirUse;
+   const double thirdVirCoeff;
+   const double refIndexInc;
+   const double waveLength;
+   const double epsilon;
+};
+*/
+
+struct Peakproperties{
+   const double startTime;
+   const double endTime;
+   const bool   secondVirUse;
+   const double secondVirCoeff;
+   const bool   thirdVirUse;
+   const double thirdVirCoeff;
+   const double refIndexInc;
+   const double waveLength;
+   const double epsilon;
+};
+
 struct SampleProperties{
    QList<double> startTimes;
    QList<double> endTimes;
-   QList<bool> secondVirUse;
+   QList<bool> secondVirUses;
    QList<double> secondVirCoeffs;
-   QList<bool> thirdVirUse;
+   QList<bool> thirdVirUses;
    QList<double> thirdVirCoeffs;
    QList<double> refIndexIncs;
    QList<double> waveLengths;
-   QList<double> epsilon;
+   QList<double> epsilons;
 };
 #endif // AF4PARAMETERSTRUCTS_H

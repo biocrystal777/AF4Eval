@@ -2,19 +2,19 @@
 using std::to_string;
 
 
-#define IS_ZERO(value, pos) {if(isZero(value, pos)) return false;}
+
 
 bool AF4Calibrator::calibrate(const ChannelDims &d,
                               const ParametersForCalibration &p)
 {
 
-
+#define IS_ZERO(value, pos) {if(isZero(value, pos)) return false;}
    IS_ZERO(p.voidPeakTime, 1);
    IS_ZERO(p.elutionFlow, 2);
    IS_ZERO(p.elutionTime, 3);
    IS_ZERO(p.crossFlow, 4);
    IS_ZERO(p.diffCoeff, 5);
-
+#undef IS_ZERO
 
    // check timeParameters
    if(p.leftOffsetTime >= p.voidPeakTime) return false;
@@ -79,20 +79,14 @@ void AF4Calibrator::calcGeometVolume(const double L1, const double L2, const dou
 }
 
 
-#undef IS_ZERO
-
-bool AF4Calibrator::isZero(double x, int pos) const
+bool AF4Calibrator::zeroErrorMessage(double x, int pos) const
 {
-   if ((x < 0.0) || (x > 0.0))
-      return false;
-   else {
-      std::string message = std::string(
-               "Division by zero; Premature Abortion of Calibration forced.\n");
-      message.append("Reached chWidth = ").append(to_string((double)w)).
-            append(", RMS = ").append(to_string(rmsDiff)).
-            append(", delta = ").append(to_string((double)delta)).append(" , Position:").
-            append(to_string(pos));
-      AF4Log::logError(message);
-      return true;
-   }
+   std::string message = std::string(
+            "Division by zero; Premature Abortion of Calibration forced.\n");
+   message.append("Reached chWidth = ").append(to_string((double)w)).
+         append(", RMS = ").append(to_string(rmsDiff)).
+         append(", delta = ").append(to_string((double)delta)).append(" , Position:").
+         append(to_string(pos));
+   AF4Log::logError(message);
+   return true;
 }

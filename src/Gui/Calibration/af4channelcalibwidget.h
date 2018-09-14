@@ -39,7 +39,7 @@
 ***
 ********************************************************************************************/
 
-class AF4ChannelCalibWidget : public QWidget
+class AF4ChannelCalibWidget final : public QWidget
 {
    Q_OBJECT
 
@@ -468,7 +468,7 @@ signals:
     */
    void calibrateChannelCalled();
 
-protected slots:
+private slots:
 
    /*!
     * \brief callDiffCoeffDialog

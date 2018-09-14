@@ -21,7 +21,7 @@
 ***
 *************************************************************************************************/
 
-class AF4StokesEinsteinCalculatorWidget : public QDialog
+class AF4StokesEinsteinCalculatorWidget final : public QDialog
 {
    Q_OBJECT
 public:

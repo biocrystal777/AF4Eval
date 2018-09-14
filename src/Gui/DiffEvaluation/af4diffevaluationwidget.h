@@ -29,7 +29,7 @@
 ***
 *************************************************************************************************/
 
-class AF4DiffEvaluationWidget : public QFrame {
+class AF4DiffEvaluationWidget final : public QFrame {
 
    Q_OBJECT
 public:
@@ -99,7 +99,7 @@ public:
                            double crossFlowVal,
                            double voidPeakVal);
 
-protected:
+private:
 
    QMap<QString, AF4ChannelDimsWidget*>                 *channelConfigWidgets   = nullptr;
    QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>  *channelCalibWidgets    = nullptr;
@@ -113,7 +113,7 @@ protected:
    QPushButton           *evalStarter            = nullptr;
    QCheckBox             *displayZeroMessages    = nullptr;
 
-protected slots:
+private slots:
 
    /*!
     * \brief startEvaluation starts the actual calculation

@@ -112,12 +112,8 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
 
 AF4CalibPlotWidget::~AF4CalibPlotWidget()
 {
-
    if(grid) {delete grid; grid = nullptr;}
-
 }
-
-
 
 void AF4CalibPlotWidget::initPlot()
 {
@@ -144,7 +140,6 @@ void AF4CalibPlotWidget::initPlot()
 
 void AF4CalibPlotWidget::addPlotVLine(QDoubleSpinBox *ctrlBox, const QColor &color)
 {
-   qDebug() << "Here";
    plotMarkers.append(new QwtDynPlotMarker());
    symbols.append(new QwtSymbol(QwtSymbol::VLine));
    QwtDynPlotMarker *marker = plotMarkers.last();

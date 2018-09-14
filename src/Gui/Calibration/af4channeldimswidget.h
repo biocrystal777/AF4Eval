@@ -25,7 +25,7 @@
 ***
 ********************************************************************************************/
 
-class AF4ChannelDimsWidget : public QWidget
+class AF4ChannelDimsWidget final : public QWidget
 {
    Q_OBJECT
 public:
@@ -165,7 +165,7 @@ public:
     */
    void writeSettings();
 
-protected:
+private:
    QFrame *widgetFrame       = nullptr;
    QGridLayout *widgetLayout = nullptr;
    QGridLayout *frameLayout  = nullptr;

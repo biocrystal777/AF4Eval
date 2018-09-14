@@ -15,6 +15,7 @@
 ***
 ***  \class     AF4Calculator "src/Core/af4calculator.h"
 ***  \author    Benedikt Häusele
+***  \brief     collection of general AF4 equations
 ***  \version   1.0
 ***  \date      2018
 ***  \copyright CC CC BY-NC-ND 4.0
@@ -23,6 +24,7 @@
 
 class AF4Calculator
 {
+
 protected:
    /*!
     * \brief FFFCalculator is the standard constructor
@@ -48,6 +50,7 @@ protected:
     */
 
 public:
+
    uint findIndexFromTime(const vecD &timeVector, const double time) const;
 protected:
 
@@ -67,19 +70,19 @@ protected:
 
    /*!
     * \brief logText logging function
-    * \param message message to be logged
+    * \param  message to be logged
     */
    inline void logText(const std::string &message) const { AF4Log::logText(message); }
 
    /*!
     * \brief logWarning logging function
-    * \param message message to be logged
+    * \param  message to be logged
     */
    inline void logWarning(const std::string &message) const { AF4Log::logWarning(message); }
 
    /*!
     * \brief logError logging function
-    * \param message message to be logged
+    * \param  message to be logged
     */
    inline void logError(const std::string &message) const { AF4Log::logError(message); }
 };
