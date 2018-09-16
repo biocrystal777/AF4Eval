@@ -110,13 +110,15 @@ public:
      * \brief getChannelDimensions
      * \return
      */
-    ChannelDims getChannelDimensions() const;
+    inline ChannelDims getChannelDimensions() const {  return channelConfigWidgets->value(channelChooser->currentText())->getChannelDimensions(); }
 
     /*!
      * \brief getChannelDimsFromCalib
      * \return
      */
-    ChannelDimsFromCalib getChannelDimsFromCalib() const;
+    inline ChannelDimsFromCalib getChannelDimsFromCalib() const {
+       return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getChannelDimsFromCalib();
+    }
 
     /*!
      * \brief saveParameters

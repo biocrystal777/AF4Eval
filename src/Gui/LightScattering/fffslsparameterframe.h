@@ -22,14 +22,18 @@ public:
    FFFSLSParameterFrame(FFFSLSParameterFrame&& src) = delete;
    FFFSLSParameterFrame& operator= (FFFSLSParameterFrame&& src) = delete;
 
-   SLSParameters getSLSParameters();
+   SLSParameters getSLSParameters();   
+   SLSPlotMode getSLSPlotMode();
+   SLSConcMode getSLSConcMode();
 
+   /*
    inline bool getZimmUse() const { return zimmPlot->isChecked(); }
    inline bool getBerryUse() const { return berryPlot->isChecked(); }
    inline bool getKratkyUse() const { return kratkyPlot->isChecked(); }
    inline bool getGuinierUse() const { return guinierPlot->isChecked(); }
-   inline bool getRefIndexUse() const { return cFromRefIndex->isChecked(); }
-   inline bool getWaveLengthUse() const { return cFromWaveLength->isChecked(); }
+   */
+   //inline bool getRefIndexUse() const { return cFromRefIndex->isChecked(); }
+   //inline bool getWaveLengthUse() const { return cFromWaveLength->isChecked(); }
 
    inline double getWaveLength() const { return laserWaveLength->value(); }
    inline double getRefIndexSolvent() const { return refIndexSolvent->value(); }
@@ -44,32 +48,32 @@ protected:
    QString prefix;
    int id;
 
-   QGridLayout* lay;
-   QGroupBox* evalGroup;
-   QHBoxLayout* evalLayout;
-   QCheckBox* zimmPlot;
-   QCheckBox* berryPlot;
-   QCheckBox* kratkyPlot;
-   QCheckBox* guinierPlot;
+   QGridLayout* lay        = nullptr;
+   QGroupBox* evalGroup    = nullptr;
+   QHBoxLayout* evalLayout = nullptr;
+   QCheckBox* zimmPlot     = nullptr;
+   QCheckBox* berryPlot    = nullptr;
+   QCheckBox* kratkyPlot   = nullptr;
+   QCheckBox* guinierPlot  = nullptr;
 
+   QHBoxLayout* concLayout    = nullptr;
+   QCheckBox* cFromRefIndex   = nullptr;
+   QCheckBox* cFromWaveLength = nullptr;
 
-   QHBoxLayout* concLayout;
-   QCheckBox* cFromRefIndex;
-   QCheckBox* cFromWaveLength;
+   FFFTwoBoxWidget *concentrationCut = nullptr;
+   QDoubleSpinBox *laserWaveLength   = nullptr;
+   QDoubleSpinBox *refIndexSolvent   = nullptr;
 
-   FFFTwoBoxWidget *concentrationCut;
-   QDoubleSpinBox *laserWaveLength;
-   QDoubleSpinBox* refIndexSolvent;
+private slots:
 
-protected slots:
+   void enableZimmPlotParams()   const;
+   void enableBerryPlotParams()   const;
+   void enableKratkyPlotParams()  const;
+   void enableGuinierPlotParams() const;
 
-   void enableZimmPlotParams(bool enable) const;
-   void enableBerryPlotParams(bool enable) const;
-   void enableKratkyPlotParams(bool enable) const;
-   void enableGuinierPlotParams(bool enable) const;
+   void enableRefIndex () const;
+   void enableWaveLength () const;
 
-   void enableRefIndex (bool enable) const;
-   void enableWaveLength (bool enable) const;
 };
 
 #endif // FFFSLSPARAMETERFRAME_H

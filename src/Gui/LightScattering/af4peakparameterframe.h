@@ -123,7 +123,7 @@ public slots:
     * \brief adaptConcentrationMode
     * \param mode
     */
-   void adaptConcentrationMode(SLSConcentrationMode mode);
+   void adaptConcentrationMode(SLSConcMode mode);
 
 private:
 
@@ -276,7 +276,7 @@ public slots:
     * \brief adoptConcentrationMode
     * \param mode
     */
-   void adoptConcentrationMode(SLSConcentrationMode mode); // 1: RI, 2: Absorbance
+   void adoptConcentrationMode(SLSConcMode mode); // 1: RI, 2: Absorbance
 
 private slots:
    /*!

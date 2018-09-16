@@ -85,7 +85,7 @@ protected:
          );
 signals:
 
-   void concModeChanged(SLSConcentrationMode);
+   void concModeChanged(SLSConcMode);
 
 public slots:
 

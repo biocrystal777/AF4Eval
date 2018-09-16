@@ -167,10 +167,11 @@ void FFFSLSCalibrationFrame::setToVolt(bool)
 
 SLSCalibrationParameters FFFSLSCalibrationFrame::getCalibParamters()
 {
-   SLSCalibrationParameters p;
-   p.usedAngles = getUsedAngles();
-   p.angleConstants = getMallsAngleConstants();
-   p.riConstant = getRIConstant();
-   p.mallsConstant = getMallsConstant();
-   return p;
+   return  SLSCalibrationParameters {
+      getRIConstant(),
+            getMallsConstant(),
+            getUsedAngles(),
+            getMallsAngleConstants()
+   };
 }
+

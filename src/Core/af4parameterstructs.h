@@ -25,6 +25,104 @@ enum struct DeconWriteFreq {
    last
 };
 
+enum struct SLSConcMode{
+   FromRI,
+   FromUVVis
+};
+
+enum struct SLSPlotMode {
+   Kratky,
+   Zimm,
+   Berry,
+   Guinier
+};
+
+struct SLSParameters {   
+   //bool cFromRefIndex;
+   //bool cFromWaveLength;
+   double laserWL;
+   double riSolvent;
+   //double concCut;
+};
+
+struct AllCalibrationParameters {
+   const double temperature;
+   const double elutionFlow;
+   const double crossFlow;
+   const double relFocusPoint;
+   const double leftOffsetTime;
+   const double voidPeakTime;
+   const double elutionTime;
+   const double diffCoeff;
+   const double chWidth;
+   const double hydrodynVolume;
+   const double geometVolume;
+
+   const QString date;
+   const QString sample;
+   const QString buffer;
+   const QString additionalNotes;
+};
+
+struct ChannelDims {
+   const double length1;
+   const double length2;
+   const double length3;
+   const double chLength;
+   const double b0;
+   const double bL;
+};
+
+struct ChannelDimsFromCalib {
+   const double chWidth;
+   const double hydrodynVolume;
+   const double geometVolume;
+};
+
+struct ParametersForCalibration {
+   const double elutionFlow;
+   const double crossFlow;
+   const double relFocusPoint;
+   const double leftOffsetTime;
+   const double voidPeakTime;
+   const double elutionTime;
+   const double diffCoeff;
+};
+
+
+struct SLSCalibrationParameters{
+   const double riConstant;
+   const double mallsConstant;
+   const QList<bool> usedAngles;
+   const QList<double> angleConstants;
+};
+
+struct Peakproperties{
+   const double startTime;
+   const double endTime;
+   const bool   secondVirUse;
+   const double secondVirCoeff;
+   const bool   thirdVirUse;
+   const double thirdVirCoeff;
+   const double refIndexInc;
+   const double waveLength;
+   const double epsilon;
+};
+
+struct SampleProperties{
+   const QList<double> startTimes;
+   const QList<double> endTimes;
+   const QList<bool> secondVirUses;
+   const QList<double> secondVirCoeffs;
+   const QList<bool> thirdVirUses;
+   const QList<double> thirdVirCoeffs;
+   const QList<double> refIndexIncs;
+   const QList<double> waveLengths;
+   const QList<double> epsilons;
+};
+
+// For later modules
+
 struct FFFDiffCorrParameters{
    double leftOffsettime;
    bool   recalcVolume;
@@ -35,77 +133,14 @@ struct FFFDiffCorrParameters{
    double startTime;
    double endTime;
    double relFocusPoint;
-   uint itMin;
-   uint itMax;
+   uint   itMin;
+   uint   itMax;
    double maxRMS;
    double leftAutoBaseBorder;
    double rightAutoBaseBorder;
-   uint algorithm;
-   uint parallelMode;
-   uint baseLineCorrMode;
-
-};
-
-enum struct SLSConcentrationMode{
-   FromRI,
-   FromUVVis
-};
-
-struct SLSParameters {
-   bool kratky;
-   bool zimm;
-   bool berry;
-   bool guinier;
-   bool cFromRefIndex;
-   bool cFromWaveLength;
-   double laserWL;
-   double riSolvent;
-   double concCut;
-};
-
-struct AllCalibrationParameters {
-   double temperature;
-   double elutionFlow;
-   double crossFlow;
-   double relFocusPoint;
-   double leftOffsetTime;
-   double voidPeakTime;
-   double elutionTime;
-   double diffCoeff;
-   double chWidth;
-   double hydrodynVolume;
-   double geometVolume;
-
-   QString date;
-   QString sample;
-   QString buffer;
-   QString additionalNotes;
-};
-
-struct ChannelDims {
-   double chLength;
-   double length1;
-   double length2;
-   double length3;
-   double b0;
-   double bL;
-
-};
-
-struct ChannelDimsFromCalib {
-   double chWidth;
-   double hydrodynVolume;
-   double geometVolume;
-};
-
-struct ParametersForCalibration {
-   double elutionFlow;
-   double crossFlow;
-   double relFocusPoint;
-   double leftOffsetTime;
-   double voidPeakTime;
-   double elutionTime;
-   double diffCoeff;
+   uint   algorithm;
+   uint   parallelMode;
+   uint   baseLineCorrMode;
 };
 
 struct DiffCorrParameters {
@@ -123,69 +158,5 @@ struct DiffCorrParameters {
    QList<uint> maxIterationsIR;
 };
 
-struct SLSCalibrationParameters{
-   double riConstant;
-   double mallsConstant;
-   QList<bool> usedAngles;
-   QList<double> angleConstants;
-};
 
-/*
-struct Peakproperties{
-
-   Peakproperties(double startTimeP,
-                  double endTimeP,
-                  bool   secondVirUseP,
-                  double secondVirCoeffP,
-                  bool   thirdVirUseP,
-                  double thirdVirCoeffP,
-                  double refIndexIncP,
-                  double waveLengthP,
-                  double epsilonP)
-                : startTime     (startTimeP),
-                  endTime       (endTimeP),
-                  secondVirUse  (secondVirUseP),
-                  secondVirCoeff(secondVirCoeffP),
-                  thirdVirUse   (thirdVirUseP),
-                  thirdVirCoeff (thirdVirCoeffP),
-                  refIndexInc   (refIndexIncP),
-                  waveLength    (waveLengthP),
-                  epsilon       (epsilonP) {}
-
-
-   const double startTime;
-   const double endTime;
-   const bool   secondVirUse;
-   const double secondVirCoeff;
-   const bool   thirdVirUse;
-   const double thirdVirCoeff;
-   const double refIndexInc;
-   const double waveLength;
-   const double epsilon;
-};
-*/
-
-struct Peakproperties{
-   const double startTime;
-   const double endTime;
-   const bool   secondVirUse;
-   const double secondVirCoeff;
-   const bool   thirdVirUse;
-   const double thirdVirCoeff;
-   const double refIndexInc;
-   const double waveLength;
-   const double epsilon;
-};
-
-struct SampleProperties{
-   QList<double> startTimes;
-   QList<double> endTimes;
-   QList<bool> secondVirUses;
-   QList<double> secondVirCoeffs;
-   QList<bool> thirdVirUses;
-   QList<double> thirdVirCoeffs;
-   QList<double> refIndexIncs;
-   QList<double> waveLengths;
-   QList<double> epsilons;
-};
 #endif // AF4PARAMETERSTRUCTS_H

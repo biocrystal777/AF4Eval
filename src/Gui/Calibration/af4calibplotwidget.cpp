@@ -182,7 +182,6 @@ void AF4CalibPlotWidget::adaptSignal1Switch(int sig1Ch)
    signal1Switch->setToolTip(signal1Switch->currentData().toString());
 }
 
-
 void AF4CalibPlotWidget::setSignal2Channels(const QStringList &strs)
 {
    signal2Switch->blockSignals(true);
@@ -266,7 +265,6 @@ void AF4CalibPlotWidget::redrawSignal1(int signalInt)
    signal1Ch = signalInt;
    signal1Curve->setSamples(plotXData, plotYData[signal1Ch]);
    autoScaleY1Axis();
-
 }
 
 void AF4CalibPlotWidget::adaptY2ScaleMinBoxLimit(double maxOfMin)
@@ -317,8 +315,6 @@ void AF4CalibPlotWidget::setXScale(double minX, double maxX)
    this->scaleXRangeMin->blockSignals(false);
    this->scaleXRangeMax->blockSignals(false);
 }
-
-
 
 void AF4CalibPlotWidget::redrawSignal2(int signalInt)
 {

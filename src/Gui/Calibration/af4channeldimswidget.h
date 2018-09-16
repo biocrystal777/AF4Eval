@@ -30,20 +30,19 @@ class AF4ChannelDimsWidget final : public QWidget
    Q_OBJECT
 public:
    explicit AF4ChannelDimsWidget(const int channelId,
-                                   const QString &channelName,
-                                   const bool loadParameters,
-                                   QWidget *parent = nullptr);
+                                 const QString &channelName,
+                                 const bool loadParameters,
+                                 QWidget *parent = nullptr);
+   ~AF4ChannelDimsWidget();
 
-    ~AF4ChannelDimsWidget();
+   AF4ChannelDimsWidget(const AF4ChannelDimsWidget& src) = delete;
+   AF4ChannelDimsWidget& operator= (AF4ChannelDimsWidget& src) = delete;
+   AF4ChannelDimsWidget(AF4ChannelDimsWidget&& src) = delete;
+   AF4ChannelDimsWidget& operator= (AF4ChannelDimsWidget&& src) = delete;
 
-    AF4ChannelDimsWidget(const AF4ChannelDimsWidget& src) = delete;
-    AF4ChannelDimsWidget& operator= (AF4ChannelDimsWidget& src) = delete;
-    AF4ChannelDimsWidget(AF4ChannelDimsWidget&& src) = delete;
-    AF4ChannelDimsWidget& operator= (AF4ChannelDimsWidget&& src) = delete;
+   inline double getChLength() const {return (length1->value() + length2->value() + length3->value());}
 
-    inline double getChLength() const {return (length1->value() + length2->value() + length3->value());}
-
-    /*!
+   /*!
     * \brief getLength1
     * \return
     */
@@ -89,32 +88,23 @@ public:
     * \brief getChannelDimensions
     * \return
     */
-   inline ChannelDims getChannelDimensions(){
-      ChannelDims dims;
-      dims.length1  = this->getLength1();
-      dims.length2  = this->getLength2();
-      dims.length3  = this->getLength3();
-      dims.chLength = this->getChLength();
-      dims.b0       = this->getB0();
-      dims.bL       = this->getBL();
-      return dims;
-   }
+   ChannelDims getChannelDimensions();
 
 
 #define SET_MACRO(function, boxPtr)\
    bool function(double value){\
-         if(value < boxPtr->minimum()){\
-            boxPtr->setValue(boxPtr->minimum());\
-            return false;\
-         }\
-         else if (value > boxPtr->maximum()){\
-            boxPtr->setValue(boxPtr->maximum());\
-            return false;\
-         }\
-         else {\
-            boxPtr->setValue(value);\
-            return true;\
-         }\
+   if(value < boxPtr->minimum()){\
+   boxPtr->setValue(boxPtr->minimum());\
+   return false;\
+}\
+   else if (value > boxPtr->maximum()){\
+   boxPtr->setValue(boxPtr->maximum());\
+   return false;\
+}\
+   else {\
+   boxPtr->setValue(value);\
+   return true;\
+}\
 };
    /*!
    * \brief setLength1
@@ -190,5 +180,6 @@ private:
     */
    void defaultInit();
 };
+
 
 #endif // AF4CHANNELCONFIGWIDGET_H

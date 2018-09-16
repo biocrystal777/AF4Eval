@@ -110,12 +110,12 @@ void AF4SinglePeakParameterWidget::makeSingleSPPW(bool makeSingle)
 }
 
 
-void AF4SinglePeakParameterWidget::adaptConcentrationMode(SLSConcentrationMode mode)
+void AF4SinglePeakParameterWidget::adaptConcentrationMode(SLSConcMode mode)
 {
    switch (mode) {
-   case SLSConcentrationMode::FromRI:
+   case SLSConcMode::FromRI:
       break;
-   case SLSConcentrationMode::FromUVVis:
+   case SLSConcMode::FromUVVis:
       break;
    default:
       AF4Log::logError(tr("Blame programmer for undefinded behaviour in AF4SinglePeakParameterWidget"));
@@ -337,7 +337,7 @@ void AF4PeakParameterFrame::writeSettings()
    settings.setValue(tr("/%1/peakParameters/%2/numberOfPeaks").arg(prefix).arg(id), peakParWidgets.size());
 }
 
-void AF4PeakParameterFrame::adoptConcentrationMode(SLSConcentrationMode mode)
+void AF4PeakParameterFrame::adoptConcentrationMode(SLSConcMode mode)
 {
    for(auto p : peakParWidgets) p->adaptConcentrationMode(mode);
 }

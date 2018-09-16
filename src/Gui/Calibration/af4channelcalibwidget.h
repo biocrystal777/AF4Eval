@@ -144,6 +144,13 @@ public:
     */
    double getGeometVolume() const { return geometVolume->value(); }
 
+   /*!
+    * \brief getChannelDimsFromCalib
+    * \return
+    */
+   ChannelDimsFromCalib getChannelDimsFromCalib() const;
+
+
 
    /*!
     * \brief getDiffCoefficient returns the input FileName
@@ -333,41 +340,13 @@ public:
     * \brief getParametersForCalibration
     * \return
     */
-   inline ParametersForCalibration getParametersForCalibration () {
-      ParametersForCalibration p;
-      p.elutionFlow    = this->getElutionFlow();
-      p.crossFlow      = this->getCrossFlow();
-      p.relFocusPoint  = this->getRelFocusPoint();
-      p.leftOffsetTime = this->getLeftOffsetTime();
-      p.voidPeakTime   = this->getVoidPeakTime();
-      p.elutionTime    = this->getElutionTime();
-      p.diffCoeff      = this->getDiffCoefficient();
-      return p;
-   }
+   ParametersForCalibration getParametersForCalibration ();
 
    /*!
     * \brief getAllCalibrationParameters
     * \return
     */
-   inline  AllCalibrationParameters getAllCalibrationParameters() {
-      AllCalibrationParameters p;
-      p.temperature     = this->getTemperature();
-      p.elutionFlow     = this->getElutionFlow();
-      p.crossFlow       = this->getCrossFlow();
-      p.relFocusPoint   = this->getRelFocusPoint();
-      p.leftOffsetTime  = this->getLeftOffsetTime();
-      p.voidPeakTime    = this->getVoidPeakTime();
-      p.elutionTime     = this->getElutionTime();
-      p.diffCoeff       = this->getDiffCoefficient();
-      p.chWidth         = this->getChannelWidth();
-      p.hydrodynVolume  = this->getHydrodynVolume();
-      p.geometVolume    = this->getGeometVolume();
-      p.date            = this->getDateDescr();
-      p.sample          = this->getSampleDescr();
-      p.buffer          = this->getBufferDescr();
-      p.additionalNotes = this->getNotesDescr();
-      return p;
-   }
+  AllCalibrationParameters getAllCalibrationParameters();
 
    /*!
     * \brief setAllCalibrationParameters

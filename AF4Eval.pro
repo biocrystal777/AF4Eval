@@ -83,7 +83,6 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/smallQDerivates/fffnumberedcombobox.cpp \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.cpp
 
-
 HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4constants.h \
     ./src/Core/af4calibrator.h \

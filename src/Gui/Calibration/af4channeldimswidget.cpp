@@ -158,3 +158,14 @@ void AF4ChannelDimsWidget::writeSettings()
    settings.setValue(tr("channels/%1/bL").arg(channelId), this->getBL());
 
 }
+
+ChannelDims AF4ChannelDimsWidget::getChannelDimensions(){
+   return ChannelDims {
+      getLength1(),
+            getLength2(),
+            getLength3(),
+            getChLength(),
+            getB0(),
+            getBL()
+   };
+}

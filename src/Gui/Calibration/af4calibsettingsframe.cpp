@@ -95,8 +95,6 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QMap<QString, AF4ChannelDimsWidget 
    layout->addWidget(currentCalibChooser, 7, 0, 1, 3);
    currentCalibChooser->show();
 
-
-
    qwtLabel = new QwtTextLabel(this);
    qwtLabel->setText(QString("w / cm"), QwtText::PlainText);
    qwtLabel->setToolTip(QString("channel height"));
@@ -231,28 +229,6 @@ void AF4CalibSettingsFrame::enableVolume(bool enable)
 }
 
 
-ChannelDims AF4CalibSettingsFrame::getChannelDimensions() const
-{
-   ChannelDims p;
-   p.length1 = this->getLength1();
-   p.length2 = this->getLength2();
-   p.length3 = this->getLength3();
-   p.chLength = this->getChLength();
-   p.b0 = this->getB0();
-   p.bL = this->getBL();
-   return p;
-}
-
-ChannelDimsFromCalib AF4CalibSettingsFrame::getChannelDimsFromCalib() const
-{
-   ChannelDimsFromCalib dims;
-   dims.chWidth        = this->getChWidth();
-   dims.hydrodynVolume = this->getHydrodynVolume();
-   dims.geometVolume   = this->getGeometVolume();
-   return dims;
-}
-
-
 void AF4CalibSettingsFrame::saveParameters()
 {
    QSettings settings("AgCoelfen", "FFFEval");
@@ -274,6 +250,4 @@ void AF4CalibSettingsFrame::loadParameters()
 
    if(ok && index < currentCalibChooser->count()) currentCalibChooser->setCurrentIndex(index);
    else AF4Log::logWarning(tr("Calibration profile could not found, set to default entry."));
-
-
 }

@@ -262,16 +262,22 @@ void AF4ExpSettingsFrame::setRecalcVolume(bool setValue)
 {
    this->enableVoidPeakTime(setValue);
 }
-
+double temperature;
+double viscosity;
+double voidPeakTime;
+double relFocusPoint;
+double elutionFlow;
+double crossFlow;
+double leftOffsetTime;
 ExpFFFParameters AF4ExpSettingsFrame::getExpFFFParameters()
 {
-   ExpFFFParameters p;
-   p.temperature = this->getTemperatureVal();
-   p.viscosity = this->getViscosityVal();
-   //p.voidPeakTime = this->getVoidPeakTimeVal();
-   p.relFocusPoint = this->getRelFocusPointVal();
-   p.elutionFlow = this->getElutionFlowVal();
-   p.crossFlow = this->getCrossFlowVal();
-   p.leftOffsetTime = this->getLeftOffsetTimeVal();
-   return p;
+   return ExpFFFParameters{
+      getTemperatureVal(),
+            getViscosityVal(),
+            getVoidPeakTimeVal(),
+            getRelFocusPointVal(),
+            getElutionFlowVal(),
+            getCrossFlowVal(),
+            getLeftOffsetTimeVal()
+   };
 }

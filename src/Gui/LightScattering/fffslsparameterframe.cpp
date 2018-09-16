@@ -1,14 +1,5 @@
 #include "fffslsparameterframe.h"
 
-#ifndef CHECK_SETTINGS_CONVERSION
-#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
-   if(!ok){ \
-   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
-   .arg(keyName).arg(defaultValueName)); \
-   }\
-   };
-#endif // CHECK_SETTINGS_CONVERSION
-
 FFFSLSParameterFrame::FFFSLSParameterFrame(const QString &prefix, int id, QWidget *parent) :
    QFrame(parent), prefix(prefix), id(id)
 {
@@ -18,32 +9,32 @@ FFFSLSParameterFrame::FFFSLSParameterFrame(const QString &prefix, int id, QWidge
 
    zimmPlot = new QCheckBox("Zimm", this);
    zimmPlot->setChecked(true);
-   QObject::connect(zimmPlot, SIGNAL(toggled(bool)), this, SLOT(enableZimmPlotParams(bool)));
+   QObject::connect(zimmPlot, SIGNAL(toggled(bool)), this, SLOT(enableZimmPlotParams()));
    lay->addWidget(zimmPlot, 0, 0, 1, 2);
 
    kratkyPlot = new QCheckBox("Kratky", this);
-   QObject::connect(kratkyPlot, SIGNAL(toggled(bool)), this, SLOT(enableKratkyPlotParams(bool)));
+   QObject::connect(kratkyPlot, SIGNAL(toggled(bool)), this, SLOT(enableKratkyPlotParams()));
    lay->addWidget(kratkyPlot, 0, 2, 1, 2);
    kratkyPlot->setEnabled(false);
 
    berryPlot = new QCheckBox("Berry", this);
-   QObject::connect(berryPlot, SIGNAL(toggled(bool)), this, SLOT(enableBerryPlotParams(bool)));
+   QObject::connect(berryPlot, SIGNAL(toggled(bool)), this, SLOT(enableBerryPlotParams()));
    lay->addWidget(berryPlot, 0, 4, 1, 2);
    berryPlot->setEnabled(false);
 
    guinierPlot = new QCheckBox("Guinier", this);
-   QObject::connect(guinierPlot, SIGNAL(toggled(bool)), this, SLOT(enableGuinierPlotParams(bool)));
+   QObject::connect(guinierPlot, SIGNAL(toggled(bool)), this, SLOT(enableGuinierPlotParams()));
    lay->addWidget(guinierPlot, 0, 6, 1, 2);
    guinierPlot->setEnabled(false);
 
    cFromRefIndex = new QCheckBox("From Refractive Index", this);
    cFromRefIndex->setChecked(true);
-   QObject::connect(cFromRefIndex, SIGNAL(toggled(bool)), this, SLOT(enableRefIndex(bool)));
+   QObject::connect(cFromRefIndex, SIGNAL(toggled(bool)), this, SLOT(enableRefIndex()));
    lay->addWidget(cFromRefIndex, 1, 0, 1, 5);
 
    cFromWaveLength = new QCheckBox("From Absorption",this);
    cFromWaveLength->setEnabled(false);
-   QObject::connect(cFromWaveLength, SIGNAL(toggled(bool)), this, SLOT(enableWaveLength(bool)));
+   QObject::connect(cFromWaveLength, SIGNAL(toggled(bool)), this, SLOT(enableWaveLength()));
    lay->addWidget(cFromWaveLength, 2, 0, 1, 5);
 
    lay->addWidget(new QLabel(tr("c<sub>min</sub> [mg/ml]"), this), 3, 0, 1, 1, Qt::AlignRight);
@@ -69,8 +60,13 @@ FFFSLSParameterFrame::FFFSLSParameterFrame(const QString &prefix, int id, QWidge
    settings.setIniCodec("UTF-8");
    bool ok(false);
    double value(0.0);
-   double signValue(0.0);
-   int expValue(0.0);
+
+#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
+   if(!ok){ \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   .arg(keyName).arg(defaultValueName)); \
+   }\
+   };
 
    value = settings.value(tr("/%1/%2/slsparam/n0").arg(prefix).arg(id), "1.3332").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION(tr("/%1/%2/slsparam/n0").arg(prefix).arg(id), "1.3332");
@@ -85,7 +81,12 @@ FFFSLSParameterFrame::FFFSLSParameterFrame(const QString &prefix, int id, QWidge
    //signValue = FFFTwoBoxWidget::calcSignificand(value, &expValue);
    //concentrationCut->setValue(signValue, expValue, 520);
    concentrationCut->setValueM(value, 520);
+
+#undef CHECK_SETTINGS_CONVERSION
 }
+
+
+
 
 void FFFSLSParameterFrame::writeSettings() const
 {
@@ -97,41 +98,53 @@ void FFFSLSParameterFrame::writeSettings() const
    settings.setValue(tr("/%1/%2/slsparam/concentrationCut").arg(prefix).arg(id), concentrationCut->value());
 }
 
-void FFFSLSParameterFrame::enableZimmPlotParams(bool enable) const
+void FFFSLSParameterFrame::enableZimmPlotParams() const
 {
 }
 
-void FFFSLSParameterFrame::enableBerryPlotParams(bool enable) const
+void FFFSLSParameterFrame::enableBerryPlotParams() const
 {
 }
 
-void FFFSLSParameterFrame::enableKratkyPlotParams(bool enable) const
+void FFFSLSParameterFrame::enableKratkyPlotParams() const
 {
 }
 
-void FFFSLSParameterFrame::enableGuinierPlotParams(bool enable) const
+void FFFSLSParameterFrame::enableGuinierPlotParams() const
 {
 }
 
-void FFFSLSParameterFrame::enableRefIndex(bool enable) const
+void FFFSLSParameterFrame::enableRefIndex() const
 {
 }
 
-void FFFSLSParameterFrame::enableWaveLength(bool enable) const
+void FFFSLSParameterFrame::enableWaveLength() const
 {
 }
-
 
 SLSParameters FFFSLSParameterFrame::getSLSParameters()
 {
-   SLSParameters p;
-   p.zimm = this->getZimmUse();
-   p.berry = this->getBerryUse();
-   p.kratky = this->getKratkyUse();
-   p.guinier = this->getGuinierUse();
-   p.cFromWaveLength = this->getWaveLengthUse();
-   p.cFromRefIndex = this->getRefIndexUse();
-   p.riSolvent = this->getRefIndexSolvent();
-   p.laserWL = this->getWaveLength();
-   return p;
+   return SLSParameters {
+      getWaveLength(),
+            getRefIndexSolvent()
+   };
+}
+
+SLSPlotMode FFFSLSParameterFrame::getSLSPlotMode()
+{
+   SLSPlotMode mode{SLSPlotMode::Zimm};
+   if     (zimmPlot->isChecked())    mode = SLSPlotMode::Zimm;
+   else if(berryPlot->isChecked())   mode = SLSPlotMode::Berry;
+   else if(kratkyPlot->isChecked())  mode = SLSPlotMode::Kratky;
+   else if(guinierPlot->isChecked()) mode = SLSPlotMode::Guinier;
+   return mode;
+
+}
+
+SLSConcMode FFFSLSParameterFrame::getSLSConcMode()
+{
+   SLSConcMode mode(SLSConcMode::FromRI);
+   if      (cFromRefIndex->isChecked())   mode = SLSConcMode::FromRI;
+   else if (cFromWaveLength->isChecked()) mode = SLSConcMode::FromUVVis;
+   return mode;
 }

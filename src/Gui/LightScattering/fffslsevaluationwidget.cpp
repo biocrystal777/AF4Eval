@@ -96,7 +96,7 @@ FFFSLSEvaluationWidget::FFFSLSEvaluationWidget(QWidget *parent) :
    calibrationFrame = new FFFSLSCalibrationFrame("slsEvaluation", -1, this);
    //peakParameterFrame = new FFFPeakParameterFrame("slsEvaluation", -1, this);
    peakParameterFrame = new AF4PeakParameterFrame("slsEvaluation", -1, this);
-   QObject::connect(this, SIGNAL(concModeChanged(SLSConcentrationMode)), peakParameterFrame, SLOT(adoptConcentrationMode(SLSConcentrationMode)));
+   QObject::connect(this, SIGNAL(concModeChanged(SLSConcMode)), peakParameterFrame, SLOT(adoptConcentrationMode(SLSConcMode)));
 
    widgetLayout->addWidget(fileWidget      , 0, 0 );
    widgetLayout->addWidget(peakParameterFrame  , 0, 1 );
@@ -359,8 +359,8 @@ void FFFSLSEvaluationWidget::startEvaluation()
 
 void FFFSLSEvaluationWidget::emitConcModeChanged(bool dummy)
 {
-   if(absorbanceConc->isChecked())    emit concModeChanged(SLSConcentrationMode::FromUVVis);
-   else if(refIndexConc->isChecked()) emit concModeChanged(SLSConcentrationMode::FromRI);
+   if(absorbanceConc->isChecked())    emit concModeChanged(SLSConcMode::FromUVVis);
+   else if(refIndexConc->isChecked()) emit concModeChanged(SLSConcMode::FromRI);
 }
 
 

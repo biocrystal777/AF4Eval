@@ -224,8 +224,6 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    elutionTime->setMaximumWidth(100);
    frameLayout->addWidget(elutionTime, 4, 12, 1, 2);
 
-
-
    if(loadParameters) loadSettings();
    //else defaultInit();
 
@@ -235,12 +233,9 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    *
    *************************************/
 
-
    const QRect rec = QApplication::desktop()->availableGeometry();
    const uint screenWidth  = rec.width();
    const uint screenHeight = rec.height();
-
-
 
    plotWidget = new AF4CalibPlotWidget(QString("Calibration signal (t_void region)"), this);
    plotWidget->setMinimumWidth(screenWidth/10*4);
@@ -267,16 +262,20 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
 
    plotWidget2->initPlot();
    plotWidget2->addPlotVLine(elutionTime, QColor(0xFF, 0x55, 0x00));
-
-
-
-
-
 }
 
 AF4ChannelCalibWidget::~AF4ChannelCalibWidget()
 {
    saveParameters();
+}
+
+ChannelDimsFromCalib AF4ChannelCalibWidget::getChannelDimsFromCalib() const
+{
+   return ChannelDimsFromCalib {
+      getChannelWidth(),
+            getHydrodynVolume(),
+            getGeometVolume()
+   };
 }
 
 
@@ -393,6 +392,40 @@ bool AF4ChannelCalibWidget::setInputFileName(QString path, bool quoted)
    return ok;
 }
 
+ParametersForCalibration AF4ChannelCalibWidget::getParametersForCalibration()
+{
+
+   return ParametersForCalibration {
+      getElutionFlow(),
+            getCrossFlow(),
+            getRelFocusPoint(),
+            getLeftOffsetTime(),
+            getVoidPeakTime(),
+            getElutionFlow(),
+            getDiffCoefficient()
+   };
+}
+
+AllCalibrationParameters AF4ChannelCalibWidget::getAllCalibrationParameters()
+{   
+   return AllCalibrationParameters {
+      getTemperature(),
+            getElutionFlow(),
+            getCrossFlow(),
+            getRelFocusPoint(),
+            getLeftOffsetTime(),
+            getVoidPeakTime(),
+            getElutionTime(),
+            getDiffCoefficient(),
+            getChannelWidth(),
+            getHydrodynVolume(),
+            getGeometVolume(),
+            getDateDescr(),
+            getSampleDescr(),
+            getBufferDescr(),
+            getNotesDescr()
+   };
+}
 
 void AF4ChannelCalibWidget::loadSettings()
 {
