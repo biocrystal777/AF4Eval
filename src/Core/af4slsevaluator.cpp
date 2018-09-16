@@ -38,14 +38,13 @@ int AF4SLSEvaluator::evalRiMALLS_partZimmplot(const vecD &riData,
    // Calculate x-Values for regression analysis (sin)^2(theta / 2) //
    ///////////////////////////////////////////////////////////////////
 
-   int errorCode(0);
+
 
    matD xValues = calcXForZimmplot(concentrations,
                                    mallsDetectorRelevant,
                                    useDataPoint,
                                    secondVirCoeffs,
-                                   thirdVirCoeffs,
-                                   &errorCode
+                                   thirdVirCoeffs
                                    );
 
    ////////////////////////////////////////////////////////////////////
@@ -59,8 +58,7 @@ int AF4SLSEvaluator::evalRiMALLS_partZimmplot(const vecD &riData,
                                    dnDcs,
                                    laserWl,
                                    riSolvent,
-                                   concCap,
-                                   &errorCode
+                                   concCap
                                    );
 
    /////////////////////////////////////////////////////////////////////////
@@ -131,14 +129,11 @@ int AF4SLSEvaluator::evalUVVis_MALLS_partZimmplot(const vecD &uvVisData,
    // Calculate x-Values for regression analysis (sin)^2(theta / 2) //
    ///////////////////////////////////////////////////////////////////
 
-   int errorCode(0);
-
    matD xValues = calcXForZimmplot(concentrations,
                                    mallsDetectorRelevant,
                                    useDataPoint,
                                    secondVirCoeffs,
-                                   thirdVirCoeffs,
-                                   &errorCode
+                                   thirdVirCoeffs
                                    );
 
    ////////////////////////////////////////////////////////////////////
@@ -152,8 +147,7 @@ int AF4SLSEvaluator::evalUVVis_MALLS_partZimmplot(const vecD &uvVisData,
                                    dnDcs,
                                    laserWl,
                                    riSolvent,
-                                   concCap,
-                                   &errorCode
+                                   concCap
                                    );
 
    /////////////////////////////////////////////////////////////////////////
@@ -192,8 +186,8 @@ matD AF4SLSEvaluator::calcXForZimmplot(const vecD &concentrations,
                                        const std::vector<bool> &mallsDetectorRelevant,
                                        const std::vector<bool> &useDataPoint,
                                        vecD *secondVirCoeffs,
-                                       vecD *thirdVirCoeffs,
-                                       int *errorCode)
+                                       vecD *thirdVirCoeffs
+                                       )
 {
    matD xValues(concentrations.size()) ;
    for(uint j = 0; j < xValues.size(); ++j)
@@ -247,8 +241,8 @@ matD AF4SLSEvaluator::calcYForZimmplot(
       const vecD &dnDcs,
       const double laserWl,
       const double riSolvent,
-      const double concCap,
-      int *errorCode)
+      const double concCap
+      )
 {
    matD yValues(concentrations.size());
    for(uint j = 0; j < yValues.size(); ++j){

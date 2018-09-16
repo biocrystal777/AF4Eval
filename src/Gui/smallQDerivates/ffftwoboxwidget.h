@@ -130,7 +130,7 @@ public slots:
      */
    void setReadOnly(bool r);
 
-protected:
+private:
    QHBoxLayout *layout;
    QDoubleSpinBox* significand;
    QSpinBox *exponent;
@@ -140,15 +140,14 @@ protected:
    double maximumSign;
    int maximumExp;
 
-protected slots:
+private slots:
 
    /*!
      * \brief callValueChanged slot is called when either the
      *        significand of exponent has been changed and throws
      *        the signal via valueChanged()
-     * \param dummyArgument
      */
-   void callValueChanged(QString dummyArgument);
+   void callValueChanged();
 
    /*!
      * \brief reNormValues takes values with significand <1.0 or >=10.0 (>-1.0 or <=-10.0)

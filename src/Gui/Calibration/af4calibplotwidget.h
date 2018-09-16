@@ -87,7 +87,7 @@ class VLineOverlay : public QwtWidgetOverlay {
 ********************************************************************************************/
 
 
-class AF4CalibPlotWidget : public QWidget
+class AF4CalibPlotWidget final : public QWidget
 {
    Q_OBJECT
 
@@ -98,7 +98,7 @@ public:
     * \param title
     * \param parent
     */
-   explicit AF4CalibPlotWidget(const QString& title, QWidget *parent);
+   AF4CalibPlotWidget(const QString& title, QWidget *parent);
 
    /*!
     *  \brief getPlotSignalChannel
@@ -210,19 +210,19 @@ public slots:
    void setXScale(double minX, double maxX);
 
 
-protected slots:
+private slots:
 
    /*!
     * \brief adaptSignal1Switch
     * \param sig1Ch
     */
-   void adaptSignal1Switch(int sig1Ch);
+   void adaptSignal1Switch();
 
    /*!
     * \brief adaptSignal2Switch
     * \param sig2Ch
     */
-   void adaptSignal2Switch(int sig2Ch);
+   void adaptSignal2Switch();
 
    /*!
     * \brief redrawSignal1
@@ -236,41 +236,43 @@ protected slots:
     */
    void redrawSignal2(int signalInt);
 
+
+   // NEED CHANGES AT THE AF4TWOBOXWIDGET
    /*!
     * \brief adaptY1ScaleMinBoxLimit
     * \param maxOfMin
     */
-   void adaptY1ScaleMinBoxLimit(double maxOfMin);
+ //  void adaptY1ScaleMinBoxLimit(double maxOfMin);
 
    /*!
     * \brief adaptY1ScaleMaxBoxLimit
     * \param minOfMax
     */
-   void adaptY1ScaleMaxBoxLimit(double minOfMax);
+   // void adaptY1ScaleMaxBoxLimit(double minOfMax);
 
    /*!
     * \brief reScaleY1Axis
-    * \param dummy
     */
-   void reScaleY1Axis(double dummy);
+   void reScaleY1Axis();
 
+   // NEED CHANGES AT THE AF4TWOBOXWIDGET
    /*!
     * \brief adaptY2ScaleMinBoxLimit
     * \param maxOfMin
     */
-   void adaptY2ScaleMinBoxLimit(double maxOfMin);
+   //void adaptY2ScaleMinBoxLimit(double maxOfMin);
 
    /*!
     * \brief adaptY2ScaleMaxBoxLimit
     * \param minOfMax
     */
-   void adaptY2ScaleMaxBoxLimit(double minOfMax);
+   //void adaptY2ScaleMaxBoxLimit(double minOfMax);
 
    /*!
     * \brief reScaleY2Axis
-    * \param dummy
+
     */
-   void reScaleY2Axis(double dummy);
+   void reScaleY2Axis();
 
    /*!
     * \brief adaptXScaleMinBoxLimit
@@ -286,8 +288,7 @@ protected slots:
 
    /*!
     * \brief reScaleXAxis
-    * \param dummy
     */
-   void reScaleXAxis(double dummy);
+   void reScaleXAxis();
 };
 #endif // AF4CALIBPLOTWIDGET_H

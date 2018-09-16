@@ -56,9 +56,9 @@ public:
     * \brief errorInLine indicates the line in the file where a possible error occured
     * \return integer indicates errorvalue
     */
-   int parseFile(uint *errorInLine = nullptr);
+   int parseFile(uint *badLineNo = nullptr);
 
-   int parseFileUTF8(std::ifstream &inpFile);
+   int parseFileASCII(std::ifstream &inpFile, uint *badLineNo);
 
 
    /*!

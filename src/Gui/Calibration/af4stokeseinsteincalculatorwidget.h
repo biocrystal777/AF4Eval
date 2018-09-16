@@ -56,9 +56,8 @@ private slots:
 
    /*!
     * \brief reCalculate
-    * \param dummy
     */
-   void reCalculate(double dummy);
+   void reCalculate();
 
 };
 

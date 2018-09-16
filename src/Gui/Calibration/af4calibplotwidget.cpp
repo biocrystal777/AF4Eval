@@ -12,7 +12,7 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
    signal1Switch = new QComboBox(this);
    signal1Switch->blockSignals(true);
    QObject::connect(signal1Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(redrawSignal1(int)));
-   QObject::connect(signal1Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(adaptSignal1Switch(int)));
+   QObject::connect(signal1Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(adaptSignal1Switch()));
    signal1Switch->setToolTip("Load calibration data set to choose a signal.");   
    signal1Switch->setMinimumContentsLength(30);
    signal1Switch->setFixedWidth(this->width() * 0.25);
@@ -23,7 +23,7 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
    signal2Switch = new QComboBox(this);
    signal2Switch->blockSignals(true);
    QObject::connect(signal2Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(redrawSignal2(int)));
-   QObject::connect(signal2Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(adaptSignal2Switch(int)));
+   QObject::connect(signal2Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(adaptSignal2Switch()));
    signal2Switch->setToolTip("Load calibration data set to choose a signal.");
    signal2Switch->setMinimumContentsLength(30);
    signal2Switch->setFixedWidth(this->width() * 0.25);
@@ -60,8 +60,8 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
 
    QObject::connect(scaleXRangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptXScaleMaxBoxLimit(double)));
    QObject::connect(scaleXRangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptXScaleMinBoxLimit(double)));
-   QObject::connect(scaleXRangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleXAxis(double)));
-   QObject::connect(scaleXRangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleXAxis(double)));
+   QObject::connect(scaleXRangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleXAxis()));
+   QObject::connect(scaleXRangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleXAxis()));
 
    scaleXRangeMax->setValue(60.0);
 
@@ -80,8 +80,8 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
 
    QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptY1ScaleMaxBoxLimit(double)));
    QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptY1ScaleMinBoxLimit(double)));
-   QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis(double)));
-   QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis(double)));
+   //  QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis()));
+   //   QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis()));
 
    autoScaleY1Button = new QPushButton("Rescale Y1");
    QObject::connect(autoScaleY1Button, SIGNAL(pressed()), this, SLOT(autoScaleY1Axis()));
@@ -102,8 +102,8 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
 
    QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptY2ScaleMaxBoxLimit(double)));
    QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptY2ScaleMinBoxLimit(double)));
-   QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis(double)));
-   QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis(double)));
+  // QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis()));
+  // QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis()));
 
    autoScaleY2Button = new QPushButton("Rescale Y2");
    QObject::connect(autoScaleY2Button, SIGNAL(pressed()), this, SLOT(autoScaleY2Axis()));
@@ -177,7 +177,7 @@ void AF4CalibPlotWidget::setSignal1Channels(const QStringList &strs)
    signal1Switch->blockSignals(false);
 }
 
-void AF4CalibPlotWidget::adaptSignal1Switch(int sig1Ch)
+void AF4CalibPlotWidget::adaptSignal1Switch()
 {
    signal1Switch->setToolTip(signal1Switch->currentData().toString());
 }
@@ -196,7 +196,7 @@ void AF4CalibPlotWidget::setSignal2Channels(const QStringList &strs)
    signal2Switch->blockSignals(false);
 }
 
-void AF4CalibPlotWidget::adaptSignal2Switch(int sig1Ch)
+void AF4CalibPlotWidget::adaptSignal2Switch()
 {
    signal1Switch->setToolTip(signal2Switch->currentData().toString());
 }
@@ -215,22 +215,25 @@ void AF4CalibPlotWidget::adaptXScaleMaxBoxLimit(double minOfMax)
 }
 
 
-void AF4CalibPlotWidget::reScaleXAxis(double dummy)
+void AF4CalibPlotWidget::reScaleXAxis()
 {
    this->plot->setAxisScale(QwtPlot::xBottom, this->scaleXRangeMin->value(), this->scaleXRangeMax->value());
    this->plot->replot();
 }
 
+//  NEED CHANGES AT THE AF4TWOBOXWIDGET
+/*
 void AF4CalibPlotWidget::adaptY1ScaleMinBoxLimit(double maxOfMin)
 {
+   this->scaleY1RangeMax->setMinimum(maxOfMin);
 }
 
 void AF4CalibPlotWidget::adaptY1ScaleMaxBoxLimit(double minOfMax)
 {
-   //this->scaleY1RangeMax->setMinimum(minOfMax);
+   this->scaleY1RangeMax->setMinimum(minOfMax);
 }
-
-void AF4CalibPlotWidget::reScaleY1Axis(double dummy)
+*/
+void AF4CalibPlotWidget::reScaleY1Axis()
 {
    this->plot->setAxisScale(QwtPlot::yLeft, this->scaleY1RangeMin->value(), this->scaleY1RangeMax->value());
    this->plot->replot();
@@ -267,17 +270,19 @@ void AF4CalibPlotWidget::redrawSignal1(int signalInt)
    autoScaleY1Axis();
 }
 
+// NEED CHANGES AT THE AF4TWOBOXWIDGET
+/*
 void AF4CalibPlotWidget::adaptY2ScaleMinBoxLimit(double maxOfMin)
 {
-   //this->scaleY1RangeMin->setMaximum(maxOfMin);
+   this->scaleY1RangeMin->setMaximum(maxOfMin);
 }
 
 void AF4CalibPlotWidget::adaptY2ScaleMaxBoxLimit(double minOfMax)
 {
-   //this->scaleY1RangeMax->setMinimum(minOfMax);
+   this->scaleY1RangeMax->setMinimum(minOfMax);
 }
-
-void AF4CalibPlotWidget::reScaleY2Axis(double dummy)
+*/
+void AF4CalibPlotWidget::reScaleY2Axis()
 {
    this->plot->setAxisScale(QwtPlot::yRight, this->scaleY2RangeMin->value(), this->scaleY2RangeMax->value());   
    this->plot->replot();

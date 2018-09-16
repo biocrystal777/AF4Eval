@@ -12,7 +12,7 @@ AF4CsvParser::AF4CsvParser(const string& filePath, const char sep, const char de
 {
 }
 
-int AF4CsvParser::parseFile(uint *errorInLine)
+int AF4CsvParser::parseFile(uint *badLineNo)
 {
    headLineEntries.clear();
    dataVectorList.clear();
@@ -31,11 +31,11 @@ int AF4CsvParser::parseFile(uint *errorInLine)
       return 5;
    }
 
-   return parseFileUTF8(inpFile);
+   return parseFileASCII(inpFile, badLineNo);
 
 }
 
-int AF4CsvParser::parseFileUTF8( ifstream &inpFile)
+int AF4CsvParser::parseFileASCII(ifstream &inpFile, uint* badLineNo)
 {
    string dataLine;
    std::getline(inpFile, dataLine);
@@ -44,7 +44,7 @@ int AF4CsvParser::parseFileUTF8( ifstream &inpFile)
    headLineEntries = split(dataLine, sep); // first line = header
 
 
-
+   if(badLineNo) *badLineNo = 1;
    dataVectorList.resize(headLineEntries.size());
 
    while(std::getline(inpFile, dataLine))
@@ -54,6 +54,7 @@ int AF4CsvParser::parseFileUTF8( ifstream &inpFile)
          double d = std::strtod(dataSplit[i].c_str(), nullptr);
          dataVectorList[i].push_back(d);
       }
+      if(badLineNo) ++(*badLineNo);
    }
 
    return 0;

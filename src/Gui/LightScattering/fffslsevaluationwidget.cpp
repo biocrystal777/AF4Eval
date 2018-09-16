@@ -52,8 +52,8 @@ FFFSLSEvaluationWidget::FFFSLSEvaluationWidget(QWidget *parent) :
    concLayout->addWidget(absorbanceConc);
    evaluationLayout->addWidget(concGroup, 1, 0, 2, 10, Qt::AlignBottom);
 
-   QObject::connect(refIndexConc, SIGNAL(toggled(bool)), this,SLOT(emitConcModeChanged(bool)));
-   QObject::connect(absorbanceConc, SIGNAL(toggled(bool)), this,SLOT(emitConcModeChanged(bool)));
+   QObject::connect(refIndexConc, SIGNAL(toggled(bool)), this,SLOT(emitConcModeChanged()));
+   QObject::connect(absorbanceConc, SIGNAL(toggled(bool)), this,SLOT(emitConcModeChanged()));
 
    evaluationLayout->addWidget(new QLabel(tr("c<sub>min</sub> [mg/ml]"), evaluationFrame), 4, 0, 1, 1, Qt::AlignRight);
    concentrationCut = new FFFTwoBoxWidget(QString("Minimum concentration to be evaluated"),evaluationFrame);
@@ -357,7 +357,7 @@ void FFFSLSEvaluationWidget::startEvaluation()
    QApplication::restoreOverrideCursor();
 }
 
-void FFFSLSEvaluationWidget::emitConcModeChanged(bool dummy)
+void FFFSLSEvaluationWidget::emitConcModeChanged()
 {
    if(absorbanceConc->isChecked())    emit concModeChanged(SLSConcMode::FromUVVis);
    else if(refIndexConc->isChecked()) emit concModeChanged(SLSConcMode::FromRI);

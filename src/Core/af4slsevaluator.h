@@ -135,14 +135,11 @@ private:
     * \return matrix with
     */
 
-   matD calcXForZimmplot(
-         const vecD &concentrations,
+   matD calcXForZimmplot(const vecD &concentrations,
          const std::vector<bool> &mallsDetectorRelevant,
          const std::vector<bool> &useDataPoint,
          vecD *secondVirCoeffs = nullptr,
-         vecD *thirdVirCoeffs = nullptr,
-         int *errorCode = nullptr
-         );
+         vecD *thirdVirCoeffs = nullptr);
 
 
   matD  calcYForZimmplot(const vecD &concentrations,
@@ -152,9 +149,7 @@ private:
                          const vecD &dnDcs,
                          const double laserWl,
                          const double riSolvent,
-                         const double concCap,
-                         int *errorCode = nullptr
-         );
+                         const double concCap);
 
 
    /*!

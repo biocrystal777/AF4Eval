@@ -9,11 +9,11 @@ FFFTwoBoxWidget::FFFTwoBoxWidget(const QString &toolTipString, QWidget *parent) 
    layout = new QHBoxLayout(this);
    significand = new QDoubleSpinBox(this);
 
-   QObject::connect(significand, SIGNAL(valueChanged(QString)), this, SLOT(callValueChanged(QString)));
+   QObject::connect(significand, SIGNAL(valueChanged(QString)), this, SLOT(callValueChanged()));
    layout->addWidget(significand, 0, Qt::AlignLeft);
    layout->addWidget(new QLabel("E", this), 0);
    exponent = new QSpinBox(this);
-   QObject::connect(exponent, SIGNAL(valueChanged(QString)), this, SLOT(callValueChanged(QString)));
+   QObject::connect(exponent, SIGNAL(valueChanged(QString)), this, SLOT(callValueChanged()));
    significand->setSingleStep(0.01);
    significand->setDecimals(5);
    significand->setRange(1.0, 9.99999);
@@ -101,7 +101,7 @@ void FFFTwoBoxWidget::setReadOnly(bool r)
    exponent->setReadOnly(r);
 }
 
-void FFFTwoBoxWidget::callValueChanged(QString dummyArgument)
+void FFFTwoBoxWidget::callValueChanged()
 {
    valueChanged();
    valueChanged(this->value());
@@ -161,9 +161,7 @@ double FFFTwoBoxWidget::calcSignificand(double number, int *exponent)
    } else {
       return -absNumber;
    }
-
 }
-
 
 void FFFTwoBoxWidget::setSignifandStep(double stepSize)
 {

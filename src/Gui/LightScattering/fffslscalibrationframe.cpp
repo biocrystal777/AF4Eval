@@ -151,10 +151,10 @@ void FFFSLSCalibrationFrame::enableAngle(int i, bool enable) const
 
 void FFFSLSCalibrationFrame::setToRayleigh(bool)
 {
-      for(int i = 0; i < NUMBER_OF_DETECTORS; ++i){
-         useAngles->at(i)->setEnabled(false);
-         enableAngle(i,false);
-      }
+   for(int i = 0; i < NUMBER_OF_DETECTORS; ++i){
+      useAngles->at(i)->setEnabled(false);
+      enableAngle(i,false);
+   }
 }
 
 void FFFSLSCalibrationFrame::setToVolt(bool)

@@ -150,8 +150,8 @@ void AF4SinglePeakParameterWidget::loadSettings()
    if(!ok){ \
    AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2.") \
    .arg(key).arg(defaultValue)); \
-   }\
-   };
+}\
+};
 
    key = tr("/%1/peakParameters/%2/no%3/startTime").arg(parentPrefix).arg(parentId).arg(peakNo);
    value = settings.value(key, "1.0").toDouble(&ok);
@@ -246,8 +246,7 @@ AF4PeakParameterFrame::~AF4PeakParameterFrame()
 
 SampleProperties AF4PeakParameterFrame::getSampleProperties() const
 {
-   return SampleProperties
-   {
+   return SampleProperties {
       getStartTimes(),
             getEndTimes(),
             getSecondVirUses(),

@@ -331,7 +331,7 @@ private:
     * \param newChannelId
     * \param caller
     */
-   void adaptCalibWidgetIds(const QString &channelName, int newChannelId = -1, const QString caller = "no");
+   void adaptCalibWidgetIds(const QString &channelName, int newChannelId = -1);
 
    /*!
     * \brief adaptCalibWidgetNames

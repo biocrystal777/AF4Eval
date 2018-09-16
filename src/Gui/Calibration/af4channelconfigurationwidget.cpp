@@ -183,7 +183,7 @@ void AF4ChannelConfigurationWidget::adaptConfigWidgetIds()
    for(const QString &key : channelCalibWidgets->keys()){
       AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
       configWidget->setConfigId(i);
-      adaptCalibWidgetIds(key, i, "adaptConfigWidgetIds");
+      adaptCalibWidgetIds(key, i);
       ++i;
    }
 }
@@ -378,7 +378,7 @@ void AF4ChannelConfigurationWidget::switchChannelWidget(QString newWidgetKey)
    currentChConfigWidget->show();
 }
 
-void AF4ChannelConfigurationWidget::adaptCalibWidgetIds(const QString &channelName, int newChannelId, const QString caller)
+void AF4ChannelConfigurationWidget::adaptCalibWidgetIds(const QString &channelName, int newChannelId)
 {
    int i = 0;
    for(const QString &key: channelCalibWidgets->value(channelName)->keys()){
@@ -439,7 +439,7 @@ void AF4ChannelConfigurationWidget::renameCalibration()
 
       currentCalibSelection->setItemText(currentCalibSelection->currentIndex(), newName);
       int channelId = channelConfigWidgets->value(channelName)->getChannelId();
-      adaptCalibWidgetIds(channelName, channelId, "renameCalibration");
+      adaptCalibWidgetIds(channelName, channelId);
       adaptCalibWidgetNames(channelName);
       saveParameters();
    }
@@ -488,7 +488,7 @@ bool AF4ChannelConfigurationWidget::addCalibration()
       currentCalibSelection->setCurrentIndex(currentCalibSelection->count()-1);
       currentCalibWidget = newCalibration;
       int channelId = channelConfigWidgets->value(channelName)->getChannelId();
-      adaptCalibWidgetIds(channelName, channelId, "addCalibration");
+      adaptCalibWidgetIds(channelName, channelId);
       adaptCalibWidgetNames(channelName);
       AF4Log::logText(tr("New Calibration \"%1\" added.").arg(newName));
       calibrationFrameLayout->addWidget(currentCalibWidget, 2, 0, 7, 7);
@@ -511,7 +511,7 @@ void AF4ChannelConfigurationWidget::deleteCalibration()
          delete (channelCalibWidgets->value(channelName)->value(calibrationToRemove));
          channelCalibWidgets->value(channelName)->remove(calibrationToRemove);
          int channelId = channelConfigWidgets->value(channelName)->getChannelId();
-         adaptCalibWidgetIds(channelName, channelId, "deleteCalibration");
+         adaptCalibWidgetIds(channelName, channelId);
          adaptCalibWidgetNames(channelName);
          AF4Log::logText(tr("Calibration deleted."));
          saveParameters();

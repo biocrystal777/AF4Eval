@@ -59,10 +59,10 @@ AF4StokesEinsteinCalculatorWidget::AF4StokesEinsteinCalculatorWidget(QWidget *pa
    lay->addWidget(diffCoefficient, 3, 2, 1, 2);
 
    loadParameters();
-   QObject::connect(stokesRad, SIGNAL(valueChanged(double)), this, SLOT(reCalculate(double)));
-   QObject::connect(temperature, SIGNAL(valueChanged(double)), this, SLOT(reCalculate(double)));
-   QObject::connect(viscosity, SIGNAL(valueChanged(double)), this, SLOT(reCalculate(double)));
-   reCalculate(0.0);
+   QObject::connect(stokesRad, SIGNAL(valueChanged(double)), this, SLOT(reCalculate()));
+   QObject::connect(temperature, SIGNAL(valueChanged(double)), this, SLOT(reCalculate()));
+   QObject::connect(viscosity, SIGNAL(valueChanged(double)), this, SLOT(reCalculate()));
+   reCalculate();
 }
 
 AF4StokesEinsteinCalculatorWidget::~AF4StokesEinsteinCalculatorWidget()
@@ -70,7 +70,7 @@ AF4StokesEinsteinCalculatorWidget::~AF4StokesEinsteinCalculatorWidget()
    saveParameters();
 }
 
-void AF4StokesEinsteinCalculatorWidget::reCalculate(double dummy)
+void AF4StokesEinsteinCalculatorWidget::reCalculate()
 {
    constexpr lDouble fac = (lDouble) KB / ( (lDouble) 6.0 * (lDouble) PI) * (lDouble) 1e16; // unit conversion factor
    lDouble D = fac * temperature->value() / ( viscosity->value() * stokesRad->value());

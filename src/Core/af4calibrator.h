@@ -74,7 +74,7 @@ private:
    double V0 = 0.0;
    double Vg = 0.0;
 
-   bool zeroErrorMessage(double x, int pos) const;
+   bool zeroErrorMessage(int pos) const;
 
    /*!
     * \brief isZero
@@ -82,8 +82,7 @@ private:
     * \return bool
     */
    inline bool isZero(double x, int pos) const {
-
-      return !(std::abs(x) >= std::numeric_limits<double>::min()) ? false : zeroErrorMessage(x, pos);
+      return !(std::abs(x) >= std::numeric_limits<double>::min()) ? false : zeroErrorMessage(pos);
    }
 
 };

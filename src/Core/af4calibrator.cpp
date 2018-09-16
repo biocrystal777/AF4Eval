@@ -79,7 +79,7 @@ void AF4Calibrator::calcGeometVolume(const double L1, const double L2, const dou
 }
 
 
-bool AF4Calibrator::zeroErrorMessage(double x, int pos) const
+bool AF4Calibrator::zeroErrorMessage(int pos) const
 {
    std::string message = std::string(
             "Division by zero; Premature Abortion of Calibration forced.\n");

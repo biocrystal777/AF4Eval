@@ -98,7 +98,7 @@ public slots:
 
 private slots:
 
-   void emitConcModeChanged(bool dummy);
+   void emitConcModeChanged();
 
 };
 
