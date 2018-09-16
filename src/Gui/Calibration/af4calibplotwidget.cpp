@@ -78,10 +78,10 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
 
    lay->addWidget(scaleY1RangeMax, 2, 0, Qt::AlignRight);
 
-   QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptY1ScaleMaxBoxLimit(double)));
-   QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptY1ScaleMinBoxLimit(double)));
-   //  QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis()));
-   //   QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis()));
+  // QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptY1ScaleMaxBoxLimit(double)));
+  // QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptY1ScaleMinBoxLimit(double)));
+   QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis()));
+   QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis()));
 
    autoScaleY1Button = new QPushButton("Rescale Y1");
    QObject::connect(autoScaleY1Button, SIGNAL(pressed()), this, SLOT(autoScaleY1Axis()));
@@ -100,10 +100,10 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
 
    lay->addWidget(scaleY2RangeMax, 2, 6, Qt::AlignLeft);
 
-   QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptY2ScaleMaxBoxLimit(double)));
-   QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptY2ScaleMinBoxLimit(double)));
-  // QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis()));
-  // QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis()));
+   // QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptY2ScaleMaxBoxLimit(double)));
+   // QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptY2ScaleMinBoxLimit(double)));
+   QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis()));
+   QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis()));
 
    autoScaleY2Button = new QPushButton("Rescale Y2");
    QObject::connect(autoScaleY2Button, SIGNAL(pressed()), this, SLOT(autoScaleY2Axis()));

@@ -1,10 +1,10 @@
-#include "fffslsevaluationwidget.h"
+#include "af4slsevaluationwidget.h"
 
 using std::vector;
 using std::string;
 using std::map;
 
-FFFSLSEvaluationWidget::FFFSLSEvaluationWidget(QWidget *parent) :
+AF4SLSEvaluationWidget::AF4SLSEvaluationWidget(QWidget *parent) :
    QWidget(parent)
 {   
 
@@ -93,7 +93,7 @@ FFFSLSEvaluationWidget::FFFSLSEvaluationWidget(QWidget *parent) :
    QObject::connect(evalStarter, SIGNAL(clicked()), this, SLOT(startEvaluation()));
    evaluationLayout->addWidget(evalStarter, 10, 2, 1, 4);
 
-   calibrationFrame = new FFFSLSCalibrationFrame("slsEvaluation", -1, this);
+   calibrationFrame = new AF4SLSCalibrationFrame("slsEvaluation", -1, this);
    //peakParameterFrame = new FFFPeakParameterFrame("slsEvaluation", -1, this);
    peakParameterFrame = new AF4PeakParameterFrame("slsEvaluation", -1, this);
    QObject::connect(this, SIGNAL(concModeChanged(SLSConcMode)), peakParameterFrame, SLOT(adoptConcentrationMode(SLSConcMode)));
@@ -106,12 +106,12 @@ FFFSLSEvaluationWidget::FFFSLSEvaluationWidget(QWidget *parent) :
    loadSettings();
 }
 
-FFFSLSEvaluationWidget::~FFFSLSEvaluationWidget()
+AF4SLSEvaluationWidget::~AF4SLSEvaluationWidget()
 {
    writeSettings();
 }
 
-void FFFSLSEvaluationWidget::writeSettings() const
+void AF4SLSEvaluationWidget::writeSettings() const
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
@@ -129,7 +129,7 @@ void FFFSLSEvaluationWidget::writeSettings() const
    };
 #endif // CHECK_SETTINGS_CONVERSION
 
-void FFFSLSEvaluationWidget::loadSettings() const
+void AF4SLSEvaluationWidget::loadSettings() const
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
@@ -157,7 +157,7 @@ void FFFSLSEvaluationWidget::loadSettings() const
 #undef CHECK_SETTINGS_CONVERSION
 
 
-void FFFSLSEvaluationWidget::startEvaluation()
+void AF4SLSEvaluationWidget::startEvaluation()
 {
    // Check File Names:
    QString fileName = fileWidget->getInputFilePath(false);
@@ -181,7 +181,6 @@ void FFFSLSEvaluationWidget::startEvaluation()
    }
    AF4Log::logText(tr("Data found."));
    // Parse File
-   qDebug() << "malls";
    AF4CsvParser parser(fileName.toStdString(), ',', '.');
    bool ok;
    int errorCode;
@@ -224,7 +223,6 @@ void FFFSLSEvaluationWidget::startEvaluation()
 
    matD rayleighRatios(mallsData);
 
-   qDebug() << "malls" << riData[0];
 
    //bool raylefighRatiosinFile = true;
    if(calibrationFrame->getVoltSignalChecked()){
@@ -235,7 +233,6 @@ void FFFSLSEvaluationWidget::startEvaluation()
          for(double &R : rayleighRatios[i]){
             R *= constant;
             //if(i==0) qDebug() << R;
-
          }
       }
 
@@ -357,16 +354,16 @@ void FFFSLSEvaluationWidget::startEvaluation()
    QApplication::restoreOverrideCursor();
 }
 
-void FFFSLSEvaluationWidget::emitConcModeChanged()
+void AF4SLSEvaluationWidget::emitConcModeChanged()
 {
    if(absorbanceConc->isChecked())    emit concModeChanged(SLSConcMode::FromUVVis);
    else if(refIndexConc->isChecked()) emit concModeChanged(SLSConcMode::FromRI);
 }
 
 
-void FFFSLSEvaluationWidget::logChosenIndices(uint timeIndex,
-                                              QList<posPeakPair> * riIndices,
-                                              QList<QList<posPeakPair> > *mallsIndices,
+void AF4SLSEvaluationWidget::logChosenIndices(uint timeIndex,
+                                              const QList<posPeakPair> &riIndices,
+                                              const QList<QList<posPeakPair> > &mallsIndices,
                                               uint diffCoeffIndex,
                                               uint rSIndex,
                                               bool diffCoeffIndexChosen,
@@ -375,21 +372,17 @@ void FFFSLSEvaluationWidget::logChosenIndices(uint timeIndex,
    AF4Log::logText(tr("time index: %1").arg(timeIndex));
    if(diffCoeffIndexChosen) AF4Log::logText(tr("diffCoeffIndex: %1").arg(diffCoeffIndex));
    if(rSIndexChosen) AF4Log::logText(tr("diffCoeffIndex: %1").arg(rSIndex));
-   for(int i = 0 ; i < riIndices->size(); ++i)
-      AF4Log::logText(tr("riIndices: index %1, peak %2, ").arg(riIndices->at(i).position).arg(riIndices->at(i).position));
-   for(int k = 0 ; k < mallsIndices->size(); ++k)
-      for(int i = 0 ; i < mallsIndices->at(k).size(); ++i)
+   for(int i = 0 ; i < riIndices.size(); ++i)
+      AF4Log::logText(tr("riIndices: index %1, peak %2, ").arg(riIndices.at(i).position).arg(riIndices.at(i).position));
+   for(int k = 0 ; k < mallsIndices.size(); ++k)
+      for(int i = 0 ; i < mallsIndices.at(k).size(); ++i)
          AF4Log::logText(tr("mallsIndices[%1]: index %2, peak %3").arg(k).
-                         arg(mallsIndices->at(k).at(i).position).arg(mallsIndices->at(k).at(i).peak));
+                         arg(mallsIndices.at(k).at(i).position).arg(mallsIndices.at(k).at(i).peak));
 }
 
-void FFFSLSEvaluationWidget::saveParameters() const
+void AF4SLSEvaluationWidget::saveParameters() const
 {
    writeSettings();
    AF4Log::logText(tr("Parameters of SLS Evaluation saved."));
 
 }
-
-///////////////////////////
-// Sepearate Grid search //
-///////////////////////////

@@ -6,9 +6,8 @@
 #define PI                  3.141592653589793     //
 #define NA                  6.02214129e+23         // [1/mol]
 #define KB                  1.3806488e-23         // [m^2*kg*s^-2*K^-1]
-#define RHO                 0.998234
-#define RT                  (293.15 * 8.314472e+07)
-#define ETA                 0.0100194
+//#define RHO                 0.998234
+//#define ETA                 0.0100194
 
 constexpr arrD8 anglesDeg = {
    21.47,

@@ -1,6 +1,6 @@
-#include "fffslsparameterframe.h"
+#include "af4slsparameterframe.h"
 
-FFFSLSParameterFrame::FFFSLSParameterFrame(const QString &prefix, int id, QWidget *parent) :
+AF4SLSParameterFrame::AF4SLSParameterFrame(const QString &prefix, int id, QWidget *parent) :
    QFrame(parent), prefix(prefix), id(id)
 {
    /////// Evaluation method
@@ -85,10 +85,7 @@ FFFSLSParameterFrame::FFFSLSParameterFrame(const QString &prefix, int id, QWidge
 #undef CHECK_SETTINGS_CONVERSION
 }
 
-
-
-
-void FFFSLSParameterFrame::writeSettings() const
+void AF4SLSParameterFrame::writeSettings() const
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
@@ -98,31 +95,31 @@ void FFFSLSParameterFrame::writeSettings() const
    settings.setValue(tr("/%1/%2/slsparam/concentrationCut").arg(prefix).arg(id), concentrationCut->value());
 }
 
-void FFFSLSParameterFrame::enableZimmPlotParams() const
+void AF4SLSParameterFrame::enableZimmPlotParams() const
 {
 }
 
-void FFFSLSParameterFrame::enableBerryPlotParams() const
+void AF4SLSParameterFrame::enableBerryPlotParams() const
 {
 }
 
-void FFFSLSParameterFrame::enableKratkyPlotParams() const
+void AF4SLSParameterFrame::enableKratkyPlotParams() const
 {
 }
 
-void FFFSLSParameterFrame::enableGuinierPlotParams() const
+void AF4SLSParameterFrame::enableGuinierPlotParams() const
 {
 }
 
-void FFFSLSParameterFrame::enableRefIndex() const
+void AF4SLSParameterFrame::enableRefIndex() const
 {
 }
 
-void FFFSLSParameterFrame::enableWaveLength() const
+void AF4SLSParameterFrame::enableWaveLength() const
 {
 }
 
-SLSParameters FFFSLSParameterFrame::getSLSParameters()
+SLSParameters AF4SLSParameterFrame::getSLSParameters()
 {
    return SLSParameters {
       getWaveLength(),
@@ -130,7 +127,7 @@ SLSParameters FFFSLSParameterFrame::getSLSParameters()
    };
 }
 
-SLSPlotMode FFFSLSParameterFrame::getSLSPlotMode()
+SLSPlotMode AF4SLSParameterFrame::getSLSPlotMode()
 {
    SLSPlotMode mode{SLSPlotMode::Zimm};
    if     (zimmPlot->isChecked())    mode = SLSPlotMode::Zimm;
@@ -138,10 +135,9 @@ SLSPlotMode FFFSLSParameterFrame::getSLSPlotMode()
    else if(kratkyPlot->isChecked())  mode = SLSPlotMode::Kratky;
    else if(guinierPlot->isChecked()) mode = SLSPlotMode::Guinier;
    return mode;
-
 }
 
-SLSConcMode FFFSLSParameterFrame::getSLSConcMode()
+SLSConcMode AF4SLSParameterFrame::getSLSConcMode()
 {
    SLSConcMode mode(SLSConcMode::FromRI);
    if      (cFromRefIndex->isChecked())   mode = SLSConcMode::FromRI;

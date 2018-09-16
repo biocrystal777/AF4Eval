@@ -57,7 +57,7 @@ FFFMainWindow::FFFMainWindow(QWidget *parent)
    funcTabWidget->addTab(diffEvaluationWidget, "Diffusion Coefficients");
 
 
-   slsEvaluationWidget = new FFFSLSEvaluationWidget(funcTabWidget);
+   slsEvaluationWidget = new AF4SLSEvaluationWidget(funcTabWidget);
    funcTabWidget->addTab(slsEvaluationWidget, "SLS Signal Evaluation");
 
    this->show();

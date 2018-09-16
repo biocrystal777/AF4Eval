@@ -5,7 +5,7 @@
 #include <QDesktopWidget>
 #include "./GeneralWidgets/af4log.h"
 #include "./DiffEvaluation/af4diffevaluationwidget.h"
-#include "./LightScattering/fffslsevaluationwidget.h"
+#include "./LightScattering/af4slsevaluationwidget.h"
 #include "./Calibration/af4channeldimswidget.h"
 #include "./Calibration/af4channelconfigurationwidget.h"
 #include "../Core/af4csvwriter.h"
@@ -72,7 +72,7 @@ protected:
    AF4DiffEvaluationWidget *diffEvaluationWidget;
 
 
-   FFFSLSEvaluationWidget *slsEvaluationWidget;
+   AF4SLSEvaluationWidget *slsEvaluationWidget;
 
 
    int lastChosenTab;

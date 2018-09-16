@@ -25,25 +25,7 @@ enum struct DeconWriteFreq {
    last
 };
 
-enum struct SLSConcMode{
-   FromRI,
-   FromUVVis
-};
 
-enum struct SLSPlotMode {
-   Kratky,
-   Zimm,
-   Berry,
-   Guinier
-};
-
-struct SLSParameters {   
-   //bool cFromRefIndex;
-   //bool cFromWaveLength;
-   double laserWL;
-   double riSolvent;
-   //double concCut;
-};
 
 struct AllCalibrationParameters {
    const double temperature;
@@ -120,6 +102,39 @@ struct SampleProperties{
    const QList<double> waveLengths;
    const QList<double> epsilons;
 };
+
+
+
+
+enum struct SLSConcMode{
+   FromRI,
+   FromUVVis
+};
+
+enum struct SLSPlotMode {
+   Kratky,
+   Zimm,
+   Berry,
+   Guinier
+};
+
+struct posPeakPair{
+   uint position; // index
+   int peak;      // peakNumber
+};
+
+
+struct SLSParameters {
+   //bool cFromRefIndex;
+   //bool cFromWaveLength;
+   double laserWL;
+   double riSolvent;
+   //double concCut;
+};
+
+
+
+
 
 // For later modules
 

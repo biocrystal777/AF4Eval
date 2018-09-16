@@ -76,9 +76,9 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/smallQDerivates/ffftwoboxwidget.cpp \
     ./src/Gui/LightScattering/af4assigndatadialog.cpp \
     ./src/Gui/LightScattering/af4peakparameterframe.cpp \
-    ./src/Gui/LightScattering/fffslscalibrationframe.cpp \
-    ./src/Gui/LightScattering/fffslsevaluationwidget.cpp \    
-    ./src/Gui/LightScattering/fffslsparameterframe.cpp \
+    ./src/Gui/LightScattering/af4slscalibrationframe.cpp \
+    ./src/Gui/LightScattering/af4slsevaluationwidget.cpp \
+    ./src/Gui/LightScattering/af4slsparameterframe.cpp \
     ./src/Gui/smallQDerivates/fffnumberedcheckbox.cpp \
     ./src/Gui/smallQDerivates/fffnumberedcombobox.cpp \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.cpp
@@ -106,10 +106,9 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/GeneralWidgets/af4fileinoutwidget.h \
     ./src/Gui/LightScattering/af4assigndatadialog.h \
     ./src/Gui/LightScattering/af4peakparameterframe.h \
-    ./src/Gui/LightScattering/fffslscalibrationframe.h \
-    ./src/Gui/LightScattering/fffslsevaluationwidget.h \    
-    ./src/Gui/LightScattering/posPeakPair.h \
-    ./src/Gui/LightScattering/fffslsparameterframe.h \
+    ./src/Gui/LightScattering/af4slscalibrationframe.h \
+    ./src/Gui/LightScattering/af4slsevaluationwidget.h \    
+    ./src/Gui/LightScattering/af4slsparameterframe.h \
     ./src/Gui/smallQDerivates/ffftwoboxwidget.h \
     ./src/Gui/smallQDerivates/fffnumberedcombobox.h \
     ./src/Gui/smallQDerivates/fffnumberedcheckbox.h \
