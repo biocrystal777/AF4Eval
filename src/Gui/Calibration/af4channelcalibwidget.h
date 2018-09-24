@@ -21,7 +21,7 @@
 #include "./af4stokeseinsteincalculatorwidget.h"
 #include "../Core/af4datatypes.h"
 #include "../Core/af4parameterstructs.h"
-#include "../smallQDerivates/ffftwoboxwidget.h"
+#include "../smallQDerivates/af4scinotspinbox.h"
 #include "../Core/af4csvparser.h"
 
 /*! ***************************************************************************************
@@ -30,14 +30,16 @@
 ***  \brief     AF4ChannelCalibWidget enables input of channel dimensions
 ***  \details   The FFFChannelCalibWidget contains the physical dimensions of the AF4 channel
 ***             and enables the input via QDoublespinboxes.
-***             Each calibration has its own
-***          widget
+***             Each calibration has its own widget
 ***  \author    Benedikt Häusele
 ***  \version   1.0
 ***  \date      2018-08-31
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 ********************************************************************************************/
+
+
+// Split class later!!
 
 class AF4ChannelCalibWidget final : public QWidget
 {
@@ -72,56 +74,56 @@ public:
     *        corresponding FFFTwoBoxWidget
     * \return diffusion Coefficient
     */
-   inline double getDiffCoefficient() const { return diffCoefficient->value();}
+   double getDiffCoefficient() const { return diffCoefficient->value();}
 
    /*!
     * \brief getCrossFlow Returns the crossFlow shown in the
     *        corresponding FFFTwoBoxWidget
     * \return crossFlow
     */
-   inline double getCrossFlow() const { return crossFlow->value();}
+   double getCrossFlow() const { return crossFlow->value();}
 
    /*!
     * \brief getCrossFlow Returns the crossFlow shown in the
     *        corresponding FFFTwoBoxWidget
     * \return crossFlow
     */
-   inline double getRelFocusPoint() const {return relFocusPoint->value();}
+   double getRelFocusPoint() const {return relFocusPoint->value();}
 
    /*!
     * \brief getTemperature Returns the temperature shown in the
     *        corresponding FFFTwoBoxWidget
     * \return temperature
     */
-   inline double getTemperature() const {return temperature->value();}
+   double getTemperature() const {return temperature->value();}
 
    /*!
     * \brief getVoidPeakTime Returns the voidPeakTime shown in the
     *        corresponding FFFTwoBoxWidget
     * \return voidPeakTime
     */
-   inline double getVoidPeakTime() const { return voidPeakTime->value(); }
+   double getVoidPeakTime() const { return voidPeakTime->value(); }
 
    /*!
     * \brief getLeftOffsetTime Returns the leftOffsetTime (t0) shown in the
     *        corresponding FFFTwoBoxWidget
     * \return leftOffsetTime
     */
-   inline double getLeftOffsetTime() const { return leftOffsetTime->value(); }
+   double getLeftOffsetTime() const { return leftOffsetTime->value(); }
 
    /*!
     * \brief getDiffCoefficient Returns the elutionTime (t elutionMaximum)
     *        shown in the corresponding FFFTwoBoxWidget
     * \return voidPeakTime
     */
-   inline double getElutionTime() const { return elutionTime->value(); }
+   double getElutionTime() const { return elutionTime->value(); }
 
    /*!
     * \brief getDiffCoefficient returns the elutionFlow shown
     *        in the corresponding FFFTwoBoxWidget
     * \return elutionFlow
     */
-   inline double getElutionFlow() const { return elutionFlow->value(); }
+   double getElutionFlow() const { return elutionFlow->value(); }
 
    /*!
     * \brief getDiffCoefficient returns the channel width shown
@@ -150,37 +152,35 @@ public:
     */
    ChannelDimsFromCalib getChannelDimsFromCalib() const;
 
-
-
    /*!
     * \brief getDiffCoefficient returns the input FileName
     * \return channel width
     */
-   inline QString getInputFileName() const { return inputFileName->text(); }
+   QString getInputFileName() const { return inputFileName->text(); }
 
    /*!
     * \brief getDiffCoefficient returns the date
     * \return channel width
     */
-   inline QString getDateDescr() const { return dateDescr->text(); }
+   QString getDateDescr() const { return dateDescr->text(); }
 
    /*!
     * \brief getDiffCoefficient returns the sample Name
     * \return channel width
     */
-   inline QString getSampleDescr() const { return sampleDescr->text(); }
+   QString getSampleDescr() const { return sampleDescr->text(); }
 
    /*!
     * \brief getDiffCoefficient returns the buffer info
     * \return channel width
     */
-   inline QString getBufferDescr() const { return bufferDescr->text(); }
+   QString getBufferDescr() const { return bufferDescr->text(); }
 
    /*!
     * \brief getDiffCoefficient returns the buffer info
     * \return channel width
     */
-   inline QString getNotesDescr() const { return notesDescr->toPlainText(); }
+   QString getNotesDescr() const { return notesDescr->toPlainText(); }
 
    /*!
     * \brief getInputFilePath
@@ -197,13 +197,6 @@ public:
     */
    bool setInputFilePath(QString path, bool quoted = true);
 
-   /*!
-    * \brief setDiffCoefficient set value of the diffusion Coefficient
-    * \return bool if value could be set
-    */
-   bool setDiffCoefficient(double value);
-
-
 #define SET_MACRO(function, boxPtr) \
    bool function(double value){\
          if(value < boxPtr->minimum()){\
@@ -218,7 +211,13 @@ public:
             boxPtr->setValue(value);\
             return true;\
          }\
-   };
+   };   
+   /*!
+    * \brief setDiffCoefficient set value of the diffusion Coefficient
+    * \return bool if value could be set
+    */
+   SET_MACRO(setDiffCoefficient, diffCoefficient)
+
    /*!
     * \brief setCrossFlow set value of the crossflow
     * \return bool if value could be set
@@ -292,49 +291,49 @@ public:
     * \brief setDateDescr
     * \param text
     */
-   inline void setDateDescr(const QString   &text)   {dateDescr->setText(text); }
+   void setDateDescr(const QString   &text)   {dateDescr->setText(text); }
 
    /*!
     * \brief setBufferDescr
     * \param text
     */
-   inline void setBufferDescr(const QString &text) {bufferDescr->setText(text);}
+   void setBufferDescr(const QString &text) {bufferDescr->setText(text);}
 
    /*!
     * \brief setSampleDescr
     * \param text
     */
-   inline void setSampleDescr(const QString &text) {sampleDescr->setText(text);}
+   void setSampleDescr(const QString &text) {sampleDescr->setText(text);}
 
    /*!
     * \brief setNotesDescr
     * \param text
     */
-   inline void setNotesDescr(const QString  &text)  {notesDescr->setText(text);}
+   void setNotesDescr(const QString  &text)  {notesDescr->setText(text);}
 
    /*!
     * \brief setChannelName
     * \param newName
     */
-   inline void setChannelName(const QString &newName){ channelName = newName; }
+   void setChannelName(const QString &newName){ channelName = newName; }
 
    /*!
     * \brief setChannelId
     * \param newId
     */
-   inline void setChannelId(int newId){ channelId = newId; }
+   void setChannelId(int newId){ channelId = newId; }
 
    /*!
     * \brief setCalibName
     * \param newName
     */
-   inline void setCalibName(const QString &newName){ calibName = newName; }
+   void setCalibName(const QString &newName){ calibName = newName; }
 
    /*!
     * \brief setCalibId
     * \param newId
     */
-   inline void setCalibId(int newId){ calibId = newId; }
+   void setCalibId(int newId){ calibId = newId; }
 
    /*!
     * \brief getParametersForCalibration
@@ -391,7 +390,7 @@ private:
    QToolButton *inputFileChooser               = nullptr;
    QLineEdit *inputFileName                    = nullptr;
 
-   FFFTwoBoxWidget *diffCoefficient            = nullptr;
+   AF4SciNotSpinBox *diffCoefficient            = nullptr;
    QDoubleSpinBox *crossFlow                   = nullptr;
    QDoubleSpinBox *temperature                 = nullptr;
    QDoubleSpinBox *voidPeakTime                = nullptr;
@@ -403,7 +402,7 @@ private:
    QFrame *calibrationFrame                    = nullptr;
    QGridLayout *calibrationFrameLayout         = nullptr;
    QPushButton *calibButton                    = nullptr;
-   FFFTwoBoxWidget *channelWidth               = nullptr;
+   AF4SciNotSpinBox *channelWidth               = nullptr;
    QDoubleSpinBox *hydrodynVolume              = nullptr;
    QDoubleSpinBox *geometVolume               = nullptr;
 
@@ -475,7 +474,7 @@ private slots:
    /*!
     * \brief setPlotDataFromFile
     */
-   void setPlotDataFromFile();
+   int setPlotDataFromFile();
 };
 
 #endif // AF4CHANNELCALIBWIDGET_H

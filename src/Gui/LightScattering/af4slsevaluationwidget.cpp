@@ -56,7 +56,8 @@ AF4SLSEvaluationWidget::AF4SLSEvaluationWidget(QWidget *parent) :
    QObject::connect(absorbanceConc, SIGNAL(toggled(bool)), this,SLOT(emitConcModeChanged()));
 
    evaluationLayout->addWidget(new QLabel(tr("c<sub>min</sub> [mg/ml]"), evaluationFrame), 4, 0, 1, 1, Qt::AlignRight);
-   concentrationCut = new FFFTwoBoxWidget(QString("Minimum concentration to be evaluated"),evaluationFrame);
+   concentrationCut = new AF4SciNotSpinBox(false, evaluationFrame);
+   concentrationCut->setToolTip("Minimum concentration to be evaluated");
    concentrationCut->setMinimum(1.0e-15);
    evaluationLayout->addWidget(concentrationCut, 4, 1, 1, 4);
 
@@ -152,7 +153,7 @@ void AF4SLSEvaluationWidget::loadSettings() const
    CHECK_SETTINGS_CONVERSION(tr("slsEvaluation/evaluation/concentrationCut"), "1.0");
    //signValue = FFFTwoBoxWidget::calcSignificand(value, &expValue);
    //concentrationCut->setValue(signValue, expValue, 520);
-   concentrationCut->setValueM(value, 520);
+   concentrationCut->setValue(value);
 }
 #undef CHECK_SETTINGS_CONVERSION
 
@@ -247,7 +248,6 @@ void AF4SLSEvaluationWidget::startEvaluation()
    /////////////////
 
    AF4SLSEvaluator slsEvaluator;
-
    if(refIndexConc->isChecked())
       slsEvaluator.evalRiMALLS_partZimmplot(
                riData,

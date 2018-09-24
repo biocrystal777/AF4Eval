@@ -20,7 +20,7 @@
 #include <qwt_symbol.h>
 #include <qwt_widget_overlay.h>
 #include "../GeneralWidgets/af4log.h"
-#include "../smallQDerivates/ffftwoboxwidget.h"
+#include "../smallQDerivates/af4scinotspinbox.h"
 #include "../../Core/af4datatypes.h"
 
 /*! *****************************************************************************************************************
@@ -116,13 +116,13 @@ public:
     * \brief setPlotXData
     * \param newXData
     */
-   inline void setPlotXData(QVector<double> &newXData)      { plotXData = newXData; }
+   void setPlotXData(QVector<double> &newXData)      { plotXData = newXData; }
 
    /*!
     * \brief setPlotYData
     * \param newYData
     */
-   inline void setPlotYData(QVecMatrix<double> &newYData)   { plotYData = newYData; }
+   void setPlotYData(QVecMatrix<double> &newYData)   { plotYData = newYData; }
 
    void setSignal1Channels(const QStringList& strs);
 
@@ -170,12 +170,12 @@ protected:
    QDoubleSpinBox         *scaleXRangeMin  = nullptr;
    QDoubleSpinBox         *scaleXRangeMax  = nullptr;
 
-   FFFTwoBoxWidget        *scaleY1RangeMin = nullptr;
-   FFFTwoBoxWidget        *scaleY1RangeMax = nullptr;
+   AF4SciNotSpinBox        *scaleY1RangeMin = nullptr;
+   AF4SciNotSpinBox        *scaleY1RangeMax = nullptr;
    QPushButton            *autoScaleY1Button = nullptr;
 
-   FFFTwoBoxWidget        *scaleY2RangeMin = nullptr;
-   FFFTwoBoxWidget        *scaleY2RangeMax = nullptr;
+   AF4SciNotSpinBox        *scaleY2RangeMin = nullptr;
+   AF4SciNotSpinBox        *scaleY2RangeMax = nullptr;
    QPushButton            *autoScaleY2Button = nullptr;
 
 
@@ -213,12 +213,6 @@ public slots:
 private slots:
 
    /*!
-    * \brief adaptSignal1Switch
-    * \param sig1Ch
-    */
-   void adaptSignal1Switch();
-
-   /*!
     * \brief adaptSignal2Switch
     * \param sig2Ch
     */
@@ -242,13 +236,13 @@ private slots:
     * \brief adaptY1ScaleMinBoxLimit
     * \param maxOfMin
     */
- //  void adaptY1ScaleMinBoxLimit(double maxOfMin);
+   void adaptY1ScaleMinBoxLimit(double maxOfMin);
 
    /*!
     * \brief adaptY1ScaleMaxBoxLimit
     * \param minOfMax
     */
-   // void adaptY1ScaleMaxBoxLimit(double minOfMax);
+    void adaptY1ScaleMaxBoxLimit(double minOfMax);
 
    /*!
     * \brief reScaleY1Axis
@@ -260,13 +254,13 @@ private slots:
     * \brief adaptY2ScaleMinBoxLimit
     * \param maxOfMin
     */
-   //void adaptY2ScaleMinBoxLimit(double maxOfMin);
+   void adaptY2ScaleMinBoxLimit(double maxOfMin);
 
    /*!
     * \brief adaptY2ScaleMaxBoxLimit
     * \param minOfMax
     */
-   //void adaptY2ScaleMaxBoxLimit(double minOfMax);
+   void adaptY2ScaleMaxBoxLimit(double minOfMax);
 
    /*!
     * \brief reScaleY2Axis

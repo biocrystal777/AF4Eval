@@ -38,7 +38,7 @@ public:
      * \brief getChLength
      * \return
      */
-    inline double getChLength() const {
+    double getChLength() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getChLength();
     }
 
@@ -46,7 +46,7 @@ public:
      * \brief getLength1
      * \return
      */
-    inline double getLength1() const {
+    double getLength1() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getLength1();
     }
 
@@ -54,7 +54,7 @@ public:
      * \brief getLength2
      * \return
      */
-    inline double getLength2() const {
+    double getLength2() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getLength2();
     }
 
@@ -62,7 +62,7 @@ public:
      * \brief getLength3
      * \return
      */
-    inline double getLength3() const {
+    double getLength3() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getLength3();
     }
 
@@ -70,7 +70,7 @@ public:
      * \brief getB0
      * \return
      */
-    inline double getB0() const {
+    double getB0() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getB0();
     }
 
@@ -78,7 +78,7 @@ public:
      * \brief getBL
      * \return
      */
-    inline double getBL() const {
+    double getBL() const {
        return channelConfigWidgets->value(channelChooser->currentText())->getBL();
     }
 
@@ -86,7 +86,7 @@ public:
      * \brief getChWidth
      * \return
      */
-    inline double getChWidth() const {
+    double getChWidth() const {
        return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getChannelWidth();
     }
 
@@ -94,7 +94,7 @@ public:
      * \brief getHydrodynVolume
      * \return
      */
-    inline double getHydrodynVolume() const {
+    double getHydrodynVolume() const {
        return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getHydrodynVolume();
     }
 
@@ -102,7 +102,7 @@ public:
      * \brief getGeometVolume
      * \return
      */
-    inline double getGeometVolume() const {
+    double getGeometVolume() const {
        return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getGeometVolume();
     }
 
@@ -110,13 +110,13 @@ public:
      * \brief getChannelDimensions
      * \return
      */
-    inline ChannelDims getChannelDimensions() const {  return channelConfigWidgets->value(channelChooser->currentText())->getChannelDimensions(); }
+    ChannelDims getChannelDimensions() const {  return channelConfigWidgets->value(channelChooser->currentText())->getChannelDimensions(); }
 
     /*!
      * \brief getChannelDimsFromCalib
      * \return
      */
-    inline ChannelDimsFromCalib getChannelDimsFromCalib() const {
+    ChannelDimsFromCalib getChannelDimsFromCalib() const {
        return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getChannelDimsFromCalib();
     }
 
@@ -147,7 +147,7 @@ private:
     QLabel *channelWidth                       = nullptr;
     QLabel *channelVolumeDef                   = nullptr;
     QLabel *channelVolume                      = nullptr;
-    QLabel *channelVolumeGeo                      = nullptr;
+    QLabel *channelVolumeGeo                   = nullptr;
 
     const QString prefix;
 

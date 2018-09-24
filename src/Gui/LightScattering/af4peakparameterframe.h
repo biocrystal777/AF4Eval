@@ -11,7 +11,7 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include "../GeneralWidgets/af4log.h"
-#include "../smallQDerivates/ffftwoboxwidget.h"
+#include "../smallQDerivates/af4scinotspinbox.h"
 #include "../smallQDerivates/fffnumberedtoolbutton.h"
 #include "../../Core/af4parameterstructs.h"
 
@@ -137,14 +137,14 @@ private:
    QDoubleSpinBox        *startTime           = nullptr;
    QDoubleSpinBox        *endTime             = nullptr;
    QCheckBox             *useSecondVirCoeff   = nullptr;
-   FFFTwoBoxWidget       *secondVirCoeff      = nullptr;
+   AF4SciNotSpinBox       *secondVirCoeff      = nullptr;
    QCheckBox             *useThirdVirCoeff    = nullptr;
-   FFFTwoBoxWidget       *thirdVirCoeff       = nullptr;
+   AF4SciNotSpinBox       *thirdVirCoeff       = nullptr;
    QDoubleSpinBox        *refIndexIncrement   = nullptr;
    QDoubleSpinBox        *waveLength          = nullptr;
-   FFFTwoBoxWidget       *epsilon             = nullptr;
+   AF4SciNotSpinBox       *epsilon             = nullptr;
    QCheckBox             *useKnownMW          = nullptr;
-   FFFTwoBoxWidget       *knownMW             = nullptr;
+   AF4SciNotSpinBox       *knownMW             = nullptr;
    QLineEdit             *fractionDescription = nullptr;
    FFFNumberedToolButton *removeButton        = nullptr;
 

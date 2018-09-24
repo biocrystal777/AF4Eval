@@ -6,7 +6,8 @@
 #include <QGridLayout>
 #include "../Core/af4parameterstructs.h"
 #include "../Core/af4constants.h"
-#include "../smallQDerivates/ffftwoboxwidget.h"
+#include "../GeneralWidgets/af4log.h"
+#include "../smallQDerivates/af4scinotspinbox.h"
 #include "../smallQDerivates/fffnumberedcheckbox.h"
 
 /*! **********************************************************************************************
@@ -71,12 +72,12 @@ public:
 private:
     QString prefix;
     int id;
-    QList<FFFNumberedCheckBox*> useAngles;
+    QList<AF4NumberedCheckBox*> useAngles;
     QList<QLabel*>              angleLabels;
     QList<QDoubleSpinBox*>      mallsAngleConstants;
     QGridLayout     *lay                         = nullptr;
-    FFFTwoBoxWidget *riConstant                  = nullptr;
-    FFFTwoBoxWidget *mallsConstant               = nullptr;
+    AF4SciNotSpinBox *riConstant                  = nullptr;
+    AF4SciNotSpinBox *mallsConstant               = nullptr;
     QGroupBox *rayleighGroup                     = nullptr;
     QGridLayout *rayleighLayout                  = nullptr;
     QRadioButton *rayleighButton                 = nullptr;

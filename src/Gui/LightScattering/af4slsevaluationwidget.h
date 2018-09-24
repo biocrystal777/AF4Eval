@@ -13,7 +13,7 @@
 #include "./af4peakparameterframe.h"
 #include "../GeneralWidgets/af4log.h"
 #include "../GeneralWidgets/af4fileinoutwidget.h"
-#include "../smallQDerivates/ffftwoboxwidget.h"
+#include "../smallQDerivates/af4scinotspinbox.h"
 #include "../../Core/af4constants.h"
 #include "../../Core/af4csvparser.h"
 #include "../../Core/af4slsevaluator.h"
@@ -78,7 +78,7 @@ private:
 
    QCheckBox* calculateShapeFactor           = nullptr;
    QCheckBox* evalPeaksSeparately            = nullptr;
-   FFFTwoBoxWidget *concentrationCut         = nullptr;
+   AF4SciNotSpinBox *concentrationCut         = nullptr;
    QDoubleSpinBox *laserWaveLength           = nullptr;
    QDoubleSpinBox* refIndexSolvent           = nullptr;
 

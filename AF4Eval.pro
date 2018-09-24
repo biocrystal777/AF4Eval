@@ -25,8 +25,8 @@ QMAKE_CXXFLAGS += -fopenmp
 QMAKE_LFLAGS += -fopenmp
 CONFIG += c++14
 
-QMAKE_CXXFLAGS += -fno-exceptions
-QMAKE_LFLAGS += -fopenmp
+#QMAKE_CXXFLAGS += -fno-exceptions
+#QMAKE_LFLAGS += -fopenmp
 
 linux {
 QWTDIR  = /usr/include/qwt
@@ -73,7 +73,7 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/DiffEvaluation/af4expsettingsframe.cpp \
     ./src/Gui/GeneralWidgets/af4log.cpp \
     ./src/Gui/GeneralWidgets/af4fileinoutwidget.cpp \
-    ./src/Gui/smallQDerivates/ffftwoboxwidget.cpp \
+    ./src/Gui/smallQDerivates/af4scinotspinbox.cpp \
     ./src/Gui/LightScattering/af4assigndatadialog.cpp \
     ./src/Gui/LightScattering/af4peakparameterframe.cpp \
     ./src/Gui/LightScattering/af4slscalibrationframe.cpp \
@@ -109,7 +109,7 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/LightScattering/af4slscalibrationframe.h \
     ./src/Gui/LightScattering/af4slsevaluationwidget.h \    
     ./src/Gui/LightScattering/af4slsparameterframe.h \
-    ./src/Gui/smallQDerivates/ffftwoboxwidget.h \
+    ./src/Gui/smallQDerivates/af4scinotspinbox.h \
     ./src/Gui/smallQDerivates/fffnumberedcombobox.h \
     ./src/Gui/smallQDerivates/fffnumberedcheckbox.h \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.h

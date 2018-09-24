@@ -3,6 +3,7 @@
 FFFMainWindow::FFFMainWindow(QWidget *parent)
    : QWidget(parent), lastChosenTab(0)
 {
+
    this->hide();
    QGuiApplication::setOverrideCursor(Qt::WaitCursor);
    QIcon icon(":/images/applIcon.svg");
@@ -43,21 +44,23 @@ FFFMainWindow::FFFMainWindow(QWidget *parent)
    ///////////////////////////
 
    funcTabWidget = new QTabWidget(this);
+   qDebug() << "0";
    channelCalConfWidget = new AF4ChannelConfigurationWidget(funcTabWidget);
    funcTabWidget->addTab(channelCalConfWidget, "Channel Calibration");
-
+   qDebug() << "0";
    layout = new QGridLayout(this);
    layout->addWidget(funcTabWidget, 0, 0);
    layout->addWidget(logFrame, 1, 0);
    this->show();
-
+qDebug() << "0";
    diffEvaluationWidget = new AF4DiffEvaluationWidget(channelCalConfWidget->getChannelConfigWidgets(),
                                                       channelCalConfWidget->getChannelCalibWidgets(),
                                                       funcTabWidget);
    funcTabWidget->addTab(diffEvaluationWidget, "Diffusion Coefficients");
 
-
+   qDebug() << "1";
    slsEvaluationWidget = new AF4SLSEvaluationWidget(funcTabWidget);
+   qDebug() << "2";
    funcTabWidget->addTab(slsEvaluationWidget, "SLS Signal Evaluation");
 
    this->show();

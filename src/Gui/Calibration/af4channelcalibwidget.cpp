@@ -52,7 +52,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    qwtLabel->setText(QString("D / cm²/s"), QwtText::PlainText);
    qwtLabel->setToolTip("Diffusion coefficient");
    frameLayout->addWidget(qwtLabel, 2, 5,Qt::AlignLeft);
-   diffCoefficient = new FFFTwoBoxWidget("Diffusion Coefficient", widgetFrame);
+   diffCoefficient = new AF4SciNotSpinBox("Diffusion Coefficient", widgetFrame);
    diffCoefficient->setMinimum(1.0000e-15);
    diffCoefficient->setMaximum(9.99999e2);
    frameLayout->addWidget(diffCoefficient, 2, 6, 1, 2);
@@ -77,7 +77,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    qwtLabel->setText(QString("ω / cm"), QwtText::PlainText);
    qwtLabel->setToolTip("Channel Width");
    calibrationFrameLayout->addWidget(qwtLabel, 1, 0, Qt::AlignLeft);
-   channelWidth = new FFFTwoBoxWidget("Channel Width", widgetFrame);
+   channelWidth = new AF4SciNotSpinBox("Channel Width", widgetFrame);
    //channelWidth->setMinimum(1.0, -4);
    //channelWidth->setMaximum(9.9999, -1);
    channelWidth->setMinimum(1.0e-4);
@@ -175,7 +175,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    relFocusPoint->setMinimum(0.1);
    relFocusPoint->setMaximumWidth(100);
    frameLayout->addWidget(relFocusPoint, 5, 10, 1, 2);
-
+   qDebug() << "2";
     /**************************************
     *
     * Fourth column
@@ -232,11 +232,9 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    * Fifth column / plot
    *
    *************************************/
-
    const QRect rec = QApplication::desktop()->availableGeometry();
    const uint screenWidth  = rec.width();
    const uint screenHeight = rec.height();
-
    plotWidget = new AF4CalibPlotWidget(QString("Calibration signal (t_void region)"), this);
    plotWidget->setMinimumWidth(screenWidth/10*4);
    plotWidget->setMaximumWidth(screenWidth/10*4);
@@ -244,24 +242,23 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    plotWidget->setMaximumHeight(screenHeight/10*5);
    frameLayout->addWidget(plotWidget,0,15,8,4);
 
-
    plotWidget2 = new AF4CalibPlotWidget(QString("Calibration signal (t_e region)"), this);
    plotWidget2->setMinimumWidth(screenWidth/10*4);
    plotWidget2->setMaximumWidth(screenWidth/10*4);
    plotWidget2->setMinimumHeight(screenHeight/20*5);
    plotWidget2->setMaximumHeight(screenHeight/10*5);
    frameLayout->addWidget(plotWidget2,8,15,8,4);
+   //QString calibFileName = getInputFilePath(false);
 
-   QString calibFileName = getInputFilePath(false);
+   int error = setPlotDataFromFile();
+   if(!error){
+      plotWidget->initPlot();
+      plotWidget->addPlotVLine(leftOffsetTime, QColor(0x00,0x00,0x00));
+      plotWidget->addPlotVLine(voidPeakTime, QColor(0x00,0x66,0xFF));
 
-   setPlotDataFromFile();
-
-   plotWidget->initPlot();
-   plotWidget->addPlotVLine(leftOffsetTime, QColor(0x00,0x00,0x00));
-   plotWidget->addPlotVLine(voidPeakTime, QColor(0x00,0x66,0xFF));
-
-   plotWidget2->initPlot();
-   plotWidget2->addPlotVLine(elutionTime, QColor(0xFF, 0x55, 0x00));
+      plotWidget2->initPlot();
+      plotWidget2->addPlotVLine(elutionTime, QColor(0xFF, 0x55, 0x00));
+   }
 }
 
 AF4ChannelCalibWidget::~AF4ChannelCalibWidget()
@@ -278,31 +275,19 @@ ChannelDimsFromCalib AF4ChannelCalibWidget::getChannelDimsFromCalib() const
    };
 }
 
-
-bool AF4ChannelCalibWidget::setDiffCoefficient(double value)
-{
-   int valExponent;
-   double valSignificand = FFFTwoBoxWidget::calcSignificand(value, &valExponent);
-   if ((1.0  <= valSignificand) && (valSignificand < 10.0)){
-      diffCoefficient->setValueS(valSignificand, valExponent, 1);
-      return true;
-   } else {
-      return false;
-   }
-}
-
 void AF4ChannelCalibWidget::callCalibrateChannel()
 {
    calibrateChannelCalled();
 }
 
-void AF4ChannelCalibWidget::setPlotDataFromFile()
+int AF4ChannelCalibWidget::setPlotDataFromFile()
 {
 
    QString calibFileName = this->getInputFilePath(false);
 
    if(!QFile::exists(calibFileName)){
-      return;
+      AF4Log::logWarning(QString("Calibration file does not exist!"));
+      return 1;
    }
 
    // Parse File
@@ -313,15 +298,13 @@ void AF4ChannelCalibWidget::setPlotDataFromFile()
    if(errorCode){
       AF4Log::logError(tr("Error %1").arg(errorCode), true);
          AF4Log::logError(tr("Diffusion Evaluation Aborted while reading the input file."), true);
-         return;
+         return 2;
    } else AF4Log::logText(tr("File %1 read").arg(calibFileName));
    parser.getData();
    std::vector<std::string> headLines = parser.getHeadLines();
    matD data = parser.getData();
 
    QVector<double> plotX = QVector<double>::fromStdVector( data[0] );
-
-
    QVecMatrix<double> plotY;
    plotY.resize(data.size() -1);
    for(int i = 0; i < plotY.size(); ++i){
@@ -333,9 +316,7 @@ void AF4ChannelCalibWidget::setPlotDataFromFile()
          v -= minY;
          v += 0.01 * fabs(maxY-minY);
       }
-
    }
-
 
    QStringList signalSwitchEntries;
    for(std::string &entry : headLines)
@@ -358,10 +339,13 @@ void AF4ChannelCalibWidget::setPlotDataFromFile()
    plotWidget2->setSignal1Channels(signalSwitchEntries);
    plotWidget2->setSignal2Channels(signalSwitchEntries);
 
+   return 0;
 }
 
 bool AF4ChannelCalibWidget::setChannelWidth(double value)
 {
+   channelWidth->setValue(value);
+/*
    int valExponent;
    double valSignificand = FFFTwoBoxWidget::calcSignificand(value, &valExponent);
    if ((1.0  <= valSignificand) && (valSignificand < 10.0)){
@@ -370,6 +354,7 @@ bool AF4ChannelCalibWidget::setChannelWidth(double value)
    } else {
       return false;
    }
+   */
 }
 
 

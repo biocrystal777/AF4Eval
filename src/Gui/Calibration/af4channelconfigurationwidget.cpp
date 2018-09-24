@@ -15,7 +15,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
    bool ok;
-
+   //qDebug() << "a1";
    ////////////////////////////
    // Basical initialization //
    ////////////////////////////
@@ -35,7 +35,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    ///////////////////////////////////
    //Constant channel configuration //
    ///////////////////////////////////
-
+   //qDebug() << "a2";
    channelSelection = new QComboBox(channelConfigFrame);
    channelSelection->setToolTip("");
    channelConfigFrameLayout->addWidget(channelSelection, 0, 4);
@@ -58,7 +58,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    ////////////////////////////////////////////////////
    // initialize channels with values from QSettings //
    ////////////////////////////////////////////////////
-
+   //qDebug() << "a3";
    channelConfigWidgets = new QMap<QString, AF4ChannelDimsWidget*>();
 
    // make all channel widgets, add them to the QMap
@@ -88,7 +88,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    ///////////////////////
    // Calibration Frame //
    ///////////////////////
-
+   //qDebug() << "a4";
    uint numberOfCalibrations = 0;
    QString calibName;
    QString channelName;
@@ -104,18 +104,22 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
 
       channelName = channelSelection->itemText(i);
       channelCalibWidgets->insert(channelName, new QMap<QString, AF4ChannelCalibWidget*>);
-
+    //  qDebug() << "a5"<< numberOfCalibrations;
       for(uint j=0; j < numberOfCalibrations; j++){
+         //qDebug() << "b1"<< numberOfCalibrations;
          calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();
          currentCalibWidget = new AF4ChannelCalibWidget(i, j, channelName, calibName, calibrationFrame);
+         //qDebug() << "b2"<< numberOfCalibrations;
          QObject::connect(currentCalibWidget, SIGNAL(calibrateChannelCalled()), this, SLOT(calibrateChannnel()));
          currentCalibSelection->addItem(calibName);
          channelCalibWidgets->value(channelName)->insert(calibName, currentCalibWidget);
+         //qDebug() << "b3"<< numberOfCalibrations;
          calibrationFrameLayout->addWidget(currentCalibWidget, 2, 0, 7, 7);
          currentCalibWidget->hide();
       }
       QObject::connect(currentCalibSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchCalibWidget(QString)));
-   }   
+   }
+   qDebug() << "a5";
    renameCalibButton = new QToolButton(calibrationFrame);
    renameCalibButton->setText("R");
    renameCalibButton->setToolTip("Rename the current calibration profile");
@@ -136,7 +140,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    //////////////////////////
    // set starting widgets //
    //////////////////////////
-
+   //qDebug() << "a6";
    channelSelection->setCurrentIndex(0);
    channelName = channelSelection->currentText();
    currentChConfigWidget = channelConfigWidgets->value(channelName);
@@ -541,7 +545,7 @@ void AF4ChannelConfigurationWidget::calibrateChannnel()
 
    double newChWidth = calibrator.getChWidth();
    double newChVolume = calibrator.getHydrodynVolume();
-   double newGeometVolume = calibrator.getGeometVolume();
+   //double newGeometVolume = calibrator.getGeometVolume();
    // adjust omega
    if(calibSuccess){
       currentCalibWidget->setChannelWidth(newChWidth);

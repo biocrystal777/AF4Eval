@@ -1,15 +1,15 @@
 #include "fffnumberedcheckbox.h"
 
-FFFNumberedCheckBox::FFFNumberedCheckBox(int id, QWidget *parent) : QCheckBox(parent), id(id)
+AF4NumberedCheckBox::AF4NumberedCheckBox(int id, QWidget *parent) : QCheckBox(parent), id(id)
 {
    QObject::connect(this, SIGNAL(toggled(bool)), this, SLOT(callcheckedID(bool)));
 }
 
-FFFNumberedCheckBox::~FFFNumberedCheckBox()
+AF4NumberedCheckBox::~AF4NumberedCheckBox()
 {
 }
 
-void FFFNumberedCheckBox::callcheckedID(bool checked)
+void AF4NumberedCheckBox::callcheckedID(bool checked)
 {
    emit checkedID(id, checked);
 }

@@ -39,7 +39,8 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
 
    useSecondVirCoeff = new QCheckBox( tr("B_2:"), this);
    useSecondVirCoeff->setChecked(false); //prelim
-   secondVirCoeff = new FFFTwoBoxWidget(tr("Second Virial Coefficient"),this);
+   secondVirCoeff = new AF4SciNotSpinBox(false, this);
+   secondVirCoeff->setToolTip("Second Virial Coefficient");
    secondVirCoeff->setMaximum(9.99e10);
    secondVirCoeff->setEnabled(false);
    QObject::connect(useSecondVirCoeff, SIGNAL(toggled(bool)), secondVirCoeff, SLOT(setEnabled(bool)));
@@ -48,7 +49,8 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
 
    useThirdVirCoeff = new QCheckBox( tr("B_3:"), this);
    useThirdVirCoeff->setChecked(false); //prelim
-   thirdVirCoeff = new FFFTwoBoxWidget(tr("Third Virial Coefficient"),this);
+   thirdVirCoeff = new AF4SciNotSpinBox(false, this);
+   thirdVirCoeff->setToolTip("Third Virial Coefficient" );
    thirdVirCoeff->setMaximum(9.99e10);
    thirdVirCoeff->setEnabled(false);
    QObject::connect(useThirdVirCoeff, SIGNAL(toggled(bool)), thirdVirCoeff, SLOT(setEnabled(bool)));
@@ -61,7 +63,8 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
    waveLength->setEnabled(false); // prelim version
 
    lay->addWidget(new QLabel(tr("ε/<sub>(mg/ml*mAU):</sub>"), this), 9, 0, 1, 1, Qt::AlignRight);
-   epsilon = new FFFTwoBoxWidget(tr("Molar Extinction Coefficient of Peak %1:").arg(peakNo), this);
+   epsilon = new AF4SciNotSpinBox(false, this);
+   epsilon->setToolTip(tr("Molar Extinction Coefficient of Peak %1:").arg(peakNo));
    epsilon->setSignifandDecimals(5);
    lay->addWidget(epsilon, 9, 1, 1, 4, Qt::AlignLeft);
    epsilon->setEnabled(false); // prelim version
@@ -77,7 +80,8 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
                              ));
    lay->addWidget(useKnownMW, 10, 0, 1, 6, Qt::AlignLeft);
 
-   knownMW = new FFFTwoBoxWidget("Determines fixed molecular weight.", this);
+   knownMW = new AF4SciNotSpinBox(false, this);
+   knownMW->setToolTip("Determines fixed molecular weight.");
    lay->addWidget(knownMW, 11, 0, 1, 6, Qt::AlignLeft);
    QObject::connect(useKnownMW, SIGNAL(toggled(bool)), knownMW, SLOT(setEnabled(bool)));
    // DISABLED HERE
@@ -176,7 +180,7 @@ void AF4SinglePeakParameterWidget::loadSettings()
    key = tr("/%1/peakParameters/%2/no%3/epsilon").arg(parentPrefix).arg(parentId).arg(peakNo);
    value = settings.value(key, "1.0").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("1.0");
-   epsilon->setValueM(value, 500);
+   epsilon->setValue(value);
 
 #undef CHECK_SETTINGS_CONVERSION
 

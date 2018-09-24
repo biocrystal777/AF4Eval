@@ -38,7 +38,8 @@ AF4SLSParameterFrame::AF4SLSParameterFrame(const QString &prefix, int id, QWidge
    lay->addWidget(cFromWaveLength, 2, 0, 1, 5);
 
    lay->addWidget(new QLabel(tr("c<sub>min</sub> [mg/ml]"), this), 3, 0, 1, 1, Qt::AlignRight);
-   concentrationCut = new FFFTwoBoxWidget(QString("Minimum concentration to be evaluated"),this);
+   concentrationCut = new AF4SciNotSpinBox(false, this);
+   concentrationCut->setToolTip("Minimum concentration to be evaluated");
 //   concentrationCut->setMinimum(1.0, -15);
    concentrationCut->setMinimum(1.0e-15);
    lay->addWidget(concentrationCut, 3, 1, 1, 4);
@@ -80,7 +81,7 @@ AF4SLSParameterFrame::AF4SLSParameterFrame(const QString &prefix, int id, QWidge
    CHECK_SETTINGS_CONVERSION(tr("/%1/%2/slsparam/concentrationCut").arg(prefix).arg(id), "1.0");
    //signValue = FFFTwoBoxWidget::calcSignificand(value, &expValue);
    //concentrationCut->setValue(signValue, expValue, 520);
-   concentrationCut->setValueM(value, 520);
+   concentrationCut->setValue(value);
 
 #undef CHECK_SETTINGS_CONVERSION
 }

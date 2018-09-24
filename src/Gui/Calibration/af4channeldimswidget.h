@@ -12,7 +12,7 @@
 //#include <qwt_mathml_text_engine.h>     renderer too slow, unfortunately
 #include "../Core/af4parameterstructs.h"
 #include "../GeneralWidgets/af4log.h"
-#include "../smallQDerivates/ffftwoboxwidget.h"
+#include "../smallQDerivates/af4scinotspinbox.h"
 
 /*! ***************************************************************************************
 ***

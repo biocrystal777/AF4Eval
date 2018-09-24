@@ -1,21 +1,21 @@
-#ifndef FFFNUMBEREDCHECKBOX_H
-#define FFFNUMBEREDCHECKBOX_H
+#ifndef AF4NUMBEREDCHECKBOX_H
+#define AF4NUMBEREDCHECKBOX_H
 
 #include <QCheckBox>
 #include <QSettings>
 #include "../Core/af4constants.h"
 
-class FFFNumberedCheckBox : public QCheckBox
+class AF4NumberedCheckBox : public QCheckBox
 {
     Q_OBJECT
 public:
-    explicit FFFNumberedCheckBox(int id, QWidget *parent = nullptr);
-    ~FFFNumberedCheckBox();
+    explicit AF4NumberedCheckBox(int id, QWidget *parent = nullptr);
+    ~AF4NumberedCheckBox();
 
-    FFFNumberedCheckBox(const FFFNumberedCheckBox& src) = delete;
-    FFFNumberedCheckBox& operator= (FFFNumberedCheckBox& src) = delete;
-    FFFNumberedCheckBox(FFFNumberedCheckBox&& src) = delete;
-    FFFNumberedCheckBox& operator= (FFFNumberedCheckBox&& src) = delete;
+    AF4NumberedCheckBox(const AF4NumberedCheckBox& src) = delete;
+    AF4NumberedCheckBox& operator= (AF4NumberedCheckBox& src) = delete;
+    AF4NumberedCheckBox(AF4NumberedCheckBox&& src) = delete;
+    AF4NumberedCheckBox& operator= (AF4NumberedCheckBox&& src) = delete;
 
 protected:
     int id;
@@ -25,4 +25,4 @@ public slots:
     void callcheckedID(bool checked);
 };
 
-#endif // FFFNUMBEREDCHECKBOX_H
+#endif // AF4NUMBEREDCHECKBOX_H

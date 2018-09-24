@@ -8,7 +8,8 @@
 #include <QGroupBox>
 #include <QCheckBox>
 #include <QSpinBox>
-#include "../smallQDerivates/ffftwoboxwidget.h"
+#include "../GeneralWidgets/af4log.h"
+#include "../smallQDerivates/af4scinotspinbox.h"
 #include "../../Core/af4parameterstructs.h"
 
 /*! **********************************************************************************************
@@ -91,7 +92,7 @@ private:
    QCheckBox* cFromRefIndex   = nullptr;
    QCheckBox* cFromWaveLength = nullptr;
 
-   FFFTwoBoxWidget *concentrationCut = nullptr;
+   AF4SciNotSpinBox *concentrationCut = nullptr;
    QDoubleSpinBox *laserWaveLength   = nullptr;
    QDoubleSpinBox *refIndexSolvent   = nullptr;
 
