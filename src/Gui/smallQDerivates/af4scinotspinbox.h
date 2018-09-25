@@ -7,16 +7,16 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <cmath>
-
+#include <QDebug>
 /*! **********************************************************************************************
 ***
 ***  \class     AF4SciNotSpinBox "src/Gui/smallQDerivates/af4scinotspinbox.h"
 ***  \brief
 ***  \details
 ***  \author    Benedikt Häusele
-***  \version   1.0
+***  \version   1.1
 ***  \date      2018-09-24
-***  \copyright CC CC BY-NC-ND 4.0
+***  \copyright LGPL 3.0
 ***  \todo      Extend for negative values, make widget size constant; documentation incomplete
 ***
 *************************************************************************************************/
@@ -66,7 +66,7 @@ public:
     * \brief getMaximum
     * \return
     */
-   double maximum();
+   double maximum() const { return maxSig * pow10(maxExp); }
    /*!
     * \brief setMinimum
     * \param value
@@ -77,7 +77,7 @@ public:
     * \brief getMinimum
     * \return
     */
-   double minimum();
+   double minimum() const { return minSig * pow10(minExp); }
 
    /*!
      * \brief setSignifandStep set the stepsize of the significand box.

@@ -344,17 +344,9 @@ int AF4ChannelCalibWidget::setPlotDataFromFile()
 
 bool AF4ChannelCalibWidget::setChannelWidth(double value)
 {
-   channelWidth->setValue(value);
-/*
-   int valExponent;
-   double valSignificand = FFFTwoBoxWidget::calcSignificand(value, &valExponent);
-   if ((1.0  <= valSignificand) && (valSignificand < 10.0)){
-      channelWidth->setValueS(valSignificand, valExponent, 7);
-      return true;
-   } else {
-      return false;
-   }
-   */
+   bool ok;
+   channelWidth->setValue(value, &ok);
+   return ok;
 }
 
 

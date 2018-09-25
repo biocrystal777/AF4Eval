@@ -390,7 +390,7 @@ private:
    QToolButton *inputFileChooser               = nullptr;
    QLineEdit *inputFileName                    = nullptr;
 
-   AF4SciNotSpinBox *diffCoefficient            = nullptr;
+   AF4SciNotSpinBox *diffCoefficient           = nullptr;
    QDoubleSpinBox *crossFlow                   = nullptr;
    QDoubleSpinBox *temperature                 = nullptr;
    QDoubleSpinBox *voidPeakTime                = nullptr;
@@ -402,9 +402,9 @@ private:
    QFrame *calibrationFrame                    = nullptr;
    QGridLayout *calibrationFrameLayout         = nullptr;
    QPushButton *calibButton                    = nullptr;
-   AF4SciNotSpinBox *channelWidth               = nullptr;
+   AF4SciNotSpinBox *channelWidth              = nullptr;
    QDoubleSpinBox *hydrodynVolume              = nullptr;
-   QDoubleSpinBox *geometVolume               = nullptr;
+   QDoubleSpinBox *geometVolume                = nullptr;
 
    QToolButton *diffCoeffCalculator            = nullptr;
    AF4StokesEinsteinCalculatorWidget *diffCoeffCalcWidget = nullptr;
@@ -415,12 +415,13 @@ private:
    QTextEdit *notesDescr                       = nullptr;
 
    AF4CalibPlotWidget *plotWidget              = nullptr;
-   AF4CalibPlotWidget *plotWidget2              = nullptr;
+   AF4CalibPlotWidget *plotWidget2             = nullptr;
 
    int channelId;
    int calibId;
    QString channelName;
    QString calibName;
+
 
    /*!
     * \brief chopStringsQuotMarksToOne if a string has more than one Quotation mark, they are merged

@@ -230,20 +230,6 @@ private slots:
     */
    void redrawSignal2(int signalInt);
 
-
-   // NEED CHANGES AT THE AF4TWOBOXWIDGET
-   /*!
-    * \brief adaptY1ScaleMinBoxLimit
-    * \param maxOfMin
-    */
-   void adaptY1ScaleMinBoxLimit(double maxOfMin);
-
-   /*!
-    * \brief adaptY1ScaleMaxBoxLimit
-    * \param minOfMax
-    */
-    void adaptY1ScaleMaxBoxLimit(double minOfMax);
-
    /*!
     * \brief reScaleY1Axis
     */
@@ -262,23 +248,13 @@ private slots:
     */
    void adaptY2ScaleMaxBoxLimit(double minOfMax);
 
+   //-\todo ----> lambda
+
    /*!
     * \brief reScaleY2Axis
 
     */
    void reScaleY2Axis();
-
-   /*!
-    * \brief adaptXScaleMinBoxLimit
-    * \param maxOfMin
-    */
-   void adaptXScaleMinBoxLimit(double maxOfMin);
-
-   /*!
-    * \brief adaptXScaleMaxBoxLimit
-    * \param minOfMax
-    */
-   void adaptXScaleMaxBoxLimit(double minOfMax);
 
    /*!
     * \brief reScaleXAxis

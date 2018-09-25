@@ -13,12 +13,15 @@ AF4SciNotSpinBox::AF4SciNotSpinBox(const bool signedBox, QWidget *parent) :
    significand = new QDoubleSpinBox(this);
    significand->setKeyboardTracking(false);   
 
+
    connect(significand, qOverload<double>(&QDoubleSpinBox::valueChanged),
-           [this] () {
-      adjustSpinBoxLimits();
+           [this] () {    
       adjustInputToFormat();
+      adjustSpinBoxLimits();
       emit valueChanged();
-      emit valueChanged(this->value()); } );
+      emit valueChanged(this->value());
+      //qDebug() << " -----------  ";
+   } );
 
    layout->addWidget(significand, 0, Qt::AlignLeft);
 
@@ -27,22 +30,31 @@ AF4SciNotSpinBox::AF4SciNotSpinBox(const bool signedBox, QWidget *parent) :
 
    exponent = new QSpinBox(this);
    exponent->setKeyboardTracking(true);
+
    connect(exponent, qOverload<int>(&QSpinBox::valueChanged),
            [this] () {
       adjustSpinBoxLimits();
       emit valueChanged();
-      emit valueChanged(this->value()); } );
+      emit valueChanged(this->value());
+      //qDebug() << " -----------  ";
+   } );
 
    setSignifandDecimals(5);
    setSignifandSingleStep(0.05);
    adjustSpinBoxLimits();
    layout->addWidget(exponent, 0, Qt::AlignLeft);
+
+
+   significand->setFixedSize(significand->maximumSize());
+   exponent->setFixedSize(exponent->maximumSize());
+   this->setFixedSize(this->maximumSize());
 }
 
 void AF4SciNotSpinBox::setValue(double value, bool *ok)
 {
    const double minVal = valAsDouble(minSig, minExp);
    const double maxVal = valAsDouble(maxSig, maxExp);
+ // if(ok) *ok = true;
    if(value < minVal){
       value = minVal;
       if(ok) *ok = false;
@@ -53,10 +65,13 @@ void AF4SciNotSpinBox::setValue(double value, bool *ok)
    }
    else
       if(ok) *ok = true;
+
    int exp;
    double signif = AF4SciNotSpinBox::calcSignificand(value, &exp);   
    setValueIntern(signif, exp);
    adjustSpinBoxLimits();
+   emit valueChanged();
+   emit valueChanged(this->value());
 }
 
 void AF4SciNotSpinBox::setMaximum(double value, bool *ok)
@@ -65,17 +80,6 @@ void AF4SciNotSpinBox::setMaximum(double value, bool *ok)
    double signif = AF4SciNotSpinBox::calcSignificand(value, &exp);
    setMaximumIntern(signif, exp, ok);
 
-}
-
-double AF4SciNotSpinBox::maximum()
-{
-   return maxSig * pow10(maxExp);
-}
-
-
-double AF4SciNotSpinBox::minimum()
-{
-   return minSig * pow10(minExp);
 }
 
 void AF4SciNotSpinBox::setMinimum(double value, bool *ok)
@@ -128,9 +132,11 @@ void AF4SciNotSpinBox::setSignifandDecimals(int dec)
 
 void AF4SciNotSpinBox::setValueIntern(double sig, int exp)
 {
+   //qDebug() << objectName() <<tr("setValueIntern %1").arg(sig) << exp;
    significand->blockSignals(true);
    exponent->blockSignals(true);
    significand->setValue(sig);
+
    exponent->setValue(exp);
    significand->blockSignals(false);
    exponent->blockSignals(false);
@@ -138,6 +144,7 @@ void AF4SciNotSpinBox::setValueIntern(double sig, int exp)
 
 void AF4SciNotSpinBox::setMaximumIntern(double sig, int exp, bool *ok)
 {
+   //qDebug() << objectName() << tr("setMaximumIntern %1").arg(sig) << exp;
    if(ok) *ok=true;
    // set maxSign if it is in maximal range of this class
    if(sig < 10.0)
@@ -163,6 +170,7 @@ void AF4SciNotSpinBox::setMaximumIntern(double sig, int exp, bool *ok)
 
 void AF4SciNotSpinBox::setMinimumIntern(double sig, int exp, bool *ok)
 {
+   //qDebug() << objectName() << tr("setMinimumIntern %1").arg(sig) << exp;
    if(ok) *ok=true;
    // set minSign if it is in maximal range of this class
    const double minDispSig = pow10(-(significand->decimals()));
@@ -187,8 +195,6 @@ void AF4SciNotSpinBox::setMinimumIntern(double sig, int exp, bool *ok)
    adjustSpinBoxLimits();
 }
 
-
-
 void AF4SciNotSpinBox::adjustInputToFormat()
 {
    double sig = significand->value();
@@ -201,31 +207,46 @@ void AF4SciNotSpinBox::adjustInputToFormat()
       sig *= 10.0;
       --modExp;
    }
-   if(modExp != 0){
+   if(modExp != 0){      
       setValueIntern(sig, exponent->value() + modExp);
    }
 }
 
 void AF4SciNotSpinBox::adjustSpinBoxLimits()
 {
+   //qDebug() << objectName() << "minExp" << minExp << "maxExp" << maxExp;
+   //qDebug() << objectName() << "expLimits" << exponent->minimum() << exponent->maximum();
+   const int expDiff = abs(maxExp - minExp);
+   const int expVal  = exponent->value();
+   const double value  = this->value();
+   const double minVal = this->minimum();
+   const double maxVal = this->maximum();
+   exponent->blockSignals(true);
+   significand->blockSignals(true);
+
+   if (expDiff == 0)
+      exponent->setRange(minExp, maxExp);
+   else if (expDiff >= 1){
+      if(value >= 10.0 * minVal )
+         exponent->setRange(minExp+1, maxExp);
+      else if (value <= 0.1 * maxVal )
+         exponent->setRange(minExp, maxExp-1);
+      else
+         exponent->setRange(minExp, maxExp);
+   }
    // if a default MinMax is used for the spinbox
-   // values out of the range of 1.0-9.999.... will
+      // values out of the range of 1.0-9.999.... will
    // have to be caught by adjustInputToFormat()
    const double defaultMin = 0.0;
    const double defaultMax = 99.9;
 
-   exponent->blockSignals(true);
-   exponent->setRange(minExp, maxExp);
-
+   if      (expVal == minExp) significand->setRange(minSig,    defaultMax);
+   else if (expVal == maxExp) significand->setRange(defaultMin, maxSig);
+   else                       significand->setRange(defaultMin, defaultMax);
    exponent->blockSignals(false);
-
-   significand->blockSignals(true);
-   if      (exponent->value() == minExp) significand->setRange(minSig,    defaultMax);
-   else if (exponent->value() == maxExp) significand->setRange(defaultMin, maxSig);
-   else                                  significand->setRange(defaultMin, defaultMax);
    significand->blockSignals(false);
+   //qDebug() << objectName()<< "expLimits" << exponent->minimum() << exponent->maximum();
 }
-
 
 double AF4SciNotSpinBox::calcSignificand(double number, int *exponent)
 {
