@@ -1,5 +1,11 @@
 #include "./af4calibplotwidget.h"
 
+//-/////////////////////////////////////
+//
+//  Public stuff
+//
+//-/////////////////////////////////////
+
 AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : QWidget(parent)
 {
    lay = new QGridLayout(this);
@@ -11,9 +17,13 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
 
    signal1Switch = new QComboBox(this);
    signal1Switch->blockSignals(true);
-   QObject::connect(signal1Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(redrawSignal1(int)));
    connect(signal1Switch, qOverload<int>(&QComboBox::currentIndexChanged),
-           [this]() { signal1Switch->setToolTip(signal1Switch->currentData().toString()); } );
+           [this](int i) {
+      this->signal1Ch = i;
+      signal1Switch->setToolTip(signal1Switch->currentText());
+      signal1Curve->setSamples(plotXData, plotYData[signal1Ch]);
+      autoScaleY1Axis();
+   } );
 
    signal1Switch->setToolTip("Load calibration data set to choose a signal.");   
    signal1Switch->setMinimumContentsLength(30);
@@ -24,8 +34,14 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
 
    signal2Switch = new QComboBox(this);
    signal2Switch->blockSignals(true);
-   QObject::connect(signal2Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(redrawSignal2(int)));
-   QObject::connect(signal2Switch, SIGNAL(currentIndexChanged(int)), this, SLOT(adaptSignal2Switch()));
+   connect(signal2Switch, qOverload<int>(&QComboBox::currentIndexChanged),
+           this,[this](int i) {
+      signal2Ch = i;
+      signal2Switch->setToolTip(signal2Switch->currentText());
+      signal2Curve->setSamples(plotXData, plotYData[signal2Ch]);
+      autoScaleY2Axis();
+   } );
+
    signal2Switch->setToolTip("Load calibration data set to choose a signal.");
    signal2Switch->setMinimumContentsLength(30);
    signal2Switch->setFixedWidth(this->width() * 0.25);
@@ -48,86 +64,86 @@ AF4CalibPlotWidget::AF4CalibPlotWidget(const QString& title, QWidget *parent) : 
    grid->attach(plot);
 
    scaleXRangeMin = new QDoubleSpinBox(this);
-   scaleXRangeMin->setDecimals(2);
+   scaleXRangeMin->setDecimals(1);
    scaleXRangeMin->setMinimum(0.0);
    scaleXRangeMin->setMaximum(300.0);
    lay->addWidget(scaleXRangeMin, 7, 1);
 
    scaleXRangeMax = new QDoubleSpinBox(this);
 
-   scaleXRangeMax->setDecimals(2);
+   scaleXRangeMax->setDecimals(1);
    scaleXRangeMax->setMinimum(1.0);
    scaleXRangeMax->setMaximum(600.0);
    lay->addWidget(scaleXRangeMax, 7, 5 );
 
-
-
-   QObject::connect(scaleXRangeMin, qOverload<double>(&QDoubleSpinBox::valueChanged),
-                    [this] (double minOfMax){ scaleXRangeMax->setMinimum(minOfMax + 1.0); } );
-   QObject::connect(scaleXRangeMax, qOverload<double>(&QDoubleSpinBox::valueChanged),
-                    [this] (double maxOfMin){ scaleXRangeMin->setMaximum(maxOfMin - 1.0); } );
-   QObject::connect(scaleXRangeMin, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &AF4CalibPlotWidget::reScaleXAxis);
-   QObject::connect(scaleXRangeMax, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &AF4CalibPlotWidget::reScaleXAxis);
+   auto reScaleXAxis = [this] () {
+      plot->setAxisScale(QwtPlot::xBottom, this->scaleXRangeMin->value(), this->scaleXRangeMax->value());
+      plot->replot();
+   };
+   connect(scaleXRangeMin, qOverload<double>(&QDoubleSpinBox::valueChanged), this, reScaleXAxis);
+   connect(scaleXRangeMax, qOverload<double>(&QDoubleSpinBox::valueChanged), this, reScaleXAxis);
+   connect(scaleXRangeMin, qOverload<double>(&QDoubleSpinBox::valueChanged),
+                    this, [this] (double minOfMax){ scaleXRangeMax->setMinimum(minOfMax + 1.0); } );
+   connect(scaleXRangeMax, qOverload<double>(&QDoubleSpinBox::valueChanged),
+                    this, [this] (double maxOfMin){ scaleXRangeMin->setMaximum(maxOfMin - 1.0); } );
 
    scaleXRangeMax->setValue(60.0);
 
    scaleY1RangeMin = new AF4SciNotSpinBox(false, this);
    scaleY1RangeMin->setObjectName(tr("Y1Min"));
    scaleY1RangeMin->setToolTip("Lower scale limit of left Y-Axis");
-   scaleY1RangeMin->setSignifandDecimals(2);
-   scaleY1RangeMin->setSignifandSingleStep(0.05);
+   scaleY1RangeMin->setSignifandDecimals(1);
+   scaleY1RangeMin->setSignifandSingleStep(0.1);
    lay->addWidget(scaleY1RangeMin, 6, 0, Qt::AlignRight);
    scaleY1RangeMax = new AF4SciNotSpinBox(false, this);
    scaleY1RangeMax->setObjectName(tr("Y1Max"));
    scaleY1RangeMax->setToolTip("Upper scale limit of left Y-Axis");
-   scaleY1RangeMax->setSignifandDecimals(2);
-   scaleY1RangeMax->setSignifandSingleStep(0.05);
+   scaleY1RangeMax->setSignifandDecimals(1);
+   scaleY1RangeMax->setSignifandSingleStep(0.1);
 
    lay->addWidget(scaleY1RangeMax, 2, 0, Qt::AlignRight);
 
+   auto reScaleY1Axis = [this] () {
+      plot->setAxisScale(QwtPlot::yLeft, scaleY1RangeMin->value(), scaleY1RangeMax->value());
+      plot->replot();
+   };
+   connect(scaleY1RangeMin, qOverload<>(&AF4SciNotSpinBox::valueChanged), this, reScaleY1Axis);
+   connect(scaleY1RangeMax, qOverload<>(&AF4SciNotSpinBox::valueChanged), this, reScaleY1Axis);
+   connect(scaleY1RangeMin, qOverload<double>(&AF4SciNotSpinBox::valueChanged),
+                    this, [this] (double m){ scaleY1RangeMax->setMinimum(m); } );
+   connect(scaleY1RangeMax, qOverload<double>(&AF4SciNotSpinBox::valueChanged),
+                    this, [this] (double m){ scaleY1RangeMin->setMaximum(m); } );
 
-
-   QObject::connect(scaleY1RangeMin, qOverload<double>(&AF4SciNotSpinBox::valueChanged),
-                    [this] (double minOfMax){ scaleY1RangeMax->setMinimum(minOfMax); } );
-   QObject::connect(scaleY1RangeMax, qOverload<double>(&AF4SciNotSpinBox::valueChanged),
-                    [this] (double maxOfMin){ scaleY1RangeMin->setMaximum(maxOfMin); } );
-   QObject::connect(scaleY1RangeMin, qOverload<>(&AF4SciNotSpinBox::valueChanged), this, &AF4CalibPlotWidget::reScaleY1Axis);
-   QObject::connect(scaleY1RangeMax, qOverload<>(&AF4SciNotSpinBox::valueChanged), this, &AF4CalibPlotWidget::reScaleY1Axis);
-   /*
-   QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptY1ScaleMaxBoxLimit(double)));
-   QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptY1ScaleMinBoxLimit(double)));
-   QObject::connect(scaleY1RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis()));
-   QObject::connect(scaleY1RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY1Axis()));
-   */
    autoScaleY1Button = new QPushButton("Rescale Y1");
-   QObject::connect(autoScaleY1Button, SIGNAL(pressed()), this, SLOT(autoScaleY1Axis()));
+   connect(autoScaleY1Button, &QPushButton::pressed, this, &AF4CalibPlotWidget::autoScaleY1Axis);
    lay->addWidget(autoScaleY1Button, 3, 0, Qt::AlignRight);
 
    scaleY2RangeMin = new AF4SciNotSpinBox( false, this);
    scaleY2RangeMin->setToolTip("Lower scale limit of right Y-Axis");
-   scaleY2RangeMin->setSignifandDecimals(2);
-   scaleY2RangeMin->setSignifandSingleStep(0.05);
+   scaleY2RangeMin->setSignifandDecimals(1);
+   scaleY2RangeMin->setSignifandSingleStep(0.1);
    lay->addWidget(scaleY2RangeMin, 6, 6, Qt::AlignLeft);   
    scaleY2RangeMax = new AF4SciNotSpinBox(false, this);
    scaleY2RangeMax->setToolTip("Upper scale limit of right Y-Axis");
-   scaleY2RangeMax->setSignifandDecimals(2);
-   scaleY2RangeMax->setSignifandSingleStep(0.05);
+   scaleY2RangeMax->setSignifandDecimals(1);
+   scaleY2RangeMax->setSignifandSingleStep(0.1);
 
    lay->addWidget(scaleY2RangeMax, 2, 6, Qt::AlignLeft);
 
-   QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(adaptY2ScaleMaxBoxLimit(double)));
-   QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(adaptY2ScaleMinBoxLimit(double)));
-   QObject::connect(scaleY2RangeMin, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis()));
-   QObject::connect(scaleY2RangeMax, SIGNAL(valueChanged(double)), this, SLOT(reScaleY2Axis()));
+   auto reScaleY2Axis = [this] () {
+      plot->setAxisScale(QwtPlot::yRight, scaleY2RangeMin->value(), scaleY2RangeMax->value());
+      plot->replot();
+   };
+   connect(scaleY2RangeMin, qOverload<>(&AF4SciNotSpinBox::valueChanged), this, reScaleY2Axis);
+   connect(scaleY2RangeMax, qOverload<>(&AF4SciNotSpinBox::valueChanged), this, reScaleY2Axis);
+   connect(scaleY2RangeMin, qOverload<double>(&AF4SciNotSpinBox::valueChanged),
+                    this, [this] (double minOfMax){ scaleY2RangeMax->setMinimum(minOfMax); } );
+   connect(scaleY2RangeMax, qOverload<double>(&AF4SciNotSpinBox::valueChanged),
+                    this, [this] (double maxOfMin){ scaleY2RangeMin->setMaximum(maxOfMin); } );
 
    autoScaleY2Button = new QPushButton("Rescale Y2");
-   QObject::connect(autoScaleY2Button, SIGNAL(pressed()), this, SLOT(autoScaleY2Axis()));
+   connect(autoScaleY2Button, &QPushButton::pressed, this, &AF4CalibPlotWidget::autoScaleY2Axis);
    lay->addWidget(autoScaleY2Button, 3, 6, Qt::AlignLeft);
-}
-
-AF4CalibPlotWidget::~AF4CalibPlotWidget()
-{
-   if(grid) {delete grid; grid = nullptr;}
 }
 
 void AF4CalibPlotWidget::initPlot()
@@ -151,31 +167,6 @@ void AF4CalibPlotWidget::initPlot()
    }
    signal2Switch->setEnabled(true);
    this->updatePlot();
-}
-
-void AF4CalibPlotWidget::addPlotVLine(QDoubleSpinBox *ctrlBox, const QColor &color)
-{
-   plotMarkers.append(new QwtDynPlotMarker());
-   symbols.append(new QwtSymbol(QwtSymbol::VLine));
-   QwtDynPlotMarker *marker = plotMarkers.last();
-   QwtSymbol *symbol = symbols.last();
-   marker->setLinePen(color, 4.0);
-   symbol->setPen(color, 2.0);
-   symbol->setSize(1);
-   symbol->setSize(10000);
-   marker->setSymbol(symbol);
-   marker->setXValue(ctrlBox->value());
-   marker->attach(plot);
-   QObject::connect(ctrlBox, SIGNAL(valueChanged(double)), marker, SLOT(setXValueEmit(double)));
-   QObject::connect(marker, SIGNAL(posChanged()), plot, SLOT(replot()));
-   plot->replot();
-}
-
-void AF4CalibPlotWidget::updatePlot()
-{
-   signal1Curve->setSamples(plotXData, plotYData[signal1Ch]);
-   signal2Curve->setSamples(plotXData, plotYData[signal2Ch]);
-   plot->repaint();
 }
 
 void AF4CalibPlotWidget::setSignal1Channels(const QStringList &strs)
@@ -206,29 +197,33 @@ void AF4CalibPlotWidget::setSignal2Channels(const QStringList &strs)
    signal2Switch->blockSignals(false);
 }
 
-void AF4CalibPlotWidget::adaptSignal2Switch()
+void AF4CalibPlotWidget::addPlotVLine(QDoubleSpinBox *ctrlBox, const QColor &color)
 {
-   signal1Switch->setToolTip(signal2Switch->currentData().toString());
+   plotMarkers.append(new QwtDynPlotMarker());
+   symbols.append(new QwtSymbol(QwtSymbol::VLine));
+   QwtDynPlotMarker *marker = plotMarkers.last();
+   QwtSymbol *symbol = symbols.last();
+   marker->setLinePen(color, 4.0);
+   symbol->setPen(color, 2.0);
+   symbol->setSize(1);
+   symbol->setSize(10000);
+   marker->setSymbol(symbol);
+   marker->setXValue(ctrlBox->value());
+   marker->attach(plot);
+   QObject::connect(ctrlBox, SIGNAL(valueChanged(double)), marker, SLOT(setXValueEmit(double)));
+   QObject::connect(marker, SIGNAL(posChanged()), plot, SLOT(replot()));
+   plot->replot();
 }
 
-
-
-void AF4CalibPlotWidget::reScaleXAxis()
-{
-   this->plot->setAxisScale(QwtPlot::xBottom, this->scaleXRangeMin->value(), this->scaleXRangeMax->value());
-   this->plot->replot();
-}
-
-void AF4CalibPlotWidget::reScaleY1Axis()
-{
-   this->plot->setAxisScale(QwtPlot::yLeft, this->scaleY1RangeMin->value(), this->scaleY1RangeMax->value());
-   this->plot->replot();
-}
+//-/////////////////////////////////////
+//
+//  Public slots
+//
+//-/////////////////////////////////////
 
 void AF4CalibPlotWidget::autoScaleY1Axis()
 {
    // find range
-
    double minX = scaleXRangeMin->value();
    double maxX = scaleXRangeMax->value();
 
@@ -253,32 +248,6 @@ void AF4CalibPlotWidget::autoScaleY1Axis()
    plot->replot();
    scaleY1RangeMin->blockSignals(false);
    scaleY1RangeMax->blockSignals(false);
-
-}
-
-void AF4CalibPlotWidget::redrawSignal1(int signalInt)
-{
-   signal1Ch = signalInt;
-   signal1Curve->setSamples(plotXData, plotYData[signal1Ch]);
-   autoScaleY1Axis();
-}
-
-// NEED CHANGES AT THE AF4TWOBOXWIDGET
-
-void AF4CalibPlotWidget::adaptY2ScaleMinBoxLimit(double maxOfMin)
-{
-   //this->scaleY1RangeMin->setMaximum(maxOfMin);
-}
-
-void AF4CalibPlotWidget::adaptY2ScaleMaxBoxLimit(double minOfMax)
-{
-   //his->scaleY1RangeMax->setMinimum(minOfMax);
-}
-
-void AF4CalibPlotWidget::reScaleY2Axis()
-{
-   this->plot->setAxisScale(QwtPlot::yRight, this->scaleY2RangeMin->value(), this->scaleY2RangeMax->value());   
-   this->plot->replot();
 }
 
 void AF4CalibPlotWidget::autoScaleY2Axis()
@@ -314,10 +283,21 @@ void AF4CalibPlotWidget::setXScale(double minX, double maxX)
    this->scaleXRangeMax->blockSignals(false);
 }
 
-void AF4CalibPlotWidget::redrawSignal2(int signalInt)
+//-/////////////////////////////////////
+//
+//  Private stuff
+//
+//-/////////////////////////////////////
+
+AF4CalibPlotWidget::~AF4CalibPlotWidget()
 {
-   signal2Ch = signalInt;
-   signal2Switch->setToolTip(signal2Switch->currentText());
-   signal2Curve->setSamples(plotXData, plotYData[signal2Ch]);
-   autoScaleY2Axis();
+   if(grid) {delete grid; grid = nullptr;}
 }
+
+void AF4CalibPlotWidget::updatePlot()
+{
+   signal1Curve->setSamples(plotXData, plotYData[signal1Ch]);
+   signal2Curve->setSamples(plotXData, plotYData[signal2Ch]);
+   plot->repaint();
+}
+

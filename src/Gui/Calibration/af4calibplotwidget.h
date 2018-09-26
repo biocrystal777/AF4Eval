@@ -29,7 +29,7 @@
 ***  \author    Benedikt Häusele
 ***  \version   1.0
 ***  \date      2018
-***  \copyright CC CC BY-NC-ND 4.0
+***  \copyright LGPL v3.0
 ***  \brief     Facultatively responsive Qwtplotmarker that can emit a signal when its position has been shifted
 ***
 *********************************************************************************************************************/
@@ -70,19 +70,16 @@ class VLineOverlay : public QwtWidgetOverlay {
   public:
    VLineOverlay( QWidget *QwtPlot ) : QwtWidgetOverlay(QwtPlot) {}
 
-
 };
 */
-
-
 
 /*! ***************************************************************************************
 ***
 ***  \class     AF4Calibplotwidget "src/Gui/Calibration/af4calibplotwidget.h"
 ***  \author    Benedikt Häusele
-***  \version   1.0
+***  \version   1.1
 ***  \date      2018
-***  \copyright CC CC BY-NC-ND 4.0
+***  \copyright LGPL v3.0
 ***
 ********************************************************************************************/
 
@@ -101,16 +98,28 @@ public:
    AF4CalibPlotWidget(const QString& title, QWidget *parent);
 
    /*!
-    *  \brief getPlotSignalChannel
-    *
+    * \brief initPlot
     */
-   int getPlotSignalChannel();
+   void initPlot();
 
    /*!
-    * \brief setPlotSignalChannels
+    * \brief setSignal1Channels
     * \param strs
     */
-   void setPlotSignalChannels(const QStringList& strs);
+   void setSignal1Channels(const QStringList& strs);
+
+   /*!
+    * \brief setSignal2Channels
+    * \param strs
+    */
+   void setSignal2Channels(const QStringList& strs);
+
+   /*!
+    * \brief addPlotVLine
+    * \param ctrlBox
+    * \param color
+    */
+   void addPlotVLine(QDoubleSpinBox* ctrlBox, const  QColor &color);
 
    /*!
     * \brief setPlotXData
@@ -123,73 +132,7 @@ public:
     * \param newYData
     */
    void setPlotYData(QVecMatrix<double> &newYData)   { plotYData = newYData; }
-
-   void setSignal1Channels(const QStringList& strs);
-
-   /*!
-    * \brief setSignal2Channels
-    * \param strs
-    */
-   void setSignal2Channels(const QStringList& strs);
-
-   /*!
-    * \brief initPlot
-    */
-   void initPlot();
-
-   /*!
-    * \brief addPlotVLine
-    * \param ctrlBox
-    * \param color
-    */
-   void addPlotVLine(QDoubleSpinBox* ctrlBox, const  QColor &color);
-
-
-protected:
-   /*!
-    * \brief destructor of this class
-    */
-   ~AF4CalibPlotWidget();
-
-   AF4CalibPlotWidget(const AF4CalibPlotWidget& src)        = delete;
-   AF4CalibPlotWidget& operator= (AF4CalibPlotWidget& src)  = delete;
-   AF4CalibPlotWidget(AF4CalibPlotWidget&& src)             = delete;
-   AF4CalibPlotWidget& operator= (AF4CalibPlotWidget&& src) = delete;
-
-   /*!
-    * \brief updatePlot updataes the data set and repaints plot
-    */
-   void updatePlot();
-
-   QGridLayout            *lay           = nullptr;
-   QwtPlot                *plot          = nullptr;
-   QwtPlotGrid            *grid          = nullptr;
-   QwtPlotCurve           *signal1Curve  = nullptr;
-   QwtPlotCurve           *signal2Curve  = nullptr;
-
-   QDoubleSpinBox         *scaleXRangeMin  = nullptr;
-   QDoubleSpinBox         *scaleXRangeMax  = nullptr;
-
-   AF4SciNotSpinBox        *scaleY1RangeMin = nullptr;
-   AF4SciNotSpinBox        *scaleY1RangeMax = nullptr;
-   QPushButton            *autoScaleY1Button = nullptr;
-
-   AF4SciNotSpinBox        *scaleY2RangeMin = nullptr;
-   AF4SciNotSpinBox        *scaleY2RangeMax = nullptr;
-   QPushButton            *autoScaleY2Button = nullptr;
-
-
-   QVector<double>         plotXData;
-   QVecMatrix<double>      plotYData;
-
-   QComboBox              *signal1Switch = nullptr;
-   int signal1Ch = 0;
-   int signal2Ch = 0;
-   QComboBox              *signal2Switch  = nullptr;
-
-   QList<QwtDynPlotMarker*> plotMarkers;
-   QList<QwtSymbol*> symbols;
-
+   
 public slots:
 
    /*!
@@ -209,56 +152,44 @@ public slots:
     */
    void setXScale(double minX, double maxX);
 
+private:
+   /*!
+    * \brief destructor of this class
+    */
+   ~AF4CalibPlotWidget();
 
-private slots:
+   AF4CalibPlotWidget(const AF4CalibPlotWidget& src)        = delete;
+   AF4CalibPlotWidget& operator= (AF4CalibPlotWidget& src)  = delete;
+   AF4CalibPlotWidget(AF4CalibPlotWidget&& src)             = delete;
+   AF4CalibPlotWidget& operator= (AF4CalibPlotWidget&& src) = delete;
 
    /*!
-    * \brief adaptSignal2Switch
-    * \param sig2Ch
+    * \brief updatePlot updataes the data set and repaints plot
     */
-   void adaptSignal2Switch();
+   void updatePlot();
 
-   /*!
-    * \brief redrawSignal1
-    * \param signalInt
-    */
-   void redrawSignal1(int signalInt);
+   QGridLayout             *lay               = nullptr;
+   QwtPlot                 *plot              = nullptr;
+   QwtPlotGrid             *grid              = nullptr;
+   QwtPlotCurve            *signal1Curve      = nullptr;
+   QwtPlotCurve            *signal2Curve      = nullptr;
 
-   /*!
-    * \brief redrawSignal2
-    * \param signalInt
-    */
-   void redrawSignal2(int signalInt);
+   QDoubleSpinBox          *scaleXRangeMin    = nullptr;
+   QDoubleSpinBox          *scaleXRangeMax    = nullptr;
+   AF4SciNotSpinBox        *scaleY1RangeMin   = nullptr;
+   AF4SciNotSpinBox        *scaleY1RangeMax   = nullptr;
+   QPushButton             *autoScaleY1Button = nullptr;
+   AF4SciNotSpinBox        *scaleY2RangeMin   = nullptr;
+   AF4SciNotSpinBox        *scaleY2RangeMax   = nullptr;
+   QPushButton             *autoScaleY2Button = nullptr;
 
-   /*!
-    * \brief reScaleY1Axis
-    */
-   void reScaleY1Axis();
-
-   // NEED CHANGES AT THE AF4TWOBOXWIDGET
-   /*!
-    * \brief adaptY2ScaleMinBoxLimit
-    * \param maxOfMin
-    */
-   void adaptY2ScaleMinBoxLimit(double maxOfMin);
-
-   /*!
-    * \brief adaptY2ScaleMaxBoxLimit
-    * \param minOfMax
-    */
-   void adaptY2ScaleMaxBoxLimit(double minOfMax);
-
-   //-\todo ----> lambda
-
-   /*!
-    * \brief reScaleY2Axis
-
-    */
-   void reScaleY2Axis();
-
-   /*!
-    * \brief reScaleXAxis
-    */
-   void reScaleXAxis();
+   QVector<double>          plotXData;
+   QVecMatrix<double>       plotYData;
+   int signal1Ch = 0;
+   int signal2Ch = 0;
+   QComboBox               *signal1Switch     = nullptr;
+   QComboBox               *signal2Switch     = nullptr;
+   QList<QwtDynPlotMarker*> plotMarkers;
+   QList<QwtSymbol*>        symbols;
 };
 #endif // AF4CALIBPLOTWIDGET_H
