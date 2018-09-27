@@ -3,10 +3,10 @@
 using std::vector;
 using std::string;
 
-uint AF4Calculator::findIndexFromTime(const vecD &timeVector, const double time) const
+uint AF4Calculator::indexFromOrderedVector(const vecD &v, const double target) const
 {
-   uint index = std::distance( timeVector.begin(), std::lower_bound(timeVector.begin(), timeVector.end(), time) );
-   if( index && std::abs(timeVector[index] - time  ) < std::abs(timeVector[index-1] -time))
+   uint index = std::distance( v.begin(), std::lower_bound(v.begin(), v.end(), target) );
+   if( index && std::abs(v[index] - target ) < std::abs(v[index-1] -target))
       return index;
    else
       return index-1;

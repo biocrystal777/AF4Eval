@@ -7,7 +7,6 @@ using std::vector;
 using std::setprecision;
 using std::ios_base;
 
-
 bool AF4CsvWriter::writeFile(const matD& data, const vector<string>& headLineEntries)
 {
    // check inputs

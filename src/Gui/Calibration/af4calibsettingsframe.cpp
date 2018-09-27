@@ -1,13 +1,19 @@
 #include "af4calibsettingsframe.h"
 
+//-/////////////////////////////////
+//
+//   Public stuff
+//
+//-/////////////////////////////////
+
 AF4CalibSettingsFrame::AF4CalibSettingsFrame(QMap<QString, AF4ChannelDimsWidget *> *channelConfigWidgets,
                                              QMap<QString, QMap<QString, AF4ChannelCalibWidget *> *> *channelCalibWidgets,
                                              const QString &prefix,
                                              QWidget *parent) :
-    QFrame(parent),    
+    QFrame(parent),
+    prefix(prefix),
     channelConfigWidgets(channelConfigWidgets),
-    channelCalibWidgets(channelCalibWidgets),
-    prefix(prefix)
+    channelCalibWidgets(channelCalibWidgets)
 {
     channelKeyList = new QList<QString>(channelConfigWidgets->keys());
     calibKeyList = new QList<QList<QString>*>();
@@ -86,11 +92,11 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QMap<QString, AF4ChannelDimsWidget 
          calibKey = calibKeyList->at(i)->at(j);
          currentCalibChooser->addItem(calibKey);
       }
-      QObject::connect(allCalibChoosers->value(channelKey), SIGNAL(currentIndexChanged(QString)),
-                       this, SLOT(updateCalibValues(QString)));
-
+      connect(allCalibChoosers->value(channelKey), qOverload<const QString &>(&QComboBox::currentIndexChanged),
+              this, &AF4CalibSettingsFrame::updateCalibValues);
    }
-   QObject::connect(channelChooser, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateChannelValues(QString)));
+   connect(channelChooser, qOverload<const QString &>(&QComboBox::currentIndexChanged),
+           this, &AF4CalibSettingsFrame::updateChannelValues);
 
    layout->addWidget(currentCalibChooser, 7, 0, 1, 3);
    currentCalibChooser->show();
@@ -124,15 +130,19 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QMap<QString, AF4ChannelDimsWidget 
    loadParameters();
 }
 
-AF4CalibSettingsFrame::~AF4CalibSettingsFrame()
+void AF4CalibSettingsFrame::saveParameters()
 {
-   saveParameters();
-   if(channelKeyList) {delete channelKeyList; channelKeyList = nullptr;}
-   if(calibKeyList){
-      for(int i = 0; i < calibKeyList->size(); ++i) delete calibKeyList->at(i);
-      delete calibKeyList; calibKeyList = nullptr;
-   }
+   QSettings settings("AgCoelfen", "FFFEval");
+   settings.setIniCodec("UTF-8");
+   settings.setValue(tr("%1/channelCalibs/channelIndex").arg(prefix), channelChooser->currentIndex());
+   settings.setValue(tr("%1/channelCalibs/calibIndex").arg(prefix), currentCalibChooser->currentIndex());
 }
+
+//-/////////////////////////////////
+//
+//   Public slots
+//
+//-/////////////////////////////////
 
 void AF4CalibSettingsFrame::updateChannelValues(QString channelKey)
 {
@@ -193,7 +203,6 @@ void AF4CalibSettingsFrame::adaptChannelParameters()
    int numberOfChannelCalibs;
    QString channelKey;
    QString calibKey;
-
    for (int i=0; i < channelKeyList->size(); i++){
       channelKey = channelKeyList->at(i);
       currentCalibChooser = new QComboBox(this);
@@ -208,9 +217,9 @@ void AF4CalibSettingsFrame::adaptChannelParameters()
    }
 
    for (int i=0; i < allCalibChoosers->size(); i++){
-       channelKey = channelKeyList->at(i);
-       QObject::connect(allCalibChoosers->value(channelKey), SIGNAL(currentIndexChanged(QString)),
-                        this, SLOT(updateCalibValues(QString)));
+      channelKey = channelKeyList->at(i);
+      connect(allCalibChoosers->value(channelKey), qOverload<const QString &>(&QComboBox::currentIndexChanged),
+              this, &AF4CalibSettingsFrame::updateCalibValues);
    }
 
    int channelIndex = channelChooser->findText(currentChannelKey);
@@ -228,13 +237,20 @@ void AF4CalibSettingsFrame::enableVolume(bool enable)
    this->channelVolume->setEnabled(enable);
 }
 
+//-/////////////////////////////////
+//
+//   Private stuff
+//
+//-/////////////////////////////////
 
-void AF4CalibSettingsFrame::saveParameters()
+AF4CalibSettingsFrame::~AF4CalibSettingsFrame()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
-   settings.setIniCodec("UTF-8");
-   settings.setValue(tr("%1/channelCalibs/channelIndex").arg(prefix), channelChooser->currentIndex());
-   settings.setValue(tr("%1/channelCalibs/calibIndex").arg(prefix), currentCalibChooser->currentIndex());
+   saveParameters();
+   if(channelKeyList) {delete channelKeyList; channelKeyList = nullptr;}
+   if(calibKeyList){
+      for(int i = 0; i < calibKeyList->size(); ++i) delete calibKeyList->at(i);
+      delete calibKeyList; calibKeyList = nullptr;
+   }
 }
 
 void AF4CalibSettingsFrame::loadParameters()

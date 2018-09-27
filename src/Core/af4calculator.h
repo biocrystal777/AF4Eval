@@ -36,12 +36,6 @@ protected:
     * \brief Default Destructor
     */
    virtual ~AF4Calculator(){}
-
-    AF4Calculator(const AF4Calculator& src) = delete;
-    AF4Calculator& operator= (const AF4Calculator& src) = delete;
-    AF4Calculator(AF4Calculator&& src) = delete;
-    AF4Calculator& operator= (AF4Calculator&& src) = delete;
-
    /*!
     * \brief findIndexFromTime returns the index corresponding to a
     *        time on the 0th column of the data matrix ( = time)
@@ -51,7 +45,7 @@ protected:
 
 public:
 
-   uint findIndexFromTime(const vecD &timeVector, const double time) const;
+   uint indexFromOrderedVector(const vecD &v, const double target) const;
 protected:
 
    /*!
@@ -85,6 +79,13 @@ protected:
     * \param  message to be logged
     */
    inline void logError(const std::string &message) const { AF4Log::logError(message); }
+
+private:
+   AF4Calculator(const AF4Calculator& src) = delete;
+   AF4Calculator& operator= (const AF4Calculator& src) = delete;
+   AF4Calculator(AF4Calculator&& src) = delete;
+   AF4Calculator& operator= (AF4Calculator&& src) = delete;
+
 };
 
 #endif // AF4CALCULATOR_H

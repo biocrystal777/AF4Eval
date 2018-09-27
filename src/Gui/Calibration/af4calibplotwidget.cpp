@@ -300,4 +300,3 @@ void AF4CalibPlotWidget::updatePlot()
    signal2Curve->setSamples(plotXData, plotYData[signal2Ch]);
    plot->repaint();
 }
-

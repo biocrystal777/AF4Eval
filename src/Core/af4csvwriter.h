@@ -38,10 +38,6 @@ public:
     */
    ~AF4CsvWriter(){}
 
-    AF4CsvWriter(const AF4CsvWriter& src) = delete;
-    AF4CsvWriter& operator= (const AF4CsvWriter& src) = delete;
-    AF4CsvWriter(AF4CsvWriter&& src) = delete;
-    AF4CsvWriter& operator= (AF4CsvWriter&& src) = delete;
 
    /*!
     * \brief writeFile The function has to be called to write the file to the path stated above
@@ -62,13 +58,18 @@ public:
     */
    uint maxElementIndex(const std::vector<uint>& searchData, uint startIndex, uint EndIndex,
                         uint* maxElementValue = nullptr) const;
-protected:
-   std::string filePath;
+private:
+   const std::string filePath;
    const char sep;
    const char dec;
    const char lineSep;
-   std::vector<std::string>* headLineEntries;
-   std::vector<vecD*>* data;
+
+   AF4CsvWriter(const AF4CsvWriter& src) = delete;
+   AF4CsvWriter& operator= (const AF4CsvWriter& src) = delete;
+   AF4CsvWriter(AF4CsvWriter&& src) = delete;
+   AF4CsvWriter& operator= (AF4CsvWriter&& src) = delete;
+
+
 };
 
 #endif // AF4CSVWRITER_H

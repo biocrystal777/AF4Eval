@@ -20,7 +20,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    inputFileChooser = new QToolButton(this);
    inputFileChooser->setText("..");
    inputFileChooser->setToolTip("Browse Files");
-   QObject::connect(inputFileChooser, SIGNAL(clicked()), this, SLOT(chooseInputFile()));
+   connect(inputFileChooser, &QToolButton::clicked, this, &AF4ChannelCalibWidget::chooseInputFile);
    frameLayout->addWidget(inputFileChooser, 1, 4, 1, 1);
    inputFileName = new QLineEdit(this);
 
@@ -60,16 +60,15 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
 
    diffCoeffCalculator = new QToolButton(this);
    diffCoeffCalculator->setText("D from R");
-   QObject::connect(diffCoeffCalculator, SIGNAL(clicked()), this, SLOT(callDiffCoeffDialog()));
+   connect(diffCoeffCalculator, &QToolButton::clicked, this, &AF4ChannelCalibWidget::callDiffCoeffDialog);
    frameLayout->addWidget(diffCoeffCalculator, 2, 8, 1, 1);
-
 
    calibrationFrame = new QFrame(this);
    calibrationFrame->setFrameStyle(0x1011);
    calibrationFrameLayout = new QGridLayout(calibrationFrame);
 
    calibButton = new QPushButton("Calibrate", widgetFrame);
-   QObject::connect(calibButton, SIGNAL(clicked()), this, SLOT(callCalibrateChannel()));
+   connect(calibButton, &QToolButton::clicked, this, &AF4ChannelCalibWidget::callCalibrateChannel);
    calibrationFrameLayout->addWidget(calibButton, 0, 0, 1, 3);
 
    qwtLabel = new QwtTextLabel(widgetFrame);
@@ -547,14 +546,13 @@ void AF4ChannelCalibWidget::callDiffCoeffDialog()
       diffCoeffCalculator->setDown(true);
       diffCoeffCalcWidget = new AF4StokesEinsteinCalculatorWidget(this);
       diffCoeffCalcWidget->show();
-      QObject::connect(diffCoeffCalcWidget, SIGNAL(destroyed()), this, SLOT(finishDiffCoeffDialog()));
+      diffCoeffCalculator->setFocus();
+      connect(diffCoeffCalcWidget, &AF4StokesEinsteinCalculatorWidget::destroyed,
+              this, [this]() {
+         diffCoeffCalculator->setDown(false);
+         diffCoeffCalcWidget = nullptr;
+      });
    }
-}
-
-void AF4ChannelCalibWidget::finishDiffCoeffDialog()
-{
-   diffCoeffCalculator->setDown(false);
-   diffCoeffCalcWidget = nullptr;
 }
 
 void AF4ChannelCalibWidget::chooseInputFile()

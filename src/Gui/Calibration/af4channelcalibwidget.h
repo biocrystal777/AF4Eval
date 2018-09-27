@@ -455,11 +455,6 @@ private slots:
    void callDiffCoeffDialog();
 
    /*!
-    * \brief finishDiffCoeffDialog
-    */
-   void finishDiffCoeffDialog();
-
-   /*!
     * \brief chooseInputFile calls a QFileDialog to choose the input file Name
     *        (see callCalibrateChannel()).
     */

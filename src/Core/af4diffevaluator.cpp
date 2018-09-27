@@ -67,7 +67,7 @@ int AF4DiffEvaluator::evalDiffCoeffs(vecD& times,
    double rMeas;
 
    uint maxIterations = 100;
-   uint timeIndexBegin = findIndexFromTime(times, voidPeakTime) + 1;
+   uint timeIndexBegin = indexFromOrderedVector(times, voidPeakTime) + 1;
 
 
    evaluationStart = timeIndexBegin;

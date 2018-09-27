@@ -218,23 +218,19 @@ public:
    explicit AF4ChannelConfigurationWidget(QWidget *parent);
 
    /*!
-    * \brief ~FFFChannelCalConfWidget() default destructor
-    */
-   ~AF4ChannelConfigurationWidget();
-
-    AF4ChannelConfigurationWidget(const AF4ChannelConfigurationWidget& src)         = delete;
-    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget& src)   = delete;
-    AF4ChannelConfigurationWidget(AF4ChannelConfigurationWidget&& src)             = delete;
-    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget&& src) = delete;
-
-
-   /*!
     * \brief getChannelConfigWidgets returns a pointer to the QMap
     *        that contains the channelConfigWidgets of the program
     * \return map of the channelConfigWidgets
     */
-   QMap<QString, AF4ChannelDimsWidget*>* getChannelConfigWidgets() const;
-   QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* getChannelCalibWidgets() const;
+   auto getChannelConfigWidgets() const -> QMap<QString, AF4ChannelDimsWidget*>*   {
+      return channelConfigWidgets;
+   }
+   /*!
+    * \brief getChannelCalibWidgets
+    */
+   auto getChannelCalibWidgets()  const -> QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* {
+      return channelCalibWidgets;
+   }
 
    //\////////////////
    // channel Frame //
@@ -353,6 +349,16 @@ private:
     * \return
     */
    bool askCalibAdding(QString &newName);
+
+   /*!
+    * \brief ~FFFChannelCalConfWidget() default destructor
+    */
+   ~AF4ChannelConfigurationWidget();
+
+    AF4ChannelConfigurationWidget(const AF4ChannelConfigurationWidget& src)        = delete;
+    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget& src)  = delete;
+    AF4ChannelConfigurationWidget(AF4ChannelConfigurationWidget&& src)             = delete;
+    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget&& src) = delete;
 
 private slots:
 

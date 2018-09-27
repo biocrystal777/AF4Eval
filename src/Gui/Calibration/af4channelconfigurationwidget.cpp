@@ -1,11 +1,5 @@
 #include "af4channelconfigurationwidget.h"
 
-#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
-   if(!ok){ \
-   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
-   .arg(keyName).arg(defaultValueName)); \
-   }\
-   };
 
 AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QWidget(parent)
@@ -42,17 +36,20 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    renameChButton = new QToolButton(channelConfigFrame);
    renameChButton->setText("R");
    renameChButton->setToolTip("Rename the current channel");
-   QObject::connect(renameChButton, SIGNAL(clicked()), this, SLOT(renameChannel()));
+   //QObject::connect(renameChButton, SIGNAL(clicked()), this, SLOT(renameChannel()));
+   connect(renameChButton, &QPushButton::clicked, this, &AF4ChannelConfigurationWidget::renameChannel);
    channelConfigFrameLayout->addWidget(renameChButton, 0, 5);
+
    addChButton = new QToolButton(channelConfigFrame);
    addChButton->setText(tr("+"));
    addChButton->setToolTip("Add new Channel");
-   QObject::connect(addChButton, SIGNAL(clicked()), this, SLOT(addChannel()));
+   connect(addChButton, &QPushButton::clicked, this, &AF4ChannelConfigurationWidget::addChannel);
    channelConfigFrameLayout->addWidget(addChButton, 0, 6);
    deleteChButton = new QToolButton(channelConfigFrame);
    deleteChButton->setText(tr("-"));
    deleteChButton->setToolTip("delete current Channel");
-   QObject::connect(deleteChButton, SIGNAL(clicked()), this, SLOT(deleteChannel()));
+
+   connect(deleteChButton, &QPushButton::clicked, this, &AF4ChannelConfigurationWidget::deleteChannel);
    channelConfigFrameLayout->addWidget(deleteChButton, 0, 7);
 
    ////////////////////////////////////////////////////
@@ -64,6 +61,12 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    // make all channel widgets, add them to the QMap
    // of ChannelWidgets and insert them
    // into the ComboBox
+#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
+   if(!ok){ \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   .arg(keyName).arg(defaultValueName)); \
+   }\
+   };
 
 
    uint numberOfChannels = settings.value("channels/number", 0).toInt(&ok);
@@ -93,7 +96,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QString calibName;
    QString channelName;
    for(uint i=0; i < numberOfChannels; i++){
-      numberOfCalibrations = settings.value(tr("channels/%1/numberOfCalibrations").arg((i)), 0).toInt(&ok);
+      numberOfCalibrations = settings.value(tr("channels/%1/numberOfCalibrations").arg((i)), 0).toInt(&ok);      
       CHECK_SETTINGS_CONVERSION(numberOfCalibrations, 0);
       currentCalibSelection =  new QComboBox(calibrationFrame);
 
@@ -119,6 +122,9 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
       }
       QObject::connect(currentCalibSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchCalibWidget(QString)));
    }
+
+   #undef CHECK_SETTINGS_CONVERSION
+
    qDebug() << "a5";
    renameCalibButton = new QToolButton(calibrationFrame);
    renameCalibButton->setText("R");
@@ -161,6 +167,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QObject::connect(settingsWriter, SIGNAL(clicked()), this, SLOT(saveParameters()));
    layout->addWidget(settingsWriter, 15, 0);
 
+
 }
 
 AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
@@ -171,15 +178,7 @@ AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
    delete allCalibSelections;
 }
 
-QMap<QString, AF4ChannelDimsWidget *> *AF4ChannelConfigurationWidget::getChannelConfigWidgets() const
-{
-   return channelConfigWidgets;
-}
 
-QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* AF4ChannelConfigurationWidget::getChannelCalibWidgets() const
-{
-   return channelCalibWidgets;
-}
 
 void AF4ChannelConfigurationWidget::adaptConfigWidgetIds()
 {
@@ -689,4 +688,4 @@ AF4DeleteChannelDialog::AF4DeleteChannelDialog()
    QObject::connect(decliner, SIGNAL(clicked()), this, SLOT(reject()));
    layout->addWidget(decliner, 1, 1);
 }
-#undef CHECK_SETTINGS_CONVERSION
+
