@@ -10,14 +10,12 @@ AF4Log::AF4Log(QWidget *parent) :
    logWidget->setReadOnly(true);
    layout->addWidget(logWidget, 0, 0, 5, 10);
    clearButton = new QPushButton("Clear", this);
-   QObject::connect(clearButton, SIGNAL(pressed()), this, SLOT(clearLog()));
+   QObject::connect(clearButton, &QPushButton::pressed, this, &AF4Log::clearLog) ;
    layout->addWidget(clearButton, 2, 10, 1,1);
 
    if(!global_LogPtr)
       global_LogPtr = this;
 }
-
-
 
 void AF4Log::logText(std::string logMessage, bool qDebugToo )
 {

@@ -34,7 +34,7 @@ public:
     * \param suffix
     * \param parent
     */
-   explicit AF4FileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent = nullptr);
+   AF4FileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent);
    ~AF4FileInOutWidget();
 
     AF4FileInOutWidget(const AF4FileInOutWidget& src) = delete;
@@ -78,14 +78,9 @@ private:
 
    QString identifier;
    QString suffix;
-
    QPushButton *nameGenButton;
    QCheckBox   *autoGenName;
-
-
    QGridLayout *widgetLayout;
-
-
    QGridLayout *fileLayout;
    QToolButton *inputFileChooser;
    QLineEdit *inputFileName;
@@ -129,7 +124,7 @@ private slots:
    /*!
     * \brief autoGenOutputName
     */
-   void autoGenOutputName();
+   void generateOutputName();
 
 };
 

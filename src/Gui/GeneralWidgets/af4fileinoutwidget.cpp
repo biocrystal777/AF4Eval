@@ -13,7 +13,7 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    inputFileChooser = new QToolButton(this);
    inputFileChooser->setText("..");
    inputFileChooser->setToolTip("Browse Files");
-   QObject::connect(inputFileChooser, SIGNAL(clicked()), this, SLOT(chooseInputFile()));
+   connect(inputFileChooser, &QToolButton::clicked, this, &AF4FileInOutWidget::chooseInputFile);
    fileLayout->addWidget(inputFileChooser, 1, 0, 1, 1);
    inputFileName = new QLineEdit(this);
    inputFileName->setMinimumWidth(300);
@@ -27,7 +27,7 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    outputFileChooser = new QToolButton(this);
    outputFileChooser->setText("..");
    outputFileChooser->setToolTip("Browse Files");
-   QObject::connect(outputFileChooser, SIGNAL(clicked()), this, SLOT(chooseOutputFile()));
+   connect(outputFileChooser, &QToolButton::clicked, this, &AF4FileInOutWidget::chooseOutputFile);
    fileLayout->addWidget(outputFileChooser, 3, 0, 1, 1);
    outputFileName = new QLineEdit(this);
    outputFileName->setMinimumWidth(300);
@@ -37,12 +37,12 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    setOutputFilePath(stringValue, true);
 
    nameGenButton = new QPushButton("имя", this);
-   QObject::connect(nameGenButton, SIGNAL(clicked()), this, SLOT(autoGenOutputName()));
+   connect(nameGenButton, &QPushButton::clicked, this, &AF4FileInOutWidget::generateOutputName);
    fileLayout->addWidget(nameGenButton, 3, 13, 1, 1, Qt::AlignLeft);
 
    autoGenName = new QCheckBox(QString("Autogenerate"), this);
    autoGenName->setChecked(settings.value(tr("fileNames/%1/autoGen").arg(identifier), false).toBool());
-   QObject::connect(inputFileName, SIGNAL(textChanged(QString)), this, SLOT(adoptOutputName()));
+   connect(inputFileName, &QLineEdit::textChanged, this, &AF4FileInOutWidget::adoptOutputName);
    fileLayout->addWidget(autoGenName, 3, 14, 1, 3, Qt::AlignLeft);
 }
 
@@ -50,7 +50,6 @@ AF4FileInOutWidget::~AF4FileInOutWidget()
 {
     writeSettings();
 }
-
 
 QString AF4FileInOutWidget::getOutputFilePath(bool quoted)
 {
@@ -142,10 +141,10 @@ void AF4FileInOutWidget::chooseOutputFile()
 
 void AF4FileInOutWidget::adoptOutputName()
 {
-   if(autoGenName->isChecked()) autoGenOutputName();
+   if(autoGenName->isChecked()) generateOutputName();
 }
 
-void AF4FileInOutWidget::autoGenOutputName()
+void AF4FileInOutWidget::generateOutputName()
 {
    QString outName = inputFileName->text();
    chopStringsQuotMarksEntirely(outName);

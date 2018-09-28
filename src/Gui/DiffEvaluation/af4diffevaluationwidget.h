@@ -40,16 +40,11 @@ public:
     * \param channelCalibWidgets Pointer to the map of existing channelCalibWidgets
     * \param parent
     */
-   explicit AF4DiffEvaluationWidget(
+   AF4DiffEvaluationWidget(
          QMap<QString, AF4ChannelDimsWidget*>* channelConfigWidgets,
          QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets,
-         QWidget *parent = nullptr);
+         QWidget *parent);
    ~AF4DiffEvaluationWidget(){}
-
-   AF4DiffEvaluationWidget(const AF4DiffEvaluationWidget& src) = delete;
-   AF4DiffEvaluationWidget& operator= (AF4DiffEvaluationWidget& src) = delete;
-   AF4DiffEvaluationWidget(AF4DiffEvaluationWidget&& src) = delete;
-   AF4DiffEvaluationWidget& operator= (AF4DiffEvaluationWidget&& src) = delete;
 
    /*!
     * \brief getTemperatureVal returns the displayed temmperature
@@ -99,6 +94,16 @@ public:
                            double crossFlowVal,
                            double voidPeakVal);
 
+public slots:
+   /*!
+    * \brief adaptChannelParameters adapts the comboboxes according
+    *        to the internal structures (QMaps) that contain
+    *        the information about all existing channels and
+    *        calibration profiles. Additionally, displayed
+    *        values of the chosen values are updated
+    */
+   //void adaptChannelParameters();
+
 private:
 
    QMap<QString, AF4ChannelDimsWidget*>                 *channelConfigWidgets   = nullptr;
@@ -113,6 +118,11 @@ private:
    QPushButton           *evalStarter            = nullptr;
    QCheckBox             *displayZeroMessages    = nullptr;
 
+   AF4DiffEvaluationWidget(const AF4DiffEvaluationWidget& src) = delete;
+   AF4DiffEvaluationWidget& operator= (AF4DiffEvaluationWidget& src) = delete;
+   AF4DiffEvaluationWidget(AF4DiffEvaluationWidget&& src) = delete;
+   AF4DiffEvaluationWidget& operator= (AF4DiffEvaluationWidget&& src) = delete;
+
 private slots:
 
    /*!
@@ -124,16 +134,6 @@ private slots:
     * \brief saveParameters
     */
    void saveParameters() const;
-
-public slots:
-   /*!
-    * \brief adaptChannelParameters adapts the comboboxes according
-    *        to the internal structures (QMaps) that contain
-    *        the information about all existing channels and
-    *        calibration profiles. Additionally, displayed
-    *        values of the chosen values are updated
-    */
-   void adaptChannelParameters();
 
 };
 

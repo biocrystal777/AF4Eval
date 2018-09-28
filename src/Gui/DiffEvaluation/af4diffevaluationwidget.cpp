@@ -176,11 +176,12 @@ void AF4DiffEvaluationWidget::saveParameters() const
    calibSettingsFrame->saveParameters();
 }
 
+/*
 void AF4DiffEvaluationWidget::adaptChannelParameters()
 {
     if(calibSettingsFrame) calibSettingsFrame->adaptChannelParameters();
 }
-
+*/
 void AF4DiffEvaluationWidget::adaptExpParameters(double tempVal,
                                                  double eluFlowVal,
                                                  double crossFlowVal,
