@@ -89,7 +89,6 @@ protected:
    // General class tools //
    /////////////////////////
 
-protected:
 
    /*!
     * \brief writeSettings write parameter to QSettings

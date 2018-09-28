@@ -59,9 +59,9 @@ AF4StokesEinsteinCalculatorWidget::AF4StokesEinsteinCalculatorWidget(QWidget *pa
    lay->addWidget(diffCoefficient, 3, 2, 1, 2);
 
    loadParameters();
-   QObject::connect(stokesRad, SIGNAL(valueChanged(double)), this, SLOT(reCalculate()));
-   QObject::connect(temperature, SIGNAL(valueChanged(double)), this, SLOT(reCalculate()));
-   QObject::connect(viscosity, SIGNAL(valueChanged(double)), this, SLOT(reCalculate()));
+   connect(stokesRad,   qOverload<double>(&QDoubleSpinBox::valueChanged), this, &AF4StokesEinsteinCalculatorWidget::reCalculate);
+   connect(temperature, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &AF4StokesEinsteinCalculatorWidget::reCalculate);
+   connect(viscosity,   qOverload<double>(&QDoubleSpinBox::valueChanged), this, &AF4StokesEinsteinCalculatorWidget::reCalculate);
    reCalculate();
 }
 

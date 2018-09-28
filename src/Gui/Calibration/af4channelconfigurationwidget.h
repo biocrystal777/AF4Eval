@@ -28,7 +28,7 @@ class AF4CalibNameDialog final : public QDialog
 public:
 
    /*!
-    * \brief FFFCalibNameDialog constructor of this class
+    * \brief AF4CalibNameDialog constructor of this class
     * \param name pointer that has to be passed that assigns the place,
     *        where the name entered by user will be written
     * \param first if the dialog is called repeatedly, this flag can
@@ -44,11 +44,6 @@ public:
     */
    ~AF4CalibNameDialog(){}
 
-   AF4CalibNameDialog(const AF4CalibNameDialog& src)        = delete;
-   AF4CalibNameDialog& operator= (AF4CalibNameDialog& src ) = delete;
-   AF4CalibNameDialog(AF4CalibNameDialog&& src)             = delete;
-   AF4CalibNameDialog& operator= (AF4CalibNameDialog&& src) = delete;
-
 private:
    QString *calibName        = nullptr;
    QGridLayout *layout       = nullptr;
@@ -56,12 +51,10 @@ private:
    QPushButton *accepter     = nullptr;
    QPushButton *decliner     = nullptr;
 
-private slots:
-   /*!
-    * \brief acceptName writes the name to the pointer passed for the constructor
-    *        and calls accept which delivers "true" to exec()
-    */
-   void acceptName();
+   AF4CalibNameDialog(const AF4CalibNameDialog& src)        = delete;
+   AF4CalibNameDialog& operator= (AF4CalibNameDialog& src ) = delete;
+   AF4CalibNameDialog(AF4CalibNameDialog&& src)             = delete;
+   AF4CalibNameDialog& operator= (AF4CalibNameDialog&& src) = delete;
 };
 
 /*! **************************************************************************************************************
@@ -115,7 +108,7 @@ public:
    /*!
     * \brief FFFDeleteChannelDialog constructor of this class
     */
-   explicit AF4DeleteChannelDialog();
+   AF4DeleteChannelDialog();
    /*!
     * \brief FFFDeleteChannelDialog
     */
@@ -125,7 +118,7 @@ public:
     AF4DeleteChannelDialog(AF4DeleteChannelDialog&& src) = delete;
     AF4DeleteChannelDialog& operator= (AF4DeleteChannelDialog&& src) = delete;
 
-protected:
+private:
    QGridLayout *layout   = nullptr;
    QPushButton *accepter = nullptr;
    QPushButton *decliner = nullptr;
@@ -145,7 +138,7 @@ protected:
 ***
 *****************************************************************************************************************/
 
-class AF4ChannelNameDialog : public QDialog
+class AF4ChannelNameDialog final : public QDialog
 {
    Q_OBJECT
 public:
@@ -159,7 +152,7 @@ public:
     * \param rename has to be set true if the dialog is called by the rename function. Changes
     *        the text of the dialog
     */
-   explicit AF4ChannelNameDialog(QString *name, bool first, const QString nameSuggestion = "", bool rename = false);
+   explicit AF4ChannelNameDialog(QString* const name, bool first, const QString nameSuggestion = "", bool rename = false);
 
    /*!
     * \brief destructor of this class
@@ -170,8 +163,8 @@ public:
    AF4ChannelNameDialog(AF4ChannelNameDialog&& src)             = delete;
    AF4ChannelNameDialog& operator= (AF4ChannelNameDialog&& src) = delete;
 
-protected:
-   QString *channelName         = nullptr;
+private:
+   QString * const channelName;
    QGridLayout *layout          = nullptr;
    QLineEdit *channelNameInput  = nullptr;
    QPushButton *accepter        = nullptr;

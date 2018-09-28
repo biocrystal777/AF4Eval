@@ -83,31 +83,3 @@ void FFFMainWindow::writeSettings() const
    settings.setValue("window/xpos", this->pos().y());
 }
 
-AF4ChannelNameDialog::AF4ChannelNameDialog(QString *name, bool first, const QString nameSuggestion, bool rename)
-{
-   channelName = name;
-   setFixedSize(250, 120);
-   layout = new QGridLayout(this);
-   if(first)
-      layout->addWidget(new QLabel("Specify Channel Name:"), 0, 0, 1, 2, Qt::AlignLeft);
-   else{
-      layout->addWidget(new QLabel(tr("<font color=\"#FF4400\"><i>\"%1\" exists already.</i></font>").arg(*channelName)),
-                        0, 0, 1, 2, Qt::AlignLeft);
-      layout->addWidget(new QLabel(tr("Please specify another name:")), 1, 0, 1, 2, Qt::AlignLeft);
-   }
-   QString defText;
-   if(nameSuggestion == 0) defText = QString("New Channel");
-   else defText = nameSuggestion;
-   channelNameInput = new QLineEdit(defText, this);
-   layout->addWidget(channelNameInput, 2, 0, 1, 2);
-
-   if(rename) accepter = new QPushButton("Rename Channel", this);
-   else accepter = new QPushButton("Add Channel", this);
-   QObject::connect(accepter, SIGNAL(clicked()), this, SLOT(acceptName()));
-   layout->addWidget(accepter, 3, 0);
-   decliner = new QPushButton("Close");
-   QObject::connect(decliner, SIGNAL(clicked()), this, SLOT(reject()));
-   layout->addWidget(decliner, 3, 1);
-
-   channelNameInput->setFocus();
-}

@@ -36,7 +36,6 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    renameChButton = new QToolButton(channelConfigFrame);
    renameChButton->setText("R");
    renameChButton->setToolTip("Rename the current channel");
-   //QObject::connect(renameChButton, SIGNAL(clicked()), this, SLOT(renameChannel()));
    connect(renameChButton, &QPushButton::clicked, this, &AF4ChannelConfigurationWidget::renameChannel);
    channelConfigFrameLayout->addWidget(renameChButton, 0, 5);
 
@@ -79,7 +78,8 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
       channelConfigWidgets->insert(newChannelName, currentChConfigWidget);
       channelSelection->addItem(newChannelName);
       channelSelection->setCurrentIndex(channelSelection->count()-1);
-      QObject::connect(channelSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchChannelWidget(QString)));
+      connect(channelSelection, qOverload<const QString&>(&QComboBox::currentIndexChanged),
+              this, &AF4ChannelConfigurationWidget::switchChannelWidget );
       currentChConfigWidget->hide();
    }
    if(numberOfChannels == 0)
@@ -113,14 +113,16 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
          calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();
          currentCalibWidget = new AF4ChannelCalibWidget(i, j, channelName, calibName, calibrationFrame);
          //qDebug() << "b2"<< numberOfCalibrations;
-         QObject::connect(currentCalibWidget, SIGNAL(calibrateChannelCalled()), this, SLOT(calibrateChannnel()));
+         connect(currentCalibWidget, &AF4ChannelCalibWidget::calibrateChannelCalled,
+                 this, &AF4ChannelConfigurationWidget::calibrateChannnel);
          currentCalibSelection->addItem(calibName);
          channelCalibWidgets->value(channelName)->insert(calibName, currentCalibWidget);
          //qDebug() << "b3"<< numberOfCalibrations;
          calibrationFrameLayout->addWidget(currentCalibWidget, 2, 0, 7, 7);
          currentCalibWidget->hide();
       }
-      QObject::connect(currentCalibSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchCalibWidget(QString)));
+      connect(currentCalibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
+              this, &AF4ChannelConfigurationWidget::switchCalibWidget);
    }
 
    #undef CHECK_SETTINGS_CONVERSION
@@ -129,24 +131,28 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    renameCalibButton = new QToolButton(calibrationFrame);
    renameCalibButton->setText("R");
    renameCalibButton->setToolTip("Rename the current calibration profile");
-   QObject::connect(renameCalibButton, SIGNAL(clicked()), this, SLOT(renameCalibration()));
+
+   connect(renameCalibButton, &QPushButton::clicked,
+           this, &AF4ChannelConfigurationWidget::renameCalibration);
    calibrationFrameLayout->addWidget(renameCalibButton, 0, 5);
 
    addCalibButton = new QToolButton(calibrationFrame);
    addCalibButton->setText(tr("+"));
    addCalibButton->setToolTip("Add new calibration profile");
-   QObject::connect(addCalibButton, SIGNAL(clicked()), this, SLOT(addCalibration()));
+   connect(addCalibButton, &QPushButton::clicked,
+           this, &AF4ChannelConfigurationWidget::addCalibration);
    calibrationFrameLayout->addWidget(addCalibButton, 0, 6);
 
    deleteCalibButton = new QToolButton(calibrationFrame);
    deleteCalibButton->setText(tr("-"));
-   deleteCalibButton->setToolTip("delete current calibration profile");
-   QObject::connect(deleteCalibButton, SIGNAL(clicked()), this, SLOT(deleteCalibration()));
+   deleteCalibButton->setToolTip("delete current calibration profile");   
+   connect(deleteCalibButton, &QPushButton::clicked,
+           this, &AF4ChannelConfigurationWidget::deleteCalibration);
    calibrationFrameLayout->addWidget(deleteCalibButton, 0, 7);
    //////////////////////////
    // set starting widgets //
    //////////////////////////
-   //qDebug() << "a6";
+
    channelSelection->setCurrentIndex(0);
    channelName = channelSelection->currentText();
    currentChConfigWidget = channelConfigWidgets->value(channelName);
@@ -164,7 +170,9 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    layout->addWidget(calibrationFrame, 3, 0, 12, 10);
 
    settingsWriter = new QPushButton("Save Parameters", this);
-   QObject::connect(settingsWriter, SIGNAL(clicked()), this, SLOT(saveParameters()));
+   connect(settingsWriter, &QPushButton::clicked,
+           this, &AF4ChannelConfigurationWidget::saveParameters);
+
    layout->addWidget(settingsWriter, 15, 0);
 
 
@@ -280,7 +288,7 @@ bool AF4ChannelConfigurationWidget::addChannel()
 
       // add new assigned channelCalibWidget, Comboboxes etc.
 
-      QObject::disconnect(channelSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchChannelWidget(QString)));
+      channelSelection->blockSignals(true);
       if(currentCalibSelection)
          currentCalibSelection->hide();
       currentCalibSelection = new QComboBox(calibrationFrame);
@@ -298,17 +306,16 @@ bool AF4ChannelConfigurationWidget::addChannel()
       while(!addCalibration());
       currentCalibSelection->setCurrentIndex(0);
 
-      QObject::connect(currentCalibSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchCalibWidget(QString)));
-      QObject::connect(channelSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(switchChannelWidget(QString)));
+      connect(currentCalibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
+              this, &AF4ChannelConfigurationWidget::switchCalibWidget);
+      channelSelection->blockSignals(false);
+
       AF4Log::logText(tr("New Channel \"%1\" added.").arg(newName));
-
-
 
       adaptConfigWidgetIds();
       // set final current widgets;
 
       currentCalibSelection->show();
-
       currentCalibWidget = channelCalibWidgets->value(newName)->value(currentCalibSelection->currentText());
       currentCalibWidget->show();
       saveParameters();
@@ -484,7 +491,7 @@ bool AF4ChannelConfigurationWidget::addCalibration()
                                                                         currentChConfigWidget->getChannelName(),
                                                                         newName, calibrationFrame);
       if(currentCalibWidget) newCalibration->setAllCalibrationParameters(currentCalibWidget->getAllCalibrationParameters());
-      QObject::connect(newCalibration, SIGNAL(calibrateChannelCalled()), this, SLOT(calibrateChannnel()));
+      connect(newCalibration, &AF4ChannelCalibWidget::calibrateChannelCalled, this, &AF4ChannelConfigurationWidget::calibrateChannnel);
       QString channelName = channelSelection->currentText();
       channelCalibWidgets->value(channelName)->insert(newName, newCalibration);
       currentCalibSelection->addItem(newName);
@@ -621,19 +628,49 @@ QString AF4ChannelConfigurationWidget::chopStringsQuotMarksEntirely(QString stri
 
 
 //\/////////////////////////// Dialogs /////////////////////////////////////////
-
-
-void AF4CalibNameDialog::acceptName()
+void AF4ChannelNameDialog::acceptName()
 {
-   *calibName = QString(calibNameInput->text());
+   *channelName = QString(channelNameInput->text());
    accept();
 }
 
 
+AF4ChannelNameDialog::AF4ChannelNameDialog(QString* const name, bool first, const QString nameSuggestion, bool rename) :
+   channelName(name)
+{
+   //channelName = name;
+   layout = new QGridLayout(this);
+   if(first)
+      layout->addWidget(new QLabel("Specify Channel Name:"), 0, 0, 1, 2, Qt::AlignLeft);
+   else{
+      layout->addWidget(new QLabel(tr("<font color=\"#FF4400\"><i>\"%1\" exists already.</i></font>").arg(*channelName)),
+                        0, 0, 1, 2, Qt::AlignLeft);
+      layout->addWidget(new QLabel(tr("Please specify another name:")), 1, 0, 1, 2, Qt::AlignLeft);
+   }
+   QString defText;
+   if(nameSuggestion == 0) defText = QString("New Channel");
+   else defText = nameSuggestion;
+   channelNameInput = new QLineEdit(defText, this);
+   layout->addWidget(channelNameInput, 2, 0, 1, 2);
+
+   if(rename) accepter = new QPushButton("Rename Channel", this);
+   else accepter = new QPushButton("Add Channel", this);
+   connect(accepter, &QPushButton::clicked,
+           this, [this]() {
+      *channelName = QString(channelNameInput->text());
+      accept();
+   });
+   layout->addWidget(accepter, 3, 0);
+   decliner = new QPushButton("Close");
+   connect(decliner, &QPushButton::clicked, this, &AF4ChannelNameDialog::reject);
+   layout->addWidget(decliner, 3, 1);
+
+   channelNameInput->setFocus();
+}
+
 AF4CalibNameDialog::AF4CalibNameDialog(QString *name, bool first, const QString nameSuggestion, bool rename)
 {
    calibName = name;
-   setFixedSize(250, 120);
    layout = new QGridLayout(this);
    if(first)
       layout->addWidget(new QLabel("Specify Calibration Name:"), 0, 0, 1, 2, Qt::AlignLeft);
@@ -650,30 +687,29 @@ AF4CalibNameDialog::AF4CalibNameDialog(QString *name, bool first, const QString 
 
    if(rename) accepter = new QPushButton("Rename Calibration", this);
    else accepter = new QPushButton("Add Calibration", this);
-   QObject::connect(accepter, SIGNAL(clicked()), this, SLOT(acceptName()));
+   connect(accepter, &QPushButton::clicked,
+           this, [this](){
+      *calibName = QString(calibNameInput->text());
+      accept();
+   } );
    layout->addWidget(accepter, 3, 0);
    decliner = new QPushButton("Close");
-   QObject::connect(decliner, SIGNAL(clicked()), this, SLOT(reject()));
+   connect(decliner, &QPushButton::clicked, this, &AF4CalibNameDialog::reject);
    layout->addWidget(decliner, 3, 1);
 
    calibNameInput->setFocus();
 }
 
-void AF4ChannelNameDialog::acceptName()
-{
-   *channelName = QString(channelNameInput->text());
-   accept();
-}
 
 AF4DeleteCalibDialog::AF4DeleteCalibDialog()
 {
    layout = new QGridLayout(this);
    layout->addWidget(new QLabel("Do you really want to delete the current Calibration?"), 0, 0, 1, 2, Qt::AlignLeft);
    accepter = new QPushButton("Yes", this);
-   QObject::connect(accepter, SIGNAL(clicked()), this, SLOT(accept()));
+   connect(accepter, &QPushButton::clicked, this, &QDialog::accept);
    layout->addWidget(accepter, 1, 0);
    decliner = new QPushButton("Close");
-   QObject::connect(decliner, SIGNAL(clicked()), this, SLOT(reject()));
+   connect(decliner, &QPushButton::clicked, this, &QDialog::reject);
    layout->addWidget(decliner, 1, 1);
 }
 
@@ -682,10 +718,10 @@ AF4DeleteChannelDialog::AF4DeleteChannelDialog()
    layout = new QGridLayout(this);
    layout->addWidget(new QLabel("Do you really want to delete the displayed channel\n and its assigned calibrations?"), 0, 0, 1, 2, Qt::AlignLeft);
    accepter = new QPushButton(" I know, what I am doing!", this);
-   QObject::connect(accepter, SIGNAL(clicked()), this, SLOT(accept()));
+   connect(accepter, &QPushButton::clicked, this, &QDialog::accept);
    layout->addWidget(accepter, 1, 0);
    decliner = new QPushButton("Close");
-   QObject::connect(decliner, SIGNAL(clicked()), this, SLOT(reject()));
+   connect(decliner, &QPushButton::clicked, this, &QDialog::reject);
    layout->addWidget(decliner, 1, 1);
 }
 

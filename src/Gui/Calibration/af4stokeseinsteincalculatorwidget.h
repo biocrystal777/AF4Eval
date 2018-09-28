@@ -26,14 +26,9 @@ class AF4StokesEinsteinCalculatorWidget final : public QDialog
 {
    Q_OBJECT
 public:
-   explicit AF4StokesEinsteinCalculatorWidget(QWidget *parent = 0);
+   explicit AF4StokesEinsteinCalculatorWidget(QWidget *parent);
 
    ~AF4StokesEinsteinCalculatorWidget();
-
-   AF4StokesEinsteinCalculatorWidget(const AF4StokesEinsteinCalculatorWidget& src) = delete;
-   AF4StokesEinsteinCalculatorWidget& operator= (AF4StokesEinsteinCalculatorWidget& src) = delete;
-   AF4StokesEinsteinCalculatorWidget(AF4StokesEinsteinCalculatorWidget&& src) = delete;
-   AF4StokesEinsteinCalculatorWidget& operator= (AF4StokesEinsteinCalculatorWidget&& src) = delete;
 
 private:
 
@@ -53,6 +48,10 @@ private:
     */
    void saveParameters();
 
+   AF4StokesEinsteinCalculatorWidget(const AF4StokesEinsteinCalculatorWidget& src) = delete;
+   AF4StokesEinsteinCalculatorWidget& operator= (AF4StokesEinsteinCalculatorWidget& src) = delete;
+   AF4StokesEinsteinCalculatorWidget(AF4StokesEinsteinCalculatorWidget&& src) = delete;
+   AF4StokesEinsteinCalculatorWidget& operator= (AF4StokesEinsteinCalculatorWidget&& src) = delete;
 private slots:
 
    /*!
