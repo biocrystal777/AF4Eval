@@ -26,10 +26,16 @@ class AF4StokesEinsteinCalculatorWidget final : public QDialog
 {
    Q_OBJECT
 public:
+   /*!
+    * \brief AF4StokesEinsteinCalculatorWidget
+    * \param parent
+    */
    explicit AF4StokesEinsteinCalculatorWidget(QWidget *parent);
 
+   /*!
+    * \brief
+    */
    ~AF4StokesEinsteinCalculatorWidget();
-
 private:
 
    QGridLayout *lay              = nullptr;
@@ -58,7 +64,6 @@ private slots:
     * \brief reCalculate
     */
    void reCalculate();
-
 };
 
 #endif // AF4STOKESEINSTEINCALCULATORWIDGET_H

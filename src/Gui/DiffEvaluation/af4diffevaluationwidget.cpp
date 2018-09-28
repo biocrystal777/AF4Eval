@@ -25,11 +25,11 @@ AF4DiffEvaluationWidget::AF4DiffEvaluationWidget(QMap<QString, AF4ChannelDimsWid
    widgetLayout->addWidget(calibSettingsFrame, 5, 0, 5, 5);
 
    settingsWriter = new QPushButton("Save Parameters", this);
-   QObject::connect(settingsWriter, SIGNAL(clicked()), this, SLOT(saveParameters()));
+   QObject::connect(settingsWriter, &QPushButton::clicked, this, &AF4DiffEvaluationWidget::saveParameters);
    widgetLayout->addWidget(settingsWriter, 15, 0, 1, 2);
 
    evalStarter = new QPushButton("Start Evaluation", this);
-   QObject::connect(evalStarter, SIGNAL(clicked()), this, SLOT(startEvaluation()));
+   QObject::connect(evalStarter, &QPushButton::clicked, this, &AF4DiffEvaluationWidget::startEvaluation);
    widgetLayout->addWidget(evalStarter, 15, 2, 1, 2);
 
    displayZeroMessages = new QCheckBox("Display Calculation Warnings", this);
@@ -39,7 +39,8 @@ AF4DiffEvaluationWidget::AF4DiffEvaluationWidget(QMap<QString, AF4ChannelDimsWid
    expSettingsFrame = new AF4ExpSettingsFrame(tr("diffEvaluation"), -1, this);
    widgetLayout->addWidget(expSettingsFrame, 5, 6, 10, 5);
 
-   QObject::connect(expSettingsFrame, SIGNAL(callEnableVolume(bool)), calibSettingsFrame, SLOT(enableVolume(bool)));
+   QObject::connect(expSettingsFrame, &AF4ExpSettingsFrame::callEnableVolume,
+                    calibSettingsFrame, &AF4CalibSettingsFrame::enableVolume);
 }
 
 

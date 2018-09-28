@@ -103,7 +103,9 @@ AF4ExpSettingsFrame::AF4ExpSettingsFrame(const QString &prefix, int id, QWidget 
 
     useVoidPeakBox = new QCheckBox(this);
     lay->addWidget(useVoidPeakBox, 5, 0, 1, 1);
-    QObject::connect(useVoidPeakBox, SIGNAL(toggled(bool)), this, SLOT(enableVoidPeakTime(bool)));
+    //QObject::connect(useVoidPeakBox, SIGNAL(toggled(bool)), this, SLOT(enableVoidPeakTime(bool)));
+    connect(useVoidPeakBox, &QCheckBox::toggled,
+            this, &AF4ExpSettingsFrame::enableVoidPeakTime);
     labelPtr =  new QLabel("Recalculate <i>V</i><sup>0</sup>", this);
     lay->addWidget(labelPtr, 5, 1, 1, 2);
 
@@ -262,13 +264,7 @@ void AF4ExpSettingsFrame::setRecalcVolume(bool setValue)
 {
    this->enableVoidPeakTime(setValue);
 }
-double temperature;
-double viscosity;
-double voidPeakTime;
-double relFocusPoint;
-double elutionFlow;
-double crossFlow;
-double leftOffsetTime;
+
 ExpFFFParameters AF4ExpSettingsFrame::getExpFFFParameters()
 {
    return ExpFFFParameters{
