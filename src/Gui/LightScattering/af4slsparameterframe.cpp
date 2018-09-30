@@ -9,38 +9,38 @@ AF4SLSParameterFrame::AF4SLSParameterFrame(const QString &prefix, int id, QWidge
 
    zimmPlot = new QCheckBox("Zimm", this);
    zimmPlot->setChecked(true);
-   QObject::connect(zimmPlot, SIGNAL(toggled(bool)), this, SLOT(enableZimmPlotParams()));
+   //QObject::connect(zimmPlot, SIGNAL(toggled(bool)), this, SLOT(enableZimmPlotParams()));
    lay->addWidget(zimmPlot, 0, 0, 1, 2);
 
    kratkyPlot = new QCheckBox("Kratky", this);
-   QObject::connect(kratkyPlot, SIGNAL(toggled(bool)), this, SLOT(enableKratkyPlotParams()));
+   //QObject::connect(kratkyPlot, SIGNAL(toggled(bool)), this, SLOT(enableKratkyPlotParams()));
    lay->addWidget(kratkyPlot, 0, 2, 1, 2);
    kratkyPlot->setEnabled(false);
 
    berryPlot = new QCheckBox("Berry", this);
-   QObject::connect(berryPlot, SIGNAL(toggled(bool)), this, SLOT(enableBerryPlotParams()));
+   //QObject::connect(berryPlot, SIGNAL(toggled(bool)), this, SLOT(enableBerryPlotParams()));
    lay->addWidget(berryPlot, 0, 4, 1, 2);
    berryPlot->setEnabled(false);
 
    guinierPlot = new QCheckBox("Guinier", this);
-   QObject::connect(guinierPlot, SIGNAL(toggled(bool)), this, SLOT(enableGuinierPlotParams()));
+   //QObject::connect(guinierPlot, SIGNAL(toggled(bool)), this, SLOT(enableGuinierPlotParams()));
    lay->addWidget(guinierPlot, 0, 6, 1, 2);
    guinierPlot->setEnabled(false);
 
    cFromRefIndex = new QCheckBox("From Refractive Index", this);
    cFromRefIndex->setChecked(true);
-   QObject::connect(cFromRefIndex, SIGNAL(toggled(bool)), this, SLOT(enableRefIndex()));
+   //QObject::connect(cFromRefIndex, SIGNAL(toggled(bool)), this, SLOT(enableRefIndex()));
    lay->addWidget(cFromRefIndex, 1, 0, 1, 5);
 
    cFromWaveLength = new QCheckBox("From Absorption",this);
    cFromWaveLength->setEnabled(false);
-   QObject::connect(cFromWaveLength, SIGNAL(toggled(bool)), this, SLOT(enableWaveLength()));
+   //QObject::connect(cFromWaveLength, SIGNAL(toggled(bool)), this, SLOT(enableWaveLength()));
    lay->addWidget(cFromWaveLength, 2, 0, 1, 5);
 
    lay->addWidget(new QLabel(tr("c<sub>min</sub> [mg/ml]"), this), 3, 0, 1, 1, Qt::AlignRight);
    concentrationCut = new AF4SciNotSpinBox(false, this);
    concentrationCut->setToolTip("Minimum concentration to be evaluated");
-//   concentrationCut->setMinimum(1.0, -15);
+   // concentrationCut->setMinimum(1.0, -15);
    concentrationCut->setMinimum(1.0e-15);
    lay->addWidget(concentrationCut, 3, 1, 1, 4);
 
@@ -96,6 +96,8 @@ void AF4SLSParameterFrame::writeSettings() const
    settings.setValue(tr("/%1/%2/slsparam/concentrationCut").arg(prefix).arg(id), concentrationCut->value());
 }
 
+// Replace by lambdas evtl. when implemented
+/*
 void AF4SLSParameterFrame::enableZimmPlotParams() const
 {
 }
@@ -119,7 +121,7 @@ void AF4SLSParameterFrame::enableRefIndex() const
 void AF4SLSParameterFrame::enableWaveLength() const
 {
 }
-
+*/
 SLSParameters AF4SLSParameterFrame::getSLSParameters()
 {
    return SLSParameters {

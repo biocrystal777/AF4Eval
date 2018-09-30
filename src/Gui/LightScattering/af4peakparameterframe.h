@@ -15,6 +15,11 @@
 #include "../smallQDerivates/fffnumberedtoolbutton.h"
 #include "../../Core/af4parameterstructs.h"
 
+// forward declaration to use this as exclusive
+// parent widget type for AF4SinglePeakParameterWidget
+// ----> Pseudo-Nesting :-)
+class AF4PeakParameterFrame;
+
 /*! **********************************************************************************************
 ***
 ***  \class   AF4SinglePeakParameterWidget "src/Gui/Calibration/af4peakparameterframe.h"
@@ -41,7 +46,7 @@ public:
                                 bool checkSettings,
                                 const QString &parentPrefix,
                                 const int parentId,
-                                QWidget *parent);
+                                AF4PeakParameterFrame *parent);
    /*!
     * \brief destructor calls settings;
     */
@@ -258,6 +263,17 @@ public:
     * \brief write Settings of the widget
     */
    void writeSettings();
+public slots:
+   /*!
+    * \brief adoptConcentrationMode
+    * \param mode
+    */
+   void adoptConcentrationMode(SLSConcMode mode); // 1: RI, 2: Absorbance
+   /*!
+    * \brief removePeakParWidget
+    * \param peakNo
+    */
+   void removePeakParWidget(const int peakNo);
 
 private:
 
@@ -271,23 +287,12 @@ private:
    QPushButton *peakAdder     = nullptr;
    QList<AF4SinglePeakParameterWidget*> peakParWidgets;
 
-public slots:
-   /*!
-    * \brief adoptConcentrationMode
-    * \param mode
-    */
-   void adoptConcentrationMode(SLSConcMode mode); // 1: RI, 2: Absorbance
-
 private slots:
    /*!
     * \brief addPeakParWidget
     */
    void addPeakParWidget();
-   /*!
-    * \brief removePeakParWidget
-    * \param peakNo
-    */
-   void removePeakParWidget(const int peakNo);
+
 };
 
 #endif // AF4PEAKPARAMETERFRAME_H

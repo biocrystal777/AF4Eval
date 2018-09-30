@@ -14,7 +14,7 @@
 #include <vector>
 #include <limits>
 #include "../GeneralWidgets/af4log.h"
-#include "../smallQDerivates/fffnumberedcombobox.h"
+#include "../smallQDerivates/af4numberedcombobox.h"
 #include "../../Core/af4constants.h"
 #include "../../Core/af4parameterstructs.h"
 
@@ -22,11 +22,12 @@
 ***
 ***  \class   AF4AssignDataDialog "src/Gui/Calibration/af4assigndatadialog.h"
 ***  \brief   Widget to ensure that signals for MALLS, UV and/or RI correspond to the detected signals
-***  \details  xxxx Has to be adapted
+***  \details   Not used at the moment
 ***  \author    Benedikt Häusele
-***  \version   0.1
+***  \version   0.1 currently not used
 ***  \date      2018-08-31
 ***  \copyright CC CC BY-NC-ND 4.0
+***  \todo     complete refactoring when used
 ***
 *************************************************************************************************/
 
@@ -85,8 +86,8 @@ private:
 
    // Items
    QGridLayout *scrolledLayout;
-   QList<FFFNumberedComboBox*> *peakBoxes = nullptr;
-   QList<FFFNumberedComboBox*> *dimensionBoxes = nullptr;
+   QList<AF4NumberedComboBox*> *peakBoxes = nullptr;
+   QList<AF4NumberedComboBox*> *dimensionBoxes = nullptr;
 
 
    QList<QLabel*> peakChecker;
@@ -102,14 +103,14 @@ private slots:
     * \param id
     * \param index
     */
-   void checkDimConfiguration(int id, int index); // Rearrange box labels after setting the peak
+   void checkDimConfiguration();//(int index, int id); // Rearrange box labels after setting the peak
 
    /*!
     * \brief checkPeakConfiguration
     * \param id
     * \param index
     */
-   void checkPeakConfiguration(int id, int index); // Rearrange box labels after setting
+   void checkPeakConfiguration();//(int index, int id); // Rearrange box labels after setting
 
 public slots:
 

@@ -40,8 +40,8 @@ AF4SLSCalibrationFrame::AF4SLSCalibrationFrame(const QString &prefix, int id, QW
    rayleighButton = new QRadioButton("Rayleigh", rayleighGroup);
    voltButton = new QRadioButton("Signal [Volt]", rayleighGroup);
    voltButton->setChecked(true);
-   QObject::connect(rayleighButton, SIGNAL(toggled(bool)), this, SLOT(setToRayleigh()));
-   QObject::connect(voltButton, SIGNAL(toggled(bool)), this, SLOT(setToVolt()));
+   connect(rayleighButton, &QRadioButton::toggled, this, &AF4SLSCalibrationFrame::setToRayleigh);
+   connect(voltButton, &QRadioButton::toggled, this, &AF4SLSCalibrationFrame::setToVolt);
    rayleighLayout->addWidget(rayleighButton, 0, 0);
    rayleighLayout->addWidget(voltButton, 0, 4);
    lay->addWidget(rayleighGroup, 2, 0, 1, 5);
@@ -55,7 +55,8 @@ AF4SLSCalibrationFrame::AF4SLSCalibrationFrame(const QString &prefix, int id, QW
       useAngles.at(i)->setToolTip("Use this angle signal in Evaluation");
       useAngles.at(i)->setMaximumHeight(35);
 
-      QObject::connect(useAngles.at(i), SIGNAL(checkedID(int,bool)), this, SLOT(enableAngle(int,bool)));
+      connect(useAngles.at(i), qOverload<bool, int>(&AF4NumberedCheckBox::toggled),
+              this, &AF4SLSCalibrationFrame::enableAngle);
 
       lay->addWidget(angleLabels.at(i), 4+i, 1, 1, 2, Qt::AlignRight);
 
@@ -72,8 +73,6 @@ AF4SLSCalibrationFrame::AF4SLSCalibrationFrame(const QString &prefix, int id, QW
    settings.setIniCodec("UTF-8");
 
    double value;
-
-
    bool boolValue;
    bool ok;
 
@@ -123,7 +122,7 @@ void AF4SLSCalibrationFrame::writeSettings()
    }
 }
 
-void AF4SLSCalibrationFrame::enableAngle(int i, bool enable) const
+void AF4SLSCalibrationFrame::enableAngle(bool enable, int i) const
 {
    if(i < angleLabels.size() && i < mallsAngleConstants.size()){
       angleLabels.at(i)->setEnabled(enable);
@@ -135,7 +134,7 @@ void AF4SLSCalibrationFrame::setToRayleigh()
 {
    for(int i = 0; i < NUMBER_OF_DETECTORS; ++i){
       useAngles.at(i)->setEnabled(false);
-      enableAngle(i,false);
+      enableAngle(false, i);
    }
 }
 
@@ -143,7 +142,7 @@ void AF4SLSCalibrationFrame::setToVolt()
 {
    for(int i = 0; i < NUMBER_OF_DETECTORS; ++i){
       useAngles.at(i)->setEnabled(true);
-      enableAngle(i,useAngles.at(i)->isChecked());
+      enableAngle(useAngles.at(i)->isChecked(), i);
    }
 }
 

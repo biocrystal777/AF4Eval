@@ -52,8 +52,12 @@ AF4SLSEvaluationWidget::AF4SLSEvaluationWidget(QWidget *parent) :
    concLayout->addWidget(absorbanceConc);
    evaluationLayout->addWidget(concGroup, 1, 0, 2, 10, Qt::AlignBottom);
 
-   QObject::connect(refIndexConc, SIGNAL(toggled(bool)), this,SLOT(emitConcModeChanged()));
-   QObject::connect(absorbanceConc, SIGNAL(toggled(bool)), this,SLOT(emitConcModeChanged()));
+   auto emitConcModeChanged = [this](){
+      if(absorbanceConc->isChecked())    emit concModeChanged(SLSConcMode::FromUVVis);
+      else if(refIndexConc->isChecked()) emit concModeChanged(SLSConcMode::FromRI);
+   };
+   QObject::connect(refIndexConc,   &QRadioButton::toggled, this, emitConcModeChanged);
+   QObject::connect(absorbanceConc, &QRadioButton::toggled, this, emitConcModeChanged);
 
    evaluationLayout->addWidget(new QLabel(tr("c<sub>min</sub> [mg/ml]"), evaluationFrame), 4, 0, 1, 1, Qt::AlignRight);
    concentrationCut = new AF4SciNotSpinBox(false, evaluationFrame);
@@ -87,17 +91,19 @@ AF4SLSEvaluationWidget::AF4SLSEvaluationWidget(QWidget *parent) :
    evaluationLayout->addWidget(calculateShapeFactor, 8, 0, 1, 5, Qt::AlignLeft);
 
    settingsWriter = new QPushButton("Save Parameters", evaluationFrame);
-   QObject::connect(settingsWriter, SIGNAL(clicked()), this, SLOT(saveParameters()));
+   connect(settingsWriter, &QPushButton::clicked, this, &AF4SLSEvaluationWidget::saveParameters);
    evaluationLayout->addWidget(settingsWriter, 10, 0, 1, 2);
 
    evalStarter = new QPushButton("Start Evaluation", evaluationFrame);
-   QObject::connect(evalStarter, SIGNAL(clicked()), this, SLOT(startEvaluation()));
+   //QObject::connect(evalStarter, SIGNAL(clicked()), this, SLOT(startEvaluation()));
+   connect(evalStarter, &QPushButton::clicked, this, &AF4SLSEvaluationWidget::startEvaluation);
    evaluationLayout->addWidget(evalStarter, 10, 2, 1, 4);
 
    calibrationFrame = new AF4SLSCalibrationFrame("slsEvaluation", -1, this);
    //peakParameterFrame = new FFFPeakParameterFrame("slsEvaluation", -1, this);
    peakParameterFrame = new AF4PeakParameterFrame("slsEvaluation", -1, this);
-   QObject::connect(this, SIGNAL(concModeChanged(SLSConcMode)), peakParameterFrame, SLOT(adoptConcentrationMode(SLSConcMode)));
+   //QObject::connect(this, SIGNAL(concModeChanged(SLSConcMode)), peakParameterFrame, SLOT(adoptConcentrationMode(SLSConcMode)));
+   QObject::connect(this, &AF4SLSEvaluationWidget::concModeChanged, peakParameterFrame, &AF4PeakParameterFrame::adoptConcentrationMode);
 
    widgetLayout->addWidget(fileWidget      , 0, 0 );
    widgetLayout->addWidget(peakParameterFrame  , 0, 1 );
@@ -354,12 +360,13 @@ void AF4SLSEvaluationWidget::startEvaluation()
    QApplication::restoreOverrideCursor();
 }
 
+/*
 void AF4SLSEvaluationWidget::emitConcModeChanged()
 {
    if(absorbanceConc->isChecked())    emit concModeChanged(SLSConcMode::FromUVVis);
    else if(refIndexConc->isChecked()) emit concModeChanged(SLSConcMode::FromRI);
 }
-
+*/
 
 void AF4SLSEvaluationWidget::logChosenIndices(uint timeIndex,
                                               const QList<posPeakPair> &riIndices,

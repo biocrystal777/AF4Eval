@@ -4,11 +4,12 @@
 #include <QGroupBox>
 #include <QRadioButton>
 #include <QGridLayout>
+#include <QSettings>
 #include "../Core/af4parameterstructs.h"
 #include "../Core/af4constants.h"
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
-#include "../smallQDerivates/fffnumberedcheckbox.h"
+#include "../smallQDerivates/af4numberedcheckbox.h"
 
 /*! **********************************************************************************************
 ***
@@ -21,7 +22,6 @@
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 *************************************************************************************************/
-
 
 class AF4SLSCalibrationFrame : public QFrame{
     Q_OBJECT
@@ -89,7 +89,7 @@ private slots:
      * \param i
      * \param enable
      */
-    void enableAngle(int i, bool enable) const;
+    void enableAngle(bool enable, int i) const;
     /*!
      * \brief setToRayleigh
      */

@@ -135,7 +135,7 @@ private slots:
    /*!
     * \brief emitConcModeChanged
     */
-   void emitConcModeChanged();
+   //void emitConcModeChanged();
 };
 
 #endif // AF4SLSEVALUATIONWIDGET_H

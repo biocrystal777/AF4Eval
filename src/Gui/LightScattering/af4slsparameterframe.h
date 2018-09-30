@@ -96,6 +96,8 @@ private:
    QDoubleSpinBox *laserWaveLength   = nullptr;
    QDoubleSpinBox *refIndexSolvent   = nullptr;
 
+   // Implement later as lamba when used!
+/*
 private slots:
 
    void enableZimmPlotParams()    const;
@@ -104,6 +106,7 @@ private slots:
    void enableGuinierPlotParams() const;
    void enableRefIndex ()         const;
    void enableWaveLength ()       const;
+   */
 };
 
 #endif // FFFSLSPARAMETERFRAME_H

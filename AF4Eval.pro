@@ -79,8 +79,8 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/LightScattering/af4slscalibrationframe.cpp \
     ./src/Gui/LightScattering/af4slsevaluationwidget.cpp \
     ./src/Gui/LightScattering/af4slsparameterframe.cpp \
-    ./src/Gui/smallQDerivates/fffnumberedcheckbox.cpp \
-    ./src/Gui/smallQDerivates/fffnumberedcombobox.cpp \
+    ./src/Gui/smallQDerivates/af4numberedcheckbox.cpp \
+    ./src/Gui/smallQDerivates/af4numberedcombobox.cpp \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.cpp
 
 HEADERS  += ./src/Core/af4parameterstructs.h \
@@ -110,8 +110,8 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/LightScattering/af4slsevaluationwidget.h \    
     ./src/Gui/LightScattering/af4slsparameterframe.h \
     ./src/Gui/smallQDerivates/af4scinotspinbox.h \
-    ./src/Gui/smallQDerivates/fffnumberedcombobox.h \
-    ./src/Gui/smallQDerivates/fffnumberedcheckbox.h \
+    ./src/Gui/smallQDerivates/af4numberedcheckbox.h \
+    ./src/Gui/smallQDerivates/af4numberedcombobox.h \
     ./src/Gui/smallQDerivates/fffnumberedtoolbutton.h
 
 RESOURCES += \

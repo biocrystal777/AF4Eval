@@ -186,7 +186,6 @@ private:
      */
    void loadParameters();
 
-
    /*!
     * \brief destructor
     */

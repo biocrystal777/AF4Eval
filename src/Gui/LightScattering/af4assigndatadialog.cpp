@@ -49,8 +49,8 @@ AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
 
    scrolledLayout = new QGridLayout(scrollWidget);
 
-   peakBoxes = new QList<FFFNumberedComboBox*>();
-   dimensionBoxes = new QList<FFFNumberedComboBox*>();
+   peakBoxes = new QList<AF4NumberedComboBox*>();
+   dimensionBoxes = new QList<AF4NumberedComboBox*>();
    dimensionChecker.clear();
    peakChecker.clear();
 
@@ -60,7 +60,7 @@ AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
       scrolledLayout->addWidget(new QLabel(tr("%1").arg(headLines->at(i).c_str()), scrollWidget), i, 0, 1, 4, Qt::AlignLeft);
 
       // dimensionBoxes
-      FFFNumberedComboBox *newDimensionBox = new FFFNumberedComboBox(i, scrollWidget);
+      AF4NumberedComboBox *newDimensionBox = new AF4NumberedComboBox(i, scrollWidget);
       // content of dimensionBoxes
       newDimensionBox->addItem("Times");                                                                        // index 0
       newDimensionBox->addItem("Diffusion Coefficents");                                                        // index 1
@@ -74,7 +74,7 @@ AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
       dimensionChecker.append(new QLabel(" ", scrollWidget));
       scrolledLayout->addWidget(dimensionChecker.at(i), i, 6, 1, 1, Qt::AlignCenter);
       // peakBoxes
-      FFFNumberedComboBox *newPeakBox = new FFFNumberedComboBox(i, scrollWidget);
+      AF4NumberedComboBox *newPeakBox = new AF4NumberedComboBox(i, scrollWidget);
       // content of peakBoxes
       for(int j = 0; j < numberOfPeaks; ++j) newPeakBox->addItem(tr("Peak %1").arg(j+1));
       peakBoxes->append(newPeakBox);
@@ -116,11 +116,20 @@ AF4AssignDataDialog::AF4AssignDataDialog(vector<string> *headLines,
       peakChecker.at(i)->show();
    }
 
-   checkDimConfiguration(0, 0);
+   //checkDimConfiguration(0, 0);
+   checkDimConfiguration();
    for(uint i = 0; i < numberOfColumns; ++i){
-      QObject::connect(dimensionBoxes->at(i), SIGNAL(currentIndexChangedId(int, int)), this, SLOT(checkDimConfiguration(int, int)));
-      QObject::connect(peakBoxes->at(i), SIGNAL(currentIndexChangedId(int, int)), this, SLOT(checkDimConfiguration(int,int)));
+      //QObject::connect(dimensionBoxes->at(i), SIGNAL(currentIndexChangedId( int)), this, SLOT(checkDimConfiguration()));
+      //QObject::connect(peakBoxes->at(i), SIGNAL(currentIndexChangedId(int)), this, SLOT(checkDimConfiguration()));
+
    }
+   for(auto *dimBox : *dimensionBoxes)
+      connect(dimBox, qOverload<int>(&QComboBox::currentIndexChanged),
+              this, &AF4AssignDataDialog::checkDimConfiguration);
+   for(auto *peakBox : *peakBoxes)
+      connect(peakBox, qOverload<int>(&QComboBox::currentIndexChanged),
+              this, &AF4AssignDataDialog::checkDimConfiguration);
+
    scrollWidget->show();
 
 }
@@ -133,7 +142,7 @@ AF4AssignDataDialog::~AF4AssignDataDialog()
 
 }
 
-void AF4AssignDataDialog::checkDimConfiguration(int id, int index)
+void AF4AssignDataDialog::checkDimConfiguration()//(int index, int id)
 {
    bool activateConfirmerLater = true;
    QList<int> timeBoxIndices = QList<int>();
@@ -272,11 +281,11 @@ void AF4AssignDataDialog::checkDimConfiguration(int id, int index)
    }
 
    confirmer->setEnabled(activateConfirmerLater);
-   checkPeakConfiguration(id, index);
+   checkPeakConfiguration();//(id, index);
 
 }
 
-void AF4AssignDataDialog::checkPeakConfiguration(int /* id */, int /* index */)
+void AF4AssignDataDialog::checkPeakConfiguration()//(int index, int id)
 {
    bool activateConfirmerLater = true;
    QList<bool> checkedFalse;
@@ -316,7 +325,6 @@ void AF4AssignDataDialog::checkPeakConfiguration(int /* id */, int /* index */)
 
 void AF4AssignDataDialog::writeUserOptionAndAccept()
 {
-
    posPeakPair ppPair;
    for (int i = 0; i < NUMBER_OF_DETECTORS; ++i){
       mallsIndices->append(QList<posPeakPair>());

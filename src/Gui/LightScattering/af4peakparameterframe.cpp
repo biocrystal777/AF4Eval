@@ -12,7 +12,7 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
                                                            bool checkSettings,
                                                            const QString &parentPrefix,
                                                            const int parentId,
-                                                           QWidget *parent)
+                                                           AF4PeakParameterFrame *parent)
    : QFrame(parent), peakNo(peakNo), parentPrefix(parentPrefix), parentId(parentId)// : AF4SingelPeakParameterWidget(parent)
 {
    this->setFrameStyle(0x1011);
@@ -21,7 +21,7 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
 
    removeButton      = new FFFNumberedToolButton(peakNo, this);
    removeButton->setText("-");
-   QObject::connect(removeButton, SIGNAL(clickedID(int)), parent, SLOT(removePeakParWidget(int)));
+   connect(removeButton, &FFFNumberedToolButton::clicked, parent, &AF4PeakParameterFrame::removePeakParWidget);
    lay->addWidget(removeButton, 0, 2, 1, 1);
 
    lay->addWidget(new QLabel("From:", this), 1, 0 , 1, 1, Qt::AlignRight);
@@ -43,7 +43,7 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
    secondVirCoeff->setToolTip("Second Virial Coefficient");
    secondVirCoeff->setMaximum(9.99e10);
    secondVirCoeff->setEnabled(false);
-   QObject::connect(useSecondVirCoeff, SIGNAL(toggled(bool)), secondVirCoeff, SLOT(setEnabled(bool)));
+   connect(useSecondVirCoeff, &QCheckBox::toggled, secondVirCoeff, &AF4SciNotSpinBox::setEnabled);
    lay->addWidget(useSecondVirCoeff, 4, 0, 1, 6);
    lay->addWidget(secondVirCoeff, 5, 0, 1, 6);
 
@@ -53,7 +53,7 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
    thirdVirCoeff->setToolTip("Third Virial Coefficient" );
    thirdVirCoeff->setMaximum(9.99e10);
    thirdVirCoeff->setEnabled(false);
-   QObject::connect(useThirdVirCoeff, SIGNAL(toggled(bool)), thirdVirCoeff, SLOT(setEnabled(bool)));
+   connect(useThirdVirCoeff, &QCheckBox::toggled, thirdVirCoeff, &AF4SciNotSpinBox::setEnabled);
    lay->addWidget(useThirdVirCoeff, 6, 0, 1, 6);
    lay->addWidget(thirdVirCoeff, 7, 0, 1, 6);
 
@@ -83,7 +83,7 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
    knownMW = new AF4SciNotSpinBox(false, this);
    knownMW->setToolTip("Determines fixed molecular weight.");
    lay->addWidget(knownMW, 11, 0, 1, 6, Qt::AlignLeft);
-   QObject::connect(useKnownMW, SIGNAL(toggled(bool)), knownMW, SLOT(setEnabled(bool)));
+   QObject::connect(useKnownMW, &QCheckBox::toggled, knownMW, &AF4SciNotSpinBox::setEnabled);
    // DISABLED HERE
    useKnownMW->setEnabled(false);
    knownMW->setEnabled(false);

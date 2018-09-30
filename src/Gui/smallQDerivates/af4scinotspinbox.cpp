@@ -11,16 +11,15 @@ AF4SciNotSpinBox::AF4SciNotSpinBox(const bool signedBox, QWidget *parent) :
 {
    layout = new QHBoxLayout(this);
    significand = new QDoubleSpinBox(this);
-   significand->setKeyboardTracking(false);   
+   significand->setKeyboardTracking(false);
 
 
    connect(significand, qOverload<double>(&QDoubleSpinBox::valueChanged),
-           [this] () {    
+           [this] () {
       adjustInputToFormat();
       adjustSpinBoxLimits();
       emit valueChanged();
       emit valueChanged(this->value());
-      //qDebug() << " -----------  ";
    } );
 
    layout->addWidget(significand, 0, Qt::AlignLeft);
@@ -36,7 +35,6 @@ AF4SciNotSpinBox::AF4SciNotSpinBox(const bool signedBox, QWidget *parent) :
       adjustSpinBoxLimits();
       emit valueChanged();
       emit valueChanged(this->value());
-      //qDebug() << " -----------  ";
    } );
 
    setSignifandDecimals(5);
@@ -54,7 +52,7 @@ void AF4SciNotSpinBox::setValue(double value, bool *ok)
 {
    const double minVal = valAsDouble(minSig, minExp);
    const double maxVal = valAsDouble(maxSig, maxExp);
- // if(ok) *ok = true;
+   // if(ok) *ok = true;
    if(value < minVal){
       value = minVal;
       if(ok) *ok = false;
@@ -67,7 +65,7 @@ void AF4SciNotSpinBox::setValue(double value, bool *ok)
       if(ok) *ok = true;
 
    int exp;
-   double signif = AF4SciNotSpinBox::calcSignificand(value, &exp);   
+   double signif = AF4SciNotSpinBox::calcSignificand(value, &exp);
    setValueIntern(signif, exp);
    adjustSpinBoxLimits();
    emit valueChanged();
@@ -207,7 +205,7 @@ void AF4SciNotSpinBox::adjustInputToFormat()
       sig *= 10.0;
       --modExp;
    }
-   if(modExp != 0){      
+   if(modExp != 0){
       setValueIntern(sig, exponent->value() + modExp);
    }
 }
@@ -235,7 +233,7 @@ void AF4SciNotSpinBox::adjustSpinBoxLimits()
          exponent->setRange(minExp, maxExp);
    }
    // if a default MinMax is used for the spinbox
-      // values out of the range of 1.0-9.999.... will
+   // values out of the range of 1.0-9.999.... will
    // have to be caught by adjustInputToFormat()
    const double defaultMin = 0.0;
    const double defaultMax = 99.9;

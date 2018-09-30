@@ -3,14 +3,14 @@
 
 void FFFNumberedToolButton::callClickedID()
 {
-   emit clickedID(id);
+   emit clicked(id);
 }
 
 
 FFFNumberedToolButton::FFFNumberedToolButton(int id, QWidget *parent) :
    QToolButton(parent), id(id)
 {
-   QObject::connect(this, SIGNAL(clicked()), this, SLOT(callClickedID()));
+   connect(this, (&QToolButton::clicked), this, [this](){emit clicked(this->id);} );
 }
 
 FFFNumberedToolButton::~FFFNumberedToolButton()

@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <cmath>
 #include <QDebug>
+
 /*! **********************************************************************************************
 ***
 ***  \class     AF4SciNotSpinBox "src/Gui/smallQDerivates/af4scinotspinbox.h"
