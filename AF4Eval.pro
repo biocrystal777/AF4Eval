@@ -62,7 +62,7 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Core/af4csvwriter.cpp \
     ./src/Core/af4diffevaluator.cpp \
     ./src/Core/af4slsevaluator.cpp \
-    ./src/Gui/fffmainwindow.cpp \
+    ./src/Gui/af4mainwindow.cpp \
     ./src/Gui/Calibration/af4calibsettingsframe.cpp \
     ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.cpp \
     ./src/Gui/Calibration/af4channelconfigurationwidget.cpp \
@@ -81,7 +81,7 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/LightScattering/af4slsparameterframe.cpp \
     ./src/Gui/smallQDerivates/af4numberedcheckbox.cpp \
     ./src/Gui/smallQDerivates/af4numberedcombobox.cpp \
-    ./src/Gui/smallQDerivates/fffnumberedtoolbutton.cpp
+    ./src/Gui/smallQDerivates/af4numberedtoolbutton.cpp
 
 HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4constants.h \
@@ -93,7 +93,7 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4diffevaluator.h \
     ./src/Core/af4slsevaluator.h \
     ./src/Core/omp_qvector.h \
-    ./src/Gui/fffmainwindow.h \
+    ./src/Gui/af4mainwindow.h \
     ./src/Gui/Calibration/af4calibsettingsframe.h \
     ./src/Gui/Calibration/af4calibplotwidget.h \
     ./src/Gui/Calibration/af4channelcalibwidget.h \
@@ -112,7 +112,7 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/smallQDerivates/af4scinotspinbox.h \
     ./src/Gui/smallQDerivates/af4numberedcheckbox.h \
     ./src/Gui/smallQDerivates/af4numberedcombobox.h \
-    ./src/Gui/smallQDerivates/fffnumberedtoolbutton.h
+    ./src/Gui/smallQDerivates/af4numberedtoolbutton.h
 
 RESOURCES += \
     ./Resources/images.qrc

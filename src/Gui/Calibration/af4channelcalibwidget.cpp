@@ -231,6 +231,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    * Fifth column / plot
    *
    *************************************/
+
    const QRect rec = QApplication::desktop()->availableGeometry();
    const uint screenWidth  = rec.width();
    const uint screenHeight = rec.height();
@@ -258,6 +259,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
       plotWidget2->initPlot();
       plotWidget2->addPlotVLine(elutionTime, QColor(0xFF, 0x55, 0x00));
    }
+
 }
 
 AF4ChannelCalibWidget::~AF4ChannelCalibWidget()

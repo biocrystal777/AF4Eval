@@ -19,9 +19,9 @@ AF4SinglePeakParameterWidget::AF4SinglePeakParameterWidget(int peakNo,
    lay       = new QGridLayout(this);
    //label     = new QLabel(this);
 
-   removeButton      = new FFFNumberedToolButton(peakNo, this);
+   removeButton      = new AF4NumberedToolButton(peakNo, this);
    removeButton->setText("-");
-   connect(removeButton, &FFFNumberedToolButton::clicked, parent, &AF4PeakParameterFrame::removePeakParWidget);
+   connect(removeButton, &AF4NumberedToolButton::clicked, parent, &AF4PeakParameterFrame::removePeakParWidget);
    lay->addWidget(removeButton, 0, 2, 1, 1);
 
    lay->addWidget(new QLabel("From:", this), 1, 0 , 1, 1, Qt::AlignRight);

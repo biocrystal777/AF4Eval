@@ -12,7 +12,7 @@
 #include <QLineEdit>
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
-#include "../smallQDerivates/fffnumberedtoolbutton.h"
+#include "../smallQDerivates/af4numberedtoolbutton.h"
 #include "../../Core/af4parameterstructs.h"
 
 // forward declaration to use this as exclusive
@@ -151,7 +151,7 @@ private:
    QCheckBox             *useKnownMW          = nullptr;
    AF4SciNotSpinBox       *knownMW             = nullptr;
    QLineEdit             *fractionDescription = nullptr;
-   FFFNumberedToolButton *removeButton        = nullptr;
+   AF4NumberedToolButton *removeButton        = nullptr;
 
    /*!
     * \brief loadSettings

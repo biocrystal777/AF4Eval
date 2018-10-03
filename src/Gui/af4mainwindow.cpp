@@ -1,34 +1,48 @@
-#include "fffmainwindow.h"
+#include "af4mainwindow.h"
 
-FFFMainWindow::FFFMainWindow(QWidget *parent)
-   : QWidget(parent), lastChosenTab(0)
+AF4MainWindow::AF4MainWindow(QWidget *parent)
+   : QWidget(parent)//, lastChosenTab(0)
 {
-
    this->hide();
    QGuiApplication::setOverrideCursor(Qt::WaitCursor);
    QIcon icon(":/images/applIcon.svg");
    setWindowIcon(icon);
-   QSettings settings("AgCoelfen", "FFFEval");   
-   settings.setIniCodec("UTF-8");
 
-   bool ok;
+   //-//////////////////////////////////////
+   // get settings and adjust window size //
+   //-//////////////////////////////////////
+   {
+      QSettings settings("AgCoelfen", "FFFEval");
+      settings.setIniCodec("UTF-8");
 
-   const QRect rec = QApplication::desktop()->availableGeometry();
-   const uint screenWidth  = rec.width();
-   const uint screenHeight = rec.height();
+      bool ok;
+      const QRect rec = QApplication::desktop()->availableGeometry();
+      const uint screenWidth  = rec.width();
+      const uint screenHeight = rec.height();
 
-   this->setMinimumSize(screenWidth/10*9, screenHeight/10*9);
-   this->setMaximumSize(screenWidth/10*9, screenHeight/10*9);
-   this->resize(settings.value("window/width", 1000).toInt(&ok),
-                settings.value("window/height", 700).toInt(&ok));
-   CHECK_SETTINGS_CONVERSION("window/width or window/size", "1000, 800 respectively");
-   this->move(settings.value("window/xpos", 100).toInt(&ok),
-              settings.value("window/ypos", 100).toInt(&ok));
-   CHECK_SETTINGS_CONVERSION("window/xpos or window/ypos", "10, 10 respectively");
 
-   /////////////////////
+#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
+   if(!ok){ \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   .arg(keyName).arg(defaultValueName)); \
+   }\
+   };
+
+      this->setMinimumSize(screenWidth/10*9, screenHeight/10*9);
+      this->setMaximumSize(screenWidth/10*9, screenHeight/10*9);
+      this->resize(settings.value("window/width", 1000).toInt(&ok),
+                   settings.value("window/height", 700).toInt(&ok));
+      CHECK_SETTINGS_CONVERSION("window/width or window/size", "1000, 800 respectively");
+      this->move(settings.value("window/xpos", 100).toInt(&ok),
+                 settings.value("window/ypos", 100).toInt(&ok));
+      CHECK_SETTINGS_CONVERSION("window/xpos or window/ypos", "10, 10 respectively");
+
+#undef CHECK_SETTINGS_CONVERSION
+   }
+   //-//////////////////
    // log Frame first //
-   /////////////////////
+   //-//////////////////
+
    logFrame = new QFrame(this);   
    logFrame->setFrameStyle(0x1011);
    logFrameLayout = new QGridLayout(logFrame);
@@ -39,40 +53,35 @@ FFFMainWindow::FFFMainWindow(QWidget *parent)
    logFrameLayout->addWidget(new QLabel("<b>Log Messages</b>", logFrame), 0, 0, Qt::AlignLeft);
    logFrameLayout->addWidget(logDevice, 1, 0);
 
-   ///////////////////////////
+   //-////////////////////////
    // Functionality widgets //
-   ///////////////////////////
+   //-////////////////////////
 
    funcTabWidget = new QTabWidget(this);
-   qDebug() << "0";
    channelCalConfWidget = new AF4ChannelConfigurationWidget(funcTabWidget);
    funcTabWidget->addTab(channelCalConfWidget, "Channel Calibration");
-   qDebug() << "0";
    layout = new QGridLayout(this);
    layout->addWidget(funcTabWidget, 0, 0);
    layout->addWidget(logFrame, 1, 0);
    this->show();
-qDebug() << "0";
    diffEvaluationWidget = new AF4DiffEvaluationWidget(channelCalConfWidget->getChannelConfigWidgets(),
                                                       channelCalConfWidget->getChannelCalibWidgets(),
                                                       funcTabWidget);
    funcTabWidget->addTab(diffEvaluationWidget, "Diffusion Coefficients");
 
-   qDebug() << "1";
    slsEvaluationWidget = new AF4SLSEvaluationWidget(funcTabWidget);
-   qDebug() << "2";
    funcTabWidget->addTab(slsEvaluationWidget, "SLS Signal Evaluation");
 
    this->show();
    QGuiApplication::restoreOverrideCursor();
 }
 
-FFFMainWindow::~FFFMainWindow()
+AF4MainWindow::~AF4MainWindow()
 {
    writeSettings();
 }
 
-void FFFMainWindow::writeSettings() const
+void AF4MainWindow::writeSettings() const
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
