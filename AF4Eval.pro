@@ -81,7 +81,9 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/LightScattering/af4slsparameterframe.cpp \
     ./src/Gui/smallQDerivates/af4numberedcheckbox.cpp \
     ./src/Gui/smallQDerivates/af4numberedcombobox.cpp \
-    ./src/Gui/smallQDerivates/af4numberedtoolbutton.cpp
+    ./src/Gui/smallQDerivates/af4numberedtoolbutton.cpp \
+    src/Gui/Calibration/af4calibplotwidget.cpp \
+    src/Gui/Calibration/af4calibrationdialogs.cpp
 
 HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4constants.h \
@@ -112,7 +114,9 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/smallQDerivates/af4scinotspinbox.h \
     ./src/Gui/smallQDerivates/af4numberedcheckbox.h \
     ./src/Gui/smallQDerivates/af4numberedcombobox.h \
-    ./src/Gui/smallQDerivates/af4numberedtoolbutton.h
+    ./src/Gui/smallQDerivates/af4numberedtoolbutton.h \
+    src/Gui/Calibration/af4calibplotwidget.h \
+    src/Gui/Calibration/af4calibrationdialogs.h
 
 RESOURCES += \
     ./Resources/images.qrc

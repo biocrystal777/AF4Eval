@@ -174,7 +174,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    relFocusPoint->setMinimum(0.1);
    relFocusPoint->setMaximumWidth(100);
    frameLayout->addWidget(relFocusPoint, 5, 10, 1, 2);
-   qDebug() << "2";
+   //qDebug() << "2";
     /**************************************
     *
     * Fourth column
@@ -216,7 +216,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    elutionTime = QSharedPointer<QDoubleSpinBox>(new QDoubleSpinBox(widgetFrame));
    elutionTime->setToolTip("Elution Time");
    elutionTime->setDecimals(3);
-   elutionTime->setSingleStep(0.005);
+   elutionTime->setSingleStep(0.05);
    elutionTime->setMaximum(300.0);
    elutionTime->setMinimum(0.00001);
    elutionTime->setMaximumWidth(100);
@@ -231,9 +231,9 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    *
    *************************************/
 
-   plotWidget = new AF4CalibPlotWidget(this);
-   frameLayout->addWidget(plotWidget,0,15,16,4);
-   plotWidget->connectMarkers(leftOffsetTime, voidPeakTime, elutionTime);
+  // plotWidget = new AF4CalibPlotWidget(this);
+   //frameLayout->addWidget(plotWidget,0,15,16,4);
+   //plotWidget->connectMarkers(leftOffsetTime, voidPeakTime, elutionTime);
 
    /*
    const QRect rec = QApplication::desktop()->availableGeometry();
@@ -289,9 +289,10 @@ void AF4ChannelCalibWidget::callCalibrateChannel()
    calibrateChannelCalled();
 }
 
+   /* remove to
 int AF4ChannelCalibWidget::setPlotDataFromFile()
 {
-   /* remove to
+
 
    QString calibFileName = this->getInputFilePath(false);
 
@@ -351,10 +352,11 @@ int AF4ChannelCalibWidget::setPlotDataFromFile()
 
    return 0;
 
-   */
+
       return 0;
 }
 
+  */
 bool AF4ChannelCalibWidget::setChannelWidth(double value)
 {
    bool ok;
@@ -587,7 +589,6 @@ void AF4ChannelCalibWidget::chooseInputFile()
    else AF4Log::logWarning(tr("Chosen input file does not exist."));
 }
 
-
 QString AF4ChannelCalibWidget::chopStringsQuotMarksToOne(QString & string) const
 {
    chopStringsQuotMarksEntirely(string);
@@ -605,68 +606,4 @@ QString AF4ChannelCalibWidget::chopStringsQuotMarksEntirely(QString & string) co
       string.remove(string.length()-1, 1);
 
    return string;
-}
-
-AF4CalibPlotWidget::AF4CalibPlotWidget(QWidget *parent) : QWidget(parent)
-{
-   const QRect rec = QApplication::desktop()->availableGeometry();
-   const uint screenWidth  = rec.width();
-   const uint screenHeight = rec.height();
-   //qDebug() << 12;
-   lay = new QVBoxLayout(this);
-   plot1 = new AF4SignalPlot(QString("Calibration signal (t_void region)"), this);
-   //qDebug() << 15;
-   plot1->setMinimumWidth(screenWidth/10*4);
-   plot1->setMaximumWidth(screenWidth/10*4);
-   plot1->setMinimumHeight(screenHeight/20*5);
-   plot1->setMaximumHeight(screenHeight/10*5);
-
-   //frameLayout->addWidget(plot1,0,15,8,4);
-   lay->addWidget(plot1);
-
-   plot2 = new AF4SignalPlot(QString("Calibration signal (t_e region)"), this);
-   plot2->setMinimumWidth(screenWidth/10*4);
-   plot2->setMaximumWidth(screenWidth/10*4);
-   plot2->setMinimumHeight(screenHeight/20*5);
-   plot2->setMaximumHeight(screenHeight/10*5);
-   lay->addWidget(plot2);
-   //frameLayout->addWidget(plot2,8,15,8,4);
-   //QString calibFileName = getInputFilePath(false);
-
-   //int error = setPlotDataFromFile();
-   int error = 0;
-   if(!error){
-      plot1->initPlot();
-      plot1->addPlotVLine("offset",      QColor(0x00,0x00,0x00));
-      plot1->addPlotVLine("voidPeak",    QColor(0x00,0x66,0xFF));
-      plot2->initPlot();
-      plot2->addPlotVLine("elutionPeak", QColor(0xFF, 0x55, 0x00));
-   }
-}
-
-void AF4CalibPlotWidget::connectMarkers(QWeakPointer<QDoubleSpinBox> leftOffset,
-                                        QWeakPointer<QDoubleSpinBox> tVoid,
-                                        QWeakPointer<QDoubleSpinBox> tElution)
-{
-   plot1->connectToPlotItem(leftOffset.data(), "offset");
-   plot1->connectToPlotItem(tVoid.data(),      "voidPeak");
-   plot2->connectToPlotItem(tElution.data(),   "elutionPeak");
-   this->leftOffset = leftOffset;
-   this->tVoid = tVoid;
-   this->tElution = tElution;
-}
-
-void AF4CalibPlotWidget::disconnectCurrentMarkers()
-{
-   if(!leftOffset.isNull())
-      plot1->disconnectFromPlotItem(leftOffset.data(), "offset");
-   if(!tVoid.isNull())
-      plot1->disconnectFromPlotItem(tVoid.data(), "voidPeak");
-   if(!tElution.isNull())
-      plot2->disconnectFromPlotItem(tElution.data(), "elutionPeak");
-}
-
-int AF4CalibPlotWidget::setPlotDataFromFile(const QString &fileName)
-{
-   return 0;
 }

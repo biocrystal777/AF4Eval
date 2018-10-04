@@ -17,45 +17,25 @@
 #include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
 #include <qwt_text_label.h>
-#include <memory> // for AF4CalibPlotWidget only
-#include "./af4signalplot.h"
+//#include "./af4signalplot.h"
+#include "./af4calibplotwidget.h"
 #include "./af4stokeseinsteincalculatorwidget.h"
 #include "../Core/af4datatypes.h"
 #include "../Core/af4parameterstructs.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
-#include "../Core/af4csvparser.h"
 
-class AF4CalibPlotWidget final : public QWidget
-{
-   Q_OBJECT
 
-public:
-   AF4CalibPlotWidget(QWidget *parent);
-
-   void connectMarkers(QWeakPointer<QDoubleSpinBox> leftOffset,
-                       QWeakPointer<QDoubleSpinBox> tVoid,
-                       QWeakPointer<QDoubleSpinBox> tElution);
-   //void disconnectMarkers(QDoubleSpinBox *leftOffset, QDoubleSpinBox *tVoid, QDoubleSpinBox *tElution);
-   void disconnectCurrentMarkers();
-   int setPlotDataFromFile(const QString &fileName);
-
-private:
-   QVBoxLayout   *lay   = nullptr;
-   AF4SignalPlot *plot1 = nullptr;
-   AF4SignalPlot *plot2 = nullptr;
-   //std::weak_ptr<QDoubleSpinBox> = nullptr
-   //std::weak_ptr<QDoubleSpinBox> = nullptr;
+struct CtrlBoxRefs {
    QWeakPointer<QDoubleSpinBox> leftOffset;
    QWeakPointer<QDoubleSpinBox> tVoid;
    QWeakPointer<QDoubleSpinBox> tElution;
 };
 
-
 /*! ***************************************************************************************
 ***
 ***  \class     AF4ChannelCalibWidget "src/Gui/Calibration/af4channelcalibwidget.h"
 ***  \brief     AF4ChannelCalibWidget enables input of channel dimensions
-***  \details   The FFFChannelCalibWidget contains the physical dimensions of the AF4 channel
+***  \details   The AF4ChannelCalibWidget contains the physical dimensions of the AF4 channel
 ***             and enables the input via QDoublespinboxes.
 ***             Each calibration has its own widget
 ***  \author    Benedikt Häusele
@@ -391,6 +371,14 @@ public:
       this->setNotesDescr(p.additionalNotes);
    }
 
+   CtrlBoxRefs getCtrlBoxRefs (){
+      return CtrlBoxRefs {
+         QWeakPointer<QDoubleSpinBox>(this->leftOffsetTime),
+               QWeakPointer<QDoubleSpinBox>(this->voidPeakTime),
+               QWeakPointer<QDoubleSpinBox>(this->elutionTime)
+      };
+   }
+
    /*!
     * \brief saveParameters
     */
@@ -439,7 +427,7 @@ private:
 
    //AF4SignalPlot *plotWidget                   = nullptr;
    //AF4SignalPlot *plotWidget2                  = nullptr;
-   AF4CalibPlotWidget *plotWidget              = nullptr;
+   //AF4CalibPlotWidget *plotWidget              = nullptr;
 
 
    int channelId;
@@ -494,7 +482,7 @@ private slots:
    /*!
     * \brief setPlotDataFromFile
     */
-   int setPlotDataFromFile();
+   //int setPlotDataFromFile();
 };
 
 #endif // AF4CHANNELCALIBWIDGET_H

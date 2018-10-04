@@ -233,6 +233,8 @@ void AF4SignalPlot::connectToPlotItem(QDoubleSpinBox *const ctrlBox, const QStri
    marker->setXValue(ctrlBox->value());
    connect(ctrlBox, qOverload<double>(&QDoubleSpinBox::valueChanged),
            marker, &QwtDynPlotMarker::setXValueEmit);
+   //this->updatePlot();
+   plot->replot();
 }
 
 void AF4SignalPlot::disconnectFromPlotItem(QDoubleSpinBox *const ctrlBox, const QString &markerName)
