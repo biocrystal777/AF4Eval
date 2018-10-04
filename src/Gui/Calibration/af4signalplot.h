@@ -1,5 +1,5 @@
-#ifndef AF4CALIBPLOTWIDGET_H
-#define AF4CALIBPLOTWIDGET_H
+#ifndef AF4SIGNALPLOT_H
+#define AF4SIGNALPLOT_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -34,7 +34,6 @@
 ***
 *********************************************************************************************************************/
 
-
 class QwtDynPlotMarker : public QObject, public QwtPlotMarker
 {
    Q_OBJECT
@@ -44,7 +43,6 @@ public:
    explicit QwtDynPlotMarker( const QwtText &title )                 : QwtPlotMarker( title ) {}
 
 signals:
-
    /*!
     * \brief posChanged Emitted when the x position is changed via xvalue slot
     */
@@ -60,6 +58,8 @@ public slots:
       setXValue(xValue);
       emit posChanged();
    }
+
+
 };
 
 
@@ -75,7 +75,7 @@ class VLineOverlay : public QwtWidgetOverlay {
 
 /*! ***************************************************************************************
 ***
-***  \class     AF4Calibplotwidget "src/Gui/Calibration/af4calibplotwidget.h"
+***  \class     AF4SignalPlot "src/Gui/Calibration/af4signalplot.h"
 ***  \author    Benedikt Häusele
 ***  \version   1.1
 ***  \date      2018
@@ -84,7 +84,7 @@ class VLineOverlay : public QwtWidgetOverlay {
 ********************************************************************************************/
 
 
-class AF4CalibPlotWidget final : public QWidget
+class AF4SignalPlot final : public QWidget
 {
    Q_OBJECT
 
@@ -95,7 +95,7 @@ public:
     * \param title
     * \param parent
     */
-   AF4CalibPlotWidget(const QString& title, QWidget *parent);
+   AF4SignalPlot(const QString& title, QWidget *parent);
 
    /*!
     * \brief initPlot
@@ -115,13 +115,6 @@ public:
    void setSignal2Channels(const QStringList& strs);
 
    /*!
-    * \brief addPlotVLine
-    * \param ctrlBox
-    * \param color
-    */
-   void addPlotVLine(QDoubleSpinBox* ctrlBox, const  QColor &color);
-
-   /*!
     * \brief setPlotXData
     * \param newXData
     */
@@ -132,7 +125,29 @@ public:
     * \param newYData
     */
    void setPlotYData(QVecMatrix<double> &newYData)   { plotYData = newYData; }
+
+   /*!
+    * \brief addPlotVLine
+    * \param ctrlBox
+    * \param color
+    */
+   void addPlotVLine(const QString &markerName, const QColor &color);
    
+   /*!
+    * \brief connectToPlotItem
+    * \param ctrlBox
+    * \param markerName
+    */
+   void connectToPlotItem(QDoubleSpinBox *const ctrlBox, const QString &markerName);
+
+   /*!
+    * \brief disconnectFromPlotItem
+    * \param ctrlBox
+    * \param markerName
+    */
+   void disconnectFromPlotItem(QDoubleSpinBox *const ctrlBox, const QString &markerName);
+
+
 public slots:
 
    /*!
@@ -156,13 +171,14 @@ private:
    /*!
     * \brief destructor of this class
     */
-   ~AF4CalibPlotWidget();
+   ~AF4SignalPlot();
 
-   AF4CalibPlotWidget(const AF4CalibPlotWidget& src)        = delete;
-   AF4CalibPlotWidget& operator= (AF4CalibPlotWidget& src)  = delete;
-   AF4CalibPlotWidget(AF4CalibPlotWidget&& src)             = delete;
-   AF4CalibPlotWidget& operator= (AF4CalibPlotWidget&& src) = delete;
+   AF4SignalPlot(const AF4SignalPlot& src)        = delete;
+   AF4SignalPlot& operator= (AF4SignalPlot& src)  = delete;
+   AF4SignalPlot(AF4SignalPlot&& src)             = delete;
+   AF4SignalPlot& operator= (AF4SignalPlot&& src) = delete;
 
+   void defaultInitData();
    /*!
     * \brief updatePlot updataes the data set and repaints plot
     */
@@ -189,7 +205,9 @@ private:
    int signal2Ch = 0;
    QComboBox               *signal1Switch     = nullptr;
    QComboBox               *signal2Switch     = nullptr;
-   QList<QwtDynPlotMarker*> plotMarkers;
-   QList<QwtSymbol*>        symbols;
+   //QList<QwtDynPlotMarker*> plotMarkers;
+   //QList<QwtSymbol*>        symbols;
+   QMap<QString, QwtDynPlotMarker*> plotMarkers;
+   QMap<QString, QwtSymbol*>        symbols;
 };
-#endif // AF4CALIBPLOTWIDGET_H
+#endif // AF4SIGNALPLOT_H

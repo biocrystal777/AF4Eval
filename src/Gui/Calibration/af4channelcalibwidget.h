@@ -17,12 +17,39 @@
 #include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
 #include <qwt_text_label.h>
-#include "./af4calibplotwidget.h"
+#include <memory> // for AF4CalibPlotWidget only
+#include "./af4signalplot.h"
 #include "./af4stokeseinsteincalculatorwidget.h"
 #include "../Core/af4datatypes.h"
 #include "../Core/af4parameterstructs.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
 #include "../Core/af4csvparser.h"
+
+class AF4CalibPlotWidget final : public QWidget
+{
+   Q_OBJECT
+
+public:
+   AF4CalibPlotWidget(QWidget *parent);
+
+   void connectMarkers(QWeakPointer<QDoubleSpinBox> leftOffset,
+                       QWeakPointer<QDoubleSpinBox> tVoid,
+                       QWeakPointer<QDoubleSpinBox> tElution);
+   //void disconnectMarkers(QDoubleSpinBox *leftOffset, QDoubleSpinBox *tVoid, QDoubleSpinBox *tElution);
+   void disconnectCurrentMarkers();
+   int setPlotDataFromFile(const QString &fileName);
+
+private:
+   QVBoxLayout   *lay   = nullptr;
+   AF4SignalPlot *plot1 = nullptr;
+   AF4SignalPlot *plot2 = nullptr;
+   //std::weak_ptr<QDoubleSpinBox> = nullptr
+   //std::weak_ptr<QDoubleSpinBox> = nullptr;
+   QWeakPointer<QDoubleSpinBox> leftOffset;
+   QWeakPointer<QDoubleSpinBox> tVoid;
+   QWeakPointer<QDoubleSpinBox> tElution;
+};
+
 
 /*! ***************************************************************************************
 ***
@@ -38,20 +65,16 @@
 ***
 ********************************************************************************************/
 
-
-// Split class later!!
-
 class AF4ChannelCalibWidget final : public QWidget
 {
    Q_OBJECT
 
 public:
-
    /*!
     * \brief FFFChannelCalibWidget constructor of this class
     * \param parent parent widget
     */
-   explicit AF4ChannelCalibWidget(
+   AF4ChannelCalibWidget(
          const int channelId,
          const int calibId,
          const QString channelName,
@@ -280,7 +303,6 @@ public:
     */
    bool setChannelWidth(double value);
 
-
    /*!
     * \brief setInputFileName set the inputFileName
     * \return bool if value could be set
@@ -393,11 +415,12 @@ private:
    AF4SciNotSpinBox *diffCoefficient           = nullptr;
    QDoubleSpinBox *crossFlow                   = nullptr;
    QDoubleSpinBox *temperature                 = nullptr;
-   QDoubleSpinBox *voidPeakTime                = nullptr;
+
    QDoubleSpinBox *relFocusPoint               = nullptr;
-   QDoubleSpinBox *leftOffsetTime              = nullptr;
-   QDoubleSpinBox *elutionTime                 = nullptr;
-   QDoubleSpinBox *elutionFlow                 = nullptr;
+   QSharedPointer<QDoubleSpinBox> leftOffsetTime;  //            = nullptr;
+   QSharedPointer<QDoubleSpinBox> elutionTime; //                = nullptr;
+   QSharedPointer<QDoubleSpinBox> voidPeakTime;//               = nullptr;
+   QDoubleSpinBox *  elutionFlow               = nullptr;
 
    QFrame *calibrationFrame                    = nullptr;
    QGridLayout *calibrationFrameLayout         = nullptr;
@@ -414,8 +437,10 @@ private:
    QLineEdit *bufferDescr                      = nullptr;
    QTextEdit *notesDescr                       = nullptr;
 
+   //AF4SignalPlot *plotWidget                   = nullptr;
+   //AF4SignalPlot *plotWidget2                  = nullptr;
    AF4CalibPlotWidget *plotWidget              = nullptr;
-   AF4CalibPlotWidget *plotWidget2             = nullptr;
+
 
    int channelId;
    int calibId;
@@ -440,7 +465,6 @@ private:
    QString chopStringsQuotMarksEntirely(QString &string) const;
 
 signals:
-
    /*!
     * \brief calibrateChannelCalled signal will be emitted when the
     *        calibButton has been pressed

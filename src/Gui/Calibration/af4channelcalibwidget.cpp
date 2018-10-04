@@ -187,41 +187,40 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    qwtLabel->setMinimumWidth(qwtLabel->size().width() * 1.0);
    qwtLabel->setToolTip("Left offset time");
    frameLayout->addWidget(qwtLabel, 2, 11, Qt::AlignLeft);
-   leftOffsetTime = new QDoubleSpinBox(widgetFrame);
+   leftOffsetTime = QSharedPointer<QDoubleSpinBox>(new QDoubleSpinBox(widgetFrame));
    leftOffsetTime->setToolTip("Left offset time");
    leftOffsetTime->setDecimals(3);
    leftOffsetTime->setSingleStep(0.005);
    leftOffsetTime->setMaximum(30.0);
    leftOffsetTime->setMinimum(0.000);
    leftOffsetTime->setMaximumWidth(100);
-   frameLayout->addWidget(leftOffsetTime, 2, 12, 1, 2);
-
+   frameLayout->addWidget(leftOffsetTime.data(), 2, 12, 1, 2);
 
    qwtLabel = new QwtTextLabel(widgetFrame);
    qwtLabel->setText(QString("t_void / min"), QwtText::PlainText);
    qwtLabel->setToolTip("Void Peak Time");
    frameLayout->addWidget(qwtLabel, 3, 11, Qt::AlignLeft);
-   voidPeakTime = new QDoubleSpinBox(widgetFrame);
+   voidPeakTime = QSharedPointer<QDoubleSpinBox>(new QDoubleSpinBox(widgetFrame));
    voidPeakTime->setToolTip("Void Peak Time");
    voidPeakTime->setDecimals(3);
    voidPeakTime->setSingleStep(0.005);
    voidPeakTime->setMaximum(30.0);
    voidPeakTime->setMinimum(0.00001);
    voidPeakTime->setMaximumWidth(100);
-   frameLayout->addWidget(voidPeakTime, 3, 12, 1, 2);
+   frameLayout->addWidget(voidPeakTime.data(), 3, 12, 1, 2);
 
    qwtLabel = new QwtTextLabel(widgetFrame);
    qwtLabel->setText(QString("t_e / min"), QwtText::PlainText);
    qwtLabel->setToolTip("Elution Time");
    frameLayout->addWidget(qwtLabel, 4, 11, Qt::AlignLeft);
-   elutionTime = new QDoubleSpinBox(widgetFrame);
+   elutionTime = QSharedPointer<QDoubleSpinBox>(new QDoubleSpinBox(widgetFrame));
    elutionTime->setToolTip("Elution Time");
    elutionTime->setDecimals(3);
    elutionTime->setSingleStep(0.005);
    elutionTime->setMaximum(300.0);
    elutionTime->setMinimum(0.00001);
    elutionTime->setMaximumWidth(100);
-   frameLayout->addWidget(elutionTime, 4, 12, 1, 2);
+   frameLayout->addWidget(elutionTime.data(), 4, 12, 1, 2);
 
    if(loadParameters) loadSettings();
    //else defaultInit();
@@ -232,17 +231,22 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    *
    *************************************/
 
+   plotWidget = new AF4CalibPlotWidget(this);
+   frameLayout->addWidget(plotWidget,0,15,16,4);
+   plotWidget->connectMarkers(leftOffsetTime, voidPeakTime, elutionTime);
+
+   /*
    const QRect rec = QApplication::desktop()->availableGeometry();
    const uint screenWidth  = rec.width();
    const uint screenHeight = rec.height();
-   plotWidget = new AF4CalibPlotWidget(QString("Calibration signal (t_void region)"), this);
+   plotWidget = new AF4SignalPlot(QString("Calibration signal (t_void region)"), this);
    plotWidget->setMinimumWidth(screenWidth/10*4);
    plotWidget->setMaximumWidth(screenWidth/10*4);
    plotWidget->setMinimumHeight(screenHeight/20*5);
    plotWidget->setMaximumHeight(screenHeight/10*5);
    frameLayout->addWidget(plotWidget,0,15,8,4);
 
-   plotWidget2 = new AF4CalibPlotWidget(QString("Calibration signal (t_e region)"), this);
+   plotWidget2 = new AF4SignalPlot(QString("Calibration signal (t_e region)"), this);
    plotWidget2->setMinimumWidth(screenWidth/10*4);
    plotWidget2->setMaximumWidth(screenWidth/10*4);
    plotWidget2->setMinimumHeight(screenHeight/20*5);
@@ -253,12 +257,16 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    int error = setPlotDataFromFile();
    if(!error){
       plotWidget->initPlot();
-      plotWidget->addPlotVLine(leftOffsetTime, QColor(0x00,0x00,0x00));
-      plotWidget->addPlotVLine(voidPeakTime, QColor(0x00,0x66,0xFF));
-
+      plotWidget->addPlotVLine("offset",         QColor(0x00,0x00,0x00));
+      //plotWidget->connectToPlotItem(QSharedPointer<QDoubleSpinBox>(leftOffsetTime), "offset");
+      plotWidget->addPlotVLine("voidPeak",       QColor(0x00,0x66,0xFF));
+      //plotWidget->connectToPlotItem(voidPeakTime, "voidPeak");
       plotWidget2->initPlot();
-      plotWidget2->addPlotVLine(elutionTime, QColor(0xFF, 0x55, 0x00));
+      plotWidget2->addPlotVLine("elutionPeak",   QColor(0xFF, 0x55, 0x00));
+      //plotWidget2->connectToPlotItem(elutionTime, "elutionPeak");
    }
+*/
+   //AF4CalibPlotWidget plotWidget()
 
 }
 
@@ -283,6 +291,7 @@ void AF4ChannelCalibWidget::callCalibrateChannel()
 
 int AF4ChannelCalibWidget::setPlotDataFromFile()
 {
+   /* remove to
 
    QString calibFileName = this->getInputFilePath(false);
 
@@ -341,6 +350,9 @@ int AF4ChannelCalibWidget::setPlotDataFromFile()
    plotWidget2->setSignal2Channels(signalSwitchEntries);
 
    return 0;
+
+   */
+      return 0;
 }
 
 bool AF4ChannelCalibWidget::setChannelWidth(double value)
@@ -593,4 +605,68 @@ QString AF4ChannelCalibWidget::chopStringsQuotMarksEntirely(QString & string) co
       string.remove(string.length()-1, 1);
 
    return string;
+}
+
+AF4CalibPlotWidget::AF4CalibPlotWidget(QWidget *parent) : QWidget(parent)
+{
+   const QRect rec = QApplication::desktop()->availableGeometry();
+   const uint screenWidth  = rec.width();
+   const uint screenHeight = rec.height();
+   //qDebug() << 12;
+   lay = new QVBoxLayout(this);
+   plot1 = new AF4SignalPlot(QString("Calibration signal (t_void region)"), this);
+   //qDebug() << 15;
+   plot1->setMinimumWidth(screenWidth/10*4);
+   plot1->setMaximumWidth(screenWidth/10*4);
+   plot1->setMinimumHeight(screenHeight/20*5);
+   plot1->setMaximumHeight(screenHeight/10*5);
+
+   //frameLayout->addWidget(plot1,0,15,8,4);
+   lay->addWidget(plot1);
+
+   plot2 = new AF4SignalPlot(QString("Calibration signal (t_e region)"), this);
+   plot2->setMinimumWidth(screenWidth/10*4);
+   plot2->setMaximumWidth(screenWidth/10*4);
+   plot2->setMinimumHeight(screenHeight/20*5);
+   plot2->setMaximumHeight(screenHeight/10*5);
+   lay->addWidget(plot2);
+   //frameLayout->addWidget(plot2,8,15,8,4);
+   //QString calibFileName = getInputFilePath(false);
+
+   //int error = setPlotDataFromFile();
+   int error = 0;
+   if(!error){
+      plot1->initPlot();
+      plot1->addPlotVLine("offset",      QColor(0x00,0x00,0x00));
+      plot1->addPlotVLine("voidPeak",    QColor(0x00,0x66,0xFF));
+      plot2->initPlot();
+      plot2->addPlotVLine("elutionPeak", QColor(0xFF, 0x55, 0x00));
+   }
+}
+
+void AF4CalibPlotWidget::connectMarkers(QWeakPointer<QDoubleSpinBox> leftOffset,
+                                        QWeakPointer<QDoubleSpinBox> tVoid,
+                                        QWeakPointer<QDoubleSpinBox> tElution)
+{
+   plot1->connectToPlotItem(leftOffset.data(), "offset");
+   plot1->connectToPlotItem(tVoid.data(),      "voidPeak");
+   plot2->connectToPlotItem(tElution.data(),   "elutionPeak");
+   this->leftOffset = leftOffset;
+   this->tVoid = tVoid;
+   this->tElution = tElution;
+}
+
+void AF4CalibPlotWidget::disconnectCurrentMarkers()
+{
+   if(!leftOffset.isNull())
+      plot1->disconnectFromPlotItem(leftOffset.data(), "offset");
+   if(!tVoid.isNull())
+      plot1->disconnectFromPlotItem(tVoid.data(), "voidPeak");
+   if(!tElution.isNull())
+      plot2->disconnectFromPlotItem(tElution.data(), "elutionPeak");
+}
+
+int AF4CalibPlotWidget::setPlotDataFromFile(const QString &fileName)
+{
+   return 0;
 }

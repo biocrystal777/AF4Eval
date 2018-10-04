@@ -68,7 +68,7 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/Calibration/af4channelconfigurationwidget.cpp \
     ./src/Gui/Calibration/af4channeldimswidget.cpp \
     ./src/Gui/Calibration/af4channelcalibwidget.cpp \
-    ./src/Gui/Calibration/af4calibplotwidget.cpp \
+    ./src/Gui/Calibration/af4signalplot.cpp \
     ./src/Gui/DiffEvaluation/af4diffevaluationwidget.cpp \
     ./src/Gui/DiffEvaluation/af4expsettingsframe.cpp \
     ./src/Gui/GeneralWidgets/af4log.cpp \
@@ -94,12 +94,12 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4slsevaluator.h \
     ./src/Core/omp_qvector.h \
     ./src/Gui/af4mainwindow.h \
-    ./src/Gui/Calibration/af4calibsettingsframe.h \
-    ./src/Gui/Calibration/af4calibplotwidget.h \
+    ./src/Gui/Calibration/af4calibsettingsframe.h \    
     ./src/Gui/Calibration/af4channelcalibwidget.h \
     ./src/Gui/Calibration/af4channeldimswidget.h \
     ./src/Gui/Calibration/af4channelconfigurationwidget.h \
     ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.h \
+    ./src/Gui/Calibration/af4signalplot.h \
     ./src/Gui/DiffEvaluation/af4diffevaluationwidget.h \
     ./src/Gui/DiffEvaluation/af4expsettingsframe.h \
     ./src/Gui/GeneralWidgets/af4log.h \
