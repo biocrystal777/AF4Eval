@@ -66,6 +66,10 @@ public:
 
    /*!
     * \brief getElutionFlowVal returns the displayed elutionFlow
+    *
+    *
+    *
+    *
     * \return elutionFlow
     */
    inline double getElutionFlowVal() const { return expSettingsFrame->getElutionFlowVal(); }

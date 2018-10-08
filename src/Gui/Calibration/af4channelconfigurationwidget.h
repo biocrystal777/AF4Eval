@@ -142,21 +142,20 @@ private slots:
 public slots:
    void adaptPlotData();
 
-private:
-
+private: 
    QFrame *calibrationFrame                                                    = nullptr;
    QGridLayout *calibrationFrameLayout                                         = nullptr;
+
    //QFrame calibrationFrame = nullptr;
    AF4CalibPlotWidget *plotWidget                                              = nullptr;
    QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets  = nullptr;   
-   AF4ChannelCalibWidget *currentCalibWidget                                   = nullptr;
-   QMap<QString, QComboBox*>* allCalibSelections                               = nullptr;   
-   QComboBox *currentCalibSelection                                            = nullptr;
-   QToolButton *addCalibButton                                                 = nullptr;
+   AF4ChannelCalibWidget     *currentCalibWidget                                   = nullptr;
+   QMap<QString, QComboBox*> *allCalibSelections                               = nullptr;
+   QComboBox                 *currentCalibSelection                                            = nullptr;
+   QToolButton               *addCalibButton                                                 = nullptr;
    QToolButton *renameCalibButton                                              = nullptr;
    QToolButton *deleteCalibButton                                              = nullptr;
-   QPushButton *settingsWriter                                                 = nullptr;
-
+   QPushButton *settingsWriter                                                 = nullptr;   
    /*!
     * \brief adaptCalibWidgetIds
     * \param channelName

@@ -95,6 +95,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    uint numberOfCalibrations = 0;
    QString calibName;
    QString channelName;
+
    for(uint i=0; i < numberOfChannels; ++i){
       numberOfCalibrations = settings.value(tr("channels/%1/numberOfCalibrations").arg((i)), 0).toInt(&ok);
       CHECK_SETTINGS_CONVERSION(numberOfCalibrations, 0);
@@ -148,7 +149,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
 
    deleteCalibButton = new QToolButton(calibrationFrame);
    deleteCalibButton->setText(tr("-"));
-   deleteCalibButton->setToolTip("delete current calibration profile");   
+   deleteCalibButton->setToolTip("delete current calibration profile");
    connect(deleteCalibButton, &QPushButton::clicked,
            this, &AF4ChannelConfigurationWidget::deleteCalibration);
    calibrationFrameLayout->addWidget(deleteCalibButton, 0, 14);

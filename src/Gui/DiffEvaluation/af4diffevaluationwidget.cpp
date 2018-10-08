@@ -138,7 +138,6 @@ void AF4DiffEvaluationWidget::startEvaluation()
    uint oldLength = data.at(0).size();
    uint newLength = oldLength - startTimeIndex;
 
-
    for (uint i = 0; i < data.size() ; ++i){
       for (uint j = 0; j < newLength; ++j){
          data.at(i).at(j) = data.at(i).at(j + startTimeIndex);

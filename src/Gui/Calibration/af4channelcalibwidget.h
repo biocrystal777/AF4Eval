@@ -41,9 +41,41 @@ struct CtrlBoxRefs {
 ***  \author    Benedikt Häusele
 ***  \version   1.0
 ***  \date      2018-08-31
+***  \todo      support class split
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 ********************************************************************************************/
+
+class AF4InnerCalibrationFrame final : public QFrame
+{
+   Q_OBJECT
+   AF4InnerCalibrationFrame();
+   ~AF4InnerCalibrationFrame(){}
+
+private:
+
+   AF4InnerCalibrationFrame(const AF4InnerCalibrationFrame& src)        = delete;
+   AF4InnerCalibrationFrame& operator= (AF4InnerCalibrationFrame& src)  = delete;
+   AF4InnerCalibrationFrame(AF4InnerCalibrationFrame&& src)             = delete;
+   AF4InnerCalibrationFrame& operator= (AF4InnerCalibrationFrame&& src) = delete;
+
+};
+
+
+class AF4CalibParametersFrame final : public QFrame
+{
+   Q_OBJECT
+public:
+   AF4CalibParametersFrame();
+   ~AF4CalibParametersFrame(){}
+
+private:
+   AF4CalibParametersFrame(const AF4CalibParametersFrame& src)        = delete;
+   AF4CalibParametersFrame& operator= (AF4CalibParametersFrame& src)  = delete;
+   AF4CalibParametersFrame(AF4CalibParametersFrame&& src)             = delete;
+   AF4CalibParametersFrame& operator= (AF4CalibParametersFrame&& src) = delete;
+};
+
 
 class AF4ChannelCalibWidget final : public QWidget
 {
@@ -66,11 +98,6 @@ public:
     * \brief destructor of this class
     */
    ~AF4ChannelCalibWidget();
-
-   AF4ChannelCalibWidget(const AF4ChannelCalibWidget& src)        = delete;
-   AF4ChannelCalibWidget& operator= (AF4ChannelCalibWidget& src)  = delete;
-   AF4ChannelCalibWidget(AF4ChannelCalibWidget&& src)             = delete;
-   AF4ChannelCalibWidget& operator= (AF4ChannelCalibWidget&& src) = delete;
 
    /*!
     * \brief getDiffCoefficient Returns the diffusion Coefficient shown in the
@@ -411,6 +438,9 @@ private:
    QDoubleSpinBox *  elutionFlow               = nullptr;
 
    QFrame *calibrationFrame                    = nullptr;
+   QCheckBox *classicMode                      = nullptr;
+   QCheckBox *VGeoMode                         = nullptr;
+   QCheckBox *VHydMode                         = nullptr;
    QGridLayout *calibrationFrameLayout         = nullptr;
    QPushButton *calibButton                    = nullptr;
    AF4SciNotSpinBox *channelWidth              = nullptr;
@@ -483,6 +513,13 @@ private slots:
     * \brief setPlotDataFromFile
     */
    //int setPlotDataFromFile();
+private:
+
+   AF4ChannelCalibWidget(const AF4ChannelCalibWidget& src)        = delete;
+   AF4ChannelCalibWidget& operator= (AF4ChannelCalibWidget& src)  = delete;
+   AF4ChannelCalibWidget(AF4ChannelCalibWidget&& src)             = delete;
+   AF4ChannelCalibWidget& operator= (AF4ChannelCalibWidget&& src) = delete;
+
 };
 
 #endif // AF4CHANNELCALIBWIDGET_H

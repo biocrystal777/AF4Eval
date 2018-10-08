@@ -607,3 +607,13 @@ QString AF4ChannelCalibWidget::chopStringsQuotMarksEntirely(QString & string) co
 
    return string;
 }
+
+AF4InnerCalibrationFrame::AF4InnerCalibrationFrame()
+{
+
+}
+
+AF4CalibParametersFrame::AF4CalibParametersFrame()
+{
+
+}

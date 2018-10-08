@@ -3,7 +3,7 @@
 using std::vector;
 using std::string;
 
-uint AF4Calculator::indexFromOrderedVector(const vecD &v, const double target) const
+uint AF4Calculator::indexFromOrderedVecD(const vecD &v, const double target) const
 {
    uint index = std::distance( v.begin(), std::lower_bound(v.begin(), v.end(), target) );
    if( index && std::abs(v[index] - target ) < std::abs(v[index-1] -target))

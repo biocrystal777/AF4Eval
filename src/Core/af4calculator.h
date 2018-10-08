@@ -36,16 +36,16 @@ protected:
     * \brief Default Destructor
     */
    virtual ~AF4Calculator(){}
+
+
+public:
    /*!
-    * \brief findIndexFromTime returns the index corresponding to a
+    * \brief indexFromOrderedVector returns the index corresponding to a
     *        time on the 0th column of the data matrix ( = time)
     * \param time The time value of the index of interest
     * \returns an index
     */
-
-public:
-
-   uint indexFromOrderedVector(const vecD &v, const double target) const;
+   uint indexFromOrderedVecD(const vecD &v, const double target) const;
 protected:
 
    /*!

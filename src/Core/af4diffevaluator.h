@@ -64,8 +64,6 @@ public:
                              double viscosity,
                              double temperature);
 
-
-
    /*!
     * \brief getResDiffCoeff returns the calculated Diffusion Coefficients.
     *        Values are stored as vector on heap. Therefore, the vector has
@@ -96,8 +94,6 @@ public:
    }
 
 protected:
-
-
 
    /*!
     * \brief calcDiffCoeff calculates a diffusion coefficient by bisection
