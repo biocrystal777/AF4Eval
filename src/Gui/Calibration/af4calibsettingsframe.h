@@ -85,6 +85,7 @@ public:
      */
    double getChWidth() const {
       return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getChannelWidth();
+
    }
 
    /*!

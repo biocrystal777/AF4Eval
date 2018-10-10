@@ -17,13 +17,11 @@
 #include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
 #include <qwt_text_label.h>
-//#include "./af4signalplot.h"
 #include "./af4calibplotwidget.h"
 #include "./af4stokeseinsteincalculatorwidget.h"
 #include "../Core/af4datatypes.h"
 #include "../Core/af4parameterstructs.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
-
 
 struct CtrlBoxRefs {
    QWeakPointer<QDoubleSpinBox> leftOffset;
@@ -31,73 +29,50 @@ struct CtrlBoxRefs {
    QWeakPointer<QDoubleSpinBox> tElution;
 };
 
+struct CalibModes {
+   const bool classical;
+   const bool geometric;
+   const bool hydrodynamic;
+};
+
+
 /*! ***************************************************************************************
 ***
-***  \class     AF4ChannelCalibWidget "src/Gui/Calibration/af4channelcalibwidget.h"
-***  \brief     AF4ChannelCalibWidget enables input of channel dimensions
-***  \details   The AF4ChannelCalibWidget contains the physical dimensions of the AF4 channel
-***             and enables the input via QDoublespinboxes.
-***             Each calibration has its own widget
+***  \class     AF4CalibParametersFrame "src/Gui/Calibration/af4channelcalibwidget.h"
+***  \brief     AF4CalibParametersFrame contains calibration parameters
+***  \details   AF4CalibParametersFrame has 8 spinboxes holding
+***             the parameters for the calibration. The Diffusion coefficient can be
+***             calculated via Stokes Einstein from hydrodynamic radius.
+***             The boxes are enabled when their parameters have to be used by
+***             set combination of calibration methods
 ***  \author    Benedikt Häusele
 ***  \version   1.0
 ***  \date      2018-08-31
-***  \todo      support class split
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 ********************************************************************************************/
-
-class AF4InnerCalibrationFrame final : public QFrame
-{
-   Q_OBJECT
-   AF4InnerCalibrationFrame();
-   ~AF4InnerCalibrationFrame(){}
-
-private:
-
-   AF4InnerCalibrationFrame(const AF4InnerCalibrationFrame& src)        = delete;
-   AF4InnerCalibrationFrame& operator= (AF4InnerCalibrationFrame& src)  = delete;
-   AF4InnerCalibrationFrame(AF4InnerCalibrationFrame&& src)             = delete;
-   AF4InnerCalibrationFrame& operator= (AF4InnerCalibrationFrame&& src) = delete;
-
-};
-
 
 class AF4CalibParametersFrame final : public QFrame
 {
    Q_OBJECT
 public:
-   AF4CalibParametersFrame();
-   ~AF4CalibParametersFrame(){}
-
-private:
-   AF4CalibParametersFrame(const AF4CalibParametersFrame& src)        = delete;
-   AF4CalibParametersFrame& operator= (AF4CalibParametersFrame& src)  = delete;
-   AF4CalibParametersFrame(AF4CalibParametersFrame&& src)             = delete;
-   AF4CalibParametersFrame& operator= (AF4CalibParametersFrame&& src) = delete;
-};
-
-
-class AF4ChannelCalibWidget final : public QWidget
-{
-   Q_OBJECT
-
-public:
-   /*!
-    * \brief FFFChannelCalibWidget constructor of this class
-    * \param parent parent widget
-    */
-   AF4ChannelCalibWidget(
-         const int channelId,
-         const int calibId,
-         const QString channelName,
-         const QString calibName,
-         const bool loadParameters,
-         QWidget *parent = nullptr);
+   AF4CalibParametersFrame(int channelId, int calibId,
+                           const QString &channelName,
+                           const QString &calibName, QWeakPointer<QPushButton> saveSettings,
+                           QWidget *parent);
+   ~AF4CalibParametersFrame();
 
    /*!
-    * \brief destructor of this class
+    * \brief getCtrlBoxRefs
+    * \return returns references to the three controlboxes which
     */
-   ~AF4ChannelCalibWidget();
+   CtrlBoxRefs getCtrlBoxRefs (){
+      return CtrlBoxRefs {
+         QWeakPointer<QDoubleSpinBox>(this->leftOffsetTime),
+               QWeakPointer<QDoubleSpinBox>(this->voidPeakTime),
+               QWeakPointer<QDoubleSpinBox>(this->elutionTime)
+      };
+   }
 
    /*!
     * \brief getDiffCoefficient Returns the diffusion Coefficient shown in the
@@ -155,26 +130,348 @@ public:
     */
    double getElutionFlow() const { return elutionFlow->value(); }
 
+#define SET_MACRO(function, boxPtr) \
+   bool function(double value){\
+         if(value < boxPtr->minimum()){\
+            boxPtr->setValue(boxPtr->minimum());\
+            return false;\
+         }\
+         else if (value > boxPtr->maximum()){\
+            boxPtr->setValue(boxPtr->maximum());\
+            return false;\
+         }\
+         else {\
+            boxPtr->setValue(value);\
+            return true;\
+         }\
+   };
    /*!
+    * \brief setDiffCoefficient set value of the diffusion Coefficient
+    * \return bool if value could be set
+    */
+   SET_MACRO(setDiffCoefficient, diffCoefficient)
+
+   /*!
+    * \brief setCrossFlow set value of the crossflow
+    * \return bool if value could be set
+    */
+   SET_MACRO(setCrossFlow, crossFlow)
+
+   /*!
+    * \brief setCrossFlow set value of the crossflow
+    * \return bool if value could be set
+    */
+   SET_MACRO(setRelFocusPoint, relFocusPoint)
+
+   /*!
+    * \brief setTemperature set value of the temperature
+    * \return bool if value could be set
+    */
+   SET_MACRO(setTemperature, temperature)
+
+   /*!
+    * \brief setVoidPeakTime set value of the voidPeakTime
+    * \return bool if value could be set
+    */
+   SET_MACRO(setVoidPeakTime, voidPeakTime)
+
+   /*!
+    * \brief setLeftOffsetTime set value of the leftOffsetTime
+    * \return bool if value could be set
+    */
+   SET_MACRO(setLeftOffsetTime, leftOffsetTime)
+
+   /*!
+    * \brief setElutionTime set value of the elutionTime
+    * \return bool if value could be set
+    */
+   SET_MACRO(setElutionTime, elutionTime)
+
+   /*!
+    * \brief setElutionFlow set value of the elutionFlow
+    * \return bool if value could be set
+    */
+   SET_MACRO(setElutionFlow, elutionFlow)
+#undef SET_MACRO
+
+   public slots:
+      void saveSettings();
+   void adaptEnablingStatus(CalibModes m);
+private slots:
+   void callDiffCoeffDialog();
+
+private:
+
+   void loadSettings();
+
+   int channelId;
+   int calibId;
+   QString channelName;
+   QString calibName;
+
+   QGridLayout    *lay                         = nullptr;
+   QDoubleSpinBox *crossFlow                   = nullptr;
+   QDoubleSpinBox *elutionFlow                 = nullptr;
+   QDoubleSpinBox *temperature                 = nullptr;
+   QDoubleSpinBox *relFocusPoint               = nullptr;
+   QSharedPointer<QDoubleSpinBox> leftOffsetTime;     //            = nullptr;
+   QSharedPointer<QDoubleSpinBox> elutionTime;        //            = nullptr;
+   QSharedPointer<QDoubleSpinBox> voidPeakTime;       //            = nullptr;
+   AF4SciNotSpinBox *diffCoefficient           = nullptr;
+   QToolButton      *diffCoeffCalcButton       = nullptr;
+   AF4StokesEinsteinCalculatorWidget *diffCoeffCalcWidget = nullptr;
+
+   AF4CalibParametersFrame(const AF4CalibParametersFrame& src)        = delete;
+   AF4CalibParametersFrame& operator= (AF4CalibParametersFrame& src)  = delete;
+   AF4CalibParametersFrame(AF4CalibParametersFrame&& src)             = delete;
+   AF4CalibParametersFrame& operator= (AF4CalibParametersFrame&& src) = delete;
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*! ***************************************************************************************
+***
+***  \class     AF4ChannelCalibWidget "src/Gui/Calibration/af4channelcalibwidget.h"
+***  \brief     AF4ChannelCalibWidget enables input of channel dimensions
+***  \details   The AF4ChannelCalibWidget contains the physical dimensions of the AF4 channel
+***             and enables the input via QDoublespinboxes.
+***             Each calibration has its own widget
+***  \author    Benedikt Häusele
+***  \version   1.1
+***  \date      2018-08-31
+***  \copyright CC CC BY-NC-ND 4.0
+***
+********************************************************************************************/
+
+class AF4InnerCalibrationFrame final : public QFrame
+{
+   Q_OBJECT
+public:
+   AF4InnerCalibrationFrame(const int channelId,
+                            const int calibId,
+                            const QString channelName,
+                            const QString calibName,
+                            QWeakPointer<QPushButton> saveButton,
+                            QWidget *parent);
+   ~AF4InnerCalibrationFrame();
+
+   /*!
+   * \brief getDiffCoefficient returns the channel width shown
+   *        in the corresponding FFFTwoBoxWidget
+   * \return channel width
+   */
+  double getChannelWidth() const { return channelWidth->value(); }
+
+  /*!
+   * \brief getDiffCoefficient returns the channel width shown
+   *        in the corresponding FFFTwoBoxWidget
+   * \return hydrodynVolume
+   */
+  double getClassicalVolume() const { return classicalVolume->value(); }
+
+  /*!
+   * \brief getDiffCoefficient returns the channel width shown
+   *        in the corresponding FFFTwoBoxWidget
+   * \return hydrodynVolume
+   */
+  double getHydrodynVolume() const { return hydrodynVolume->value(); }
+
+  /*!
+   * \brief getGeometVolume returns the channel width shown
+   *        in the corresponding FFFTwoBoxWidget
+   * \return geometVolume
+   */
+  double getGeometVolume() const { return geometVolume->value(); }
+
+  /*!
+   * \brief getChannelDimsFromCalib
+   * \return
+   */
+  ChannelDimsFromCalib getChannelDimsFromCalib() const;
+
+#define SET_MACRO(function, boxPtr) \
+   bool function(double value){\
+         if(value < boxPtr->minimum()){\
+            boxPtr->setValue(boxPtr->minimum());\
+            return false;\
+         }\
+         else if (value > boxPtr->maximum()){\
+            boxPtr->setValue(boxPtr->maximum());\
+            return false;\
+         }\
+         else {\
+            boxPtr->setValue(value);\
+            return true;\
+         }\
+   };
+
+  /*!
+   * \brief hydrodynVolume set value of the channelWidth
+   * \return bool if value could be set
+   */
+  SET_MACRO(setClassicalVolume, classicalVolume)
+
+   /*!
+    * \brief hydrodynVolume set value of the channelWidth
+    * \return bool if value could be set
+    */
+  SET_MACRO(setHydrodynVolume, hydrodynVolume)
+
+  /*!
+    * \brief hydrodynVolume set value of the channelWidth
+    * \return bool if value could be set
+    */
+  SET_MACRO(setGeometVolume, geometVolume)
+
+#undef SET_MACRO
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+  void setChannelWidth(double value) { channelWidth->setValue(value); }
+  /*!
+   * \brief setChannelWidthGeo
+   * \param value
+   */
+  void setChannelWidthGeo(double value) { channelWidthGeo->setValue(value); }
+  /*!
+   * \brief setChannelWidthHydro
+   * \param value
+   */
+  void setChannelWidthHydro(double value) { channelWidthHydro->setValue(value); }
+
+public slots:
+  void saveSettings();
+
+signals:
+  void calibrateChannelCalled();
+  void calibModeSettingsChanged(CalibModes m);
+
+private:
+   void loadSettings();
+
+   int channelId;
+   int calibId;
+   QString channelName;
+   QString calibName;
+
+
+   QGridLayout    *lay               = nullptr;
+   QCheckBox      *classicMode       = nullptr;
+   QCheckBox      *geoMode           = nullptr;
+   QCheckBox      *hydMode           = nullptr;
+   QPushButton    *calibButton       = nullptr;
+
+   QwtTextLabel *channelWidthLabel      = nullptr;
+   QwtTextLabel *channelWidthHydroLabel = nullptr;
+   QwtTextLabel *channelWidthGeoLabel   = nullptr;
+   QwtTextLabel *classicalVolumeLabel   = nullptr;
+   QwtTextLabel *hydrodynVolumeLabel    = nullptr;
+   QwtTextLabel *geometVolumeLabel      = nullptr;
+
+   QDoubleSpinBox *channelWidth      = nullptr;
+   QDoubleSpinBox *channelWidthHydro = nullptr;
+   QDoubleSpinBox *channelWidthGeo   = nullptr;
+   QDoubleSpinBox *classicalVolume   = nullptr;
+   QDoubleSpinBox *hydrodynVolume    = nullptr;
+   QDoubleSpinBox *geometVolume      = nullptr;
+
+   AF4InnerCalibrationFrame(const AF4InnerCalibrationFrame& src)        = delete;
+   AF4InnerCalibrationFrame& operator= (AF4InnerCalibrationFrame& src)  = delete;
+   AF4InnerCalibrationFrame(AF4InnerCalibrationFrame&& src)             = delete;
+   AF4InnerCalibrationFrame& operator= (AF4InnerCalibrationFrame&& src) = delete;
+};
+
+
+
+
+
+
+
+
+/*! ***************************************************************************************
+***
+***  \class     AF4ChannelCalibWidget "src/Gui/Calibration/af4channelcalibwidget.h"
+***  \brief     AF4ChannelCalibWidget enables input of channel dimensions
+***  \details   The AF4ChannelCalibWidget contains the physical dimensions of the AF4 channel
+***             and enables the input via QDoublespinboxes.
+***             Each calibration has its own widget
+***  \author    Benedikt Häusele
+***  \version   1.0
+***  \date      2018-08-31
+***  \todo      support class split
+***  \copyright CC CC BY-NC-ND 4.0
+***
+********************************************************************************************/
+
+class AF4ChannelCalibWidget final : public QWidget
+{
+   Q_OBJECT
+
+public:
+   /*!
+    * \brief FFFChannelCalibWidget constructor of this class
+    * \param parent parent widget
+    */
+   AF4ChannelCalibWidget(const int channelId,
+                         const int calibId,
+                         const QString channelName,
+                         const QString calibName,
+                         QWeakPointer<QPushButton> saveButton,
+                         QWidget *parent);
+
+   /*!
+    * \brief destructor of this class
+    */
+   ~AF4ChannelCalibWidget();
+
+    /*!
     * \brief getDiffCoefficient returns the channel width shown
     *        in the corresponding FFFTwoBoxWidget
     * \return channel width
     */
-   double getChannelWidth() const { return channelWidth->value(); }
+   //double getChannelWidth() const { return channelWidth->value(); }
+   double getChannelWidth() const { return innerCalibFrame->getChannelWidth(); }
 
    /*!
     * \brief getDiffCoefficient returns the channel width shown
     *        in the corresponding FFFTwoBoxWidget
     * \return hydrodynVolume
     */
-   double getHydrodynVolume() const { return hydrodynVolume->value(); }
+   //double getHydrodynVolume() const { return hydrodynVolume->value(); }
+   double getHydrodynVolume() const { return innerCalibFrame->getHydrodynVolume(); }
 
    /*!
     * \brief getGeometVolume returns the channel width shown
     *        in the corresponding FFFTwoBoxWidget
     * \return geometVolume
     */
-   double getGeometVolume() const { return geometVolume->value(); }
+   //double getGeometVolume() const { return geometVolume->value(); }
+   double getGeometVolume() const { return innerCalibFrame->getGeometVolume(); }
 
    /*!
     * \brief getChannelDimsFromCalib
@@ -242,73 +539,27 @@ public:
             return true;\
          }\
    };   
-   /*!
-    * \brief setDiffCoefficient set value of the diffusion Coefficient
-    * \return bool if value could be set
-    */
-   SET_MACRO(setDiffCoefficient, diffCoefficient)
 
-   /*!
-    * \brief setCrossFlow set value of the crossflow
-    * \return bool if value could be set
-    */
-   SET_MACRO(setCrossFlow, crossFlow)
-
-   /*!
-    * \brief setCrossFlow set value of the crossflow
-    * \return bool if value could be set
-    */
-   SET_MACRO(setRelFocusPoint, relFocusPoint)
-
-   /*!
-    * \brief setTemperature set value of the temperature
-    * \return bool if value could be set
-    */
-   SET_MACRO(setTemperature, temperature)
-
-   /*!
-    * \brief setVoidPeakTime set value of the voidPeakTime
-    * \return bool if value could be set
-    */
-   SET_MACRO(setVoidPeakTime, voidPeakTime)
-
-   /*!
-    * \brief setLeftOffsetTime set value of the leftOffsetTime
-    * \return bool if value could be set
-    */
-   SET_MACRO(setLeftOffsetTime, leftOffsetTime)
-
-   /*!
-    * \brief setElutionTime set value of the elutionTime
-    * \return bool if value could be set
-    */
-   SET_MACRO(setElutionTime, elutionTime)
-
-   /*!
-    * \brief setElutionFlow set value of the elutionFlow
-    * \return bool if value could be set
-    */
-   SET_MACRO(setElutionFlow, elutionFlow)
 
 
    /*!
     * \brief hydrodynVolume set value of the channelWidth
     * \return bool if value could be set
     */
-   SET_MACRO(setHydrodynVolume, hydrodynVolume)
+   //SET_MACRO(setHydrodynVolume, hydrodynVolume)
 
    /*!
     * \brief hydrodynVolume set value of the channelWidth
     * \return bool if value could be set
     */
-   SET_MACRO(setGeometVolume, geometVolume)
+   //SET_MACRO(setGeometVolume, geometVolume)
 
 #undef SET_MACRO
    /*!
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
     */
-   bool setChannelWidth(double value);
+   void setChannelWidth(double value);
 
    /*!
     * \brief setInputFileName set the inputFileName
@@ -374,91 +625,43 @@ public:
     * \brief getAllCalibrationParameters
     * \return
     */
-  AllCalibrationParameters getAllCalibrationParameters();
+   AllCalibrationParameters getAllCalibrationParameters();
 
    /*!
     * \brief setAllCalibrationParameters
     * \param p
     */
-   void setAllCalibrationParameters(const AllCalibrationParameters &p){
-      this->setTemperature(p.temperature);
-      this->setElutionFlow(p.elutionFlow);
-      this->setCrossFlow(p.crossFlow);
-      this->setRelFocusPoint(p.relFocusPoint);
-      this->setLeftOffsetTime(p.leftOffsetTime);
-      this->setVoidPeakTime(p.voidPeakTime);
-      this->setElutionTime(p.elutionTime);
-      this->setDiffCoefficient(p.diffCoeff);
-      this->setChannelWidth(p.chWidth);
-      this->setHydrodynVolume(p.hydrodynVolume);
-      this->setGeometVolume(p.geometVolume);
-      this->setDateDescr(p.date);
-      this->setSampleDescr(p.sample);
-      this->setBufferDescr(p.buffer);
-      this->setNotesDescr(p.additionalNotes);
-   }
+   void setAllCalibrationParameters(const AllCalibrationParameters &p);
 
-   CtrlBoxRefs getCtrlBoxRefs (){
-      return CtrlBoxRefs {
-         QWeakPointer<QDoubleSpinBox>(this->leftOffsetTime),
-               QWeakPointer<QDoubleSpinBox>(this->voidPeakTime),
-               QWeakPointer<QDoubleSpinBox>(this->elutionTime)
-      };
-   }
+   CtrlBoxRefs getCtrlBoxRefs () { return calibParFrame->getCtrlBoxRefs(); }
 
+signals:
    /*!
-    * \brief saveParameters
+    * \brief calibrateChannelCalled signal will be emitted when the
+    *        calibButton has been pressed
     */
-   void saveParameters();
+   void calibrateChannelCalled();
 
 private:
 
-   //void defaultInit();
-
-
    void loadSettings();
 
-   QFrame *widgetFrame                         = nullptr;
-   QGridLayout *widgetLayout                   = nullptr;
-   QGridLayout *frameLayout                    = nullptr;
+   QFrame      *widgetFrame                   = nullptr;
+   QGridLayout *widgetLayout                  = nullptr;
+   QGridLayout *frameLayout                   = nullptr;
 
-   QWidget *fileWidget                         = nullptr;
-   QHBoxLayout *fileLayout                     = nullptr;
-   QToolButton *inputFileChooser               = nullptr;
-   QLineEdit *inputFileName                    = nullptr;
+   QWidget     *fileWidget                    = nullptr;
+   QHBoxLayout *fileLayout                    = nullptr;
+   QToolButton *inputFileChooser              = nullptr;
+   QLineEdit   *inputFileName                 = nullptr;
 
-   AF4SciNotSpinBox *diffCoefficient           = nullptr;
-   QDoubleSpinBox *crossFlow                   = nullptr;
-   QDoubleSpinBox *temperature                 = nullptr;
+   AF4CalibParametersFrame  *calibParFrame    = nullptr;
+   AF4InnerCalibrationFrame *innerCalibFrame  = nullptr;
 
-   QDoubleSpinBox *relFocusPoint               = nullptr;
-   QSharedPointer<QDoubleSpinBox> leftOffsetTime;  //            = nullptr;
-   QSharedPointer<QDoubleSpinBox> elutionTime; //                = nullptr;
-   QSharedPointer<QDoubleSpinBox> voidPeakTime;//               = nullptr;
-   QDoubleSpinBox *  elutionFlow               = nullptr;
-
-   QFrame *calibrationFrame                    = nullptr;
-   QCheckBox *classicMode                      = nullptr;
-   QCheckBox *VGeoMode                         = nullptr;
-   QCheckBox *VHydMode                         = nullptr;
-   QGridLayout *calibrationFrameLayout         = nullptr;
-   QPushButton *calibButton                    = nullptr;
-   AF4SciNotSpinBox *channelWidth              = nullptr;
-   QDoubleSpinBox *hydrodynVolume              = nullptr;
-   QDoubleSpinBox *geometVolume                = nullptr;
-
-   QToolButton *diffCoeffCalculator            = nullptr;
-   AF4StokesEinsteinCalculatorWidget *diffCoeffCalcWidget = nullptr;
-
-   QLineEdit *dateDescr                        = nullptr;
-   QLineEdit *sampleDescr                      = nullptr;
-   QLineEdit *bufferDescr                      = nullptr;
-   QTextEdit *notesDescr                       = nullptr;
-
-   //AF4SignalPlot *plotWidget                   = nullptr;
-   //AF4SignalPlot *plotWidget2                  = nullptr;
-   //AF4CalibPlotWidget *plotWidget              = nullptr;
-
+   QLineEdit *dateDescr                       = nullptr;
+   QLineEdit *sampleDescr                     = nullptr;
+   QLineEdit *bufferDescr                     = nullptr;
+   QTextEdit *notesDescr                      = nullptr;
 
    int channelId;
    int calibId;
@@ -482,20 +685,7 @@ private:
     */
    QString chopStringsQuotMarksEntirely(QString &string) const;
 
-signals:
-   /*!
-    * \brief calibrateChannelCalled signal will be emitted when the
-    *        calibButton has been pressed
-    */
-   void calibrateChannelCalled();
-
 private slots:
-
-   /*!
-    * \brief callDiffCoeffDialog
-    */
-   void callDiffCoeffDialog();
-
    /*!
     * \brief chooseInputFile calls a QFileDialog to choose the input file Name
     *        (see callCalibrateChannel()).
@@ -503,16 +693,9 @@ private slots:
    void chooseInputFile();
 
    /*!
-    * \brief callCalibrateChannel As this class is thought as containment of FFFChannels
-    * emits a signal that is connected to a slot method "one level above".
-    * => "throw" the signal clicked()
+    * \brief saveParameters
     */
-   void callCalibrateChannel();
-
-   /*!
-    * \brief setPlotDataFromFile
-    */
-   //int setPlotDataFromFile();
+   void saveParameters();
 private:
 
    AF4ChannelCalibWidget(const AF4ChannelCalibWidget& src)        = delete;

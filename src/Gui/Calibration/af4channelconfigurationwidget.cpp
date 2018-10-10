@@ -2,7 +2,7 @@
 
 
 AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
-   QWidget(parent)
+   QWidget(parent), settingsWriter (QSharedPointer<QPushButton>(new QPushButton("Save Parameters", this)))
 {
 
    layout = new QGridLayout(this);
@@ -25,6 +25,10 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    calibrationFrameLayout->addWidget(new QLabel("<b>Calibration</b>", calibrationFrame), 0, 0, Qt::AlignLeft);
    allCalibSelections = new QMap<QString, QComboBox*>();
    channelCalibWidgets = new QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>();
+
+
+   //
+
 
    ///////////////////////////////////
    //Constant channel configuration //
@@ -112,7 +116,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
       for(uint j=0; j < numberOfCalibrations; j++){
          //qDebug() << "b1"<< numberOfCalibrations;
          calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();
-         currentCalibWidget = new AF4ChannelCalibWidget(i, j, channelName, calibName, calibrationFrame);
+         currentCalibWidget = new AF4ChannelCalibWidget(i, j, channelName, calibName, settingsWriter, calibrationFrame);
          //qDebug() << "b2"<< numberOfCalibrations;
          connect(currentCalibWidget, &AF4ChannelCalibWidget::calibrateChannelCalled,
                  this, &AF4ChannelConfigurationWidget::calibrateChannnel);
@@ -165,7 +169,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    currentCalibSelection->setCurrentIndex(0);
    currentCalibWidget = channelCalibWidgets->value(channelName)->value(currentCalibSelection->currentText());
    // connect boxes to widget
-   qDebug() << currentCalibWidget->getVoidPeakTime();
+   //qDebug() << currentCalibWidget->getVoidPeakTime();
    connectCtrlWithPlotWidget();
    adaptPlotData();
    currentCalibWidget->show();
@@ -177,11 +181,11 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    layout->addWidget(channelConfigFrame, 0, 0, 2, 10);
    layout->addWidget(calibrationFrame, 3, 0, 12, 10);
 
-   settingsWriter = new QPushButton("Save Parameters", this);
-   connect(settingsWriter, &QPushButton::clicked,
+   connect(settingsWriter.data(), &QPushButton::clicked,
            this, &AF4ChannelConfigurationWidget::saveParameters);
 
-   layout->addWidget(settingsWriter, 15, 0);
+   layout->addWidget(settingsWriter.data(), 15, 0);
+
 }
 
 AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
@@ -491,7 +495,9 @@ bool AF4ChannelConfigurationWidget::addCalibration()
       AF4ChannelCalibWidget* newCalibration = new AF4ChannelCalibWidget(channelConfigWidgets->size(),
                                                                         channelCalibWidgets->value(currentChConfigWidget->getChannelName())->size(),
                                                                         currentChConfigWidget->getChannelName(),
-                                                                        newName, calibrationFrame);
+                                                                        newName,
+                                                                        this->settingsWriter,
+                                                                        calibrationFrame);
       if(currentCalibWidget) newCalibration->setAllCalibrationParameters(currentCalibWidget->getAllCalibrationParameters());
       connect(newCalibration, &AF4ChannelCalibWidget::calibrateChannelCalled, this, &AF4ChannelConfigurationWidget::calibrateChannnel);
       QString channelName = channelSelection->currentText();
@@ -564,7 +570,7 @@ void AF4ChannelConfigurationWidget::calibrateChannnel()
    // adjust omega
    if(calibSuccess){
       currentCalibWidget->setChannelWidth(newChWidth);
-      currentCalibWidget->setHydrodynVolume(newChVolume);
+      //currentCalibWidget->setHydrodynVolume(newChVolume);
       AF4Log::logText(tr("Calibration Finished. Channel Width set to %1, Channel Volume set to %2.").arg(newChWidth).arg(newChVolume));
    } else {
       AF4Log::logError(tr("Calibration could not be finished."));
@@ -577,9 +583,9 @@ void AF4ChannelConfigurationWidget::saveParameters() const
    writeSettings();
    for(const QString &configWidgetKey : channelConfigWidgets->keys()){
       channelConfigWidgets->value(configWidgetKey)->writeSettings();
-      for(const QString &calibWidgetKey : channelCalibWidgets->value(configWidgetKey)->keys()){
-         channelCalibWidgets->value(configWidgetKey)->value(calibWidgetKey)->saveParameters();
-      }
+      //for(const QString &calibWidgetKey : channelCalibWidgets->value(configWidgetKey)->keys()){
+      //channelCalibWidgets->value(configWidgetKey)->value(calibWidgetKey)->saveParameters();
+      //}
    }
 }
 
@@ -608,42 +614,4 @@ void AF4ChannelConfigurationWidget::writeSettings() const
       int numberOfCalibrations = channelCalibWidgets->value(channelName)->count();
       settings.setValue(tr("channels/%1/numberOfCalibrations").arg(i), numberOfCalibrations);
    }
-}
-
-QString AF4ChannelConfigurationWidget::chopStringsQuotMarksToOne(QString string)
-{
-   QChar compChar = QChar('\"');
-   uint stringLength = string.length();
-   if(stringLength < 5)
-      return QString("");
-   while(string.at(1) == compChar){
-      string.remove(0, 1);
-   }
-   stringLength = string.length();
-   while(string.at(stringLength - 2) == compChar){
-      string.remove(stringLength - 1, 1);
-      stringLength = string.length();
-   }
-   stringLength = string.length();
-   if(string.at(0) != compChar) string.prepend(compChar);
-   if(string.at(stringLength - 1) != compChar) string.append((compChar));
-   return string;
-}
-
-QString AF4ChannelConfigurationWidget::chopStringsQuotMarksEntirely(QString string)
-{
-   QChar compChar = QChar('\"');
-   uint stringLength = string.length();
-   if(stringLength < 5)
-      return QString("");
-   while(string.at(0) == compChar){
-      string.remove(0, 1);
-   }
-   stringLength = string.length();
-   while(string.at(stringLength - 1) == compChar){
-      string.remove(stringLength - 1, 1);
-      stringLength = string.length();
-   }
-   stringLength = string.length();
-   return string;
 }

@@ -149,13 +149,14 @@ private:
    //QFrame calibrationFrame = nullptr;
    AF4CalibPlotWidget *plotWidget                                              = nullptr;
    QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets  = nullptr;   
-   AF4ChannelCalibWidget     *currentCalibWidget                                   = nullptr;
+   AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
    QMap<QString, QComboBox*> *allCalibSelections                               = nullptr;
-   QComboBox                 *currentCalibSelection                                            = nullptr;
-   QToolButton               *addCalibButton                                                 = nullptr;
+   QComboBox                 *currentCalibSelection                            = nullptr;
+   QToolButton               *addCalibButton                                   = nullptr;
    QToolButton *renameCalibButton                                              = nullptr;
    QToolButton *deleteCalibButton                                              = nullptr;
-   QPushButton *settingsWriter                                                 = nullptr;   
+   QSharedPointer<QPushButton> settingsWriter;//                                  = nullptr;
+
    /*!
     * \brief adaptCalibWidgetIds
     * \param channelName
@@ -249,20 +250,5 @@ private:
     */
    void writeSettings() const;
 
-   /*!
-    * \brief chopStringsQuotMarksToOne if a string has more than one Quotation mark, they are merged
-    * \example """this string"""   =>    "this string"
-    * \param string to be processed
-    * \return processed string
-    */
-   QString chopStringsQuotMarksToOne(QString string);
-
-   /*!
-    * \brief chopStringsQuotMarksEntirely removes quotation marks of strings
-    * \example """this string"""   =>    this string
-    * \param string to be processed
-    * \return processed string
-    */
-   QString chopStringsQuotMarksEntirely(QString string);
 };
 #endif // AF4CHANNELCONFIGUARTIONWIDGET_H
