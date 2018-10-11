@@ -266,8 +266,7 @@ void AF4SignalPlot::autoScaleY1Axis()
    maxY += 0.1 * fabs(maxY-minY);
    scaleY1RangeMin->blockSignals(true);
    scaleY1RangeMax->blockSignals(true);
-   bool ok;
-   scaleY1RangeMin->setValue(minY, &ok);
+   bool ok = scaleY1RangeMin->setValue(minY);
    if(!ok) AF4Log::logWarning(tr("Bug scaleY1RangeMin->setValue(minY, &ok);"));
    scaleY1RangeMax->setValue(maxY);
    if(!ok) AF4Log::logWarning(tr("Bug scaleY1RangeMax->setValue(minY, &ok);"));

@@ -15,7 +15,8 @@
 ***
 ***  \class     AF4Calculator "src/Core/af4calculator.h"
 ***  \author    Benedikt Häusele
-***  \brief     collection of general AF4 equations
+***  \brief     collection of general AF4-related equations
+***             and numerical solutions
 ***  \version   1.0
 ***  \date      2018
 ***  \copyright CC CC BY-NC-ND 4.0
@@ -55,9 +56,18 @@ protected:
     */
    inline double coth(double x)  const {  return (1.0 / std::tanh(x)); }
 
+
    /*!
-    * \brief isZero checks if a double x is Zero and return a corresponding bool
-    * \param x
+    * \brief  RToLambda implements a simple bisection method to convert
+    *         R to λ with the relationship R = 6λ( coth( 1/(2λ) - 2λ ) )
+    * \param  R
+    * \return λ
+    */
+   double RToLambda(const double R);
+
+   /*!
+    * \brief  isZero checks if a double x is Zero and return a corresponding bool
+    * \param  x
     * \return result
     */
    virtual bool isZero(double x) const;
@@ -66,19 +76,19 @@ protected:
     * \brief logText logging function
     * \param  message to be logged
     */
-   inline void logText(const std::string &message) const { AF4Log::logText(message); }
+   void logText(const std::string &message) const { AF4Log::logText(message); }
 
    /*!
     * \brief logWarning logging function
     * \param  message to be logged
     */
-   inline void logWarning(const std::string &message) const { AF4Log::logWarning(message); }
+   void logWarning(const std::string &message) const { AF4Log::logWarning(message); }
 
    /*!
     * \brief logError logging function
     * \param  message to be logged
     */
-   inline void logError(const std::string &message) const { AF4Log::logError(message); }
+   void logError(const std::string &message) const { AF4Log::logError(message); }
 
 private:
    AF4Calculator(const AF4Calculator& src) = delete;

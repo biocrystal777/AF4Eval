@@ -50,13 +50,7 @@ public:
      */
    double value() const { return valAsDouble(significand->value(), exponent->value());}
 
-   /*!
-    * \brief setValue
-    * \param value
-    * \param ok
-    * \param callID
-    */
-   void setValue(double value, bool *ok = nullptr);
+
 
    /*!
     * \brief setMaximum
@@ -108,6 +102,12 @@ public:
      **/
    double calcSignificand(double number, int *exponent = nullptr);
 
+   /*!
+     * \brief setReadOnly set the readOnly flag of both boxes
+     * \param r flag
+     */
+   void setReadOnly(bool r);
+
 signals:
 
    /*!
@@ -125,10 +125,12 @@ signals:
 public slots:
 
    /*!
-     * \brief setReadOnly set the readOnly flag of both boxes
-     * \param r flag
-     */
-   void setReadOnly(bool r);
+    * \brief setValue
+    * \param value
+    * \param ok
+    * \param callID
+    */
+   bool setValue(double value);
 
 protected:
 

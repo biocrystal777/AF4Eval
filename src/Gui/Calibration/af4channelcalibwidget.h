@@ -132,19 +132,19 @@ public:
 
 #define SET_MACRO(function, boxPtr) \
    bool function(double value){\
-         if(value < boxPtr->minimum()){\
-            boxPtr->setValue(boxPtr->minimum());\
-            return false;\
-         }\
-         else if (value > boxPtr->maximum()){\
-            boxPtr->setValue(boxPtr->maximum());\
-            return false;\
-         }\
-         else {\
-            boxPtr->setValue(value);\
-            return true;\
-         }\
-   };
+   if(value < boxPtr->minimum()){\
+   boxPtr->setValue(boxPtr->minimum());\
+   return false;\
+}\
+   else if (value > boxPtr->maximum()){\
+   boxPtr->setValue(boxPtr->maximum());\
+   return false;\
+}\
+   else {\
+   boxPtr->setValue(value);\
+   return true;\
+}\
+};
    /*!
     * \brief setDiffCoefficient set value of the diffusion Coefficient
     * \return bool if value could be set
@@ -196,7 +196,13 @@ public:
 
    public slots:
       void saveSettings();
+   /*!
+    * \brief adaptEnablingStatus Activates/Deactivatees according
+    * \param
+    * \todo NOT IMPLEMENTED DETAILS, BUT STRUCTURE ONLY; ALREADY CONNECTED;
+    */
    void adaptEnablingStatus(CalibModes m);
+
 private slots:
    void callDiffCoeffDialog();
 
@@ -214,9 +220,9 @@ private:
    QDoubleSpinBox *elutionFlow                 = nullptr;
    QDoubleSpinBox *temperature                 = nullptr;
    QDoubleSpinBox *relFocusPoint               = nullptr;
-   QSharedPointer<QDoubleSpinBox> leftOffsetTime;     //            = nullptr;
-   QSharedPointer<QDoubleSpinBox> elutionTime;        //            = nullptr;
-   QSharedPointer<QDoubleSpinBox> voidPeakTime;       //            = nullptr;
+   QSharedPointer<QDoubleSpinBox> leftOffsetTime;
+   QSharedPointer<QDoubleSpinBox> elutionTime;
+   QSharedPointer<QDoubleSpinBox> voidPeakTime;
    AF4SciNotSpinBox *diffCoefficient           = nullptr;
    QToolButton      *diffCoeffCalcButton       = nullptr;
    AF4StokesEinsteinCalculatorWidget *diffCoeffCalcWidget = nullptr;
@@ -255,11 +261,9 @@ private:
 
 /*! ***************************************************************************************
 ***
-***  \class     AF4ChannelCalibWidget "src/Gui/Calibration/af4channelcalibwidget.h"
-***  \brief     AF4ChannelCalibWidget enables input of channel dimensions
-***  \details   The AF4ChannelCalibWidget contains the physical dimensions of the AF4 channel
-***             and enables the input via QDoublespinboxes.
-***             Each calibration has its own widget
+***  \class     AF4InnerCalibrationFrame "src/Gui/Calibration/af4channelcalibwidget.h"
+***  \brief     AF4InnerCalibrationFrame
+***  \details
 ***  \author    Benedikt Häusele
 ***  \version   1.1
 ***  \date      2018-08-31
@@ -280,96 +284,119 @@ public:
    ~AF4InnerCalibrationFrame();
 
    /*!
+    * \brief getUncertRange
+    * \return
+    */
+   double getUncertRange() const { return uncertRange->value(); }
+   /*!
+    * \brief getUncertGridSize
+    * \return
+    */
+   uint   getUncertGridSize() const{ return static_cast<uint>(uncertGrid->value()); }
+
+   /*!
    * \brief getDiffCoefficient returns the channel width shown
    *        in the corresponding FFFTwoBoxWidget
    * \return channel width
    */
-  double getChannelWidth() const { return channelWidth->value(); }
+   double getChannelWidth() const { return channelWidth->value(); }
 
-  /*!
+   /*!
+    * \brief getChannelWidthGeo
+    * \return
+    */
+   double getChannelWidthGeo() const { return channelWidthGeo->value(); }
+
+   /*!
+    * \brief getChannelWidthHydro
+    * \return
+    */
+   double getChannelWidthHydro() const { return channelWidthHydro->value(); }
+
+   /*!
    * \brief getDiffCoefficient returns the channel width shown
    *        in the corresponding FFFTwoBoxWidget
    * \return hydrodynVolume
    */
-  double getClassicalVolume() const { return classicalVolume->value(); }
+   double getClassicalVolume() const { return classicalVolume->value(); }
 
-  /*!
+   /*!
    * \brief getDiffCoefficient returns the channel width shown
    *        in the corresponding FFFTwoBoxWidget
    * \return hydrodynVolume
    */
-  double getHydrodynVolume() const { return hydrodynVolume->value(); }
+   double getHydrodynVolume() const { return hydrodynVolume->value(); }
 
-  /*!
+   /*!
    * \brief getGeometVolume returns the channel width shown
    *        in the corresponding FFFTwoBoxWidget
    * \return geometVolume
    */
-  double getGeometVolume() const { return geometVolume->value(); }
+   double getGeometVolume() const { return geometVolume->value(); }
 
-  /*!
+   /*!
    * \brief getChannelDimsFromCalib
    * \return
    */
-  ChannelDimsFromCalib getChannelDimsFromCalib() const;
+   ChannelDimsFromCalib getChannelDimsFromCalib() const;
 
 #define SET_MACRO(function, boxPtr) \
    bool function(double value){\
-         if(value < boxPtr->minimum()){\
-            boxPtr->setValue(boxPtr->minimum());\
-            return false;\
-         }\
-         else if (value > boxPtr->maximum()){\
-            boxPtr->setValue(boxPtr->maximum());\
-            return false;\
-         }\
-         else {\
-            boxPtr->setValue(value);\
-            return true;\
-         }\
-   };
+   if(value < boxPtr->minimum()){\
+   boxPtr->setValue(boxPtr->minimum());\
+   return false;\
+}\
+   else if (value > boxPtr->maximum()){\
+   boxPtr->setValue(boxPtr->maximum());\
+   return false;\
+}\
+   else {\
+   boxPtr->setValue(value);\
+   return true;\
+}\
+};
 
-  /*!
+   /*!
    * \brief hydrodynVolume set value of the channelWidth
    * \return bool if value could be set
    */
-  SET_MACRO(setClassicalVolume, classicalVolume)
+   SET_MACRO(setClassicalVolume, classicalVolume)
 
    /*!
     * \brief hydrodynVolume set value of the channelWidth
     * \return bool if value could be set
     */
-  SET_MACRO(setHydrodynVolume, hydrodynVolume)
+   SET_MACRO(setHydrodynVolume, hydrodynVolume)
 
-  /*!
+   /*!
     * \brief hydrodynVolume set value of the channelWidth
     * \return bool if value could be set
     */
-  SET_MACRO(setGeometVolume, geometVolume)
+   SET_MACRO(setGeometVolume, geometVolume)
 
 #undef SET_MACRO
    /*!
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
     */
-  void setChannelWidth(double value) { channelWidth->setValue(value); }
-  /*!
+   void setChannelWidth(double value) { channelWidth->setValue(value); }
+   /*!
    * \brief setChannelWidthGeo
    * \param value
    */
-  void setChannelWidthGeo(double value) { channelWidthGeo->setValue(value); }
-  /*!
+   void setChannelWidthGeo(double value) { channelWidthGeo->setValue(value); }
+   /*!
    * \brief setChannelWidthHydro
    * \param value
    */
-  void setChannelWidthHydro(double value) { channelWidthHydro->setValue(value); }
+   void setChannelWidthHydro(double value) { channelWidthHydro->setValue(value); }
 
 public slots:
-  void saveSettings();
+   void saveSettings();
 
 signals:
-  void calibrateChannelCalled();
-  void calibModeSettingsChanged(CalibModes m);
+   void calibrateChannelCalled();
+   void calibModeSettingsChanged(CalibModes m);
 
 private:
    void loadSettings();
@@ -379,12 +406,17 @@ private:
    QString channelName;
    QString calibName;
 
+   QCheckBox      *checkUncertainties = nullptr;
+   QwtTextLabel   *uncertRangeLabel   = nullptr;
+   QDoubleSpinBox *uncertRange        = nullptr;
+   QwtTextLabel   *uncertGridLabel    = nullptr;
+   QSpinBox       *uncertGrid         = nullptr;
 
    QGridLayout    *lay               = nullptr;
+   QPushButton    *calibButton       = nullptr;
    QCheckBox      *classicMode       = nullptr;
    QCheckBox      *geoMode           = nullptr;
    QCheckBox      *hydMode           = nullptr;
-   QPushButton    *calibButton       = nullptr;
 
    QwtTextLabel *channelWidthLabel      = nullptr;
    QwtTextLabel *channelWidthHydroLabel = nullptr;
@@ -449,7 +481,7 @@ public:
     */
    ~AF4ChannelCalibWidget();
 
-    /*!
+   /*!
     * \brief getDiffCoefficient returns the channel width shown
     *        in the corresponding FFFTwoBoxWidget
     * \return channel width
@@ -526,19 +558,19 @@ public:
 
 #define SET_MACRO(function, boxPtr) \
    bool function(double value){\
-         if(value < boxPtr->minimum()){\
-            boxPtr->setValue(boxPtr->minimum());\
-            return false;\
-         }\
-         else if (value > boxPtr->maximum()){\
-            boxPtr->setValue(boxPtr->maximum());\
-            return false;\
-         }\
-         else {\
-            boxPtr->setValue(value);\
-            return true;\
-         }\
-   };   
+   if(value < boxPtr->minimum()){\
+   boxPtr->setValue(boxPtr->minimum());\
+   return false;\
+}\
+   else if (value > boxPtr->maximum()){\
+   boxPtr->setValue(boxPtr->maximum());\
+   return false;\
+}\
+   else {\
+   boxPtr->setValue(value);\
+   return true;\
+}\
+};
 
 
 
@@ -565,7 +597,7 @@ public:
     * \brief setInputFileName set the inputFileName
     * \return bool if value could be set
     **/
-   bool setInputFileName(QString value, bool quoted = false);
+   bool setInputFileName(QString path, bool quoted = false);
 
    /*!
     * \brief setDateDescr

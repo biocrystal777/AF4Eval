@@ -13,12 +13,12 @@
 /*! **********************************************************************************************
 ***
 ***  \class     AF4StokesEinsteinCalculatorWidget "src/Gui/Calibration/af4channeldimswidget.h"
-***  \brief     AF4StokesEinsteinCalculatorWidget Small GUI for quick estimations of Dvia classical
-***                                               Stokes Einstein equation
+***  \brief     AF4StokesEinsteinCalculatorWidget Small GUI for quick estimations of D via classical
+***                                               Stokes Einstein equation for calibration purposes
 ***  \author    Benedikt Häusele
-***  \version   1.0
-***  \date      2018-08-31
-***  \copyright CC CC BY-NC-ND 4.0
+***  \version   1.1
+***  \date      2018-10-09
+***  \copyright LGPL
 ***
 *************************************************************************************************/
 
@@ -36,14 +36,20 @@ public:
     * \brief
     */
    ~AF4StokesEinsteinCalculatorWidget();
+
+signals:
+
+   void newDiffCoeff(double D);
+
+
+private slots:
+
+   /*!
+    * \brief reCalculate with D with Stokes-Einstein equation
+    */
+   void reCalculate();
+
 private:
-
-   QGridLayout *lay              = nullptr;
-   QDoubleSpinBox *stokesRad     = nullptr;
-   QDoubleSpinBox *temperature   = nullptr;
-   QDoubleSpinBox *viscosity     = nullptr;
-   QLineEdit *diffCoefficient    = nullptr;
-
    /*!
     * \brief loadParameters
     */
@@ -54,16 +60,20 @@ private:
     */
    void saveParameters();
 
+   QGridLayout      *lay             = nullptr;
+   QDoubleSpinBox   *stokesRad       = nullptr;
+   QDoubleSpinBox   *temperature     = nullptr;
+   QDoubleSpinBox   *viscosity       = nullptr;
+   QFrame           *dFrame          = nullptr;
+   QHBoxLayout      *frameLay        = nullptr;
+   AF4SciNotSpinBox *diffCoefficient = nullptr;
+   QPushButton *accepter             = nullptr;
+   QPushButton *rejecter             = nullptr;
+
    AF4StokesEinsteinCalculatorWidget(const AF4StokesEinsteinCalculatorWidget& src) = delete;
    AF4StokesEinsteinCalculatorWidget& operator= (AF4StokesEinsteinCalculatorWidget& src) = delete;
    AF4StokesEinsteinCalculatorWidget(AF4StokesEinsteinCalculatorWidget&& src) = delete;
    AF4StokesEinsteinCalculatorWidget& operator= (AF4StokesEinsteinCalculatorWidget&& src) = delete;
-private slots:
-
-   /*!
-    * \brief reCalculate
-    */
-   void reCalculate();
 };
 
 #endif // AF4STOKESEINSTEINCALCULATORWIDGET_H

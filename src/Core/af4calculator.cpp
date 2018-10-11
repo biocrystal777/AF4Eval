@@ -12,6 +12,30 @@ uint AF4Calculator::indexFromOrderedVecD(const vecD &v, const double target) con
       return index-1;
 }
 
+double AF4Calculator::RToLambda(const double R)
+{
+   const double lambdaMin{1e-8};
+   const double lambdaMax{1e2};
+   double lambda = (lambdaMin + lambdaMax) * 0.5;
+   double delta  = (lambdaMax - lambdaMin) * 0.25;
+   double lambdaOld = lambda;
+   for(uint i = 0; i < 50; ++i){
+      // calculate test variable with test λ
+      double RTest = coth( 1.0 / (2.0 * lambda ) );
+      RTest -= 2.0 * lambda;
+      RTest *= 6.0 * lambda;
+      // adapt with test λ
+      if      (RTest > R) lambda += delta;
+      else if (RTest < R) lambda += delta;
+      else                break;
+      // terminate if lambda doesn't change anymore
+      if(lambda == lambdaOld)  break;
+      else lambdaOld = lambda;
+      delta *= 0.5;
+   }
+   return lambda;
+}
+
 bool AF4Calculator::isZero(double x) const
 {
    if ((x < 0.0) || (x > 0.0))

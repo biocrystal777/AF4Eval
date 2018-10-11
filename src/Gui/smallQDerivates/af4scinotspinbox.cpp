@@ -11,8 +11,7 @@ AF4SciNotSpinBox::AF4SciNotSpinBox(const bool signedBox, QWidget *parent) :
 {
    layout = new QHBoxLayout(this);
    significand = new QDoubleSpinBox(this);
-   significand->setKeyboardTracking(false);
-
+   significand->setKeyboardTracking(false);   
 
    connect(significand, qOverload<double>(&QDoubleSpinBox::valueChanged),
            [this] () {
@@ -48,21 +47,22 @@ AF4SciNotSpinBox::AF4SciNotSpinBox(const bool signedBox, QWidget *parent) :
    this->setFixedSize(this->maximumSize());
 }
 
-void AF4SciNotSpinBox::setValue(double value, bool *ok)
+bool AF4SciNotSpinBox::setValue(double value)
 {
    const double minVal = valAsDouble(minSig, minExp);
    const double maxVal = valAsDouble(maxSig, maxExp);
+   bool ok{false};
    // if(ok) *ok = true;
    if(value < minVal){
       value = minVal;
-      if(ok) *ok = false;
+      ok = false;
    }
    else if(value > maxVal) {
       value = maxVal;
-      if(ok) *ok = false;
+      ok = false;
    }
    else
-      if(ok) *ok = true;
+      ok = true;
 
    int exp;
    double signif = AF4SciNotSpinBox::calcSignificand(value, &exp);
@@ -70,6 +70,8 @@ void AF4SciNotSpinBox::setValue(double value, bool *ok)
    adjustSpinBoxLimits();
    emit valueChanged();
    emit valueChanged(this->value());
+
+   return ok;
 }
 
 void AF4SciNotSpinBox::setMaximum(double value, bool *ok)

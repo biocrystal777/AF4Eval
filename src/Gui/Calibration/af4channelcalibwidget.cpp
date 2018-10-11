@@ -15,36 +15,37 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    widgetLayout->addWidget(widgetFrame, 0, 0, 1, 1);
    frameLayout = new QGridLayout(widgetFrame);
 
-   frameLayout->addWidget(new QLabel("<b>Calibration File</b>", this), 0, 5, 1, 3, Qt::AlignBottom);
+   frameLayout->addWidget(new QLabel("<b>Calibration File</b>", this), 0, 1, 1, 3, Qt::AlignBottom);
    inputFileChooser = new QToolButton(this);
    inputFileChooser->setText("..");
    inputFileChooser->setToolTip("Browse Files");
    connect(inputFileChooser, &QToolButton::clicked, this, &AF4ChannelCalibWidget::chooseInputFile);
-   frameLayout->addWidget(inputFileChooser, 1, 4, 1, 1);
+   frameLayout->addWidget(inputFileChooser, 1, 0, 1, 1, Qt::AlignRight);
    inputFileName = new QLineEdit(this);
 
-   frameLayout->addWidget(inputFileName, 1, 5, 1, 9);
+   frameLayout->addWidget(inputFileName, 1, 1, 1, 14);
 
    QLabel *labelPtr = new QLabel(tr("<b>Notes</b>"), this);
-   labelPtr->setMaximumHeight(50);
-   frameLayout->addWidget(labelPtr, 0, 1, Qt::AlignCenter);
+   //labelPtr->setMaximumHeight(50);
+   frameLayout->addWidget(labelPtr, 2, 1, Qt::AlignCenter);
 
-   frameLayout->addWidget(new QLabel("Date:", this), 2, 0);
+   frameLayout->addWidget(new QLabel("Date:", this),   3, 0);
    dateDescr = new QLineEdit(this);
-   frameLayout->addWidget(dateDescr, 2, 1, 1, 3);
+   frameLayout->addWidget(dateDescr,                   3, 1, 1, 3);
 
-   frameLayout->addWidget(new QLabel("Sample:", this), 3, 0);
+   frameLayout->addWidget(new QLabel("Sample:", this), 4, 0);
    sampleDescr = new QLineEdit(this);
-   frameLayout->addWidget(sampleDescr, 3, 1, 1, 3);
+   frameLayout->addWidget(sampleDescr,                 4, 1, 1, 3);
 
-   frameLayout->addWidget(new QLabel("Buffer:", this), 4, 0);
+   frameLayout->addWidget(new QLabel("Buffer:", this), 5, 0);
    bufferDescr = new QLineEdit(this);
-   frameLayout->addWidget(bufferDescr, 4, 1, 1, 3);
+   frameLayout->addWidget(bufferDescr,                 5, 1, 1, 3);
 
    frameLayout->addWidget(new QLabel("Additional Notes:", this), 7, 0, Qt::AlignTop);
    notesDescr = new QTextEdit(this);
    frameLayout->addWidget(notesDescr, 8, 0, 1, 14);
 
+   loadSettings();
    //-
    // Second column
    //--
@@ -59,7 +60,6 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
     *************************************/
    calibParFrame = new AF4CalibParametersFrame(channelId, calibId, channelName, calibName, saveButton, this);
    frameLayout->addWidget(calibParFrame, 3, 9, 3, 4);
-
    // connect saveButton
    connect(saveButton.data(), &QPushButton::clicked, this, &AF4ChannelCalibWidget::saveParameters);
 }
@@ -88,9 +88,11 @@ void AF4ChannelCalibWidget::setChannelWidth(double value)
 
 bool AF4ChannelCalibWidget::setInputFileName(QString path, bool quoted)
 {
-   bool ok(true);
    QString testPath = path;
+   if(testPath.isEmpty()) return true;
+   bool ok(true);
    chopStringsQuotMarksEntirely(testPath);
+
    if(!QFile::exists(testPath)){
       path = QDir::homePath();
       path.prepend('"');
@@ -163,24 +165,18 @@ void AF4ChannelCalibWidget::loadSettings()
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
    //double calibValue;
-   QString calibStringValue;
+   QString calibString;
    //bool ok;
-   calibStringValue = settings.value(tr("channels/%1/calib/%2/dateDescr").arg(channelId).arg(calibId), "").toString();
-
-
-   calibStringValue = settings.value(tr("channels/%1/calib/%2/bufferDescr").arg(channelId).arg(calibId), "").toString();
-
-
-   calibStringValue = settings.value(tr("channels/%1/calib/%2/sampleDescr").arg(channelId).arg(calibId), "").toString();
-
-
-   calibStringValue = settings.value(tr("channels/%1/calib/%2/notesDescr").arg(channelId).arg(calibId), "").toString();
-
-
-   calibStringValue = settings.value(tr("channels/%1/calib/%2/calibFileName").arg(channelId).arg(calibId), "").toString();
-   if(!(this->setInputFileName(calibStringValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value \"calib FileName\" in Constructor."));
-
+   calibString = settings.value(tr("channels/%1/calib/%2/dateDescr").arg(channelId).arg(calibId), "").toString();
+   dateDescr->setText(calibString);
+   calibString = settings.value(tr("channels/%1/calib/%2/bufferDescr").arg(channelId).arg(calibId), "").toString();
+   bufferDescr->setText(calibString);
+   calibString = settings.value(tr("channels/%1/calib/%2/sampleDescr").arg(channelId).arg(calibId), "").toString();
+   sampleDescr->setText(calibString);
+   calibString = settings.value(tr("channels/%1/calib/%2/notesDescr").arg(channelId).arg(calibId), "").toString();
+   notesDescr->setText(calibString);
+   calibString = settings.value(tr("channels/%1/calib/%2/calibFileName").arg(channelId).arg(calibId), "").toString();
+   if(!(this->setInputFileName(calibString))) AF4Log::logWarning(tr("Error while setting calib Value \"calib FileName\" in Constructor."));
 }
 
 void AF4ChannelCalibWidget::saveParameters()
@@ -192,7 +188,7 @@ void AF4ChannelCalibWidget::saveParameters()
    settings.setValue(tr("channels/%1/calib/%2/bufferDescr").arg(channelId).arg(calibId), QVariant(getBufferDescr()));
    settings.setValue(tr("channels/%1/calib/%2/dateDescr").arg(channelId).arg(calibId), QVariant(getDateDescr()));
    settings.setValue(tr("channels/%1/calib/%2/notesDescr").arg(channelId).arg(calibId), QVariant(getNotesDescr()));
-   settings.setValue(tr("channels/%1/calib/%2/calibFileName").arg(channelId).arg(calibId), QVariant(this->getInputFilePath(true)));
+   settings.setValue(tr("channels/%1/calib/%2/calibFileName").arg(channelId).arg(calibId), QVariant(this->getInputFilePath(false)));
 }
 
 QString AF4ChannelCalibWidget::getInputFilePath(bool quoted)
@@ -286,94 +282,136 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    this->setFrameStyle(0x1011);
    lay = new QGridLayout(this);
 
+   QString tip("Relative uncertainty consideration within grid\n\
+               (from -u to +u) around value with \"|grid|\"\n\
+               points on each side. Warning: may slow down computation\n\
+               significantly!"
+               );
+   checkUncertainties = new QCheckBox(this);
+   checkUncertainties->setChecked(false);
+   checkUncertainties->setToolTip(tip);
+
+   uncertRangeLabel = new QwtTextLabel(this);
+   uncertRangeLabel->setText(QString("u(X) / %"), QwtText::PlainText);
+   uncertRangeLabel->setToolTip(tip);
+
+   uncertRange = new QDoubleSpinBox(this);
+   uncertRange->setMinimum(0.1);
+   uncertRange->setMaximum(99.9);
+   uncertRange->setSingleStep(0.1);
+   uncertRange->setToolTip(tip);
+
+   uncertGridLabel = new QwtTextLabel(this);
+   uncertGridLabel->setText(QString("|grid|"), QwtText::PlainText);
+   uncertGridLabel->setToolTip(tip);
+
+   uncertGrid = new QSpinBox(this);
+   uncertGrid->setMinimum(1);
+   uncertGrid->setMaximum(500);
+
+   lay->addWidget(checkUncertainties, 0, 0, 1, 1, Qt::AlignRight);
+   lay->addWidget(uncertRangeLabel,   0, 1, 1, 1, Qt::AlignRight);
+   lay->addWidget(uncertRange,        0, 2, 1, 1, Qt::AlignLeft);
+   lay->addWidget(uncertGridLabel,    0, 3, 1, 1, Qt::AlignRight);
+   lay->addWidget(uncertGrid,         0, 4, 1, 1, Qt::AlignLeft);
+
+   auto enableUncertBlock = [this](bool b){
+      uncertRangeLabel->setEnabled(b);
+      uncertRange     ->setEnabled(b);
+      uncertGridLabel ->setEnabled(b);
+      uncertGrid      ->setEnabled(b);
+   };
+   enableUncertBlock(false);
+   connect(checkUncertainties, &QCheckBox::toggled, enableUncertBlock);
+
    calibButton = new QPushButton("Calibrate", this);
    connect(calibButton, &QToolButton::clicked, this, &AF4InnerCalibrationFrame::calibrateChannelCalled);
-   lay->addWidget(calibButton, 0, 0, 1, 5);
-
-   auto adaptReadiness = [this](){
-      if(classicMode->isChecked() || geoMode->isChecked() || hydMode->isChecked()) calibButton->setEnabled(true);
-      else                                                                             calibButton->setEnabled(false);
-   };
-
-   auto callCalibModeSettingsChanged = [this](){
-      emit calibModeSettingsChanged(CalibModes{classicMode->isChecked(), geoMode->isChecked(), hydMode->isChecked() });
-   };
+   lay->addWidget(calibButton, 1, 0, 1, 5);
 
    classicMode = new QCheckBox(this);
    classicMode->setChecked(true);
-   lay->addWidget(classicMode, 1, 0);
+   lay->addWidget(classicMode, 2, 0);
    geoMode = new QCheckBox(this);
    geoMode->setChecked(true);
-   lay->addWidget(geoMode, 2, 0);
+   lay->addWidget(geoMode, 3, 0);
    hydMode = new QCheckBox(this);
    hydMode->setChecked(true);
-   lay->addWidget(hydMode, 3, 0);
+   lay->addWidget(hydMode, 4, 0);
 
    channelWidthLabel = new QwtTextLabel(this);
    //channelWidthLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
    channelWidthLabel->setText(QString("w_cla / cm"), QwtText::PlainText);
    channelWidthLabel->setToolTip("Channel Width");
-   lay->addWidget(channelWidthLabel, 1, 1, Qt::AlignRight);
+   lay->addWidget(channelWidthLabel, 2, 1, Qt::AlignRight);
    channelWidth = new QDoubleSpinBox( this);
    //channelWidth->setMinimum(1.0, -4);
    //channelWidth->setMaximum(9.9999, -1);
    channelWidth->setMinimum(1.0e-4);
    channelWidth->setMaximum(9.9999e-1);
-   lay->addWidget(channelWidth, 1, 2, Qt::AlignLeft);
+   lay->addWidget(channelWidth, 2, 2, Qt::AlignLeft);
 
    channelWidthGeoLabel = new QwtTextLabel(this);
    //channelWidthGeoLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
    channelWidthGeoLabel->setText(QString("w_Hyd / cm"), QwtText::PlainText);
    channelWidthGeoLabel->setToolTip("Channel Width");
-   lay->addWidget(channelWidthGeoLabel, 2, 1, Qt::AlignRight);
+   lay->addWidget(channelWidthGeoLabel, 3, 1, Qt::AlignRight);
    channelWidthGeo = new QDoubleSpinBox(this);
    //channelWidth->setMinimum(1.0, -4);
    //channelWidth->setMaximum(9.9999, -1);
    channelWidthGeo->setMinimum(1.0e-4);
    channelWidthGeo->setMaximum(9.9999e-1);
-   lay->addWidget(channelWidthGeo, 2, 2, Qt::AlignLeft);
+   lay->addWidget(channelWidthGeo, 3, 2, Qt::AlignLeft);
 
    channelWidthHydroLabel = new QwtTextLabel(this);
    //channelWidthHydroLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
    channelWidthHydroLabel->setText(QString("w_Geo / cm"), QwtText::PlainText);
    channelWidthHydroLabel->setToolTip("Channel Width");
-   lay->addWidget(channelWidthHydroLabel, 3, 1, Qt::AlignRight);
+   lay->addWidget(channelWidthHydroLabel, 4, 1, Qt::AlignRight);
    channelWidthHydro = new QDoubleSpinBox(this);
    //channelWidth->setMinimum(1.0, -4);
    //channelWidth->setMaximum(9.9999, -1);
    channelWidthHydro->setMinimum(1.0e-4);
    channelWidthHydro->setMaximum(9.9999e-1);
-   lay->addWidget(channelWidthHydro, 3, 2, Qt::AlignLeft);
+   lay->addWidget(channelWidthHydro, 4, 2, Qt::AlignLeft);
 
    classicalVolumeLabel = new QwtTextLabel(this);
    //classicalVolumeLabel->setText(QString("<math><msup><mi>V</mi><mtext>0</mtext></msup><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
    classicalVolumeLabel->setText(QString("V_cla / ml "), QwtText::PlainText);
    classicalVolumeLabel->setToolTip("Channel Volume");
-   lay->addWidget(classicalVolumeLabel, 1, 3, Qt::AlignLeft);
+   lay->addWidget(classicalVolumeLabel, 2, 3, Qt::AlignLeft);
    classicalVolume = new QDoubleSpinBox(this);
    classicalVolume->setMinimum(1.0e-2);
    classicalVolume->setMaximum(9.9999e2);
-   lay->addWidget(classicalVolume, 1, 4, Qt::AlignLeft);
+   lay->addWidget(classicalVolume, 2, 4, Qt::AlignLeft);
 
    geometVolumeLabel = new QwtTextLabel(this);
    //geometVolumeLabel->setText(QString("<math><msup><mi>V</mi><mtext>0</mtext></msup><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
    geometVolumeLabel->setText(QString("V_Geo / ml "), QwtText::PlainText);
    geometVolumeLabel->setToolTip("Channel Volume");
-   lay->addWidget(geometVolumeLabel, 2, 3, Qt::AlignLeft);
+   lay->addWidget(geometVolumeLabel, 3, 3, Qt::AlignLeft);
    geometVolume = new QDoubleSpinBox(this);
    geometVolume->setMinimum(1.0e-2);
    geometVolume->setMaximum(9.9999e2);
-   lay->addWidget(geometVolume, 2, 4, Qt::AlignLeft);
+   lay->addWidget(geometVolume, 3, 4, Qt::AlignLeft);
 
    hydrodynVolumeLabel = new QwtTextLabel(this);
    //hydrodynVolumeLabel->setText(QString("<math><msup><mi>V</mi><mtext>0</mtext></msup><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
    hydrodynVolumeLabel->setText(QString("V_hyd / ml "), QwtText::PlainText);
    hydrodynVolumeLabel->setToolTip("Channel Volume");
-   lay->addWidget(hydrodynVolumeLabel, 3, 3, Qt::AlignLeft);
+   lay->addWidget(hydrodynVolumeLabel, 4, 3, Qt::AlignLeft);
    hydrodynVolume = new QDoubleSpinBox(this);
    hydrodynVolume->setMinimum(1.0e-2);
    hydrodynVolume->setMaximum(9.9999e2);
-   lay->addWidget(hydrodynVolume, 3, 4, Qt::AlignLeft);
+   lay->addWidget(hydrodynVolume, 4, 4, Qt::AlignLeft);
+
+   auto adaptReadiness = [this](){
+      if(classicMode->isChecked() || geoMode->isChecked() || hydMode->isChecked()) calibButton->setEnabled(true);
+      else                                                                         calibButton->setEnabled(false);
+   };
+
+   auto callCalibModeSettingsChanged = [this](){
+      emit calibModeSettingsChanged(CalibModes{classicMode->isChecked(), geoMode->isChecked(), hydMode->isChecked() });
+   };
 
    connect(classicMode, &QCheckBox::toggled, [this](bool enable){
       channelWidth->        setEnabled(enable);
@@ -404,9 +442,6 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
 
    loadSettings();
    connect(saveButton.data(), &QPushButton::clicked, this, &AF4InnerCalibrationFrame::saveSettings);
-
-
-
 }
 
 AF4InnerCalibrationFrame::~AF4InnerCalibrationFrame()
@@ -417,8 +452,12 @@ AF4InnerCalibrationFrame::~AF4InnerCalibrationFrame()
 void AF4InnerCalibrationFrame::saveSettings()
 {
    QSettings settings("AgCoelfen", "FFFEval");
-   settings.setIniCodec("UTF-8");
-   settings.setValue(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId),    QVariant(getChannelWidth()));
+   settings.setIniCodec("UTF-8");   
+   settings.setValue(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId),      QVariant(getUncertRange()));
+   settings.setValue(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId),      QVariant(getUncertGridSize()));
+   settings.setValue(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId),      QVariant(getChannelWidth()));
+   settings.setValue(tr("channels/%1/calib/%2/channelWidthGeo").arg(channelId).arg(calibId),   QVariant(getChannelWidthGeo()));
+   settings.setValue(tr("channels/%1/calib/%2/channelWidthHydro").arg(channelId).arg(calibId), QVariant(getChannelWidthHydro()));
    settings.setValue(tr("channels/%1/calib/%2/classicalVolume").arg(channelId).arg(calibId), QVariant(getClassicalVolume()));
    settings.setValue(tr("channels/%1/calib/%2/hydrodynVolume").arg(channelId).arg(calibId),  QVariant(getHydrodynVolume()));
    settings.setValue(tr("channels/%1/calib/%2/geometVolume").arg(channelId).arg(calibId),    QVariant(getGeometVolume()));
@@ -439,6 +478,14 @@ void AF4InnerCalibrationFrame::loadSettings()
    .arg(keyName).arg(defaultValueName)); \
 }\
 };
+   calibValue = settings.value(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId), "").toDouble(&ok);
+   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../uncertRange", "0.0e0");
+   this->uncertRange->setValue(calibValue);
+
+   int calibValInt = settings.value(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId), "").toInt(&ok);
+   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../uncertGridSize", "0.0e0");
+   this->uncertGrid->setValue(calibValInt);
+
    calibValue = settings.value(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidth", "0.0e0");
    this->setChannelWidth(calibValue);
@@ -448,7 +495,7 @@ void AF4InnerCalibrationFrame::loadSettings()
    this->setChannelWidthGeo(calibValue);
 
    calibValue = settings.value(tr("channels/%1/calib/%2/channelWidthHydro").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidthHydor", "0.0e0");
+   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidthHydro", "0.0e0");
    this->setChannelWidthHydro(calibValue);
       //AF4Log::logWarning(tr("Error while setting calib Value (channelWidth, %1, %2).")
       //                   .arg(channelName).arg(calibName));
@@ -511,8 +558,9 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
    QFrame(parent), channelId(channelId), calibId(calibId),
    channelName(channelName), calibName(calibName)
 {
-   lay = new QGridLayout(this);
 
+   lay = new QGridLayout(this);
+   this->setFrameStyle(0x1011);
    /**************************************
     *
     * first column
@@ -651,20 +699,18 @@ AF4CalibParametersFrame::~AF4CalibParametersFrame()
 
 void AF4CalibParametersFrame::callDiffCoeffDialog()
 {
-   if(diffCoeffCalcWidget){
-      delete diffCoeffCalcWidget; diffCoeffCalcWidget = nullptr;
-      return;
-   }
-   else {
+   if(!diffCoeffCalcWidget){
       diffCoeffCalcButton->setDown(true);
+      diffCoeffCalcButton->clearFocus();
       diffCoeffCalcWidget = new AF4StokesEinsteinCalculatorWidget(this);
+      connect(diffCoeffCalcWidget, &AF4StokesEinsteinCalculatorWidget::newDiffCoeff, diffCoefficient, &AF4SciNotSpinBox::setValue);
       diffCoeffCalcWidget->show();
-      diffCoeffCalcButton->setFocus();
-      connect(diffCoeffCalcWidget, &AF4StokesEinsteinCalculatorWidget::destroyed,
-              this, [this]() {
+
+      diffCoeffCalcWidget->setFocus();
+      connect(diffCoeffCalcWidget, &AF4StokesEinsteinCalculatorWidget::finished, this, [this]() {
          diffCoeffCalcButton->setDown(false);
-         diffCoeffCalcWidget = nullptr;
-      });
+         diffCoeffCalcWidget =  nullptr;
+      } );
    }
 }
 
