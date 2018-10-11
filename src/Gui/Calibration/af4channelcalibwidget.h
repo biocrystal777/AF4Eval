@@ -30,11 +30,13 @@ struct CtrlBoxRefs {
 };
 
 struct CalibModes {
-   const bool classical;
-   const bool geometric;
-   const bool hydrodynamic;
+   const bool   checkUncertainty;
+   const double uncertRange;
+   const uint   uncertGridSize;
+   const bool   classical;
+   const bool   geometric;
+   const bool   hydrodynamic;
 };
-
 
 /*! ***************************************************************************************
 ***
@@ -283,16 +285,8 @@ public:
                             QWidget *parent);
    ~AF4InnerCalibrationFrame();
 
-   /*!
-    * \brief getUncertRange
-    * \return
-    */
-   double getUncertRange() const { return uncertRange->value(); }
-   /*!
-    * \brief getUncertGridSize
-    * \return
-    */
-   uint   getUncertGridSize() const{ return static_cast<uint>(uncertGrid->value()); }
+
+   CalibModes getCalibModes() const;
 
    /*!
    * \brief getDiffCoefficient returns the channel width shown
@@ -339,6 +333,10 @@ public:
    * \return
    */
    ChannelDimsFromCalib getChannelDimsFromCalib() const;
+
+
+
+
 
 #define SET_MACRO(function, boxPtr) \
    bool function(double value){\
@@ -504,6 +502,10 @@ public:
     */
    //double getGeometVolume() const { return geometVolume->value(); }
    double getGeometVolume() const { return innerCalibFrame->getGeometVolume(); }
+
+
+
+   CalibModes getCalibModes() const{ return innerCalibFrame->getCalibModes(); }
 
    /*!
     * \brief getChannelDimsFromCalib

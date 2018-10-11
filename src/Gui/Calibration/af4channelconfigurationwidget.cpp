@@ -556,14 +556,28 @@ void AF4ChannelConfigurationWidget::switchCalibWidget(QString newWidgetKey)
    currentCalibWidget->show();
 }
 
+
+
 void AF4ChannelConfigurationWidget::calibrateChannnel()
 {
+   ChannelDims chDims  = currentChConfigWidget->getChannelDimensions();
+   ParametersForCalibration params = currentCalibWidget->getParametersForCalibration();
+   CalibModes cModes = currentCalibWidget->getCalibModes();
+   calibRealMeaurement(chDims, params, cModes);
+   if(cModes.checkUncertainty)
+      calibUncertaintyGrid(chDims, params, cModes);
+}
+
+
+
+
+void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims chDims, const ParametersForCalibration &params, const CalibModes &cModes)
+{
+
    // calculate omega (channel Width) by calibrator
    AF4Calibrator calibrator;
    //bool calibSuccess = calibrator.calibrate(currentCalibWidget->getAllCalibrationParameters()
-   bool calibSuccess = calibrator.calibrate(currentChConfigWidget->getChannelDimensions(),
-                                            currentCalibWidget->getParametersForCalibration());
-
+   bool calibSuccess = calibrator.calibrate(chDims, params);
    double newChWidth = calibrator.getChWidth();
    double newChVolume = calibrator.getHydrodynVolume();
    //double newGeometVolume = calibrator.getGeometVolume();
@@ -575,7 +589,21 @@ void AF4ChannelConfigurationWidget::calibrateChannnel()
    } else {
       AF4Log::logError(tr("Calibration could not be finished."));
    }
+
 }
+
+void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims chDims, const ParametersForCalibration &params, const CalibModes &cModes)
+{
+
+}
+
+void AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params)
+{
+
+
+}
+
+
 
 void AF4ChannelConfigurationWidget::saveParameters() const
 {
@@ -588,6 +616,24 @@ void AF4ChannelConfigurationWidget::saveParameters() const
       //}
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void AF4ChannelConfigurationWidget::adaptPlotData()
 {

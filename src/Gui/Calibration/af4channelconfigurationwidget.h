@@ -61,6 +61,7 @@ public:
       return channelCalibWidgets;
    }
 
+
    //\////////////////
    // channel Frame //
    //\////////////////
@@ -235,11 +236,32 @@ private slots:
     */
    void saveParameters() const;
 
-   //*************
-   // utilities **
-   //*************
+private:   
 
-private:
+   /*!
+    * \brief calibRealMeaurement calibrates the Channel with the given Parameters and sets the values
+    *                            to the widget
+    * \param chDims
+    * \param params
+    * \param cModes
+    */
+   void calibRealMeaurement(const ChannelDims chDims, const ParametersForCalibration &params, const CalibModes &cModes);
+
+   /*!
+    * \brief calibUncertaintyGrid iterates over the calibration grids
+    * \param chDims
+    * \param params
+    * \param cModes
+    */
+   void calibUncertaintyGrid(const ChannelDims chDims, const ParametersForCalibration &params, const CalibModes &cModes);
+
+   /*!
+    * \brief calibSingleParamSet conducts a calibration with the given Parameter set
+    * \param chDims
+    * \param params
+    */
+   void calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params);
+
    /*!
     * \brief connectCtrlWithPlotWidget
     */

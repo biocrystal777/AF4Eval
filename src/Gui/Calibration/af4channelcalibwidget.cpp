@@ -410,7 +410,7 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    };
 
    auto callCalibModeSettingsChanged = [this](){
-      emit calibModeSettingsChanged(CalibModes{classicMode->isChecked(), geoMode->isChecked(), hydMode->isChecked() });
+      emit calibModeSettingsChanged( this->getCalibModes() );
    };
 
    connect(classicMode, &QCheckBox::toggled, [this](bool enable){
@@ -449,12 +449,24 @@ AF4InnerCalibrationFrame::~AF4InnerCalibrationFrame()
    saveSettings();
 }
 
+CalibModes AF4InnerCalibrationFrame::getCalibModes() const
+{
+   return  CalibModes {
+      checkUncertainties->isChecked(),
+            uncertRange->value(),
+            static_cast<uint>(uncertGrid->value()),
+            classicMode->isChecked(),
+            geoMode->isChecked(),
+            hydMode->isChecked()
+   };
+}
+
 void AF4InnerCalibrationFrame::saveSettings()
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");   
-   settings.setValue(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId),      QVariant(getUncertRange()));
-   settings.setValue(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId),      QVariant(getUncertGridSize()));
+   settings.setValue(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId),      QVariant(uncertRange->value()));
+   settings.setValue(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId),      QVariant(uncertGrid->value()));
    settings.setValue(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId),      QVariant(getChannelWidth()));
    settings.setValue(tr("channels/%1/calib/%2/channelWidthGeo").arg(channelId).arg(calibId),   QVariant(getChannelWidthGeo()));
    settings.setValue(tr("channels/%1/calib/%2/channelWidthHydro").arg(channelId).arg(calibId), QVariant(getChannelWidthHydro()));

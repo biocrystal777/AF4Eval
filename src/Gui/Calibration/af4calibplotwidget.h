@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QDoubleSpinBox>
-#include "./af4signalplot.h"
+#include "../GeneralWidgets/af4signalplot.h"
 #include "../Core/af4csvparser.h"
 
 class AF4CalibPlotWidget final : public QWidget

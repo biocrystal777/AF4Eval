@@ -67,12 +67,12 @@ SOURCES += ./src/Core/main.cpp \
     ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.cpp \
     ./src/Gui/Calibration/af4channelconfigurationwidget.cpp \
     ./src/Gui/Calibration/af4channeldimswidget.cpp \
-    ./src/Gui/Calibration/af4channelcalibwidget.cpp \
-    ./src/Gui/Calibration/af4signalplot.cpp \
+    ./src/Gui/Calibration/af4channelcalibwidget.cpp \    
     ./src/Gui/DiffEvaluation/af4diffevaluationwidget.cpp \
     ./src/Gui/DiffEvaluation/af4expsettingsframe.cpp \
     ./src/Gui/GeneralWidgets/af4log.cpp \
     ./src/Gui/GeneralWidgets/af4fileinoutwidget.cpp \
+    ./src/Gui/GeneralWidgets/af4signalplot.cpp \
     ./src/Gui/smallQDerivates/af4scinotspinbox.cpp \
     ./src/Gui/LightScattering/af4assigndatadialog.cpp \
     ./src/Gui/LightScattering/af4peakparameterframe.cpp \
@@ -100,12 +100,12 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Gui/Calibration/af4channelcalibwidget.h \
     ./src/Gui/Calibration/af4channeldimswidget.h \
     ./src/Gui/Calibration/af4channelconfigurationwidget.h \
-    ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.h \
-    ./src/Gui/Calibration/af4signalplot.h \
+    ./src/Gui/Calibration/af4stokeseinsteincalculatorwidget.h \    
     ./src/Gui/DiffEvaluation/af4diffevaluationwidget.h \
     ./src/Gui/DiffEvaluation/af4expsettingsframe.h \
     ./src/Gui/GeneralWidgets/af4log.h \
     ./src/Gui/GeneralWidgets/af4fileinoutwidget.h \
+    ./src/Gui/GeneralWidgets/af4signalplot.h \
     ./src/Gui/LightScattering/af4assigndatadialog.h \
     ./src/Gui/LightScattering/af4peakparameterframe.h \
     ./src/Gui/LightScattering/af4slscalibrationframe.h \
