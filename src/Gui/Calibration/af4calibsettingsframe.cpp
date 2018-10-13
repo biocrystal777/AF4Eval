@@ -169,14 +169,14 @@ void AF4CalibSettingsFrame::updateCalibValues(QString calibKey)
 {
    currentCalibKey = calibKey;
    AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText())->value(calibKey);
-   channelWidth->setText(QString::number(calibWidget->getChannelWidth(), 'E'));
+   channelWidth->setText(QString::number(calibWidget->getClassicalChannelWidth(), 'E'));
    channelVolume->setText(QString::number(calibWidget->getHydrodynVolume(), 'E'));
 }
 
 void AF4CalibSettingsFrame::adaptCalibValues(QString calibKey)
 {
    AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText())->value(calibKey);
-   channelWidth->setText(QString::number(calibWidget->getChannelWidth(), 'E'));
+   channelWidth->setText(QString::number(calibWidget->getClassicalChannelWidth(), 'E'));
    channelVolume->setText(QString::number(calibWidget->getHydrodynVolume(), 'E'));
 }
 

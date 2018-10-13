@@ -29,7 +29,13 @@ struct CtrlBoxRefs {
    QWeakPointer<QDoubleSpinBox> tElution;
 };
 
-struct CalibModes {
+enum struct CalibMode {
+   classical,
+   geometric,
+   hydrodynamic
+};
+
+struct CalibModeSettings {
    const bool   checkUncertainty;
    const double uncertRange;
    const uint   uncertGridSize;
@@ -203,7 +209,7 @@ public:
     * \param
     * \todo NOT IMPLEMENTED DETAILS, BUT STRUCTURE ONLY; ALREADY CONNECTED;
     */
-   void adaptEnablingStatus(CalibModes m);
+   void adaptEnablingStatus(CalibModeSettings m);
 
 private slots:
    void callDiffCoeffDialog();
@@ -286,7 +292,7 @@ public:
    ~AF4InnerCalibrationFrame();
 
 
-   CalibModes getCalibModes() const;
+   CalibModeSettings getCalibModes() const;
 
    /*!
    * \brief getDiffCoefficient returns the channel width shown
@@ -377,7 +383,7 @@ public:
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
     */
-   void setChannelWidth(double value) { channelWidth->setValue(value); }
+   void setChannelWidthClassical(double value) { channelWidth->setValue(value); }
    /*!
    * \brief setChannelWidthGeo
    * \param value
@@ -394,7 +400,7 @@ public slots:
 
 signals:
    void calibrateChannelCalled();
-   void calibModeSettingsChanged(CalibModes m);
+   void calibModeSettingsChanged(CalibModeSettings m);
 
 private:
    void loadSettings();
@@ -485,8 +491,12 @@ public:
     * \return channel width
     */
    //double getChannelWidth() const { return channelWidth->value(); }
-   double getChannelWidth() const { return innerCalibFrame->getChannelWidth(); }
+   double getClassicalChannelWidth() const { return innerCalibFrame->getChannelWidth(); }
 
+   double getGeometChannelWidth() const { return innerCalibFrame->getChannelWidthGeo(); }
+   double getHydrodynChannelWidth() const { return innerCalibFrame->getChannelWidthHydro(); }
+
+   double getClassicalVolume() const { return innerCalibFrame->getClassicalVolume(); }
    /*!
     * \brief getDiffCoefficient returns the channel width shown
     *        in the corresponding FFFTwoBoxWidget
@@ -504,8 +514,7 @@ public:
    double getGeometVolume() const { return innerCalibFrame->getGeometVolume(); }
 
 
-
-   CalibModes getCalibModes() const{ return innerCalibFrame->getCalibModes(); }
+   CalibModeSettings getCalibModes() const{ return innerCalibFrame->getCalibModes(); }
 
    /*!
     * \brief getChannelDimsFromCalib
@@ -573,14 +582,11 @@ public:
    return true;\
 }\
 };
-
-
-
    /*!
     * \brief hydrodynVolume set value of the channelWidth
     * \return bool if value could be set
     */
-   //SET_MACRO(setHydrodynVolume, hydrodynVolume)
+  // SET_MACRO(setHydrodynVolume, hydrodynVolume)
 
    /*!
     * \brief hydrodynVolume set value of the channelWidth
@@ -589,11 +595,35 @@ public:
    //SET_MACRO(setGeometVolume, geometVolume)
 
 #undef SET_MACRO
+
+
+   void setClassicalVolume(double value){ innerCalibFrame->setClassicalVolume(value); }
+
+   void setHydrodynVolume(double value){ innerCalibFrame->setHydrodynVolume(value); }
+
+   void setGeometVolume(double value){ innerCalibFrame->setGeometVolume(value); }
    /*!
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
     */
-   void setChannelWidth(double value);
+   void setChannelWidthClassical(double value) { innerCalibFrame->setChannelWidthClassical(value); }
+
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthGeo(double value) { innerCalibFrame->setChannelWidthGeo(value); }
+
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthHydro(double value) { innerCalibFrame->setChannelWidthHydro(value); }
+
+
+
+
+
 
    /*!
     * \brief setInputFileName set the inputFileName

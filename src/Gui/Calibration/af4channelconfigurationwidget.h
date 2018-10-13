@@ -12,7 +12,7 @@
 #include "./a.out.h"
 #include "./af4channeldimswidget.h"
 #include "../../Core/af4calibrator.h"
-
+#include "../../Core/af4csvwriter.h"
 
 /*! **************************************************************************************************************
 ***
@@ -245,7 +245,7 @@ private:
     * \param params
     * \param cModes
     */
-   void calibRealMeaurement(const ChannelDims chDims, const ParametersForCalibration &params, const CalibModes &cModes);
+   void calibRealMeaurement(const ChannelDims &chDims, const ParametersForCalibration &params, const CalibModeSettings &cModes);
 
    /*!
     * \brief calibUncertaintyGrid iterates over the calibration grids
@@ -253,14 +253,20 @@ private:
     * \param params
     * \param cModes
     */
-   void calibUncertaintyGrid(const ChannelDims chDims, const ParametersForCalibration &params, const CalibModes &cModes);
+   void calibUncertaintyGrid(const ChannelDims &chDims, const ParametersForCalibration &params, const CalibModeSettings &cModes);
 
    /*!
     * \brief calibSingleParamSet conducts a calibration with the given Parameter set
     * \param chDims
     * \param params
     */
-   void calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params);
+   CalibResult calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode);
+
+
+
+
+
+   void logErrorMessage(CalibErrorCode errorCode);
 
    /*!
     * \brief connectCtrlWithPlotWidget
@@ -271,6 +277,7 @@ private:
     * \brief writeSettings writes Parameters to QSettings
     */
    void writeSettings() const;
+
 
 };
 #endif // AF4CHANNELCONFIGUARTIONWIDGET_H

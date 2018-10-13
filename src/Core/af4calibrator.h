@@ -3,6 +3,25 @@
 
 #include "af4calculator.h"
 
+enum struct CalibErrorCode : uint {
+   noError           = 0,
+   voidTimeZero      = 1,
+   eluFlowZero       = 2,
+   eluTimeZero       = 3,
+   crossFlowZero     = 4,
+   diffCoeffZero     = 5,
+   voidTimeTooSmall  = 6,
+   eluTimeTooSmall   = 7,
+   ParamsNotChecked  = 8
+};
+
+struct CalibResult {
+   double width;
+   double volume;
+   CalibErrorCode errorCode;
+   double sqDelta;
+};
+
 /*! ***********************************************************
 ***
 ***  \class     AF4Calibrator "src/Core/af4calibrator.h"
@@ -22,17 +41,14 @@ public:
     * \brief FFFCalibrator is the standard constructor
     * \param
     */
-   AF4Calibrator(){}
-   AF4Calibrator(const AF4Calibrator& src) = delete;
-   AF4Calibrator& operator= (const AF4Calibrator& src) = delete;
-   AF4Calibrator(AF4Calibrator&& src) = delete;
-   AF4Calibrator& operator= (AF4Calibrator&& src) = delete;
-
+   AF4Calibrator(const ChannelDims &d,
+                 const ParametersForCalibration &p) :
+      chDims(d), params(p) {}
 
    /*!
     * \brief ~FFFCalibrator Default destructor
     */
-   ~AF4Calibrator(){}
+   virtual ~AF4Calibrator(){}
 
    /*!
     * \brief calibrate the actual calibration function
@@ -50,13 +66,22 @@ public:
     * \return
     */
 
-   bool calibrate(const ChannelDims &d,
-                  const ParametersForCalibration &p);
 
-   inline double getChWidth() const { return w;}
-   inline double getHydrodynVolume() const { return V0;}
-   inline double getGeometVolume() const { return Vg;}
+   CalibErrorCode checkParameters();
 
+
+   CalibResult calibrate_classic();
+
+   CalibResult calibrate_geometric();
+
+   CalibResult calibrate_hydrodynamic();
+
+
+   //inline double getChWidth() const { return w;}
+   //inline double getHydrodynVolume() const { return V0;}
+   //inline double getGeometVolume() const { return Vg;}
+
+   /*
    void calcGeometVolume(
          const double L1,
          const double L2,
@@ -67,23 +92,35 @@ public:
          const double zL
          );
 
+         */
 private:
+   const ChannelDims chDims;
+   const ParametersForCalibration params;
+   bool paramsChecked = false;
+
+
    double w = 0.0;
    double rmsDiff = 0.0;
    double delta = 0.0;
    double V0 = 0.0;
    double Vg = 0.0;
 
-   bool zeroErrorMessage(int pos) const;
+//   bool zeroErrorMessage(int pos) const;
 
    /*!
     * \brief isZero
     * \param x determines whether a double is 0.0 or not
     * \return bool
     */
-   inline bool isZero(double x, int pos) const {
-      return !(std::abs(x) >= std::numeric_limits<double>::min()) ? false : zeroErrorMessage(pos);
-   }
+   //inline bool isZero(double x, int pos) const {
+   //   return !(std::abs(x) >= std::numeric_limits<double>::min()) ? false : zeroErrorMessage(pos);
+   //}
+
+   AF4Calibrator(const AF4Calibrator& src) = delete;
+   AF4Calibrator& operator= (const AF4Calibrator& src) = delete;
+   AF4Calibrator(AF4Calibrator&& src) = delete;
+   AF4Calibrator& operator= (AF4Calibrator&& src) = delete;
+
 
 };
 

@@ -1,5 +1,6 @@
 #include "af4channelconfigurationwidget.h"
 
+using std::string;
 
 AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QWidget(parent), settingsWriter (QSharedPointer<QPushButton>(new QPushButton("Save Parameters", this)))
@@ -169,7 +170,6 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    currentCalibSelection->setCurrentIndex(0);
    currentCalibWidget = channelCalibWidgets->value(channelName)->value(currentCalibSelection->currentText());
    // connect boxes to widget
-   //qDebug() << currentCalibWidget->getVoidPeakTime();
    connectCtrlWithPlotWidget();
    adaptPlotData();
    currentCalibWidget->show();
@@ -389,9 +389,7 @@ void AF4ChannelConfigurationWidget::switchChannelWidget(QString newWidgetKey)
       //currentCalibWidget = channelCalibWidgets->value(newWidgetKey)->value(calibWidgetKey);
       //calibrationFrameLayout->addWidget(currentCalibWidget, 2, 0, 7, 7);
       //currentCalibWidget->show();
-
    }
-
 }
 
 void AF4ChannelConfigurationWidget::adaptCalibWidgetIds(const QString &channelName, int newChannelId)
@@ -562,50 +560,233 @@ void AF4ChannelConfigurationWidget::calibrateChannnel()
 {
    ChannelDims chDims  = currentChConfigWidget->getChannelDimensions();
    ParametersForCalibration params = currentCalibWidget->getParametersForCalibration();
-   CalibModes cModes = currentCalibWidget->getCalibModes();
-   calibRealMeaurement(chDims, params, cModes);
+   CalibModeSettings cModes = currentCalibWidget->getCalibModes();
+   calibRealMeaurement(chDims, params, cModes);   
    if(cModes.checkUncertainty)
       calibUncertaintyGrid(chDims, params, cModes);
 }
 
 
 
-
-void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims chDims, const ParametersForCalibration &params, const CalibModes &cModes)
+void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDims, const ParametersForCalibration &params, const CalibModeSettings &cModes)
 {
+   CalibResult result;
+   if(cModes.classical){
+      result = calibSingleParamSet(chDims, params, CalibMode::classical);
+      if(result.errorCode == CalibErrorCode::noError){
+         AF4Log::logText(tr("\"Classical\"Calibration Finished. w_cla set to %1, V_cla set to %2.").arg(result.width).arg(result.volume));
+         currentCalibWidget->setChannelWidthClassical(result.width);
+         currentCalibWidget->setClassicalVolume(result.volume);
+      }
+      else
+         logErrorMessage(result.errorCode);
+   }
+   if(cModes.geometric){
+      result = calibSingleParamSet(chDims, params, CalibMode::geometric);
+      if(result.errorCode == CalibErrorCode::noError){
+         AF4Log::logText(tr("\"Geometric\" calibration finished. w_geo set to %1, V_geo set to %2.").arg(result.width).arg(result.volume));
+         currentCalibWidget->setChannelWidthGeo(result.width);
+         currentCalibWidget->setGeometVolume(result.volume);
+      }
+      else
+         logErrorMessage(result.errorCode);
+   }
+   if(cModes.hydrodynamic){
+      result = calibSingleParamSet(chDims, params, CalibMode::hydrodynamic);
+      if(result.errorCode == CalibErrorCode::noError){
+         AF4Log::logText(tr("\"Volume\"Calibration Finished. w_hyd set to %1, V_hyd set to %2.").arg(result.width).arg(result.volume));
+         currentCalibWidget->setChannelWidthHydro(result.width);
+         currentCalibWidget->setChannelWidthGeo(result.volume);
+      }
+      else
+         logErrorMessage(result.errorCode);
+   }
+}
 
-   // calculate omega (channel Width) by calibrator
-   AF4Calibrator calibrator;
-   //bool calibSuccess = calibrator.calibrate(currentCalibWidget->getAllCalibrationParameters()
-   bool calibSuccess = calibrator.calibrate(chDims, params);
-   double newChWidth = calibrator.getChWidth();
-   double newChVolume = calibrator.getHydrodynVolume();
-   //double newGeometVolume = calibrator.getGeometVolume();
-   // adjust omega
-   if(calibSuccess){
-      currentCalibWidget->setChannelWidth(newChWidth);
-      //currentCalibWidget->setHydrodynVolume(newChVolume);
-      AF4Log::logText(tr("Calibration Finished. Channel Width set to %1, Channel Volume set to %2.").arg(newChWidth).arg(newChVolume));
-   } else {
-      AF4Log::logError(tr("Calibration could not be finished."));
+CalibResult AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode)
+{
+   AF4Calibrator calibrator(chDims, params);
+   CalibResult result;
+   result.errorCode = calibrator.checkParameters();
+   if(result.errorCode != CalibErrorCode::noError) return result;
+
+   switch (mode) {
+   case CalibMode::classical:
+      result = calibrator.calibrate_classic();
+      break;
+   case CalibMode::hydrodynamic:
+      result = calibrator.calibrate_hydrodynamic();
+      break;
+   case CalibMode::geometric:
+      result = calibrator.calibrate_geometric();
+      break;
+   }
+  return result;
+}
+
+// non-const structures are required to generic
+// macro syntax to conduct iterated calibration
+// for all structure members
+// Are used here exclusively
+struct ChannelDims_nonConst {
+   double length1;
+   double length2;
+   double length3;
+   double chLength;
+   double b0;
+   double bL;
+};
+struct ParamsForCalibration_nonConst {
+   double elutionFlow;
+   double crossFlow;
+   double relFocusPoint;
+   double leftOffsetTime;
+   double voidPeakTime;
+   double elutionTime;
+   double diffCoeff;
+};
+
+void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims &chDims, const ParametersForCalibration &params, const CalibModeSettings &cModes)
+{
+   // conversion lambdas for converting const to non-const and vice versa
+   auto dimsToNonConst = [](const ChannelDims &constDims) -> ChannelDims_nonConst {
+      return ChannelDims_nonConst
+      {        constDims.length1,
+               constDims.length2,
+               constDims.length3,
+               constDims.chLength,
+               constDims.b0,
+               constDims.bL
+      };
+   };
+   auto dimsToConst = [](const ChannelDims_nonConst &nonConstDims) -> ChannelDims {
+      return ChannelDims
+      {        nonConstDims.length1,
+               nonConstDims.length2,
+               nonConstDims.length3,
+               nonConstDims.chLength,
+               nonConstDims.b0,
+               nonConstDims.bL
+      };
+   };
+   auto paramsToNonConst = [](const ParametersForCalibration &nonConstParams) -> ParamsForCalibration_nonConst {
+      return ParamsForCalibration_nonConst
+      {        nonConstParams.elutionFlow,
+               nonConstParams.crossFlow,
+               nonConstParams.relFocusPoint,
+               nonConstParams.leftOffsetTime,
+               nonConstParams.voidPeakTime,
+               nonConstParams.elutionTime,
+               nonConstParams.diffCoeff
+      };
+   };
+   auto paramsToConst = [](const ParamsForCalibration_nonConst &constParams) ->ParametersForCalibration {
+      return  ParametersForCalibration
+      {        constParams.elutionFlow,
+               constParams.crossFlow,
+               constParams.relFocusPoint,
+               constParams.leftOffsetTime,
+               constParams.voidPeakTime,
+               constParams.elutionTime,
+               constParams.diffCoeff
+      };
+   };
+
+   const double deltaMax = cModes.uncertRange;
+   //const double deltaMin = - deltaMax;
+   const uint   gridMidPos = cModes.uncertGridSize;
+   const uint   gridSize(2 * gridMidPos + 1);
+   vecD devXRel;                 // relative deviating sizes within the defined range [X - X⋅δmax, X + X⋅δmax]
+   devXRel.resize(gridSize);
+   vecD deltaWidth;              // relative deviations of channel volume from  ( (Y(X ± δX) / Y(X)) - 1 )
+   deltaWidth.resize(gridSize);
+   vecD deltaVolume;             // relative deviations of channel width from  ( (Y(X ± δX) / Y(X)) - 1 )
+   deltaVolume.resize(gridSize);
+
+   CalibResult refResult;
+   if(cModes.classical){
+      // try a single test calibration to
+      refResult = calibSingleParamSet(chDims, params, CalibMode::classical);
+      if(refResult.errorCode != CalibErrorCode::noError){
+         logErrorMessage(refResult.errorCode);
+         return;
+      }
+      const double widthRefY = refResult.width;   // Y_width(X)
+      const double VolumeRefY = refResult.volume;  // Y_vol(X)
+
+      //#define ITERATIVE_PARAMETER_DELTA_ANALYSIS(deltasize, container)
+      // START MACRO CODE
+      {
+         const double X = params.elutionFlow;
+         for(uint i = 0; i < gridSize; ++i){
+            /* create modified parameter structure: */
+            ParamsForCalibration_nonConst paramsDeltaMod = paramsToNonConst(params);
+            ChannelDims_nonConst chDimsDeltaMod  = dimsToNonConst(chDims);
+            /* get the modifier between δmin to δmax */
+            devXRel[i] = deltaMax * ( static_cast<double>(i) - static_cast<double>(gridSize) ) / static_cast<double>(gridSize);
+            /* modify δsize parameter to X ± δX */
+            paramsDeltaMod.elutionFlow = (1.0 + devXRel[i]) * X;
+            /* conduct calibration */
+            CalibResult deltaResult = calibSingleParamSet(dimsToConst(chDimsDeltaMod), paramsToConst(paramsDeltaMod), CalibMode::classical);
+            deltaWidth[i]  = (deltaResult.width  / widthRefY  ) - 1.0;
+            deltaVolume[i] = (deltaResult.volume / VolumeRefY ) - 1.0;
+            /* write results */
+            AF4CsvWriter(string("/home/bluemage/test/deltaTests").append("elutionFlow"));
+         }
+      };
+      // END MACRO CODE
+   }
+   if(cModes.geometric){
+      refResult = calibSingleParamSet(chDims, params, CalibMode::geometric);
+      if(refResult.errorCode != CalibErrorCode::noError){
+         logErrorMessage(refResult.errorCode);
+         return;
+      }
+      else
+         logErrorMessage(refResult.errorCode);
+   }
+   if(cModes.hydrodynamic){
+      refResult = calibSingleParamSet(chDims, params, CalibMode::hydrodynamic);
+      if(refResult.errorCode != CalibErrorCode::noError){
+         logErrorMessage(refResult.errorCode);
+         return;
+      }
+      else
+         logErrorMessage(refResult.errorCode);
    }
 
+   //vecD deltaSamples;
+   //deltaSamples.resize(cModes.);
 }
 
-void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims chDims, const ParametersForCalibration &params, const CalibModes &cModes)
+void AF4ChannelConfigurationWidget::logErrorMessage(CalibErrorCode errorCode)
 {
-
+   switch(errorCode){
+   case CalibErrorCode::noError:
+      break;
+   case CalibErrorCode::voidTimeZero:
+      AF4Log::logError(tr(""));
+   case CalibErrorCode::eluFlowZero:
+      AF4Log::logError(tr(""));
+   case CalibErrorCode::eluTimeZero:
+      AF4Log::logError(tr(""));
+   case CalibErrorCode::crossFlowZero:
+      AF4Log::logError(tr(""));
+   case CalibErrorCode::diffCoeffZero:
+      AF4Log::logError(tr(""));
+   case CalibErrorCode::voidTimeTooSmall:
+      AF4Log::logError(tr(""));
+   case CalibErrorCode::eluTimeTooSmall:
+      AF4Log::logError(tr(""));
+   case CalibErrorCode::ParamsNotChecked:
+      AF4Log::logError(tr(""));
+      break;
+   default:
+      break;
+   }
 }
 
-void AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params)
-{
-
-
-}
-
-
-
-void AF4ChannelConfigurationWidget::saveParameters() const
+   void AF4ChannelConfigurationWidget::saveParameters() const
 {
    AF4Log::logText(tr("Parameters saved of Channel Calibrations saved."));
    writeSettings();

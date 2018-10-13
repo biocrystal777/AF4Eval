@@ -73,17 +73,12 @@ AF4ChannelCalibWidget::~AF4ChannelCalibWidget()
 ChannelDimsFromCalib AF4ChannelCalibWidget::getChannelDimsFromCalib() const
 {      
    return ChannelDimsFromCalib {
-      getChannelWidth(),
+      getClassicalChannelWidth(),
             getHydrodynVolume(),
             getGeometVolume()
    };
 }
 
-
-void AF4ChannelCalibWidget::setChannelWidth(double value)
-{
-   innerCalibFrame->setChannelWidth(value);
-}
 
 
 bool AF4ChannelCalibWidget::setInputFileName(QString path, bool quoted)
@@ -151,7 +146,7 @@ void AF4ChannelCalibWidget::setAllCalibrationParameters(const AllCalibrationPara
    calibParFrame->setVoidPeakTime(p.voidPeakTime);
    calibParFrame->setElutionTime(p.elutionTime);
    calibParFrame->setDiffCoefficient(p.diffCoeff);
-   innerCalibFrame->setChannelWidth(p.chWidth);
+   innerCalibFrame->setChannelWidthClassical(p.chWidth);
    innerCalibFrame->setHydrodynVolume(p.hydrodynVolume);
    innerCalibFrame->setGeometVolume(p.geometVolume);
    this->setDateDescr(p.date);
@@ -449,9 +444,9 @@ AF4InnerCalibrationFrame::~AF4InnerCalibrationFrame()
    saveSettings();
 }
 
-CalibModes AF4InnerCalibrationFrame::getCalibModes() const
+CalibModeSettings AF4InnerCalibrationFrame::getCalibModes() const
 {
-   return  CalibModes {
+   return  CalibModeSettings {
       checkUncertainties->isChecked(),
             uncertRange->value(),
             static_cast<uint>(uncertGrid->value()),
@@ -500,7 +495,7 @@ void AF4InnerCalibrationFrame::loadSettings()
 
    calibValue = settings.value(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidth", "0.0e0");
-   this->setChannelWidth(calibValue);
+   this->setChannelWidthClassical(calibValue);
 
    calibValue = settings.value(tr("channels/%1/calib/%2/channelWidthGeo").arg(channelId).arg(calibId), "").toDouble(&ok);
    CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidthGeo", "0.0e0");
@@ -740,7 +735,7 @@ void AF4CalibParametersFrame::saveSettings()
    settings.setValue(tr("channels/%1/calib/%2/elutionTime").arg(channelId).arg(calibId),     QVariant(getElutionTime()));
 }
 
-void AF4CalibParametersFrame::adaptEnablingStatus(CalibModes m)
+void AF4CalibParametersFrame::adaptEnablingStatus(CalibModeSettings m)
 {
    uint mode{0x00000000};
    if (m.classical)    mode += 0x000000001;
