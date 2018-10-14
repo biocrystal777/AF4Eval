@@ -1,20 +1,15 @@
 #include "af4log.h"
 
-AF4Log * global_LogPtr = nullptr;
+static AF4Log * global_LogPtr = nullptr;
 
-AF4Log::AF4Log(QWidget *parent) :
-   QWidget(parent)
+AF4Log* AF4Log::createSingleInstance(QWidget *parent)
 {
-   layout =      new QGridLayout(this);
-   logWidget =   new QTextEdit(this);
-   logWidget->setReadOnly(true);
-   layout->addWidget(logWidget, 0, 0, 5, 10);
-   clearButton = new QPushButton("Clear", this);
-   QObject::connect(clearButton, &QPushButton::pressed, this, &AF4Log::clearLog) ;
-   layout->addWidget(clearButton, 2, 10, 1,1);
-
-   if(!global_LogPtr)
-      global_LogPtr = this;
+   if(!global_LogPtr){
+      global_LogPtr = new AF4Log(parent);
+      return global_LogPtr;
+   }
+   else
+      return nullptr;
 }
 
 void AF4Log::logText(std::string logMessage, bool qDebugToo )
@@ -69,6 +64,22 @@ void AF4Log::logError(QString logMessage, bool qDebugToo)
 void AF4Log::clearLog()
 {
    if(global_LogPtr) global_LogPtr->clearLogInInstance();
+}
+
+//-/////////////////////////////
+// Private stuff
+//-/////////////////////////////
+
+AF4Log::AF4Log(QWidget *parent) :
+   QWidget(parent)
+{
+   layout =      new QGridLayout(this);
+   logWidget =   new QTextEdit(this);
+   logWidget->setReadOnly(true);
+   layout->addWidget(logWidget, 0, 0, 5, 10);
+   clearButton = new QPushButton("Clear", this);
+   QObject::connect(clearButton, &QPushButton::pressed, this, &AF4Log::clearLog) ;
+   layout->addWidget(clearButton, 2, 10, 1,1);
 }
 
 void AF4Log::logTextInInstance(QString logMessage) const

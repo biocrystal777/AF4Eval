@@ -49,7 +49,7 @@ AF4MainWindow::AF4MainWindow(QWidget *parent)
    logFrame->setMinimumSize(this->minimumSize().width()/5*4, this->minimumSize().width()/20/3);
    logFrame->setMinimumWidth(this->maximumSize().width()/20/3);
 
-   logDevice = new AF4Log(this);   
+   logDevice = AF4Log::createSingleInstance(this); // ( new AF4Log(this);
    logFrameLayout->addWidget(new QLabel("<b>Log Messages</b>", logFrame), 0, 0, Qt::AlignLeft);
    logFrameLayout->addWidget(logDevice, 1, 0);
 

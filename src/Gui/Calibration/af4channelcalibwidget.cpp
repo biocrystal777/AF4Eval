@@ -110,7 +110,7 @@ ParametersForCalibration AF4ChannelCalibWidget::getParametersForCalibration()
             calibParFrame->getRelFocusPoint(),
             calibParFrame->getLeftOffsetTime(),
             calibParFrame->getVoidPeakTime(),
-            calibParFrame->getElutionFlow(),
+            calibParFrame->getElutionTime(),
             calibParFrame->getDiffCoefficient()
    };
 }

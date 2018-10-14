@@ -27,21 +27,7 @@ class AF4Log final: public QWidget
    Q_OBJECT
 public:
 
-   /*!
-     * \brief AF4Log the constructor of this class
-     * \param parent parent widget
-     */
-   explicit AF4Log(QWidget *parent = nullptr);
-
-    AF4Log(const AF4Log& src) = delete;
-    AF4Log& operator= (AF4Log& src) = delete;
-    AF4Log(AF4Log&& src) = delete;
-    AF4Log& operator= (AF4Log&& src) = delete;
-
-   /*!
-    * \brief destructor of this class
-    */
-   ~AF4Log(){}
+   static AF4Log* createSingleInstance(QWidget *parent);
 
    /*!
      * \brief logText global overloaded logging function, calls the
@@ -71,6 +57,9 @@ public:
       */
    static void logText(QString logMessage, bool qDebugToo = false);
 
+
+
+
    /*!
       * \brief logWarning global overloaded logging function, calls the
       *        internal logging function
@@ -93,6 +82,13 @@ private slots:
    static void clearLog();
 
 private:
+
+
+   /*!
+     * \brief AF4Log the constructor of this class
+     * \param parent parent widget
+     */
+   explicit AF4Log(QWidget *parent = nullptr);
 
    QGridLayout   *layout       = nullptr;
    QTextEdit     *logWidget    = nullptr;
@@ -121,6 +117,16 @@ private:
      * \param logMessage message to be logged
      */
    void clearLogInInstance();
+
+   AF4Log(const AF4Log& src) = delete;
+   AF4Log& operator= (AF4Log& src) = delete;
+   AF4Log(AF4Log&& src) = delete;
+   AF4Log& operator= (AF4Log&& src) = delete;
+
+  /*!
+   * \brief destructor of this class
+   */
+  ~AF4Log(){}
 
 };
 
