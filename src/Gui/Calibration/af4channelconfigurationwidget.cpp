@@ -699,7 +699,7 @@ void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims &chDi
       {        nonConstParams.elutionFlow,
                nonConstParams.crossFlow,
                nonConstParams.relFocusPoint,
-               nonConstParams.leftOffsetTime,
+               //nonConstParams.leftOffsetTime,
                nonConstParams.voidPeakTime,
                nonConstParams.elutionTime,
                nonConstParams.diffCoeff
@@ -711,7 +711,7 @@ void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims &chDi
       {        constParams.elutionFlow,
                constParams.crossFlow,
                constParams.relFocusPoint,
-               constParams.leftOffsetTime,
+               //constParams.leftOffsetTime,
                constParams.voidPeakTime,
                constParams.elutionTime,
                constParams.diffCoeff

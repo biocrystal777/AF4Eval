@@ -108,7 +108,7 @@ ParametersForCalibration AF4ChannelCalibWidget::getParametersForCalibration()
       calibParFrame->getElutionFlow(),
             calibParFrame->getCrossFlow(),
             calibParFrame->getRelFocusPoint(),
-            calibParFrame->getLeftOffsetTime(),
+   //         calibParFrame->getLeftOffsetTime(),
             calibParFrame->getVoidPeakTime(),
             calibParFrame->getElutionTime(),
             calibParFrame->getDiffCoefficient()
@@ -122,7 +122,7 @@ AllCalibrationParameters AF4ChannelCalibWidget::getAllCalibrationParameters()
             calibParFrame->getElutionFlow(),
             calibParFrame->getCrossFlow(),
             calibParFrame->getRelFocusPoint(),
-            calibParFrame->getLeftOffsetTime(),
+            //calibParFrame->getLeftOffsetTime(),
             calibParFrame->getVoidPeakTime(),
             calibParFrame->getElutionTime(),
             calibParFrame->getDiffCoefficient(),
@@ -142,7 +142,7 @@ void AF4ChannelCalibWidget::setAllCalibrationParameters(const AllCalibrationPara
    calibParFrame->setElutionFlow(p.elutionFlow);
    calibParFrame->setCrossFlow(p.crossFlow);
    calibParFrame->setRelFocusPoint(p.relFocusPoint);
-   calibParFrame->setLeftOffsetTime(p.leftOffsetTime);
+   //calibParFrame->setLeftOffsetTime(p.leftOffsetTime);
    calibParFrame->setVoidPeakTime(p.voidPeakTime);
    calibParFrame->setElutionTime(p.elutionTime);
    calibParFrame->setDiffCoefficient(p.diffCoeff);
@@ -650,7 +650,7 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
    leftOffsetTime->setSingleStep(0.005);
    leftOffsetTime->setMaximum(30.0);
    leftOffsetTime->setMinimum(0.000);
-   leftOffsetTime->setMaximumWidth(100);
+   //leftOffsetTime->setMaximumWidth(100);
    lay->addWidget(leftOffsetTime.data(), 0, 4, 1, 2);
 
    label = new QwtTextLabel(this);
@@ -662,8 +662,10 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
    voidPeakTime->setDecimals(3);
    voidPeakTime->setSingleStep(0.005);
    voidPeakTime->setMaximum(30.0);
-   voidPeakTime->setMinimum(0.00001);
-   voidPeakTime->setMaximumWidth(100);
+   //voidPeakTime->setMinimum(0.00001);
+   connect(leftOffsetTime.data(),qOverload<double>(&QDoubleSpinBox::valueChanged),
+           voidPeakTime.data(),  &QDoubleSpinBox::setMinimum);
+   //voidPeakTime->setMaximumWidth(100);
    lay->addWidget(voidPeakTime.data(), 1, 4, 1, 2);
 
    label = new QwtTextLabel(this);
@@ -675,8 +677,10 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
    elutionTime->setDecimals(3);
    elutionTime->setSingleStep(0.05);
    elutionTime->setMaximum(300.0);
-   elutionTime->setMinimum(0.00001);
-   elutionTime->setMaximumWidth(100);
+   connect(voidPeakTime.data(),qOverload<double>(&QDoubleSpinBox::valueChanged),
+           elutionTime.data(),  &QDoubleSpinBox::setMinimum);
+   //elutionTime->setMinimum(0.00001);
+   //elutionTime->setMaximumWidth(100);
    lay->addWidget(elutionTime.data(), 2, 4, 1, 2);
 
    /**************************************
@@ -729,7 +733,7 @@ void AF4CalibParametersFrame::saveSettings()
    settings.setValue(tr("channels/%1/calib/%2/crossFlow").arg(channelId).arg(calibId),       QVariant(getCrossFlow()));
    settings.setValue(tr("channels/%1/calib/%2/temperature").arg(channelId).arg(calibId),     QVariant(getTemperature()));
    settings.setValue(tr("channels/%1/calib/%2/elutionFlow").arg(channelId).arg(calibId),     QVariant(getElutionFlow()));
-   settings.setValue(tr("channels/%1/calib/%2/leftOffsetTime").arg(channelId).arg(calibId),  QVariant(getLeftOffsetTime()));
+   settings.setValue(tr("channels/%1/calib/%2/leftOffsetTime").arg(channelId).arg(calibId),  QVariant(leftOffsetTime->value()));
    settings.setValue(tr("channels/%1/calib/%2/voidPeakTime").arg(channelId).arg(calibId),    QVariant(getVoidPeakTime()));
    settings.setValue(tr("channels/%1/calib/%2/relFocusPoint").arg(channelId).arg(calibId),   QVariant(getRelFocusPoint()));
    settings.setValue(tr("channels/%1/calib/%2/elutionTime").arg(channelId).arg(calibId),     QVariant(getElutionTime()));

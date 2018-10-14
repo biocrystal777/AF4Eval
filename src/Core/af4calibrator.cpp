@@ -8,7 +8,7 @@ CalibErrorCode AF4Calibrator::checkParameters()
    if(isZero(params.elutionTime))  return CalibErrorCode::eluTimeZero;
    if(isZero(params.crossFlow))    return CalibErrorCode::crossFlowZero;
    if(isZero(params.diffCoeff))    return CalibErrorCode::diffCoeffZero;
-   if(params.leftOffsetTime >= params.voidPeakTime) return CalibErrorCode::voidTimeTooSmall;
+   //if(params.leftOffsetTime >= params.voidPeakTime) return CalibErrorCode::voidTimeTooSmall;
    if(params.voidPeakTime   >= params.elutionTime)  return CalibErrorCode::eluTimeTooSmall;
    // if no error found,  "unlock" calibration methods
    paramsChecked = true;
@@ -21,8 +21,8 @@ CalibResult AF4Calibrator::calibrate_classic()
    if(!paramsChecked) return result;
 
    // adjust time axis according to leftOffsetTime
-   const double tvoid      = params.voidPeakTime - params.leftOffsetTime;  // remove focussing time offset
-   const double te         = params.elutionTime - params.leftOffsetTime;   // remove focussing time offset
+   const double tvoid      = params.voidPeakTime; // params.leftOffsetTime;  // remove focussing time offset
+   const double te         = params.elutionTime;// - params.leftOffsetTime;   // remove focussing time offset
    const double D          = params.diffCoeff * 60;                   // cm^2/s => cm^2/min
    const double Ve         = params.elutionFlow;
    const double Vc         = params.crossFlow;

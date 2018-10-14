@@ -115,21 +115,21 @@ public:
     *        corresponding FFFTwoBoxWidget
     * \return voidPeakTime
     */
-   double getVoidPeakTime() const { return voidPeakTime->value(); }
+   double getVoidPeakTime() const { return voidPeakTime->value() - leftOffsetTime->value(); }
 
    /*!
     * \brief getLeftOffsetTime Returns the leftOffsetTime (t0) shown in the
     *        corresponding FFFTwoBoxWidget
     * \return leftOffsetTime
     */
-   double getLeftOffsetTime() const { return leftOffsetTime->value(); }
+   //double getLeftOffsetTime() const { return leftOffsetTime->value(); }
 
    /*!
     * \brief getDiffCoefficient Returns the elutionTime (t elutionMaximum)
     *        shown in the corresponding FFFTwoBoxWidget
     * \return voidPeakTime
     */
-   double getElutionTime() const { return elutionTime->value(); }
+   double getElutionTime() const { return elutionTime->value() - leftOffsetTime->value(); }
 
    /*!
     * \brief getDiffCoefficient returns the elutionFlow shown
@@ -177,30 +177,57 @@ public:
     */
    SET_MACRO(setTemperature, temperature)
 
+
    /*!
     * \brief setVoidPeakTime set value of the voidPeakTime
     * \return bool if value could be set
     */
-   SET_MACRO(setVoidPeakTime, voidPeakTime)
+   //SET_MACRO(setVoidPeakTime, voidPeakTime)
+   //#define SET_MACRO(function, boxPtr)
+   bool setVoidPeakTime(double value){
+      value += leftOffsetTime->value();
+      if(value  < voidPeakTime->minimum()){
+         voidPeakTime->setValue(voidPeakTime->minimum());
+         return false;
+      }
+      else if (value > voidPeakTime->maximum()){
+         voidPeakTime->setValue(voidPeakTime->maximum());
+         return false;
+      }
+      else {
+         voidPeakTime->setValue(value);
+         return true;
+      }
+   }
 
-   /*!
-    * \brief setLeftOffsetTime set value of the leftOffsetTime
-    * \return bool if value could be set
-    */
-   SET_MACRO(setLeftOffsetTime, leftOffsetTime)
+   //#define SET_MACRO(function, boxPtr)
+   bool setElutionTime(double value){
+      value += leftOffsetTime->value();
+      if(value  < elutionTime->minimum()){
+         elutionTime->setValue(elutionTime->minimum());
+         return false;
+      }
+      else if (value > elutionTime->maximum()){
+         elutionTime->setValue(elutionTime->maximum());
+         return false;
+      }
+      else {
+         elutionTime->setValue(value);
+         return true;
+      }
+   }
 
    /*!
     * \brief setElutionTime set value of the elutionTime
     * \return bool if value could be set
     */
-   SET_MACRO(setElutionTime, elutionTime)
+   //SET_MACRO(setElutionTime, elutionTime)
 
    /*!
     * \brief setElutionFlow set value of the elutionFlow
     * \return bool if value could be set
     */
    SET_MACRO(setElutionFlow, elutionFlow)
-#undef SET_MACRO
 
    public slots:
       void saveSettings();
@@ -215,6 +242,13 @@ private slots:
    void callDiffCoeffDialog();
 
 private:
+
+   /*!
+    * \brief setLeftOffsetTime set value of the leftOffsetTime
+    * \return bool if value could be set
+    */
+   SET_MACRO(setLeftOffsetTime, leftOffsetTime);
+#undef SET_MACRO
 
    void loadSettings();
 

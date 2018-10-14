@@ -14,6 +14,34 @@
 #include "../../Core/af4calibrator.h"
 #include "../../Core/af4csvwriter.h"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*! **************************************************************************************************************
 ***
 ***  \class     AF4ChannelConfigurationWidget "src/Gui/Calibration/af4channelconfigurationwidget.h"
@@ -32,7 +60,6 @@
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 *****************************************************************************************************************/
-
 
 class AF4ChannelConfigurationWidget final : public QWidget {
 
@@ -61,11 +88,9 @@ public:
       return channelCalibWidgets;
    }
 
-
    //\////////////////
    // channel Frame //
    //\////////////////
-
 
 
 private:
@@ -261,8 +286,6 @@ private:
     * \param params
     */
    CalibResult calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode);
-
-
 
 
 

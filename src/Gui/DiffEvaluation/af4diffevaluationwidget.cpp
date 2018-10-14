@@ -127,9 +127,9 @@ void AF4DiffEvaluationWidget::startEvaluation()
    evaluator.calcStokesRadii(diffCoeffs, expSettingsFrame->getViscosityVal(), expSettingsFrame->getTemperatureVal());
    vecD stokesRadii = evaluator.getResStokesRadii();
 
-   ///////////////
+   //-////////////
    // write data
-   ///////////////
+   //-/////////////
    AF4CsvWriter writer(outFileName.toStdString());
    matD writeResults;
    // copy "used" times from data to result matrix

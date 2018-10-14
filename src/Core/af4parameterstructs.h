@@ -25,14 +25,12 @@ enum struct DeconWriteFreq {
    last
 };
 
-
-
 struct AllCalibrationParameters {
    const double temperature;
    const double elutionFlow;
    const double crossFlow;
    const double relFocusPoint;
-   const double leftOffsetTime;
+   //const double leftOffsetTime;
    const double voidPeakTime;
    const double elutionTime;
    const double diffCoeff;
@@ -65,7 +63,7 @@ struct ParametersForCalibration {
    const double elutionFlow;
    const double crossFlow;
    const double relFocusPoint;
-   const double leftOffsetTime;
+   //const double leftOffsetTime;
    const double voidPeakTime;
    const double elutionTime;
    const double diffCoeff;
@@ -139,7 +137,7 @@ struct SLSParameters {
 // For later modules
 
 struct FFFDiffCorrParameters{
-   double leftOffsettime;
+   //double leftOffsettime;
    bool   recalcVolume;
    double voidPeakTime;
    double elutionFlow;
