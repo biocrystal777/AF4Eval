@@ -10,10 +10,9 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
    bool ok;
-   //qDebug() << "a1";
-   ////////////////////////////
+   //\/////////////////////////
    // Basical initialization //
-   ////////////////////////////
+   //\/////////////////////////
 
    channelConfigFrame = new QFrame(this);
    channelConfigFrame->setFrameStyle(0x1011);
@@ -28,13 +27,9 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    channelCalibWidgets = new QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>();
 
 
-   //
-
-
    ///////////////////////////////////
    //Constant channel configuration //
    ///////////////////////////////////
-   //qDebug() << "a2";
    channelSelection = new QComboBox(channelConfigFrame);
    channelSelection->setToolTip("");
    channelConfigFrameLayout->addWidget(channelSelection, 0, 4);
@@ -659,7 +654,7 @@ void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims &chDi
       double elutionFlow;
       double crossFlow;
       double relFocusPoint;
-      double leftOffsetTime;
+      //double leftOffsetTime;
       double voidPeakTime;
       double elutionTime;
       double diffCoeff;
@@ -809,14 +804,6 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
 };
 -------------------------------------------------------------------------------------------------------------------*/
 
-   double elutionFlow;
-   double crossFlow;
-   double relFocusPoint;
-   double leftOffsetTime;
-   double voidPeakTime;
-   double elutionTime;
-   double diffCoeff;
-
    CalibResult refResult;
    if(cModes.classical){
       // try a single test calibration to
@@ -927,4 +914,173 @@ void AF4ChannelConfigurationWidget::writeSettings() const
       int numberOfCalibrations = channelCalibWidgets->value(channelName)->count();
       settings.setValue(tr("channels/%1/numberOfCalibrations").arg(i), numberOfCalibrations);
    }
+}
+
+
+
+
+/**************************************
+ *
+ *
+ *
+ * AF4ChannelDimsOrgFrame
+ *
+ *
+ *
+ *************************************/
+
+
+
+AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
+{
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**************************************
+ *
+ *
+ *
+ * AF4ChannelCalibsOrgFrame
+ *
+ *
+ *
+ *************************************/
+
+
+
+
+AF4ChannelCalibsOrgFrame::AF4ChannelCalibsOrgFrame(QComboBox *channelSelection, QWidget *parent) : QFrame(parent)
+{
+   QSettings settings("AgCoelfen", "FFFEval");
+   settings.setIniCodec("UTF-8");
+
+   bool ok;
+#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
+   if(!ok){ \
+   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
+   .arg(keyName).arg(defaultValueName)); \
+   }\
+   };
+
+   uint numberOfChannels = settings.value("channels/number", 0).toInt(&ok);
+   CHECK_SETTINGS_CONVERSION("channels/number", "1");
+
+   uint numberOfCalibrations = 0;
+   QString calibName;
+   QString channelName;
+
+   for(uint i=0; i < numberOfChannels; ++i){
+      numberOfCalibrations = settings.value(tr("channels/%1/numberOfCalibrations").arg((i)), 0).toInt(&ok);
+
+
+      CHECK_SETTINGS_CONVERSION(numberOfCalibrations, 0);
+      currentCalibSelection =  new QComboBox(calibrationFrame);
+
+      currentCalibSelection->setToolTip("Choose a Calibration profile");
+      currentCalibSelection->hide();
+      calibrationFrameLayout->addWidget(currentCalibSelection, 0, 11);
+      allCalibSelections->insert(channelSelection->itemText(i), currentCalibSelection);
+
+      channelName = channelSelection->itemText(i);
+      channelCalibWidgets->insert(channelName, new QMap<QString, AF4ChannelCalibWidget*>);
+    //  qDebug() << "a5"<< numberOfCalibrations;
+      for(uint j=0; j < numberOfCalibrations; j++){
+         //qDebug() << "b1"<< numberOfCalibrations;
+         calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();
+         currentCalibWidget = new AF4ChannelCalibWidget(i, j, channelName, calibName, settingsWriter, calibrationFrame);
+         //qDebug() << "b2"<< numberOfCalibrations;
+         connect(currentCalibWidget, &AF4ChannelCalibWidget::calibrateChannelCalled,
+                 this, &AF4ChannelCalibsOrgFrame::calibrateChannnel);
+         currentCalibSelection->addItem(calibName);
+         channelCalibWidgets->value(channelName)->insert(calibName, currentCalibWidget);
+         //qDebug() << "b3"<< numberOfCalibrations;
+         calibrationFrameLayout->addWidget(currentCalibWidget, 2, 0, 7, 7);
+         currentCalibWidget->hide();
+      }
+      connect(currentCalibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
+              this, &AF4ChannelCalibsOrgFrame::switchCalibWidget);
+
+   }
+   #undef CHECK_SETTINGS_CONVERSION
+
+   plotWidget = new AF4CalibPlotWidget(calibrationFrame);
+   calibrationFrameLayout->addWidget(plotWidget, 2, 7, 7, 7);
+
+   //qDebug() << "a5";
+   renameCalibButton = new QToolButton(calibrationFrame);
+   renameCalibButton->setText("R");
+   renameCalibButton->setToolTip("Rename the current calibration profile");
+
+   connect(renameCalibButton, &QPushButton::clicked,
+           this, &AF4ChannelCalibsOrgFrame::renameCalibration);
+   calibrationFrameLayout->addWidget(renameCalibButton, 0, 12);
+
+   addCalibButton = new QToolButton(calibrationFrame);
+   addCalibButton->setText(tr("+"));
+   addCalibButton->setToolTip("Add new calibration profile");
+   connect(addCalibButton, &QPushButton::clicked,
+           this, &AF4ChannelCalibsOrgFrame::addCalibration);
+   calibrationFrameLayout->addWidget(addCalibButton, 0, 13);
+
+   deleteCalibButton = new QToolButton(calibrationFrame);
+   deleteCalibButton->setText(tr("-"));
+   deleteCalibButton->setToolTip("delete current calibration profile");
+   connect(deleteCalibButton, &QPushButton::clicked,
+           this, &AF4ChannelCalibsOrgFrame::deleteCalibration);
+   calibrationFrameLayout->addWidget(deleteCalibButton, 0, 14);
+
+
+}
+
+void AF4ChannelCalibsOrgFrame::adaptPlotData()
+{
+
+}
+
+bool AF4ChannelCalibsOrgFrame::addCalibration()
+{
+
+}
+
+void AF4ChannelCalibsOrgFrame::renameCalibration()
+{
+
+}
+
+void AF4ChannelCalibsOrgFrame::deleteCalibration()
+{
+
+}
+
+void AF4ChannelCalibsOrgFrame::switchCalibWidget(QString newWidgetKey)
+{
+
+}
+
+void AF4ChannelCalibsOrgFrame::calibrateChannnel()
+{
+
+}
+
+void AF4ChannelCalibsOrgFrame::saveParameters() const
+{
+
 }
