@@ -68,6 +68,9 @@ public:
     * \return channel width
     */
    //double getChannelWidth() const { return channelWidth->value(); }
+   int getChannelId() const { return channelId; }
+   int getCalibId() const { return channelId; }
+
    double getClassicalChannelWidth() const { return innerCalibFrame->getChannelWidth(); }
 
    double getGeometChannelWidth() const { return innerCalibFrame->getChannelWidthGeo(); }

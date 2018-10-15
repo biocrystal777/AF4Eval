@@ -22,7 +22,7 @@
 class AF4CalibSettingsFrame final : public QFrame {
    Q_OBJECT
 public:
-   AF4CalibSettingsFrame(QMap<QString, AF4ChannelDimsWidget*>* channelConfigWidgets,
+   AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets,
                          QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets,
                          const QString &prefix,
                          QWidget *parent = nullptr);
@@ -159,7 +159,7 @@ public slots:
 
 private:
    const QString prefix;
-   QMap<QString, AF4ChannelDimsWidget*>*                  const channelConfigWidgets;
+   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;
    QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* const channelCalibWidgets;
 
    QGridLayout *layout                         = nullptr;

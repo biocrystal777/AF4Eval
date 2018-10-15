@@ -60,7 +60,9 @@ class AF4ChannelCalibsOrgFrame final : public QFrame {
 
 public:
 
-   explicit AF4ChannelCalibsOrgFrame(QComboBox *channelSelection, QWidget *parent);
+   explicit AF4ChannelCalibsOrgFrame(QSharedPointer<QComboBox> channelSelection,
+                                     QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets,
+                                     QWidget *parent);
    ~AF4ChannelCalibsOrgFrame(){}
 
 public slots:
@@ -105,15 +107,23 @@ private slots:
    void saveParameters() const;
 
 private:
-   QFrame *calibrationFrame                                                    = nullptr;
-   QGridLayout *calibrationFrameLayout                                         = nullptr;
+   QSharedPointer <QComboBox> channelSelection; // transitory solution for class split; replace by slot connnections later
+
+
+   //QFrame *calibrationFrame                                                    = nullptr;
+   QGridLayout *lay                                         = nullptr;
 
    //QFrame calibrationFrame = nullptr;
    AF4CalibPlotWidget *plotWidget                                              = nullptr;
-   QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets  = nullptr;
+
+   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;
+   QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*> > channelCalibWidgets;
+
+
+
    AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
    QMap<QString, QComboBox*> *allCalibSelections                               = nullptr;
-   QComboBox                 *currentCalibSelection                            = nullptr;
+   QComboBox                 *calibSelection                            = nullptr;
    QToolButton               *addCalibButton                                   = nullptr;
    QToolButton *renameCalibButton                                              = nullptr;
    QToolButton *deleteCalibButton                                              = nullptr;
@@ -125,7 +135,7 @@ private:
     * \param newChannelId
     * \param caller
     */
-   void adaptCalibWidgetIds(const QString &channelName, int newChannelId = -1);
+   void adaptCalibWidgetIds(const QString &oldName, int newChannelId = -1);
 
    /*!
     * \brief adaptCalibWidgetNames
@@ -147,7 +157,6 @@ private:
     * \return
     */
    bool askCalibAdding(QString &newName);
-
 
    /*!
     * \brief calibRealMeaurement calibrates the Channel with the given Parameters and sets the values
@@ -175,7 +184,7 @@ private:
 
 
 
-   void logErrorMessage(CalibErrorCode errorCode);
+   void logErrorMessage(CalibErrorCode errorCode) const;
 
    /*!
     * \brief connectCtrlWithPlotWidget
@@ -192,8 +201,6 @@ private:
    AF4ChannelCalibsOrgFrame(            AF4ChannelCalibsOrgFrame&& src) = delete;
    AF4ChannelCalibsOrgFrame& operator= (AF4ChannelCalibsOrgFrame&& src) = delete;
 };
-
-
 
 
 
@@ -236,7 +243,7 @@ public:
     *        that contains the channelConfigWidgets of the program
     * \return map of the channelConfigWidgets
     */
-   auto getChannelConfigWidgets() const -> QMap<QString, AF4ChannelDimsWidget*>*   {
+   auto getChannelConfigWidgets() const -> QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >   {
       return channelConfigWidgets;
    }
    /*!
@@ -251,14 +258,16 @@ public:
    //\////////////////
 
 
+
 private:
 
    QGridLayout *layout                                          = nullptr;
    QFrame *channelConfigFrame                                   = nullptr;
    QGridLayout *channelConfigFrameLayout                        = nullptr;
-   QMap<QString, AF4ChannelDimsWidget*> *channelConfigWidgets   = nullptr;
+   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;//  = nullptr;
    AF4ChannelDimsWidget *currentChConfigWidget                  = nullptr;
-   QComboBox *channelSelection                                  = nullptr;
+   //QComboBox *channelSelection                                  = nullptr;
+   QSharedPointer<QComboBox> channelSelection;
    QToolButton *addChButton                                     = nullptr;
    QToolButton *renameChButton                                  = nullptr;
    QToolButton *deleteChButton                                  = nullptr;
@@ -322,6 +331,8 @@ private slots:
    //\////////////////////
    // calibration Frame //
    //\////////////////////
+private:
+   AF4ChannelCalibsOrgFrame *calibsOrgFrame    = nullptr;
 
 public slots:
    void adaptPlotData();

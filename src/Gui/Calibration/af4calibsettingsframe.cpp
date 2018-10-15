@@ -6,7 +6,7 @@
 //
 //-/////////////////////////////////
 
-AF4CalibSettingsFrame::AF4CalibSettingsFrame(QMap<QString, AF4ChannelDimsWidget *> *channelConfigWidgets,
+AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4ChannelDimsWidget *> >channelConfigWidgets,
                                              QMap<QString, QMap<QString, AF4ChannelCalibWidget *> *> *channelCalibWidgets,
                                              const QString &prefix,
                                              QWidget *parent) :

@@ -41,7 +41,7 @@ public:
     * \param parent
     */
    AF4DiffEvaluationWidget(
-         QMap<QString, AF4ChannelDimsWidget*>* channelConfigWidgets,
+         QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets,
          QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets,
          QWidget *parent);
    ~AF4DiffEvaluationWidget(){}
@@ -110,7 +110,7 @@ public slots:
 
 private:
 
-   QMap<QString, AF4ChannelDimsWidget*>                 *channelConfigWidgets   = nullptr;
+   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >   channelConfigWidgets;
    QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>  *channelCalibWidgets    = nullptr;
 
    QGridLayout           *widgetLayout           = nullptr;

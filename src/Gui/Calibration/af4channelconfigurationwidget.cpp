@@ -19,6 +19,9 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    channelConfigFrameLayout = new QGridLayout(channelConfigFrame);
    channelConfigFrameLayout->addWidget(new QLabel("<b>Channel Configurations</b>", channelConfigFrame), 0, 0, Qt::AlignLeft);
 
+
+
+
    calibrationFrame = new QFrame(this);
    calibrationFrame->setFrameStyle(0x1011);
    calibrationFrameLayout = new QGridLayout(calibrationFrame);
@@ -30,9 +33,9 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    ///////////////////////////////////
    //Constant channel configuration //
    ///////////////////////////////////
-   channelSelection = new QComboBox(channelConfigFrame);
+   channelSelection = QSharedPointer<QComboBox>(new QComboBox(channelConfigFrame));
    channelSelection->setToolTip("");
-   channelConfigFrameLayout->addWidget(channelSelection, 0, 4);
+   channelConfigFrameLayout->addWidget(channelSelection.data(), 0, 4);
    renameChButton = new QToolButton(channelConfigFrame);
    renameChButton->setText("R");
    renameChButton->setToolTip("Rename the current channel");
@@ -55,7 +58,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    // initialize channels with values from QSettings //
    ////////////////////////////////////////////////////
    //qDebug() << "a3";
-   channelConfigWidgets = new QMap<QString, AF4ChannelDimsWidget*>();
+   channelConfigWidgets = QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > (new QMap<QString, AF4ChannelDimsWidget*>() );
 
    // make all channel widgets, add them to the QMap
    // of ChannelWidgets and insert them
@@ -78,7 +81,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
       channelConfigWidgets->insert(newChannelName, currentChConfigWidget);
       channelSelection->addItem(newChannelName);
       channelSelection->setCurrentIndex(channelSelection->count()-1);
-      connect(channelSelection, qOverload<const QString&>(&QComboBox::currentIndexChanged),
+      connect(channelSelection.data(), qOverload<const QString&>(&QComboBox::currentIndexChanged),
               this, &AF4ChannelConfigurationWidget::switchChannelWidget );
       currentChConfigWidget->hide();
    }
@@ -92,6 +95,26 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    // Calibration Frame //
    ///////////////////////
    //qDebug() << "a4";
+
+
+
+
+
+
+   // SUMMON BIG HAIRY BEAST HERE!
+
+  // calibsOrgFrame = new AF4ChannelCalibsOrgFrame(channelSelection, channelConfigWidgets, this);
+
+
+
+
+
+
+
+
+
+
+
    uint numberOfCalibrations = 0;
    QString calibName;
    QString channelName;
@@ -186,7 +209,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
 AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
 {
    writeSettings();
-   delete channelConfigWidgets;
+   //delete channelConfigWidgets;
    delete channelCalibWidgets;
    delete allCalibSelections;
 }
@@ -887,8 +910,6 @@ void AF4ChannelConfigurationWidget::logErrorMessage(CalibErrorCode errorCode)
    }
 }
 
-
-
 void AF4ChannelConfigurationWidget::adaptPlotData()
 {
    QString fileName = currentCalibWidget->getInputFileName();
@@ -967,10 +988,20 @@ AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
 
 
 
-AF4ChannelCalibsOrgFrame::AF4ChannelCalibsOrgFrame(QComboBox *channelSelection, QWidget *parent) : QFrame(parent)
+AF4ChannelCalibsOrgFrame::AF4ChannelCalibsOrgFrame(QSharedPointer<QComboBox> channelSelection,
+                                                   QSharedPointer<QMap<QString, AF4ChannelDimsWidget *> > channelConfigWidgets,
+                                                   QWidget *parent)
+   : QFrame(parent), channelSelection(channelSelection) , channelConfigWidgets(channelConfigWidgets)
 {
    QSettings settings("AgCoelfen", "FFFEval");
    settings.setIniCodec("UTF-8");
+   this->setFrameStyle(0x1011);
+   // allCalibSelections = new QMap<QString, QComboBox*>();
+
+   lay = new QGridLayout(this);
+   lay->addWidget(new QLabel("<b>Calibration</b>", this), 0, 0, Qt::AlignLeft);
+   allCalibSelections  = new QMap<QString, QComboBox*>();
+   channelCalibWidgets = QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>>(new QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>);
 
    bool ok;
 #define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
@@ -987,100 +1018,596 @@ AF4ChannelCalibsOrgFrame::AF4ChannelCalibsOrgFrame(QComboBox *channelSelection, 
    QString calibName;
    QString channelName;
 
+   qDebug() << "1";
+
    for(uint i=0; i < numberOfChannels; ++i){
       numberOfCalibrations = settings.value(tr("channels/%1/numberOfCalibrations").arg((i)), 0).toInt(&ok);
 
-
       CHECK_SETTINGS_CONVERSION(numberOfCalibrations, 0);
-      currentCalibSelection =  new QComboBox(calibrationFrame);
+      calibSelection =  new QComboBox(this);
 
-      currentCalibSelection->setToolTip("Choose a Calibration profile");
-      currentCalibSelection->hide();
-      calibrationFrameLayout->addWidget(currentCalibSelection, 0, 11);
-      allCalibSelections->insert(channelSelection->itemText(i), currentCalibSelection);
+      calibSelection->setToolTip("Choose a Calibration profile");
+      calibSelection->hide();
+      lay->addWidget(calibSelection, 0, 11);
+      allCalibSelections->insert(channelSelection->itemText(i), calibSelection);
 
       channelName = channelSelection->itemText(i);
+      qDebug() << "5";
       channelCalibWidgets->insert(channelName, new QMap<QString, AF4ChannelCalibWidget*>);
-    //  qDebug() << "a5"<< numberOfCalibrations;
+      //  qDebug() << "a5"<< numberOfCalibrations;
       for(uint j=0; j < numberOfCalibrations; j++){
+         qDebug() << "10" << i << j;
          //qDebug() << "b1"<< numberOfCalibrations;
          calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();
-         currentCalibWidget = new AF4ChannelCalibWidget(i, j, channelName, calibName, settingsWriter, calibrationFrame);
+         currentCalibWidget = new AF4ChannelCalibWidget(i, j, channelName, calibName, settingsWriter, this);
          //qDebug() << "b2"<< numberOfCalibrations;
+         qDebug() << "11" << i << j;
          connect(currentCalibWidget, &AF4ChannelCalibWidget::calibrateChannelCalled,
                  this, &AF4ChannelCalibsOrgFrame::calibrateChannnel);
-         currentCalibSelection->addItem(calibName);
+         qDebug() << "12" << i << j;
+         calibSelection->addItem(calibName);
          channelCalibWidgets->value(channelName)->insert(calibName, currentCalibWidget);
          //qDebug() << "b3"<< numberOfCalibrations;
-         calibrationFrameLayout->addWidget(currentCalibWidget, 2, 0, 7, 7);
+         lay->addWidget(currentCalibWidget, 2, 0, 7, 7);
+         qDebug() << "13" << i << j;
          currentCalibWidget->hide();
       }
-      connect(currentCalibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
+      connect(calibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
               this, &AF4ChannelCalibsOrgFrame::switchCalibWidget);
 
    }
    #undef CHECK_SETTINGS_CONVERSION
-
-   plotWidget = new AF4CalibPlotWidget(calibrationFrame);
-   calibrationFrameLayout->addWidget(plotWidget, 2, 7, 7, 7);
+   qDebug() << "20";
+   plotWidget = new AF4CalibPlotWidget(this);
+   lay->addWidget(plotWidget, 2, 7, 7, 7);
 
    //qDebug() << "a5";
-   renameCalibButton = new QToolButton(calibrationFrame);
+   renameCalibButton = new QToolButton(this);
    renameCalibButton->setText("R");
    renameCalibButton->setToolTip("Rename the current calibration profile");
 
    connect(renameCalibButton, &QPushButton::clicked,
            this, &AF4ChannelCalibsOrgFrame::renameCalibration);
-   calibrationFrameLayout->addWidget(renameCalibButton, 0, 12);
+   lay->addWidget(renameCalibButton, 0, 12);
 
-   addCalibButton = new QToolButton(calibrationFrame);
+   addCalibButton = new QToolButton(this);
    addCalibButton->setText(tr("+"));
    addCalibButton->setToolTip("Add new calibration profile");
    connect(addCalibButton, &QPushButton::clicked,
            this, &AF4ChannelCalibsOrgFrame::addCalibration);
-   calibrationFrameLayout->addWidget(addCalibButton, 0, 13);
+   lay->addWidget(addCalibButton, 0, 13);
 
-   deleteCalibButton = new QToolButton(calibrationFrame);
+   deleteCalibButton = new QToolButton(this);
    deleteCalibButton->setText(tr("-"));
    deleteCalibButton->setToolTip("delete current calibration profile");
    connect(deleteCalibButton, &QPushButton::clicked,
            this, &AF4ChannelCalibsOrgFrame::deleteCalibration);
-   calibrationFrameLayout->addWidget(deleteCalibButton, 0, 14);
-
-
+   lay->addWidget(deleteCalibButton, 0, 14);
 }
+
+
+
 
 void AF4ChannelCalibsOrgFrame::adaptPlotData()
 {
-
+   QString fileName = currentCalibWidget->getInputFileName();
+   if(!fileName.isEmpty())
+      plotWidget->setPlotData(fileName);
 }
 
 bool AF4ChannelCalibsOrgFrame::addCalibration()
 {
+   QString newName;
+   if(askCalibAdding(newName)){
+      // add a new Calibration here:
+      if(currentCalibWidget) currentCalibWidget->hide();
+     // CalibrationParameters params;
+      QString channelName = channelSelection->currentText();
+      int channelId = channelSelection->currentIndex();
+      int newCalibId = channelCalibWidgets->size();
+      AF4ChannelCalibWidget* newCalibration = new AF4ChannelCalibWidget(channelId,
+                                                                        newCalibId,
+                                                                        //channelSelection->count(),
+                                                                        //channelCalibWidgets->value(channelSelection->currentText())->size(),
+                                                                        //currentChConfigWidget->getChannelName(),
+                                                                        //channelConfigWidgets->currentText(),
+                                                                        channelName,
+                                                                        newName,
+                                                                        this->settingsWriter,
+                                                                        this);
+      if(currentCalibWidget) newCalibration->setAllCalibrationParameters(currentCalibWidget->getAllCalibrationParameters());
+      connect(newCalibration, &AF4ChannelCalibWidget::calibrateChannelCalled, this, &AF4ChannelCalibsOrgFrame::calibrateChannnel);
 
+      channelCalibWidgets->value(channelName)->insert(newName, newCalibration);
+      calibSelection->addItem(newName);
+      calibSelection->setCurrentIndex(calibSelection->count()-1);
+      currentCalibWidget = newCalibration;
+      // int channelId = channelConfigWidgets->value(channelName)->getChannelId();
+      adaptCalibWidgetIds(channelName, channelId);
+      adaptCalibWidgetNames(channelName);
+      AF4Log::logText(tr("New Calibration \"%1\" added.").arg(newName));
+      lay->addWidget(currentCalibWidget, 2, 0, 7, 7);
+      switchCalibWidget(newName);
+      //currentCalibWidget->show();
+      saveParameters();
+      return true;
+   }
+   else return false;
 }
 
 void AF4ChannelCalibsOrgFrame::renameCalibration()
 {
+   QString newName;
+   QString oldCalibName = QString(calibSelection->currentText());
 
+   if(askCalibRenaming(newName, oldCalibName)){
+
+      // remove the old calibration here and inset it under its new key:
+      QString channelName = channelSelection->currentText();
+
+      AF4ChannelCalibWidget *oldCalibWidget = channelCalibWidgets->value(channelName)->value(oldCalibName);
+      channelCalibWidgets->remove(oldCalibName);
+      channelCalibWidgets->value(channelName)->insert(newName, oldCalibWidget);
+
+      calibSelection->setItemText(calibSelection->currentIndex(), newName);
+      int channelId = channelConfigWidgets->value(channelName)->getChannelId();
+      adaptCalibWidgetIds(channelName, channelId);
+      adaptCalibWidgetNames(channelName);
+      saveParameters();
+   }
 }
 
 void AF4ChannelCalibsOrgFrame::deleteCalibration()
 {
+   if(calibSelection->count() > 1){
+      AF4DeleteCalibDialog* deleteCalibDialog = new AF4DeleteCalibDialog();
+      if(deleteCalibDialog->exec()){
+         const QString calibrationToRemove = calibSelection->currentText();
+         const QString channelName = channelSelection->currentText();
+         int indexToRemove = calibSelection->currentIndex();
+         calibSelection->removeItem(indexToRemove);
+         delete (channelCalibWidgets->value(calibrationToRemove));
+         channelCalibWidgets->remove(calibrationToRemove);
+         int channelId = channelConfigWidgets->value(channelName)->getChannelId();
+         adaptCalibWidgetIds(channelName, channelId);
+         adaptCalibWidgetNames(channelName);
 
+         AF4Log::logText(tr("Calibration deleted."));
+         saveParameters();
+      }
+   } else {
+      AF4Log::logWarning(tr("You cannot remove the last Calibration!"));
+   }
 }
 
 void AF4ChannelCalibsOrgFrame::switchCalibWidget(QString newWidgetKey)
 {
+   currentCalibWidget->hide();
+   plotWidget->disconnectCurrentMarkers();
 
+   QString channelName = channelSelection->currentText();
+   currentCalibWidget = channelCalibWidgets->value(channelName)->value(newWidgetKey);
+   lay->addWidget(currentCalibWidget, 2, 0, 7, 7);
+   connectCtrlWithPlotWidget();
+   //auto ctrl = currentCalibWidget->getCtrlBoxRefs();
+   //plotWidget->connectMarkers(ctrl.leftOffset, ctrl.tVoid, ctrl.tElution);
+   adaptPlotData();
+   currentCalibWidget->show();
 }
 
 void AF4ChannelCalibsOrgFrame::calibrateChannnel()
 {
+   AF4Log::logText(tr("Start calibration..."));
+   QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+   const QString channelName = channelSelection->currentText();
+   ChannelDims chDims = channelConfigWidgets->value(channelName)->getChannelDimensions();
+   //channelCalibWidgets->value(channelName)->getC;
+   //ChannelDims chDims  = channelCalibWidgets->currentItem()->getChannelDimensions();
+   ParametersForCalibration params = currentCalibWidget->getParametersForCalibration();
+   CalibModeSettings cModes = currentCalibWidget->getCalibModes();
 
+   calibRealMeaurement(chDims, params, cModes);
+   if(cModes.checkUncertainty){
+      calibUncertaintyGrid(chDims, params, cModes);
+      AF4Log::logText(tr(""));
+   }
+   QGuiApplication::restoreOverrideCursor();
 }
 
 void AF4ChannelCalibsOrgFrame::saveParameters() const
 {
 
+}
+
+void AF4ChannelCalibsOrgFrame::adaptCalibWidgetIds(const QString &channelName,int newChannelId)
+{
+   int i = 0;
+   for(const QString &key: channelCalibWidgets->keys()){
+      AF4ChannelCalibWidget *calibWidget = channelCalibWidgets->value(channelName)->value(key);
+      calibWidget->setCalibId(i);
+      calibWidget->setChannelId(newChannelId);
+      ++i;
+   }
+}
+
+void AF4ChannelCalibsOrgFrame::adaptCalibWidgetNames(const QString &channelName)
+{
+   int i = 0;
+   //QString channelName = channelSelection->currentText();
+   for(const QString &key: channelCalibWidgets->keys()){
+      AF4ChannelCalibWidget *calibWidget = channelCalibWidgets->value(channelName)->value(key);
+      calibWidget->setCalibName(key);
+      calibWidget->setChannelName(channelName);
+      ++i;
+   }
+}
+
+bool AF4ChannelCalibsOrgFrame::askCalibRenaming(QString &newName, const QString &oldName)
+{
+   bool nameIsOk;
+   bool firstDialog = true;
+   do {
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
+      AF4CalibNameDialog calibNameDialog(&newName, firstDialog, oldName, true);
+      firstDialog = false;
+      if(calibNameDialog.exec()){
+         // check if the entered name is already used
+         nameIsOk = true;
+         for(int i=0; i < calibSelection->count() ; ++i){
+            QString compName = calibSelection->itemText(i);
+            if(!(QString::compare(newName, compName))){
+               nameIsOk = false;
+               break;
+            }
+         }
+      } else return false;
+   } while(!nameIsOk);
+   return true;
+}
+
+bool AF4ChannelCalibsOrgFrame::askCalibAdding(QString &newName)
+{
+   bool nameIsOk;
+   bool firstDialog = true;
+   do {
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
+      AF4CalibNameDialog calibNameDialog(&newName, firstDialog);
+      firstDialog = false;
+      if(calibNameDialog.exec()){
+         // check if the entered name is already used
+         nameIsOk = true;
+         for(int i=0; i < calibSelection->count() ; i++){
+            QString compName = calibSelection->itemText(i);
+            if(!(QString::compare(newName, compName))){
+               nameIsOk = false;
+               break;
+            }
+         }
+      } else return false;
+   } while(!nameIsOk);
+   return true;
+}
+
+void AF4ChannelCalibsOrgFrame::calibRealMeaurement(const ChannelDims &chDims, const ParametersForCalibration &params, const CalibModeSettings &cModes)
+{
+   AF4Log::logText(tr("Calibrate with measured values..."));
+   CalibResult result;
+   if(cModes.classical){
+      AF4Log::logText(tr("Try \"Classical\" calibration..."));
+      result = calibSingleParamSet(chDims, params, CalibMode::classical);
+      if(result.errorCode == CalibErrorCode::noError){
+         AF4Log::logText(tr("\"Classical\" calibration Finished. w_cla set to %1, V_cla set to %2.").arg(result.width).arg(result.volume));
+         currentCalibWidget->setChannelWidthClassical(result.width);
+         currentCalibWidget->setClassicalVolume(result.volume);
+      }
+      else      {
+         AF4Log::logError(tr("\"Classical\" calibration could not be conducted."));
+         logErrorMessage(result.errorCode);
+      }
+   }
+   if(cModes.geometric){
+      AF4Log::logText(tr("Try \"Geometric\" calibration..."));
+      result = calibSingleParamSet(chDims, params, CalibMode::geometric);
+      if(result.errorCode == CalibErrorCode::noError){
+         AF4Log::logText(tr("\"Geometric\" calibration finished. w_geo set to %1, V_geo set to %2.").arg(result.width).arg(result.volume));
+         currentCalibWidget->setChannelWidthGeo(result.width);
+         currentCalibWidget->setGeometVolume(result.volume);
+      }
+      else {
+         AF4Log::logError(tr("\"Geometric\" calibration could not be conducted."));
+         logErrorMessage(result.errorCode);
+      }
+   }
+   if(cModes.hydrodynamic){
+      AF4Log::logText(tr("Try \"Hydrodynamic\" calibration..."));
+      result = calibSingleParamSet(chDims, params, CalibMode::hydrodynamic);
+      if(result.errorCode == CalibErrorCode::noError){
+         AF4Log::logText(tr("\"Hydrodynamic\" calibration Finished. w_hyd set to %1, V_hyd set to %2.").arg(result.width).arg(result.volume));
+         currentCalibWidget->setChannelWidthHydro(result.width);
+         currentCalibWidget->setChannelWidthGeo(result.volume);
+      }
+      else {
+         AF4Log::logError(tr("\"Hydrodynamic\" calibration could not be conducted."));
+         logErrorMessage(result.errorCode);
+      }
+   }
+}
+
+void AF4ChannelCalibsOrgFrame::calibUncertaintyGrid(const ChannelDims &chDims, const ParametersForCalibration &params, const CalibModeSettings &cModes)
+{
+
+   //-////////////////////////////////////////
+   // non-const parameter structures for
+   // Macro-based parameter modifications
+   //-////////////////////////////////////////
+
+   struct ChannelDims_nonConst {
+      double length1;
+      double length2;
+      double length3;
+      double chLength;
+      double b0;
+      double bL;
+   };
+   struct ParamsForCalibration_nonConst {
+      double elutionFlow;
+      double crossFlow;
+      double relFocusPoint;
+      //double leftOffsetTime;
+      double voidPeakTime;
+      double elutionTime;
+      double diffCoeff;
+   };
+
+   //-/////////////////////////////////////////////////////////////////
+   //
+   // converters for const to non-const containers and vice versa
+   //
+   //-/////////////////////////////////////////////////////////////////
+
+   auto dimsToNonConst = [](const ChannelDims &constDims)
+         -> ChannelDims_nonConst {
+      return ChannelDims_nonConst
+      {        constDims.length1,
+               constDims.length2,
+               constDims.length3,
+               constDims.chLength,
+               constDims.b0,
+               constDims.bL
+      };
+   };
+   auto dimsToConst = [](const ChannelDims_nonConst &nonConstDims)
+         -> ChannelDims {
+      return ChannelDims
+      {        nonConstDims.length1,
+               nonConstDims.length2,
+               nonConstDims.length3,
+               nonConstDims.chLength,
+               nonConstDims.b0,
+               nonConstDims.bL
+      };
+   };
+   auto paramsToNonConst = [](const ParametersForCalibration &nonConstParams)
+         -> ParamsForCalibration_nonConst {
+      return ParamsForCalibration_nonConst
+      {        nonConstParams.elutionFlow,
+               nonConstParams.crossFlow,
+               nonConstParams.relFocusPoint,
+               //nonConstParams.leftOffsetTime,
+               nonConstParams.voidPeakTime,
+               nonConstParams.elutionTime,
+               nonConstParams.diffCoeff
+      };
+   };
+   auto paramsToConst = [](const ParamsForCalibration_nonConst &constParams)
+         ->ParametersForCalibration {
+      return  ParametersForCalibration
+      {        constParams.elutionFlow,
+               constParams.crossFlow,
+               constParams.relFocusPoint,
+               //constParams.leftOffsetTime,
+               constParams.voidPeakTime,
+               constParams.elutionTime,
+               constParams.diffCoeff
+      };
+   };
+
+   //-/////////////////////////////////////////////////////////////////////////////
+   //
+   // Start of actual function
+   // void .....::  calibUncertaintyGrid(const ChannelDims &chDims,
+   //                                    const ParametersForCalibration &params,
+   //                                    const CalibModeSettings &cModes)
+   //
+   //-//////////////////////////////////////////////////////////////////////////////
+
+   const double deltaMax = cModes.uncertRange / 100.0; // from "%" to factor
+   //const double deltaMin = - deltaMax;
+   const uint   gridMidPos = cModes.uncertGridSize;
+   const uint   gridSize(2 * gridMidPos + 1);
+   vecD devXRel;                 // relative deviating sizes within the defined range [X - X⋅δmax, X + X⋅δmax]
+   devXRel.resize(gridSize);
+   vecD deltaWidth;              // relative deviations of channel volume from  ( (Y(X ± δX) / Y(X)) - 1 )
+   deltaWidth.resize(gridSize);
+   vecD deltaVolume;             // relative deviations of channel width from  ( (Y(X ± δX) / Y(X)) - 1 )
+   deltaVolume.resize(gridSize);
+
+/*
+ * DELTAMAGN         = size in one of the containers
+ * CONSTCONTAINER    = conatainer of DELTAMAGN (params or chDims)
+ * NONCONSTCONTAINER = corresponding modifyable version ()
+ * CALIBMODE         = one of the three CalibModes (classical, geometric or hydrodynamic)
+ * FILENAMESUFF      = "_*.csv"
+ *
+*/
+#define ITERATIVE_PARAMETER_DELTA_ANALYSIS(DELTAMAGN, CONSTCONTAINER, NONCONSTCONTAINER, CALIBMODE , FILENAMESUFFIX) \
+   {                                                                           \
+   const double X = CONSTCONTAINER . DELTAMAGN;                                \
+   for(uint i = 0; i < gridSize; ++i){                                         \
+   /* create modified parameter structures, for both containers,               \
+    *  so no macro parameter required */                                       \
+   ParamsForCalibration_nonConst paramsDeltaMod = paramsToNonConst(params);    \
+   ChannelDims_nonConst chDimsDeltaMod  = dimsToNonConst(chDims);             \
+   /* get the modifier between δmin to δmax */                                \
+   devXRel[i] =  static_cast<double>(i) - static_cast<double>(gridMidPos);    \
+   devXRel[i] *= deltaMax / static_cast<double>(gridMidPos);                  \
+   /* modify δsize parameter to X ± δX, specific NONCONSTCONTAINER needed  */ \
+   NONCONSTCONTAINER.DELTAMAGN = (1.0 + devXRel[i]) * X;                      \
+   /* conduct calibration */                                                  \
+   CalibResult deltaResult = calibSingleParamSet(dimsToConst(chDimsDeltaMod), \
+   paramsToConst(paramsDeltaMod),                                             \
+   CalibMode::CALIBMODE);                                                     \
+   deltaWidth[i]  = (deltaResult.width  / widthRefY  ) - 1.0;                 \
+   deltaVolume[i] = (deltaResult.volume / VolumeRefY ) - 1.0;                 \
+   AF4Log::logText(tr("Tested for modified %1 = %2 , with δX = %3\%")         \
+                   .arg(#DELTAMAGN)                                           \
+                   .arg(paramsDeltaMod.DELTAMAGN)                             \
+                   .arg(devXRel[i] * 100.0));                                 \
+}                                                                             \
+/* write results */                                                           \
+string outFile = filePathPrefix + string(FILENAMESUFFIX);                     \
+AF4Log::logText(tr("Write result to %1").arg(outFile.c_str()));               \
+AF4CsvWriter csvWriter(outFile);                                              \
+csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
+};
+
+/*----------------------------------------------------------------------------------------------------------------
+//Expanded example for Macro with arguments (elutionFlow, params, paramsDeltaMod, classical,"_elutionFlow.csv")
+{
+   const double X = params.elutionFlow;
+   for(uint i = 0; i < gridSize; ++i){
+      // create modified parameter structures:
+      ParamsForCalibration_nonConst paramsDeltaMod = paramsToNonConst(params);
+      ChannelDims_nonConst chDimsDeltaMod  = dimsToNonConst(chDims);
+      // get the modifier between δmin to δmax
+      devXRel[i] =  static_cast<double>(i) - static_cast<double>(gridMidPos);
+      devXRel[i] *= deltaMax / static_cast<double>(gridMidPos);
+      modify δsize parameter to X ± δX
+      paramsDeltaMod.elutionFlow = (1.0 + devXRel[i]) * X;
+      // conduct calibration
+      CalibResult deltaResult = calibSingleParamSet(dimsToConst(chDimsDeltaMod),
+                                                    paramsToConst(paramsDeltaMod),
+                                                    CalibMode::classical);
+      deltaWidth[i]  = (deltaResult.width  / widthRefY  ) - 1.0;
+      deltaVolume[i] = (deltaResult.volume / VolumeRefY ) - 1.0;
+      AF4Log::logText(tr("Tested for modified %1 = %2 , with δX = %3\%")
+                      .arg("elutionFlow")
+                      .arg(paramsDeltaMod.elutionFlow)
+                      .arg(devXRel[i] * 100.0));
+   }
+   // write results
+   string outFile = filePathPrefix + string("_elutionFlow.csv");
+   AF4Log::logText(tr("Write result to %1").arg(outFile.c_str()));
+   AF4CsvWriter csvWriter(outFile);
+   csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);
+};
+-------------------------------------------------------------------------------------------------------------------*/
+
+   CalibResult refResult;
+   if(cModes.classical){
+      // try a single test calibration to
+      refResult = calibSingleParamSet(chDims, params, CalibMode::classical);
+      if(refResult.errorCode != CalibErrorCode::noError){
+         logErrorMessage(refResult.errorCode);
+         return;
+      }
+      const double widthRefY = refResult.width;   // Y_width(X)
+      const double VolumeRefY = refResult.volume;  // Y_vol(X)
+      const string filePathPrefix("/home/bluemage/tests/deltaTests/delta");
+      const std::vector<string> header = {string("delta X"), string("delta width"), string("delta volume") };
+
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionFlow,   params, paramsDeltaMod, classical, "_elutionFlow_cla.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(crossFlow,     params, paramsDeltaMod, classical, "_crossFlow_cla.csv"     );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(relFocusPoint, params, paramsDeltaMod, classical, "_relFocusPoint_cla.csv" );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(voidPeakTime,  params, paramsDeltaMod, classical, "_voidPeakTime_cla.csv"  );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionTime,   params, paramsDeltaMod, classical, "_elutionTime_cla.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, classical, "_diffCoeff_cla.csv"     );
+
+   }
+   if(cModes.geometric){
+      refResult = calibSingleParamSet(chDims, params, CalibMode::geometric);
+      if(refResult.errorCode != CalibErrorCode::noError){
+         logErrorMessage(refResult.errorCode);
+         return;
+      }
+      else
+         logErrorMessage(refResult.errorCode);
+   }
+   if(cModes.hydrodynamic){
+      refResult = calibSingleParamSet(chDims, params, CalibMode::hydrodynamic);
+      if(refResult.errorCode != CalibErrorCode::noError){
+         logErrorMessage(refResult.errorCode);
+         return;
+      }
+      else
+         logErrorMessage(refResult.errorCode);
+   }
+
+#undef ITERATIVE_PARAMETER_DELTA_ANALYSIS
+
+
+}
+
+CalibResult AF4ChannelCalibsOrgFrame::calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode)
+{
+   AF4Calibrator calibrator(chDims, params);
+   CalibResult result;
+   result.errorCode = calibrator.checkParameters();
+   if(result.errorCode != CalibErrorCode::noError) return result;
+
+   switch (mode) {
+   case CalibMode::classical:
+      result = calibrator.calibrate_classic();
+      break;
+   case CalibMode::hydrodynamic:
+      result = calibrator.calibrate_hydrodynamic();
+      break;
+   case CalibMode::geometric:
+      result = calibrator.calibrate_geometric();
+      break;
+   }
+  return result;
+}
+
+void AF4ChannelCalibsOrgFrame::logErrorMessage(CalibErrorCode errorCode) const
+{
+   switch(errorCode){
+   case CalibErrorCode::noError:
+      break;
+   case CalibErrorCode::voidTimeZero:
+      AF4Log::logError(tr("tVoid = 0!")); break;
+   case CalibErrorCode::eluFlowZero:
+      AF4Log::logError(tr("Ve = 0!")); break;
+   case CalibErrorCode::eluTimeZero:
+      AF4Log::logError(tr("te = 0!")); break;
+   case CalibErrorCode::crossFlowZero:
+      AF4Log::logError(tr("Vc = 0!")); break;
+   case CalibErrorCode::diffCoeffZero:
+      AF4Log::logError(tr("D = 0!")); break;
+   case CalibErrorCode::voidTimeTooSmall:
+      AF4Log::logError(tr("tvoid must not be smaller than offset!")); break;
+   case CalibErrorCode::eluTimeTooSmall:
+      AF4Log::logError(tr("te must not be smaller than tvoid!")); break;
+   case CalibErrorCode::ParamsNotChecked:
+      AF4Log::logError(tr("Parameters were not checked! رجم مبرمج")); break;
+      break;
+   default:
+      break;
+   }
+}
+
+void AF4ChannelCalibsOrgFrame::connectCtrlWithPlotWidget()
+{
+   auto ctrl =  currentCalibWidget->getCtrlBoxRefs();
+   plotWidget->connectMarkers(ctrl.leftOffset, ctrl.tVoid, ctrl.tElution);
+}
+
+void AF4ChannelCalibsOrgFrame::writeSettings() const
+{
+   QSettings settings("AgCoelfen", "FFFEval");
+   settings.setIniCodec("UTF-8");
+
+   QList<QString> keys = allCalibSelections->keys();
+   for(int i = 0; i < channelConfigWidgets->count(); ++i)
+      settings.setValue(tr("channels/%1/numberOfCalibrations").arg(i), allCalibSelections->value(keys.at(i))->count());
 }
