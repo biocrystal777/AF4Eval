@@ -94,7 +94,7 @@ public:
    double getGeometVolume() const { return innerCalibFrame->getGeometVolume(); }
 
 
-   CalibModeSettings getCalibModes() const{ return innerCalibFrame->getCalibModes(); }
+   CalibModeSettings getCalibModes() const { return innerCalibFrame->getCalibModes(); }
 
    /*!
     * \brief getChannelDimsFromCalib

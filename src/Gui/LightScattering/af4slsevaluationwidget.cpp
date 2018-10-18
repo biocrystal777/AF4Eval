@@ -8,7 +8,7 @@ AF4SLSEvaluationWidget::AF4SLSEvaluationWidget(QWidget *parent) :
    QWidget(parent)
 {   
 
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
 
    bool ok;
@@ -120,7 +120,7 @@ AF4SLSEvaluationWidget::~AF4SLSEvaluationWidget()
 
 void AF4SLSEvaluationWidget::writeSettings() const
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("slsEvaluation/evaluation/n0"), refIndexSolvent->value());
    settings.setValue(tr("slsEvaluation/evaluation/laserWaveLength"), laserWaveLength->value());
@@ -138,7 +138,7 @@ void AF4SLSEvaluationWidget::writeSettings() const
 
 void AF4SLSEvaluationWidget::loadSettings() const
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    //QString stringValue;
    double value;

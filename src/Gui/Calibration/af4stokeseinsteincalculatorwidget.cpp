@@ -96,7 +96,7 @@ void AF4StokesEinsteinCalculatorWidget::reCalculate()
 
 void AF4StokesEinsteinCalculatorWidget::saveParameters()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("AF4StokesEinsteinCalculatorWidget/RS"),  stokesRad->value());
    settings.setValue(tr("AF4StokesEinsteinCalculatorWidget/T"),   temperature->value());
@@ -105,7 +105,7 @@ void AF4StokesEinsteinCalculatorWidget::saveParameters()
 
 void AF4StokesEinsteinCalculatorWidget::loadParameters()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    bool ok;
    double val = settings.value(tr("AF4StokesEinsteinCalculatorWidget/RS"), 10.0).toDouble(&ok);

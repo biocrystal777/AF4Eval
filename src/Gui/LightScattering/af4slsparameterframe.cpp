@@ -57,7 +57,7 @@ AF4SLSParameterFrame::AF4SLSParameterFrame(const QString &prefix, int id, QWidge
    refIndexSolvent->setToolTip("Refractive Index of the solvent");
    lay->addWidget(refIndexSolvent, 5, 1, 1, 4, Qt::AlignLeft);
 
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    bool ok(false);
    double value(0.0);
@@ -88,7 +88,7 @@ AF4SLSParameterFrame::AF4SLSParameterFrame(const QString &prefix, int id, QWidge
 
 void AF4SLSParameterFrame::writeSettings() const
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
 
    settings.setValue(tr("/%1/%2/slsparam/n0").arg(prefix).arg(id), refIndexSolvent->value());

@@ -23,7 +23,7 @@ class AF4CalibSettingsFrame final : public QFrame {
    Q_OBJECT
 public:
    AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets,
-                         QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* channelCalibWidgets,
+                         QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget *> > > channelCalibWidgets,
                          const QString &prefix,
                          QWidget *parent = nullptr);
    /*!
@@ -84,7 +84,7 @@ public:
      * \return
      */
    double getChWidth() const {
-      return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getClassicalChannelWidth();
+      return channelCalibWidgets->value(channelChooser->currentText()).value(currentCalibChooser->currentText())->getClassicalChannelWidth();
 
    }
 
@@ -93,7 +93,7 @@ public:
      * \return
      */
    double getHydrodynVolume() const {
-      return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getHydrodynVolume();
+      return channelCalibWidgets->value(channelChooser->currentText()).value(currentCalibChooser->currentText())->getHydrodynVolume();
    }
 
    /*!
@@ -101,7 +101,7 @@ public:
      * \return
      */
    double getGeometVolume() const {
-      return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getGeometVolume();
+      return channelCalibWidgets->value(channelChooser->currentText()).value(currentCalibChooser->currentText())->getGeometVolume();
    }
 
    /*!
@@ -115,7 +115,7 @@ public:
      * \return
      */
    ChannelDimsFromCalib getChannelDimsFromCalib() const {
-      return channelCalibWidgets->value(channelChooser->currentText())->value(currentCalibChooser->currentText())->getChannelDimsFromCalib();
+      return channelCalibWidgets->value(channelChooser->currentText()).value(currentCalibChooser->currentText())->getChannelDimsFromCalib();
    }
 
 public slots:
@@ -160,11 +160,11 @@ public slots:
 private:
    const QString prefix;
    QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;
-   QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>* const channelCalibWidgets;
+   QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
 
    QGridLayout *layout                         = nullptr;
    QList<QString> *channelKeyList              = nullptr;
-   QList<QList<QString>*> *calibKeyList        = nullptr;
+   QList<QList<QString> > calibKeyList;
    QComboBox *channelChooser                   = nullptr;
    QComboBox *currentCalibChooser              = nullptr;
    QMap<QString, QComboBox*>* allCalibChoosers = nullptr;

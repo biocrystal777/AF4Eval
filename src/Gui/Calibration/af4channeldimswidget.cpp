@@ -101,7 +101,7 @@ void AF4ChannelDimsWidget::loadSettings()
    .arg(keyName).arg(defaultValueName)); \
 }\
 };
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    double channelValue;
    QString newChannelName;
@@ -146,7 +146,7 @@ void AF4ChannelDimsWidget::defaultInit()
 
 void AF4ChannelDimsWidget::writeSettings()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    // window parameters
 

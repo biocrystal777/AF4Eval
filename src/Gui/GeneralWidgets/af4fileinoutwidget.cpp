@@ -3,7 +3,7 @@
 AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent) :
    QFrame(parent), identifier(identifier), suffix(suffix)
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    QString stringValue;
 
@@ -99,7 +99,7 @@ void AF4FileInOutWidget::setOutputFilePath(QString path, bool quoted)
 
 void AF4FileInOutWidget::writeSettings()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("fileNames/%1/inputFileName").arg(identifier), getInputFilePath(true));
    settings.setValue(tr("fileNames/%1/outputFileName").arg(identifier), getOutputFilePath(true));

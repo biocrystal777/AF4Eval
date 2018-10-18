@@ -12,7 +12,7 @@ AF4MainWindow::AF4MainWindow(QWidget *parent)
    // get settings and adjust window size //
    //-//////////////////////////////////////
    {
-      QSettings settings("AgCoelfen", "FFFEval");
+      QSettings settings("AgCoelfen", "AF4Eval");
       settings.setIniCodec("UTF-8");
 
       bool ok;
@@ -58,15 +58,19 @@ AF4MainWindow::AF4MainWindow(QWidget *parent)
    //-////////////////////////
 
    funcTabWidget = new QTabWidget(this);
+   qDebug() << "Main1";
    channelCalConfWidget = new AF4ChannelConfigurationWidget(funcTabWidget);
+   qDebug() << "Main2";
    funcTabWidget->addTab(channelCalConfWidget, "Channel Calibration");
    layout = new QGridLayout(this);
    layout->addWidget(funcTabWidget, 0, 0);
    layout->addWidget(logFrame, 1, 0);
    this->show();
+   qDebug() << "Main3";
    diffEvaluationWidget = new AF4DiffEvaluationWidget(channelCalConfWidget->getChannelConfigWidgets(),
                                                       channelCalConfWidget->getChannelCalibWidgets(),
                                                       funcTabWidget);
+   qDebug() << "Main4";
    funcTabWidget->addTab(diffEvaluationWidget, "Diffusion Coefficients");
 
    slsEvaluationWidget = new AF4SLSEvaluationWidget(funcTabWidget);
@@ -83,7 +87,7 @@ AF4MainWindow::~AF4MainWindow()
 
 void AF4MainWindow::writeSettings() const
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
 
    settings.setValue("window/height", this->height());

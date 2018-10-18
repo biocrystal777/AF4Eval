@@ -123,7 +123,7 @@ void AF4ExpSettingsFrame::loadSettings()
 }\
 };
 #endif // CHECK_SETTINGS_CONVERSION
-    QSettings settings("AgCoelfen", "FFFEval");
+    QSettings settings("AgCoelfen", "AF4Eval");
     bool ok{false};
     settings.setIniCodec("UTF-8");
 
@@ -165,7 +165,7 @@ void AF4ExpSettingsFrame::loadSettings()
 
 void AF4ExpSettingsFrame::writeSettings()
 {
-    QSettings settings("AgCoelfen", "FFFEval");
+    QSettings settings("AgCoelfen", "AF4Eval");
     settings.setIniCodec("UTF-8");
 
 //    QString prefix = (id >= 0 ? QString("project") : QString("other"));

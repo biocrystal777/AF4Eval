@@ -187,7 +187,7 @@ void AF4CalibParametersFrame::callDiffCoeffDialog()
 
 void AF4CalibParametersFrame::saveSettings()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("channels/%1/calib/%2/diffCoefficient").arg(channelId).arg(calibId), QVariant(getDiffCoefficient()));
    settings.setValue(tr("channels/%1/calib/%2/crossFlow").arg(channelId).arg(calibId),       QVariant(getCrossFlow()));
@@ -238,7 +238,7 @@ void AF4CalibParametersFrame::adaptEnablingStatus(CalibModeSettings m)
 void AF4CalibParametersFrame::loadSettings()
 {
 
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    double calibValue;
    //QString calibStringValue;

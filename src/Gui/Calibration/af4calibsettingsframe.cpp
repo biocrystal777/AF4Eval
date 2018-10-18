@@ -7,7 +7,7 @@
 //-/////////////////////////////////
 
 AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4ChannelDimsWidget *> >channelConfigWidgets,
-                                             QMap<QString, QMap<QString, AF4ChannelCalibWidget *> *> *channelCalibWidgets,
+                                             QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget *> > >channelCalibWidgets,
                                              const QString &prefix,
                                              QWidget *parent) :
    QFrame(parent),
@@ -16,9 +16,9 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
    channelCalibWidgets(channelCalibWidgets)
 {
    channelKeyList = new QList<QString>(channelConfigWidgets->keys());
-   calibKeyList = new QList<QList<QString>*>();
+   calibKeyList =  QList<QList<QString> >();
    for(int i=0; i < channelKeyList->size(); ++i)
-      calibKeyList->append(new QList<QString>(channelCalibWidgets->value(channelKeyList->at(i))->keys()));
+      calibKeyList.append( QList<QString>(channelCalibWidgets->value(channelKeyList->at(i)).keys()));
 
    layout = new QGridLayout(this);
    channelChooser = new QComboBox(this);
@@ -86,9 +86,9 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
       allCalibChoosers->insert(channelKey, currentCalibChooser);
       currentCalibChooser->hide();
       //fill comboBoxes;
-      numberOfChannelCalibs = channelCalibWidgets->value(channelKey)->size();
+      numberOfChannelCalibs = channelCalibWidgets->value(channelKey).size();
       for(int j=0; j < numberOfChannelCalibs; j++){
-         calibKey = calibKeyList->at(i)->at(j);
+         calibKey = calibKeyList.at(i).at(j);
          currentCalibChooser->addItem(calibKey);
       }
       connect(allCalibChoosers->value(channelKey), qOverload<const QString &>(&QComboBox::currentIndexChanged),
@@ -131,7 +131,7 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
 
 void AF4CalibSettingsFrame::saveParameters()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("%1/channelCalibs/channelIndex").arg(prefix), channelChooser->currentIndex());
    settings.setValue(tr("%1/channelCalibs/calibIndex").arg(prefix), currentCalibChooser->currentIndex());
@@ -168,14 +168,14 @@ void AF4CalibSettingsFrame::updateChannelValues(QString channelKey)
 void AF4CalibSettingsFrame::updateCalibValues(QString calibKey)
 {
    currentCalibKey = calibKey;
-   AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText())->value(calibKey);
+   AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText()).value(calibKey);
    channelWidth->setText(QString::number(calibWidget->getClassicalChannelWidth(), 'E'));
    channelVolume->setText(QString::number(calibWidget->getHydrodynVolume(), 'E'));
 }
 
 void AF4CalibSettingsFrame::adaptCalibValues(QString calibKey)
 {
-   AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText())->value(calibKey);
+   AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText()).value(calibKey);
    channelWidth->setText(QString::number(calibWidget->getClassicalChannelWidth(), 'E'));
    channelVolume->setText(QString::number(calibWidget->getHydrodynVolume(), 'E'));
 }
@@ -186,10 +186,11 @@ void AF4CalibSettingsFrame::adaptChannelParameters()
    delete channelKeyList;
    channelKeyList = new QList<QString>(channelConfigWidgets->keys());
 
-   delete calibKeyList;
-   calibKeyList = new QList<QList<QString>*>();
+   //delete calibKeyList;
+   //calibKeyList = new QList<QList<QString> >();
+   calibKeyList.clear();
    for(int i=0; i < channelKeyList->size(); i++)
-      calibKeyList->append(new QList<QString>(channelCalibWidgets->value(channelKeyList->at(i))->keys()));
+      calibKeyList.append(QList<QString>(channelCalibWidgets->value(channelKeyList->at(i)).keys()));
    // adapt channelChooser
 
    channelChooser->blockSignals(true);
@@ -208,9 +209,9 @@ void AF4CalibSettingsFrame::adaptChannelParameters()
       allCalibChoosers->insert(channelKey, currentCalibChooser);
       currentCalibChooser->hide();
       //fill comboBoxes;
-      numberOfChannelCalibs = channelCalibWidgets->value(channelKey)->size();
+      numberOfChannelCalibs = channelCalibWidgets->value(channelKey).size();
       for(int j=0; j < numberOfChannelCalibs; j++){
-         calibKey = calibKeyList->at(i)->at(j);
+         calibKey = calibKeyList.at(i).at(j);
          currentCalibChooser->addItem(calibKey);
       }
    }
@@ -246,15 +247,16 @@ AF4CalibSettingsFrame::~AF4CalibSettingsFrame()
 {
    saveParameters();
    if(channelKeyList) {delete channelKeyList; channelKeyList = nullptr;}
-   if(calibKeyList){
-      for(int i = 0; i < calibKeyList->size(); ++i) delete calibKeyList->at(i);
-      delete calibKeyList; calibKeyList = nullptr;
-   }
+   //if(!calibKeyList.isEmpty()){
+//      for(int i = 0; i < calibKeyList->size(); ++i) delete calibKeyList->at(i);
+   //delete calibKeyList; calibKeyList = nullptr;
+   //}
+   calibKeyList.clear();
 }
 
 void AF4CalibSettingsFrame::loadParameters()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    bool ok(false);
    int index = settings.value(tr("%1/channelCalibs/channelIndex").arg(prefix), 0).toInt(&ok);

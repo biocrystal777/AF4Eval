@@ -1,17 +1,5 @@
 #include "af4innercalibrationframe.h"
 
-
-
-/**************************************
- *
- *
- *
- * AF4InnerCalibrationFrame
- *
- *
- *
- *************************************/
-
 AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
                                                    const int calibId,
                                                    const QString channelName,
@@ -205,7 +193,7 @@ CalibModeSettings AF4InnerCalibrationFrame::getCalibModes() const
 
 void AF4InnerCalibrationFrame::saveSettings()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId),      QVariant(uncertRange->value()));
    settings.setValue(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId),      QVariant(uncertGrid->value()));
@@ -221,7 +209,7 @@ void AF4InnerCalibrationFrame::saveSettings()
 void AF4InnerCalibrationFrame::loadSettings()
 {
 
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    double calibValue;
    //QString calibStringValue;
@@ -274,16 +262,4 @@ void AF4InnerCalibrationFrame::loadSettings()
                          .arg(channelName).arg(calibName));
 
 #undef CHECK_SETTINGS_CONVERSION //
-
 }
-
-
-
-
-
-
-
-
-
-
-

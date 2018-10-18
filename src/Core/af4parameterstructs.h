@@ -69,6 +69,15 @@ struct ParametersForCalibration {
    const double diffCoeff;
 };
 
+struct ParametersFromCalibration {
+   const double classicalWidth;
+   const double classicalVolume;
+   const double geometricWidth;
+   const double geometricVolume;
+   const double hydrodynWidth;
+   const double hydrodynVolume;
+};
+
 
 struct SLSCalibrationParameters{
    const double riConstant;
@@ -92,17 +101,14 @@ struct Peakproperties{
 struct SampleProperties{
    const QList<double> startTimes;
    const QList<double> endTimes;
-   const QList<bool> secondVirUses;
+   const QList<bool>   secondVirUses;
    const QList<double> secondVirCoeffs;
-   const QList<bool> thirdVirUses;
+   const QList<bool>   thirdVirUses;
    const QList<double> thirdVirCoeffs;
    const QList<double> refIndexIncs;
    const QList<double> waveLengths;
    const QList<double> epsilons;
 };
-
-
-
 
 enum struct SLSConcMode{
    FromRI,

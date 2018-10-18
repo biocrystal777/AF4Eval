@@ -9,6 +9,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    QWidget(parent), channelId(channelId), calibId(calibId),
    channelName(channelName), calibName(calibName)//, saveButton(saveButton)
 {
+   qDebug() << "CC1";
    widgetLayout = new QGridLayout(this);
    widgetFrame = new QFrame(this);
    widgetFrame->setFrameStyle(0x0023);
@@ -24,7 +25,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    inputFileName = new QLineEdit(this);
 
    frameLayout->addWidget(inputFileName, 1, 1, 1, 14);
-
+   qDebug() << "CC2";
    QLabel *labelPtr = new QLabel(tr("<b>Notes</b>"), this);
    //labelPtr->setMaximumHeight(50);
    frameLayout->addWidget(labelPtr, 2, 1, Qt::AlignCenter);
@@ -40,7 +41,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    frameLayout->addWidget(new QLabel("Buffer:", this), 5, 0);
    bufferDescr = new QLineEdit(this);
    frameLayout->addWidget(bufferDescr,                 5, 1, 1, 3);
-
+   qDebug() << "CC4";
    frameLayout->addWidget(new QLabel("Additional Notes:", this), 7, 0, Qt::AlignTop);
    notesDescr = new QTextEdit(this);
    frameLayout->addWidget(notesDescr, 8, 0, 1, 14);
@@ -52,7 +53,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    innerCalibFrame = new AF4InnerCalibrationFrame(channelId, calibId, channelName, calibName, saveButton, this);
    connect(innerCalibFrame, &AF4InnerCalibrationFrame::calibrateChannelCalled, this, &AF4ChannelCalibWidget::calibrateChannelCalled);
    frameLayout->addWidget(innerCalibFrame, 3, 5, 3, 4);
-
+   qDebug() << "CC5";
    /**************************************
     *
     * third column
@@ -62,6 +63,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    frameLayout->addWidget(calibParFrame, 3, 9, 3, 4);
    // connect saveButton
    connect(saveButton.data(), &QPushButton::clicked, this, &AF4ChannelCalibWidget::saveParameters);
+   qDebug() << "CC6";
 }
 
 AF4ChannelCalibWidget::~AF4ChannelCalibWidget()
@@ -157,7 +159,7 @@ void AF4ChannelCalibWidget::setAllCalibrationParameters(const AllCalibrationPara
 
 void AF4ChannelCalibWidget::loadSettings()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    //double calibValue;
    QString calibString;
@@ -176,7 +178,7 @@ void AF4ChannelCalibWidget::loadSettings()
 
 void AF4ChannelCalibWidget::saveParameters()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("channels/%1/calib/%2/name").arg(channelId).arg(calibId), calibName);
    settings.setValue(tr("channels/%1/calib/%2/sampleDescr").arg(channelId).arg(calibId), QVariant(getSampleDescr()));

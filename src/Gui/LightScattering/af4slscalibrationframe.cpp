@@ -69,7 +69,7 @@ AF4SLSCalibrationFrame::AF4SLSCalibrationFrame(const QString &prefix, int id, QW
       lay->addWidget(mallsAngleConstants.at(i), 4+i, 3, 1, 2, Qt::AlignRight);
    }
 
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
 
    double value;
@@ -112,7 +112,7 @@ AF4SLSCalibrationFrame::~AF4SLSCalibrationFrame()
 
 void AF4SLSCalibrationFrame::writeSettings()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("%1/slscalibration/%2/calibMALLS").arg(prefix).arg(id), mallsConstant->value());
    settings.setValue(tr("%1/slscalibration/%2/calibRI").arg(prefix).arg(id), riConstant->value());

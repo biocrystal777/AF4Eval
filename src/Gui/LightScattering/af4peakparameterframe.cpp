@@ -144,7 +144,7 @@ void AF4SinglePeakParameterWidget::loadSettings()
 {
    bool ok(false);
    double value(0.0);
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    QString key;
 
@@ -189,7 +189,7 @@ void AF4SinglePeakParameterWidget::loadSettings()
 void AF4SinglePeakParameterWidget::writeSettings()
 {
 
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
 
    settings.setValue(tr("/%1/peakParameters/%2/no%3/startTime").arg(parentPrefix).arg(parentId).arg(peakNo), startTime->value());
@@ -230,7 +230,7 @@ AF4PeakParameterFrame::AF4PeakParameterFrame(const QString &prefix, const int id
 
    peakParLayout = new QHBoxLayout(areaWidget);
 
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    bool ok(false);
    int numberOfPeaks = settings.value(tr("/%1/peakParameters/%2/numberOfPeaks").arg(prefix).arg(id), 1).toInt(&ok);
@@ -335,7 +335,7 @@ QList<QString> AF4PeakParameterFrame::getFractionDescriptions() const
 
 void AF4PeakParameterFrame::writeSettings()
 {
-   QSettings settings("AgCoelfen", "FFFEval");
+   QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("/%1/peakParameters/%2/numberOfPeaks").arg(prefix).arg(id), peakParWidgets.size());
 }

@@ -12,7 +12,7 @@ using std::vector;
 
 
 AF4DiffEvaluationWidget::AF4DiffEvaluationWidget(QSharedPointer<QMap<QString, AF4ChannelDimsWidget *> > channelConfigWidgets,
-                                                 QMap<QString, QMap<QString, AF4ChannelCalibWidget *> *> *channelCalibWidgets,
+                                                 QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget *> > >channelCalibWidgets,
                                                  QWidget *parent)
    : QFrame(parent), channelConfigWidgets(channelConfigWidgets), channelCalibWidgets(channelCalibWidgets)
 {
