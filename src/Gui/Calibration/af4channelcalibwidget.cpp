@@ -4,7 +4,7 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
                                              const int calibId,
                                              const QString channelName,
                                              const QString calibName,
-                                             QWeakPointer<QPushButton> saveButton,
+                                             //QWeakPointer<QPushButton> saveButton,
                                              QWidget *parent) :
    QWidget(parent), channelId(channelId), calibId(calibId),
    channelName(channelName), calibName(calibName)//, saveButton(saveButton)
@@ -50,20 +50,23 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    //-
    // Second column
    //--
-   innerCalibFrame = new AF4InnerCalibrationFrame(channelId, calibId, channelName, calibName, saveButton, this);
+   innerCalibFrame = new AF4InnerCalibrationFrame(channelId, calibId, channelName, calibName,  this);
    connect(innerCalibFrame, &AF4InnerCalibrationFrame::calibrateChannelCalled, this, &AF4ChannelCalibWidget::calibrateChannelCalled);
+   connect(this, &AF4ChannelCalibWidget::saveButtonClicked, innerCalibFrame, &AF4InnerCalibrationFrame::saveButtonClicked);
+
    frameLayout->addWidget(innerCalibFrame, 3, 5, 3, 4);
    qDebug() << "CC5";
    /**************************************
     *
     * third column
-    *
+    *numberOfCalibrations
     *************************************/
-   calibParFrame = new AF4CalibParametersFrame(channelId, calibId, channelName, calibName, saveButton, this);
+   calibParFrame = new AF4CalibParametersFrame(channelId, calibId, channelName, calibName, this);
    frameLayout->addWidget(calibParFrame, 3, 9, 3, 4);
    // connect saveButton
-   connect(saveButton.data(), &QPushButton::clicked, this, &AF4ChannelCalibWidget::saveParameters);
+   //connect(saveButton.data(), &QPushButton::clicked, this, &AF4ChannelCalibWidget::saveParameters);
    qDebug() << "CC6";
+   connect(this, &AF4ChannelCalibWidget::saveButtonClicked, this, &AF4ChannelCalibWidget::saveParameters);
 }
 
 AF4ChannelCalibWidget::~AF4ChannelCalibWidget()

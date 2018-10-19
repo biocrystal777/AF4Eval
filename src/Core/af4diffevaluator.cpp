@@ -58,7 +58,7 @@ int AF4DiffEvaluator::evalDiffCoeffs(vecD& times,
    {
       double var1 = (elutionFlow + crossFlow)/ crossFlow;
       double volumeFac = log((relFocusPoint / 100 - var1) / (1 - var1));
-      voidPeakTime = chVolume * volumeFac / crossFlow;      
+      voidPeakTime = chVolume * volumeFac / crossFlow;
    }
 
    AF4Log::logText(string("Used void peak time: ").append(std::to_string(voidPeakTime)));

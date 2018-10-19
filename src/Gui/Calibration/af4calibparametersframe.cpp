@@ -1,26 +1,9 @@
 #include "af4calibparametersframe.h"
 
-
-
-
-
-
-
-/**************************************
- *
- *
- *
- * AF4CalibParametersFrame
- *
- *
- *
- *************************************/
-
-
 AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
                                                  const QString &channelName,
                                                  const QString &calibName,
-                                                 QWeakPointer<QPushButton> saveButton,
+                                                 //QWeakPointer<QPushButton> saveButton,
                                                  QWidget *parent) :
    QFrame(parent), channelId(channelId), calibId(calibId),
    channelName(channelName), calibName(calibName)
@@ -28,6 +11,7 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
 
    lay = new QGridLayout(this);
    this->setFrameStyle(0x1011);
+
    /**************************************
     *
     * first column
@@ -160,7 +144,7 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
    lay->addWidget(diffCoefficient, 5, 1, 1, 3);
 
    loadSettings();
-   connect(saveButton.data(), &QPushButton::clicked, this, &AF4CalibParametersFrame::saveSettings);
+   connect(this, &AF4CalibParametersFrame::saveButtonClicked, this, &AF4CalibParametersFrame::saveSettings);
 }
 
 AF4CalibParametersFrame::~AF4CalibParametersFrame()

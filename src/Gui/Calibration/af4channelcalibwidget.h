@@ -54,7 +54,6 @@ public:
                          const int calibId,
                          const QString channelName,
                          const QString calibName,
-                         QWeakPointer<QPushButton> saveButton,
                          QWidget *parent);
 
    /*!
@@ -281,6 +280,7 @@ signals:
     *        calibButton has been pressed
     */
    void calibrateChannelCalled();
+   void saveButtonClicked();
 
 private:
 

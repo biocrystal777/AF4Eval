@@ -50,7 +50,7 @@ public:
                             const int calibId,
                             const QString channelName,
                             const QString calibName,
-                            QWeakPointer<QPushButton> saveButton,
+                            //QWeakPointer<QPushButton> saveButton,
                             QWidget *parent);
    ~AF4InnerCalibrationFrame();
 
@@ -164,7 +164,7 @@ public slots:
 signals:
    void calibrateChannelCalled();
    void calibModeSettingsChanged(CalibModeSettings m);
-
+   void saveButtonClicked();
 private:
    void loadSettings();
 

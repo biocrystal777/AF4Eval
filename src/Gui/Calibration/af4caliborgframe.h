@@ -61,6 +61,7 @@ public slots:
 
 signals:
    void calibrateChannelCalled();
+   void saveButtonClicked();
 
 private slots:
    /*!
@@ -93,8 +94,6 @@ private slots:
     */
    void saveParameters() const;
 
-
-
 private:
    QSharedPointer <QComboBox> channelSelection; // transitory solution for class split; replace by slot connnections later
 
@@ -105,12 +104,12 @@ private:
    //QFrame calibrationFrame = nullptr;
    AF4CalibPlotWidget *plotWidget                                              = nullptr;
 
-   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;
+   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >                  channelConfigWidgets;
    QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
    QSharedPointer<QPushButton> settingsWriter;//                                  = nullptr;
 
    AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
-   QMap<QString, QComboBox*> *allCalibSelections                               = nullptr;
+   QMap<QString, QComboBox*> allCalibSelections;
    QComboBox                 *calibSelection                            = nullptr;
    QToolButton               *addCalibButton                                   = nullptr;
    QToolButton *renameCalibButton                                              = nullptr;
@@ -150,11 +149,6 @@ private:
     * \brief connectCtrlWithPlotWidget
     */
    void connectCtrlWithPlotWidget();
-
-   /*!
-    * \brief writeSettings writes Parameters to QSettings
-    */
-   void writeSettings() const;
 
    AF4CalibOrgFrame( const      AF4CalibOrgFrame& src)  = delete;
    AF4CalibOrgFrame& operator= (AF4CalibOrgFrame& src)  = delete;

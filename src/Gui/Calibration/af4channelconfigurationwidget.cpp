@@ -119,6 +119,9 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
 
    connect(settingsWriter.data(), &QPushButton::clicked,
            this, &AF4ChannelConfigurationWidget::saveParameters);
+   //connect(settingsWriter.data(), &QPushButton::clicked, );
+   connect(settingsWriter.data(), &QPushButton::clicked, calibsOrgFrame, &AF4CalibOrgFrame::saveButtonClicked);
+
 
    layout->addWidget(settingsWriter.data(), 15, 0);
 
@@ -664,8 +667,9 @@ void AF4ChannelConfigurationWidget::saveParameters() const
    writeSettings();
    for(const QString &configWidgetKey : channelConfigWidgets->keys()){
       channelConfigWidgets->value(configWidgetKey)->writeSettings();
+
       //for(const QString &calibWidgetKey : channelCalibWidgets->value(configWidgetKey)->keys()){
-      //channelCalibWidgets->value(configWidgetKey)->value(calibWidgetKey)->saveParameters();
+      //   channelCalibWidgets->value(configWidgetKey)->value(calibWidgetKey)->saveParameters();
       //}
    }
 }

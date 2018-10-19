@@ -45,7 +45,7 @@ class AF4CalibParametersFrame final : public QFrame
 public:
    AF4CalibParametersFrame(int channelId, int calibId,
                            const QString &channelName,
-                           const QString &calibName, QWeakPointer<QPushButton> saveSettings,
+                           const QString &calibName,
                            QWidget *parent);
    ~AF4CalibParametersFrame();
 
@@ -216,6 +216,8 @@ public:
     * \todo NOT IMPLEMENTED DETAILS, BUT STRUCTURE ONLY; ALREADY CONNECTED;
     */
    void adaptEnablingStatus(CalibModeSettings m);
+signals:
+   void saveButtonClicked();
 
 private slots:
    void callDiffCoeffDialog();

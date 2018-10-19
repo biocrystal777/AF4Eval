@@ -16,6 +16,9 @@ class AF4ChannelDimsOrgFrame final : public QFrame {
 public:
    explicit AF4ChannelDimsOrgFrame(QWidget *parent);
 
+signals:
+   void saveButtonClicked();
+
 private:
 
    AF4ChannelDimsOrgFrame( const      AF4ChannelDimsOrgFrame& s)    = delete;
@@ -71,6 +74,10 @@ public:
       //return channelCalibWidgets;
       return calibsOrgFrame->getChannelCalibWidgets();
    }
+
+
+signals:
+   //void saveButtonClicked();
 
    //\////////////////
    // channel Frame //
