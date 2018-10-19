@@ -24,8 +24,6 @@
 #include "../Core/af4parameterstructs.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
 
-
-
 /*! ***************************************************************************************
 ***
 ***  \class     AF4ChannelCalibWidget "src/Gui/Calibration/af4channelcalibwidget.h"

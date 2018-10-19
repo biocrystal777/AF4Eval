@@ -8,9 +8,7 @@
 #include <vector>
 #include "./af4caliborgframe.h"
 
-
 class AF4ChannelDimsOrgFrame final : public QFrame {
-
    Q_OBJECT
 
 public:
@@ -71,15 +69,10 @@ public:
     * \brief getChannelCalibWidgets
     */
    auto getChannelCalibWidgets()  const -> QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > {
-      //return channelCalibWidgets;
       return calibsOrgFrame->getChannelCalibWidgets();
    }
 
-
-signals:
-   //void saveButtonClicked();
-
-   //\////////////////
+  //\////////////////
    // channel Frame //
    //\////////////////
 
@@ -121,7 +114,24 @@ private:
     */
    bool askChannelAdding(QString &newName);
 
+
 private slots:
+
+    // void switchCalibWidget(QString newWidgetKey);
+
+
+   /*!
+    * \brief saveParameters
+    */
+   void saveParameters() const;
+
+
+   /*!
+    * \brief calibrateChannnel
+    * \details creates a fffcalibrator object to calculate the channel width, depending
+    *          on the parameters in the current channel and calibration profile
+    */
+   void calibrateChannnel();
 
  // have to be extended with calibration meta settings!
    /*!
@@ -152,117 +162,10 @@ private slots:
     */
    void switchChannelWidget(const QString &newWidgetKey);
 
-
-
-
-   //\////////////////////
-   // calibration Frame //
-   //\////////////////////
 private:
    AF4CalibOrgFrame *calibsOrgFrame    = nullptr;
 
-public slots:
-   //void adaptPlotData();
-
-private: 
- //  QFrame *calibrationFrame                                                    = nullptr;
-  // QGridLayout *calibrationFrameLayout                                         = nullptr;
-
-   //QFrame calibrationFrame = nullptr;
-//   AF4CalibPlotWidget *plotWidget                                              = nullptr;
- //  QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*> > channelCalibWidgets ;// = nullptr;
-//   AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
-//   QMap<QString, QComboBox*> *allCalibSelections                               = nullptr;
-//   QComboBox                 *currentCalibSelection                            = nullptr;
- //  QToolButton               *addCalibButton                                   = nullptr;
-//   QToolButton *renameCalibButton                                              = nullptr;
-//   QToolButton *deleteCalibButton                                              = nullptr;
-   QSharedPointer<QPushButton> settingsWriter;//                                  = nullptr;
-
-   /*!
-    * \brief adaptCalibWidgetIds
-    * \param channelName
-    * \param newChannelId
-    * \param caller
-    */
-//   void adaptCalibWidgetIds(const QString &channelName, int newChannelId = -1);
-
-   /*!
-    * \brief adaptCalibWidgetNames
-    * \param channelName
-    */
-//   void adaptCalibWidgetNames(const QString &channelName);
-
-   /*!
-    * \brief askCalibRenaming
-    * \param newName
-    * \param oldName
-    * \return
-    */
-//   bool askCalibRenaming(QString &newName, const QString &oldName);
-
-   /*!
-    * \brief askCalibAdding
-    * \param newName
-    * \return
-    */
-//   bool askCalibAdding(QString &newName);
-
-   /*!
-    * \brief ~FFFChannelCalConfWidget() default destructor
-    */
-   ~AF4ChannelConfigurationWidget();
-
-    AF4ChannelConfigurationWidget(const AF4ChannelConfigurationWidget& src)        = delete;
-    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget& src)  = delete;
-    AF4ChannelConfigurationWidget(AF4ChannelConfigurationWidget&& src)             = delete;
-    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget&& src) = delete;
-
-private slots:
-
-   /*!
-    * \brief renameCalibration creates a dialog for renaming a calibration profile.
-    *        Adapts keys of internal data structures
-    */
-    //   void renameCalibration();
-
-   /*!
-    * \brief addCalibration creates a dialog and a new calibration profile
-    *        Adapts internal data structures
-    */
-    //   bool addCalibration();
-
-    /*!
-    * \brief deleteCalibration removes the current calibration profile and
-    *        adapts internal data structures
-    */
-    // void deleteCalibration();
-
-   /*!
-    * \brief switchCalibWidget switches to another calibration profile and
-    *        shows its values
-    * \param newWidgetKey
-    */
-    // void switchCalibWidget(QString newWidgetKey);
-
-
-   /*!
-    * \brief saveParameters
-    */
-   void saveParameters() const;
-
-
-   /*!
-    * \brief calibrateChannnel
-    * \details creates a fffcalibrator object to calculate the channel width, depending
-    *          on the parameters in the current channel and calibration profile
-    */
-   void calibrateChannnel();
-
-private:   
-
-
-
+   QSharedPointer<QPushButton> settingsWriter;
    /*!
     * \brief calibRealMeaurement calibrates the Channel with the given Parameters and sets the values
     *                            to the widget
@@ -301,6 +204,15 @@ private:
     */
    void writeSettings() const;
 
+   /*!
+    * \brief ~FFFChannelCalConfWidget() default destructor
+    */
+   ~AF4ChannelConfigurationWidget();
+
+    AF4ChannelConfigurationWidget(const AF4ChannelConfigurationWidget& src)        = delete;
+    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget& src)  = delete;
+    AF4ChannelConfigurationWidget(AF4ChannelConfigurationWidget&& src)             = delete;
+    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget&& src) = delete;
 
 };
 #endif // AF4CHANNELCONFIGUARTIONWIDGET_H

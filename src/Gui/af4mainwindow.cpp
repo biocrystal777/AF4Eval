@@ -58,19 +58,15 @@ AF4MainWindow::AF4MainWindow(QWidget *parent)
    //-////////////////////////
 
    funcTabWidget = new QTabWidget(this);
-   qDebug() << "Main1";
    channelCalConfWidget = new AF4ChannelConfigurationWidget(funcTabWidget);
-   qDebug() << "Main2";
    funcTabWidget->addTab(channelCalConfWidget, "Channel Calibration");
    layout = new QGridLayout(this);
    layout->addWidget(funcTabWidget, 0, 0);
    layout->addWidget(logFrame, 1, 0);
    this->show();
-   qDebug() << "Main3";
    diffEvaluationWidget = new AF4DiffEvaluationWidget(channelCalConfWidget->getChannelConfigWidgets(),
                                                       channelCalConfWidget->getChannelCalibWidgets(),
                                                       funcTabWidget);
-   qDebug() << "Main4";
    funcTabWidget->addTab(diffEvaluationWidget, "Diffusion Coefficients");
 
    slsEvaluationWidget = new AF4SLSEvaluationWidget(funcTabWidget);

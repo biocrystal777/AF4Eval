@@ -9,7 +9,6 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    QWidget(parent), channelId(channelId), calibId(calibId),
    channelName(channelName), calibName(calibName)//, saveButton(saveButton)
 {
-   qDebug() << "CC1";
    widgetLayout = new QGridLayout(this);
    widgetFrame = new QFrame(this);
    widgetFrame->setFrameStyle(0x0023);
@@ -25,7 +24,6 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    inputFileName = new QLineEdit(this);
 
    frameLayout->addWidget(inputFileName, 1, 1, 1, 14);
-   qDebug() << "CC2";
    QLabel *labelPtr = new QLabel(tr("<b>Notes</b>"), this);
    //labelPtr->setMaximumHeight(50);
    frameLayout->addWidget(labelPtr, 2, 1, Qt::AlignCenter);
@@ -41,7 +39,6 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    frameLayout->addWidget(new QLabel("Buffer:", this), 5, 0);
    bufferDescr = new QLineEdit(this);
    frameLayout->addWidget(bufferDescr,                 5, 1, 1, 3);
-   qDebug() << "CC4";
    frameLayout->addWidget(new QLabel("Additional Notes:", this), 7, 0, Qt::AlignTop);
    notesDescr = new QTextEdit(this);
    frameLayout->addWidget(notesDescr, 8, 0, 1, 14);
@@ -55,7 +52,6 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
    connect(this, &AF4ChannelCalibWidget::saveButtonClicked, innerCalibFrame, &AF4InnerCalibrationFrame::saveButtonClicked);
 
    frameLayout->addWidget(innerCalibFrame, 3, 5, 3, 4);
-   qDebug() << "CC5";
    /**************************************
     *
     * third column
@@ -63,9 +59,6 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
     *************************************/
    calibParFrame = new AF4CalibParametersFrame(channelId, calibId, channelName, calibName, this);
    frameLayout->addWidget(calibParFrame, 3, 9, 3, 4);
-   // connect saveButton
-   //connect(saveButton.data(), &QPushButton::clicked, this, &AF4ChannelCalibWidget::saveParameters);
-   qDebug() << "CC6";
    connect(this, &AF4ChannelCalibWidget::saveButtonClicked, this, &AF4ChannelCalibWidget::saveParameters);
 }
 
@@ -113,7 +106,6 @@ ParametersForCalibration AF4ChannelCalibWidget::getParametersForCalibration()
       calibParFrame->getElutionFlow(),
             calibParFrame->getCrossFlow(),
             calibParFrame->getRelFocusPoint(),
-   //         calibParFrame->getLeftOffsetTime(),
             calibParFrame->getVoidPeakTime(),
             calibParFrame->getElutionTime(),
             calibParFrame->getDiffCoefficient()
@@ -127,7 +119,6 @@ AllCalibrationParameters AF4ChannelCalibWidget::getAllCalibrationParameters()
             calibParFrame->getElutionFlow(),
             calibParFrame->getCrossFlow(),
             calibParFrame->getRelFocusPoint(),
-            //calibParFrame->getLeftOffsetTime(),
             calibParFrame->getVoidPeakTime(),
             calibParFrame->getElutionTime(),
             calibParFrame->getDiffCoefficient(),
@@ -147,7 +138,6 @@ void AF4ChannelCalibWidget::setAllCalibrationParameters(const AllCalibrationPara
    calibParFrame->setElutionFlow(p.elutionFlow);
    calibParFrame->setCrossFlow(p.crossFlow);
    calibParFrame->setRelFocusPoint(p.relFocusPoint);
-   //calibParFrame->setLeftOffsetTime(p.leftOffsetTime);
    calibParFrame->setVoidPeakTime(p.voidPeakTime);
    calibParFrame->setElutionTime(p.elutionTime);
    calibParFrame->setDiffCoefficient(p.diffCoeff);
@@ -167,6 +157,9 @@ void AF4ChannelCalibWidget::loadSettings()
    //double calibValue;
    QString calibString;
    //bool ok;
+   //settings.setValue(tr("channels/%1/calib/%2/name").arg(channelId).arg(calibId), calibName);
+   calibString = settings.value(tr("channels/%1/calib/%2/name").arg(channelId).arg(calibId), "").toString();
+   this->setCalibName(calibString);
    calibString = settings.value(tr("channels/%1/calib/%2/dateDescr").arg(channelId).arg(calibId), "").toString();
    dateDescr->setText(calibString);
    calibString = settings.value(tr("channels/%1/calib/%2/bufferDescr").arg(channelId).arg(calibId), "").toString();

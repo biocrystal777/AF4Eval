@@ -16,15 +16,6 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    channelConfigFrameLayout = new QGridLayout(channelConfigFrame);
    channelConfigFrameLayout->addWidget(new QLabel("<b>Channel Configurations</b>", channelConfigFrame), 0, 0, Qt::AlignLeft);
 
-   //calibrationFrame = new QFrame(this);
-   //calibrationFrame->setFrameStyle(0x1011);
-   //calibrationFrameLayout = new QGridLayout(calibrationFrame);
-   //calibrationFrameLayout->addWidget(new QLabel("<b>Calibration</b>", calibrationFrame), 0, 0, Qt::AlignLeft);
-   //allCalibSelections = new QMap<QString, QComboBox*>();
-   //channelCalibWidgets = new QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>();
-   //channelCalibWidgets = QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*> >(new QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>());
-
-
    ///////////////////////////////////
    //Constant channel configuration //
    ///////////////////////////////////
@@ -36,7 +27,6 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    renameChButton->setToolTip("Rename the current channel");
    connect(renameChButton, &QPushButton::clicked, this, &AF4ChannelConfigurationWidget::renameChannel);
    channelConfigFrameLayout->addWidget(renameChButton, 0, 5);
-   qDebug() << 100;
    addChButton = new QToolButton(channelConfigFrame);
    addChButton->setText(tr("+"));
    addChButton->setToolTip("Add new Channel");
@@ -45,16 +35,13 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    deleteChButton = new QToolButton(channelConfigFrame);
    deleteChButton->setText(tr("-"));
    deleteChButton->setToolTip("delete current Channel");
-   qDebug() << 101;
    connect(deleteChButton, &QPushButton::clicked, this, &AF4ChannelConfigurationWidget::deleteChannel);
    channelConfigFrameLayout->addWidget(deleteChButton, 0, 7);
 
    ////////////////////////////////////////////////////
    // initialize channels with values from QSettings //
    ////////////////////////////////////////////////////
-   //qDebug() << "a3";
    channelConfigWidgets = QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > (new QMap<QString, AF4ChannelDimsWidget*>() );
-   qDebug() << 102;
    // make all channel widgets, add them to the QMap
    // of ChannelWidgets and insert them
    // into the ComboBox
@@ -83,7 +70,6 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    ///////////////////////
    // Calibration Frame //
    ///////////////////////
-   //qDebug() << "a4";
 
    calibsOrgFrame = new AF4CalibOrgFrame(channelSelection, channelConfigWidgets, this);
 
@@ -96,35 +82,19 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QString channelName = channelSelection->currentText();
    currentChConfigWidget = channelConfigWidgets->value(channelName);
    currentChConfigWidget->show();
-   //currentCalibSelection->show();
-   //currentCalibSelection->setCurrentIndex(0);
-   //currentCalibWidget = channelCalibWidgets->value(channelName)->value(currentCalibSelection->currentText());
-   // connect boxes to widget
-   //connectCtrlWithPlotWidget();
-   //adaptPlotData();
-   //currentCalibWidget->show();
 
    //\///////////////////////////
    // add Frames to the layout //
    //\///////////////////////////
 
    layout->addWidget(channelConfigFrame, 0, 0, 2, 10);
-
-   // DEV CODE
-   //layout->addWidget(calibrationFrame, 3, 0, 12, 10);
-   //calibrationFrame->hide();
    layout->addWidget(calibsOrgFrame, 3, 0, 12, 10);
-   //END DEV CODE
-
 
    connect(settingsWriter.data(), &QPushButton::clicked,
            this, &AF4ChannelConfigurationWidget::saveParameters);
-   //connect(settingsWriter.data(), &QPushButton::clicked, );
    connect(settingsWriter.data(), &QPushButton::clicked, calibsOrgFrame, &AF4CalibOrgFrame::saveButtonClicked);
 
-
    layout->addWidget(settingsWriter.data(), 15, 0);
-
 }
 
 AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
@@ -138,13 +108,9 @@ void AF4ChannelConfigurationWidget::adaptConfigWidgetIds()
    for(const QString &key : channelConfigWidgets->keys()){
       AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
       configWidget->setConfigId(i);
-      //adaptCalibWidgetIds(key, i);
-      //calibsOrgFrame->adaptCalibWidgetIds(key, i);
       ++i;
    }
-   //qDebug() << 1;
    calibsOrgFrame->adaptAllCalibWidgetIds();
-   //qDebug() << 2;
 }
 
 void AF4ChannelConfigurationWidget::adaptConfigWidgetNames()
@@ -152,7 +118,6 @@ void AF4ChannelConfigurationWidget::adaptConfigWidgetNames()
    for(const QString &key : channelConfigWidgets->keys()){
       AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
       configWidget->setChannelName(key);
-     // adaptCalibWidgetNames(key);
    }
    calibsOrgFrame->adaptAllCalibWidgetIds();
 }
@@ -193,16 +158,6 @@ void AF4ChannelConfigurationWidget::renameChannel()
       oldConfWidget->setChannelName(newName);
       // remove and reinsert the calibSelection and the FFFChannelselection
       // under the new key;
-
-      /*
-
-      QComboBox *renamedCalibSelection = allCalibSelections->value(oldName);
-      allCalibSelections->remove(oldName);
-      allCalibSelections->insert(newName, renamedCalibSelection);
-      QMap<QString, AF4ChannelCalibWidget*>* renamedCalibWidgets = channelCalibWidgets->value(oldName);
-      channelCalibWidgets->remove(oldName);
-      channelCalibWidgets->insert(newName, renamedCalibWidgets);
-      */
       //replaced by
       calibsOrgFrame->renameConnectedChannel(oldName, newName);
       saveParameters();
@@ -233,7 +188,6 @@ bool AF4ChannelConfigurationWidget::askChannelAdding(QString &newName){
 
 bool AF4ChannelConfigurationWidget::addChannel(bool firstInit)
 {
-   qDebug() << "201";
    QApplication::restoreOverrideCursor();
    QString newName;
    if(askChannelAdding(newName)){
@@ -246,36 +200,14 @@ bool AF4ChannelConfigurationWidget::addChannel(bool firstInit)
       // add new assigned channelCalibWidget, Comboboxes etc.
 
       channelSelection->blockSignals(true);
-     // if(currentCalibSelection)   currentCalibSelection->hide();
-      //currentCalibSelection = new QComboBox(calibrationFrame);
       channelConfigFrameLayout->addWidget(currentChConfigWidget, 2, 0, 7, 7);
       currentChConfigWidget->show();
-
-      //calibrationFrameLayout->addWidget(currentCalibSelection, 0, 4);
-      //allCalibSelections->insert(newName, currentCalibSelection);
-      //channelCalibWidgets->insert(newName, new  QMap<QString, AF4ChannelCalibWidget*>());
-      qDebug() << "202";
       channelSelection->addItem(newName);
       channelSelection->setCurrentIndex(channelSelection->count() - 1);
-      qDebug() << "203";
-      //while(!calibsOrgFrame-> addCalibration());
-      //currentCalibSelection->setCurrentIndex(0);
-
-      //connect(currentCalibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
-      //        this, &AF4ChannelConfigurationWidget::switchCalibWidget);
       channelSelection->blockSignals(false);
-      qDebug() << "204";
       AF4Log::logText(tr("New Channel \"%1\" added.").arg(newName));
-      qDebug() << "204.5";
       if(!firstInit) adaptConfigWidgetIds();
-      qDebug() << "204.7";
-      // set final current widgets;
-      //switchCalibWidget(newName);
-      //currentCalibSelection->show();
-      //currentCalibWidget = channelCalibWidgets->value(newName)->value(currentCalibSelection->currentText());
-      //currentCalibWidget->show();
       saveParameters();
-      qDebug() << "205";
       return true;
    }
    else return false;
@@ -295,19 +227,7 @@ void AF4ChannelConfigurationWidget::deleteChannel()
          AF4Log::logText(tr("Channel deleted."));
 
          QString newChannelName = channelSelection->currentText();
-         // Delete now all assigned Calibration things:
-         //         QComboBox *selectionToRemove = allCalibSelections->value(channelToRemove);
-         //       currentCalibSelection = allCalibSelections->value(newChannelName);
-         //     calibrationFrameLayout->addWidget(currentCalibSelection, 0, 4);
-         //currentCalibSelection->show();
-         //allCalibSelections->remove(channelToRemove);
-         //delete selectionToRemove;
-         //currentCalibWidget = channelCalibWidgets->value(newChannelName)->value(currentCalibSelection->currentText());
-         //currentCalibWidget->show();
-         //QMap<QString, AF4ChannelCalibWidget*>* calWidgetsToRemove = channelCalibWidgets->value(channelToRemove);
-         //calWidgetsToRemove->clear();
-         //channelCalibWidgets->remove(channelToRemove);
-         //delete calWidgetsToRemove;
+
          calibsOrgFrame->deleteConnectedChannel(channelToRemove,newChannelName);
          saveParameters();
          adaptConfigWidgetIds();
@@ -325,6 +245,7 @@ void AF4ChannelConfigurationWidget::switchChannelWidget(const QString &channelNa
    currentChConfigWidget->show();
 
    calibsOrgFrame->switchToFirstCalibWidget(channelName);
+
 
    currentChConfigWidget->show();
 
@@ -346,14 +267,8 @@ void AF4ChannelConfigurationWidget::calibrateChannnel()
    QGuiApplication::restoreOverrideCursor();
 }
 
-
-
-
 void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDims, const ParametersForCalibration &params, const CalibModeSettings &cModes)
 {
-
-
-
    AF4Log::logText(tr("Calibrate with measured values..."));
    CalibResult result;
    if(cModes.classical){
@@ -448,7 +363,7 @@ void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims &chDi
 
    //-/////////////////////////////////////////////////////////////////
    //
-   // converters for const to non-const containers and vice versa
+   // converters for const-to-nonConst containers and vice versa
    //
    //-/////////////////////////////////////////////////////////////////
 
@@ -668,9 +583,7 @@ void AF4ChannelConfigurationWidget::saveParameters() const
    for(const QString &configWidgetKey : channelConfigWidgets->keys()){
       channelConfigWidgets->value(configWidgetKey)->writeSettings();
 
-      //for(const QString &calibWidgetKey : channelCalibWidgets->value(configWidgetKey)->keys()){
-      //   channelCalibWidgets->value(configWidgetKey)->value(calibWidgetKey)->saveParameters();
-      //}
+
    }
 }
 
@@ -681,14 +594,6 @@ void AF4ChannelConfigurationWidget::writeSettings() const
    settings.remove("channels");
    int numberOfChannels = channelSelection->count();
    settings.setValue("channels/number", numberOfChannels);
-
-   /* TO OTHER CLASS
-   for(int i = 0 ; i < numberOfChannels; i++){
-      QString channelName = channelSelection->itemText(i);
-      int numberOfCalibrations = channelCalibWidgets->value(channelName)->count();
-      settings.setValue(tr("channels/%1/numberOfCalibrations").arg(i), numberOfCalibrations);
-   }
-   */
 }
 
 /**************************************

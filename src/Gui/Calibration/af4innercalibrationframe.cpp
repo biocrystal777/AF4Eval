@@ -142,7 +142,6 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    auto callCalibModeSettingsChanged = [this](){
       emit calibModeSettingsChanged( this->getCalibModes() );
    };
-   qDebug() << "DD1";
    connect(classicMode, &QCheckBox::toggled, [this](bool enable){
       channelWidth->        setEnabled(enable);
       channelWidthLabel->   setEnabled(enable);
@@ -151,7 +150,6 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    });
    connect(classicMode, &QCheckBox::toggled, adaptReadiness);
    connect(classicMode, &QCheckBox::toggled, callCalibModeSettingsChanged);
-   qDebug() << "DD4";
    connect(geoMode, &QCheckBox::toggled, [this](bool enable){
       channelWidthGeo->     setEnabled(enable);
       channelWidthGeoLabel->setEnabled(enable);
@@ -160,7 +158,6 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    });
    connect(geoMode, &QCheckBox::toggled, adaptReadiness);
    connect(geoMode, &QCheckBox::toggled, callCalibModeSettingsChanged);
-   qDebug() << "DD6";
    connect(hydMode, &QCheckBox::toggled, [this](bool enable){
       channelWidthHydro->     setEnabled(enable);
       channelWidthHydroLabel->setEnabled(enable);
@@ -169,11 +166,9 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    });
    connect(hydMode, &QCheckBox::toggled, adaptReadiness);
    connect(hydMode, &QCheckBox::toggled, callCalibModeSettingsChanged);
-   qDebug() << "DD9";
-   loadSettings();
-   connect(this, &AF4InnerCalibrationFrame::saveButtonClicked, this, &AF4InnerCalibrationFrame::saveSettings);
-   qDebug() << "DD10";
 
+   loadSettings();
+   connect(this, &AF4InnerCalibrationFrame::saveButtonClicked, this, &AF4InnerCalibrationFrame::saveSettings);   
 }
 
 AF4InnerCalibrationFrame::~AF4InnerCalibrationFrame()

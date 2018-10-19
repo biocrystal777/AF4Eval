@@ -74,7 +74,6 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
    relFocusPoint->setMinimum(0.1);
    relFocusPoint->setMaximumWidth(100);
    lay->addWidget(relFocusPoint, 3, 1, 1, 2);
-   //qDebug() << "2";
 
     /**************************************
     *
@@ -152,6 +151,15 @@ AF4CalibParametersFrame::~AF4CalibParametersFrame()
    saveSettings();
 }
 
+CtrlBoxRefs AF4CalibParametersFrame::getCtrlBoxRefs()
+{
+   return CtrlBoxRefs {
+      QWeakPointer<QDoubleSpinBox>(this->leftOffsetTime),
+            QWeakPointer<QDoubleSpinBox>(this->voidPeakTime),
+            QWeakPointer<QDoubleSpinBox>(this->elutionTime)
+   };
+}
+
 void AF4CalibParametersFrame::callDiffCoeffDialog()
 {
    if(!diffCoeffCalcWidget){
@@ -167,20 +175,6 @@ void AF4CalibParametersFrame::callDiffCoeffDialog()
          diffCoeffCalcWidget =  nullptr;
       } );
    }
-}
-
-void AF4CalibParametersFrame::saveSettings()
-{
-   QSettings settings("AgCoelfen", "AF4Eval");
-   settings.setIniCodec("UTF-8");
-   settings.setValue(tr("channels/%1/calib/%2/diffCoefficient").arg(channelId).arg(calibId), QVariant(getDiffCoefficient()));
-   settings.setValue(tr("channels/%1/calib/%2/crossFlow").arg(channelId).arg(calibId),       QVariant(getCrossFlow()));
-   settings.setValue(tr("channels/%1/calib/%2/temperature").arg(channelId).arg(calibId),     QVariant(getTemperature()));
-   settings.setValue(tr("channels/%1/calib/%2/elutionFlow").arg(channelId).arg(calibId),     QVariant(getElutionFlow()));
-   settings.setValue(tr("channels/%1/calib/%2/leftOffsetTime").arg(channelId).arg(calibId),  QVariant(leftOffsetTime->value()));
-   settings.setValue(tr("channels/%1/calib/%2/voidPeakTime").arg(channelId).arg(calibId),    QVariant(getVoidPeakTime()));
-   settings.setValue(tr("channels/%1/calib/%2/relFocusPoint").arg(channelId).arg(calibId),   QVariant(getRelFocusPoint()));
-   settings.setValue(tr("channels/%1/calib/%2/elutionTime").arg(channelId).arg(calibId),     QVariant(getElutionTime()));
 }
 
 void AF4CalibParametersFrame::adaptEnablingStatus(CalibModeSettings m)
@@ -285,3 +279,19 @@ void AF4CalibParametersFrame::loadSettings()
 
 #undef CHECK_SETTINGS_CONVERSION //
 }
+
+
+void AF4CalibParametersFrame::saveSettings()
+{
+   QSettings settings("AgCoelfen", "AF4Eval");
+   settings.setIniCodec("UTF-8");
+   settings.setValue(tr("channels/%1/calib/%2/diffCoefficient").arg(channelId).arg(calibId), QVariant(getDiffCoefficient()));
+   settings.setValue(tr("channels/%1/calib/%2/crossFlow").arg(channelId).arg(calibId),       QVariant(getCrossFlow()));
+   settings.setValue(tr("channels/%1/calib/%2/temperature").arg(channelId).arg(calibId),     QVariant(getTemperature()));
+   settings.setValue(tr("channels/%1/calib/%2/elutionFlow").arg(channelId).arg(calibId),     QVariant(getElutionFlow()));
+   settings.setValue(tr("channels/%1/calib/%2/leftOffsetTime").arg(channelId).arg(calibId),  QVariant(leftOffsetTime->value()));
+   settings.setValue(tr("channels/%1/calib/%2/voidPeakTime").arg(channelId).arg(calibId),    QVariant(getVoidPeakTime()));
+   settings.setValue(tr("channels/%1/calib/%2/relFocusPoint").arg(channelId).arg(calibId),   QVariant(getRelFocusPoint()));
+   settings.setValue(tr("channels/%1/calib/%2/elutionTime").arg(channelId).arg(calibId),     QVariant(getElutionTime()));
+}
+

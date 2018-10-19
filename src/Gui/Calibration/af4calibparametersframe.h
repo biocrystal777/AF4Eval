@@ -53,13 +53,7 @@ public:
     * \brief getCtrlBoxRefs
     * \return returns references to the three controlboxes which
     */
-   CtrlBoxRefs getCtrlBoxRefs (){
-      return CtrlBoxRefs {
-         QWeakPointer<QDoubleSpinBox>(this->leftOffsetTime),
-               QWeakPointer<QDoubleSpinBox>(this->voidPeakTime),
-               QWeakPointer<QDoubleSpinBox>(this->elutionTime)
-      };
-   }
+   CtrlBoxRefs getCtrlBoxRefs();
 
    /*!
     * \brief getDiffCoefficient Returns the diffusion Coefficient shown in the
@@ -257,19 +251,6 @@ private:
    AF4CalibParametersFrame& operator= (AF4CalibParametersFrame&& src) = delete;
 
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif // AF4CALIBPARAMETERSFRAME_H
