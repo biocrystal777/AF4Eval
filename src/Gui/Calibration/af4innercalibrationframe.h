@@ -9,6 +9,7 @@
 #include <QDoubleSpinBox>
 #include <QSettings>
 #include <qwt/qwt_text_label.h>
+#include "../Core/af4evalmacros.h"
 #include "../GeneralWidgets/af4log.h"
 #include "../Core/af4parameterstructs.h"
 
@@ -26,9 +27,6 @@ struct CalibModeSettings {
    const bool   geometric;
    const bool   hydrodynamic;
 };
-
-
-
 
 /*! ***************************************************************************************
 ***
@@ -199,10 +197,7 @@ private:
    QDoubleSpinBox *hydrodynVolume    = nullptr;
    QDoubleSpinBox *geometVolume      = nullptr;
 
-   AF4InnerCalibrationFrame(const AF4InnerCalibrationFrame& src)        = delete;
-   AF4InnerCalibrationFrame& operator= (AF4InnerCalibrationFrame& src)  = delete;
-   AF4InnerCalibrationFrame(AF4InnerCalibrationFrame&& src)             = delete;
-   AF4InnerCalibrationFrame& operator= (AF4InnerCalibrationFrame&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4InnerCalibrationFrame)
 };
 
 

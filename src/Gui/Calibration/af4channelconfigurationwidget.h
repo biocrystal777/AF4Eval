@@ -7,6 +7,7 @@
 #include <QRadioButton>
 #include <vector>
 #include "./af4caliborgframe.h"
+#include "../Core/af4evalmacros.h"
 
 class AF4ChannelDimsOrgFrame final : public QFrame {
    Q_OBJECT
@@ -18,11 +19,7 @@ signals:
    void saveButtonClicked();
 
 private:
-
-   AF4ChannelDimsOrgFrame( const      AF4ChannelDimsOrgFrame& s)    = delete;
-   AF4ChannelDimsOrgFrame& operator= (AF4ChannelDimsOrgFrame& src)  = delete;
-   AF4ChannelDimsOrgFrame(            AF4ChannelDimsOrgFrame&& src) = delete;
-   AF4ChannelDimsOrgFrame& operator= (AF4ChannelDimsOrgFrame&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelDimsOrgFrame)
 };
 
 
@@ -209,10 +206,6 @@ private:
     */
    ~AF4ChannelConfigurationWidget();
 
-    AF4ChannelConfigurationWidget(const AF4ChannelConfigurationWidget& src)        = delete;
-    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget& src)  = delete;
-    AF4ChannelConfigurationWidget(AF4ChannelConfigurationWidget&& src)             = delete;
-    AF4ChannelConfigurationWidget& operator= (AF4ChannelConfigurationWidget&& src) = delete;
-
+   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelConfigurationWidget)
 };
 #endif // AF4CHANNELCONFIGUARTIONWIDGET_H

@@ -64,12 +64,7 @@ private:
    const char dec;
    const char lineSep;
 
-   AF4CsvWriter(const AF4CsvWriter& src) = delete;
-   AF4CsvWriter& operator= (const AF4CsvWriter& src) = delete;
-   AF4CsvWriter(AF4CsvWriter&& src) = delete;
-   AF4CsvWriter& operator= (AF4CsvWriter&& src) = delete;
-
-
+   NO_COPY_ASSIGNMENT_CTORS(AF4CsvWriter)
 };
 
 #endif // AF4CSVWRITER_H

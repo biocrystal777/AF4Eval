@@ -2,6 +2,7 @@
 #define AF4NUMBEREDCOMBOBOX_H
 
 #include <QComboBox>
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***
@@ -30,10 +31,7 @@ signals:
    void currentIndexChanged(int index, int id);
 
 private:
-   AF4NumberedComboBox(const AF4NumberedComboBox& src) = delete;
-   AF4NumberedComboBox& operator= (AF4NumberedComboBox& src) = delete;
-   AF4NumberedComboBox(AF4NumberedComboBox&& src) = delete;
-   AF4NumberedComboBox& operator= (AF4NumberedComboBox&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4NumberedComboBox)
 };
 
 #endif // AF4NUMBEREDCOMBOBOX_H

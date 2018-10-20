@@ -136,10 +136,6 @@ struct SLSParameters {
    //double concCut;
 };
 
-
-
-
-
 // For later modules
 
 struct FFFDiffCorrParameters{

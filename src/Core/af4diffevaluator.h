@@ -28,12 +28,6 @@ public:
     */
    ~AF4DiffEvaluator(){}
 
-    AF4DiffEvaluator(const AF4DiffEvaluator& src) = delete;
-    AF4DiffEvaluator& operator= (const AF4DiffEvaluator& src) = delete;
-    AF4DiffEvaluator(AF4DiffEvaluator&& src) = delete;
-    AF4DiffEvaluator& operator= (AF4DiffEvaluator&& src) = delete;
-
-
    /*!
     * \brief evaluate
     * \param leftOffsetTime
@@ -93,7 +87,7 @@ public:
       return evaluationStart;
    }
 
-protected:
+private:
 
    /*!
     * \brief calcDiffCoeff calculates a diffusion coefficient by bisection
@@ -126,6 +120,8 @@ protected:
 
    vecD resDiffCoeff;
    vecD resStokesRadii;
+
+   NO_COPY_ASSIGNMENT_CTORS(AF4DiffEvaluator)
 };
 
 #endif // AF4DIFFEVALUATOR_H

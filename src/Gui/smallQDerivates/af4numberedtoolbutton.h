@@ -1,7 +1,8 @@
-#ifndef FFFNUMBEREDTOOLBUTTON_H
-#define FFFNUMBEREDTOOLBUTTON_H
+#ifndef AF4NUMBEREDTOOLBUTTON_H
+#define AF4NUMBEREDTOOLBUTTON_H
 
 #include <QToolButton>
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***
@@ -48,9 +49,6 @@ signals:
    void clicked(int id);
 
 private:
-   AF4NumberedToolButton(const AF4NumberedToolButton& src) = delete;
-   AF4NumberedToolButton& operator= (AF4NumberedToolButton& src) = delete;
-   AF4NumberedToolButton(AF4NumberedToolButton&& src) = delete;
-   AF4NumberedToolButton& operator= (AF4NumberedToolButton&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4NumberedToolButton)
 };
-#endif // FFFNUMBEREDTOOLBUTTON_H
+#endif // AF4NUMBEREDTOOLBUTTON_H

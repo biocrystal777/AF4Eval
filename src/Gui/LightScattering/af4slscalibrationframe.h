@@ -10,6 +10,7 @@
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
 #include "../smallQDerivates/af4numberedcheckbox.h"
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***

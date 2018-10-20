@@ -1,6 +1,7 @@
 #ifndef AF4SLSEVALUATOR_H
 #define AF4SLSEVALUATOR_H
 #include "af4calculator.h"
+#include "af4evalmacros.h"
 #include "../Gui/GeneralWidgets/af4log.h"
 
 /*! ***********************************************************
@@ -27,14 +28,7 @@ public:
     */
    ~AF4SLSEvaluator(){}
 
-    AF4SLSEvaluator(const AF4SLSEvaluator& src) = delete;
-    AF4SLSEvaluator& operator= (const AF4SLSEvaluator& src) = delete;
-    AF4SLSEvaluator(AF4SLSEvaluator&& src) = delete;
-    AF4SLSEvaluator& operator= (AF4SLSEvaluator&& src) = delete;
-
-
-
-    int evalUVVis_MALLS_partZimmplot(const vecD &uvVisData,
+   int evalUVVis_MALLS_partZimmplot(const vecD &uvVisData,
                                      matD &rayleighRatios,
                                      const std::vector<bool> &useDataPoint,
                                      const vecD &epsilon,
@@ -222,6 +216,7 @@ private:
     */
    int setNegativeToZero(vecD &values);
 
+   NO_COPY_ASSIGNMENT_CTORS(AF4SLSEvaluator)
 };
 
 #endif // FFFSLSEVALUATOR_H

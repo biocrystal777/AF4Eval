@@ -582,8 +582,6 @@ void AF4ChannelConfigurationWidget::saveParameters() const
    writeSettings();
    for(const QString &configWidgetKey : channelConfigWidgets->keys()){
       channelConfigWidgets->value(configWidgetKey)->writeSettings();
-
-
    }
 }
 

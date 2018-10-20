@@ -10,6 +10,7 @@
 #include <QPainter>
 #include <qwt_text_label.h>
 //#include <qwt_mathml_text_engine.h>     renderer too slow, unfortunately
+#include "../Core/af4evalmacros.h"
 #include "../Core/af4parameterstructs.h"
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
@@ -34,11 +35,6 @@ public:
                                  const bool loadParameters,
                                  QWidget *parent = nullptr);
    ~AF4ChannelDimsWidget();
-
-   AF4ChannelDimsWidget(const AF4ChannelDimsWidget& src) = delete;
-   AF4ChannelDimsWidget& operator= (AF4ChannelDimsWidget& src) = delete;
-   AF4ChannelDimsWidget(AF4ChannelDimsWidget&& src) = delete;
-   AF4ChannelDimsWidget& operator= (AF4ChannelDimsWidget&& src) = delete;
 
    inline double getChLength() const {return (length1->value() + length2->value() + length3->value());}
 
@@ -178,8 +174,8 @@ private:
    /*!
     * \brief defaultInit
     */
-   void defaultInit();
+   void defaultInit();   
+   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelDimsWidget)
 };
-
 
 #endif // AF4CHANNELCONFIGWIDGET_H

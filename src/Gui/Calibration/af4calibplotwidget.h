@@ -6,6 +6,7 @@
 #include <QLayout>
 #include <QDoubleSpinBox>
 #include "../GeneralWidgets/af4signalplot.h"
+#include "../Core/af4evalmacros.h"
 #include "../Core/af4csvparser.h"
 
 class AF4CalibPlotWidget final : public QWidget
@@ -30,6 +31,8 @@ private:
    QWeakPointer<QDoubleSpinBox> leftOffset;
    QWeakPointer<QDoubleSpinBox> tVoid;
    QWeakPointer<QDoubleSpinBox> tElution;
+
+   NO_COPY_ASSIGNMENT_CTORS(AF4CalibPlotWidget)
 };
 
 #endif // AF4CALIBPLOTWIDGET_H

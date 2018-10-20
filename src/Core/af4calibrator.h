@@ -1,6 +1,6 @@
 #ifndef AF4CALIBRATOR_H
 #define AF4CALIBRATOR_H
-
+#include "af4evalmacros.h"
 #include "af4calculator.h"
 
 enum struct CalibErrorCode : uint {
@@ -115,13 +115,7 @@ private:
    //inline bool isZero(double x, int pos) const {
    //   return !(std::abs(x) >= std::numeric_limits<double>::min()) ? false : zeroErrorMessage(pos);
    //}
-
-   AF4Calibrator(const AF4Calibrator& src) = delete;
-   AF4Calibrator& operator= (const AF4Calibrator& src) = delete;
-   AF4Calibrator(AF4Calibrator&& src) = delete;
-   AF4Calibrator& operator= (AF4Calibrator&& src) = delete;
-
-
+   NO_COPY_ASSIGNMENT_CTORS(AF4Calibrator)
 };
 
 #endif // AF4CALIBRATOR_H

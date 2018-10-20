@@ -7,7 +7,9 @@
 #include <QComboBox>
 #include "./af4channeldimswidget.h"
 #include "./af4channelcalibwidget.h"
+#include "../../Core/af4evalmacros.h"
 #include "../../Core/af4parameterstructs.h"
+
 
 /*! ***************************************************************************************
 ***
@@ -192,9 +194,6 @@ private:
     */
    ~AF4CalibSettingsFrame();
 
-   AF4CalibSettingsFrame(const AF4CalibSettingsFrame& src)        = delete;
-   AF4CalibSettingsFrame& operator= (AF4CalibSettingsFrame& src)  = delete;
-   AF4CalibSettingsFrame(AF4CalibSettingsFrame&& src)             = delete;
-   AF4CalibSettingsFrame& operator= (AF4CalibSettingsFrame&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4CalibSettingsFrame)
 };
 #endif // AF4CALIBSETTINGSFRAME_H

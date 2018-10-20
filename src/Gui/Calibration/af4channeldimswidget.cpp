@@ -26,7 +26,6 @@ AF4ChannelDimsWidget::AF4ChannelDimsWidget(const int channelId,
    b0->setMaximum(1000.0);
    frameLayout->addWidget(b0, 0, 11, 1, 4, Qt::AlignLeft);
 
-
    qwtLabel = new QwtTextLabel(widgetFrame);
    //qwtLabel->setText(QString("b</mi><mtext>L</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
    qwtLabel->setText(QString("b_L / cm"), QwtText::PlainText);

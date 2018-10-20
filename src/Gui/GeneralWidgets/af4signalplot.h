@@ -19,6 +19,8 @@
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 #include <qwt_widget_overlay.h>
+#include "../Core/af4evalmacros.h"
+#include "../Core/af4evalmacros.h"
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
 #include "../../Core/af4datatypes.h"
@@ -173,11 +175,6 @@ private:
     */
    ~AF4SignalPlot();
 
-   AF4SignalPlot(const AF4SignalPlot& src)        = delete;
-   AF4SignalPlot& operator= (AF4SignalPlot& src)  = delete;
-   AF4SignalPlot(AF4SignalPlot&& src)             = delete;
-   AF4SignalPlot& operator= (AF4SignalPlot&& src) = delete;
-
    void defaultInitData();
    /*!
     * \brief updatePlot updataes the data set and repaints plot
@@ -209,5 +206,7 @@ private:
    //QList<QwtSymbol*>        symbols;
    QMap<QString, QwtDynPlotMarker*> plotMarkers;
    QMap<QString, QwtSymbol*>        symbols;
+
+   NO_COPY_ASSIGNMENT_CTORS(AF4SignalPlot)
 };
 #endif // AF4SIGNALPLOT_H

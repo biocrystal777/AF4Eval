@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QLineEdit>
+#include "../Core/af4evalmacros.h"
 #include "./af4log.h"
 
 /*! **********************************************************************************************
@@ -36,11 +37,6 @@ public:
     */
    AF4FileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent);
    ~AF4FileInOutWidget();
-
-    AF4FileInOutWidget(const AF4FileInOutWidget& src) = delete;
-    AF4FileInOutWidget& operator= (AF4FileInOutWidget& src) = delete;
-    AF4FileInOutWidget(AF4FileInOutWidget&& src) = delete;
-    AF4FileInOutWidget& operator= (AF4FileInOutWidget&& src) = delete;
 
     /*!
     * \brief getOutputFilePath
@@ -74,6 +70,31 @@ public:
     */
    void writeSettings();
 
+
+private slots:
+   /*!
+    * \brief chooseInputFile opens a dialog to choose an input data file
+    *        (csv-formatted)
+    */
+   void chooseInputFile();
+
+   /*!
+    * \brief chooseOutputFile opens a dialog to choose a folder and filename
+    *                         for the output file
+    */
+   void chooseOutputFile();
+
+   /*!
+    * \brief adoptOutputName
+    */
+   void adoptOutputName();
+
+   /*!
+    * \brief autoGenOutputName
+    */
+   void generateOutputName();
+
+
 private:
 
    QString identifier;
@@ -103,29 +124,7 @@ private:
     */
    QString chopStringsQuotMarksEntirely(QString &string) const;
 
-private slots:
-   /*!
-    * \brief chooseInputFile opens a dialog to choose an input data file
-    *        (csv-formatted)
-    */
-   void chooseInputFile();
-
-   /*!
-    * \brief chooseOutputFile opens a dialog to choose a folder and filename
-    *                         for the output file
-    */
-   void chooseOutputFile();
-
-   /*!
-    * \brief adoptOutputName
-    */
-   void adoptOutputName();
-
-   /*!
-    * \brief autoGenOutputName
-    */
-   void generateOutputName();
-
+   NO_COPY_ASSIGNMENT_CTORS(AF4FileInOutWidget)
 };
 
 #endif // AF4FILEINOUTWIDGET_H

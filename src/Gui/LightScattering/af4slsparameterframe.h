@@ -11,6 +11,7 @@
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
 #include "../../Core/af4parameterstructs.h"
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***
@@ -36,11 +37,6 @@ public:
     * \param parent
     */
    explicit AF4SLSParameterFrame(const QString &prefix, int id, QWidget *parent);
-
-   AF4SLSParameterFrame(const AF4SLSParameterFrame& src) = delete;
-   AF4SLSParameterFrame& operator= (AF4SLSParameterFrame& src) = delete;
-   AF4SLSParameterFrame(AF4SLSParameterFrame&& src) = delete;
-   AF4SLSParameterFrame& operator= (AF4SLSParameterFrame&& src) = delete;
 
    /*!
     * \brief getSLSParameters
@@ -105,8 +101,9 @@ private slots:
    void enableKratkyPlotParams()  const;
    void enableGuinierPlotParams() const;
    void enableRefIndex ()         const;
-   void enableWaveLength ()       const;
+   void enableWaveLength ()       const;   
    */
+   NO_COPY_ASSIGNMENT_CTORS(AF4SLSParameterFrame)
 };
 
 #endif // FFFSLSPARAMETERFRAME_H

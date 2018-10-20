@@ -13,6 +13,7 @@
 #include "./af4stokeseinsteincalculatorwidget.h"
 #include "./a.out.h"
 #include "./af4channeldimswidget.h"
+#include "../../Core/af4evalmacros.h"
 #include "../../Core/af4calibrator.h"
 #include "../../Core/af4csvwriter.h"
 #include <../smallQDerivates/af4scinotspinbox.h>
@@ -245,12 +246,6 @@ private:
    QToolButton      *diffCoeffCalcButton       = nullptr;
    AF4StokesEinsteinCalculatorWidget *diffCoeffCalcWidget = nullptr;
 
-   AF4CalibParametersFrame(const AF4CalibParametersFrame& src)        = delete;
-   AF4CalibParametersFrame& operator= (AF4CalibParametersFrame& src)  = delete;
-   AF4CalibParametersFrame(AF4CalibParametersFrame&& src)             = delete;
-   AF4CalibParametersFrame& operator= (AF4CalibParametersFrame&& src) = delete;
-
+   NO_COPY_ASSIGNMENT_CTORS(AF4CalibParametersFrame)
 };
-
-
 #endif // AF4CALIBPARAMETERSFRAME_H

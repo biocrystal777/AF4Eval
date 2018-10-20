@@ -2,6 +2,7 @@
 #define AF4NUMBEREDCHECKBOX_H
 
 #include <QCheckBox>
+#include "../Core/af4evalmacros.h"
 //#include <QSettings>
 //#include "../Core/af4constants.h"
 
@@ -32,10 +33,7 @@ protected:
     int id;
 
 private:
-    AF4NumberedCheckBox(const AF4NumberedCheckBox& src)        = delete;
-    AF4NumberedCheckBox& operator= (AF4NumberedCheckBox& src)  = delete;
-    AF4NumberedCheckBox(AF4NumberedCheckBox&& src)             = delete;
-    AF4NumberedCheckBox& operator= (AF4NumberedCheckBox&& src) = delete;
+    NO_COPY_ASSIGNMENT_CTORS(AF4NumberedCheckBox)
 };
 
 #endif // AF4NUMBEREDCHECKBOX_H

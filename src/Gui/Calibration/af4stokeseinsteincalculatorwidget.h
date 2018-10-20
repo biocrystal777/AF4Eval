@@ -8,7 +8,8 @@
 #include <qwt_text_label.h>
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
-#include "../../Core/af4constants.h"
+#include "../Core/af4evalmacros.h"
+#include "../Core/af4constants.h"
 
 /*! **********************************************************************************************
 ***
@@ -70,10 +71,7 @@ private:
    QPushButton *accepter             = nullptr;
    QPushButton *rejecter             = nullptr;
 
-   AF4StokesEinsteinCalculatorWidget(const AF4StokesEinsteinCalculatorWidget& src) = delete;
-   AF4StokesEinsteinCalculatorWidget& operator= (AF4StokesEinsteinCalculatorWidget& src) = delete;
-   AF4StokesEinsteinCalculatorWidget(AF4StokesEinsteinCalculatorWidget&& src) = delete;
-   AF4StokesEinsteinCalculatorWidget& operator= (AF4StokesEinsteinCalculatorWidget&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4StokesEinsteinCalculatorWidget)
 };
 
 #endif // AF4STOKESEINSTEINCALCULATORWIDGET_H

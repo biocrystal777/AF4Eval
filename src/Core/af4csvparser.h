@@ -25,7 +25,6 @@
 ***
 **************************************************************/
 
-
 class AF4CsvParser final
 {
 
@@ -38,13 +37,6 @@ public:
                          const char sep,
                          const char dec
                          );
-
-   AF4CsvParser() = delete;
-   AF4CsvParser(const AF4CsvParser& src) = delete;
-   AF4CsvParser& operator= (const AF4CsvParser& src) = delete;
-   AF4CsvParser(AF4CsvParser&& src) = delete;
-   AF4CsvParser& operator= (AF4CsvParser&& src) = delete;
-
 
    /*!
     * \brief ~FFFCsvParser Default Destructor
@@ -77,11 +69,9 @@ public:
     */
    matD getData() const;
 
-
-
    bool dataIsComplete(matD &data);
 
-protected:
+private:
 
    /////////////
    // Members //
@@ -99,8 +89,6 @@ protected:
    // Protected functions //
    /////////////////////////
 
-
-
    std::vector<std::string> split(const std::string& s,
                                   const char delim,
                                   const bool keepEmpty = false) const;
@@ -113,6 +101,7 @@ protected:
                                            std::string::const_iterator end,
                                            const char c) const;
 
+   NO_COPY_ASSIGNMENT_CTORS(AF4CsvParser)
 };
 
 #endif // AF4CSVPARSER_H

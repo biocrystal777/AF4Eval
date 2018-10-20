@@ -20,6 +20,7 @@
 #include "./af4calibplotwidget.h"
 #include "./af4innercalibrationframe.h"
 #include "./af4stokeseinsteincalculatorwidget.h"
+#include "../Core/af4evalmacros.h"
 #include "../Core/af4datatypes.h"
 #include "../Core/af4parameterstructs.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
@@ -335,12 +336,7 @@ private slots:
     */
    void saveParameters();
 private:
-
-   AF4ChannelCalibWidget(const AF4ChannelCalibWidget& src)        = delete;
-   AF4ChannelCalibWidget& operator= (AF4ChannelCalibWidget& src)  = delete;
-   AF4ChannelCalibWidget(AF4ChannelCalibWidget&& src)             = delete;
-   AF4ChannelCalibWidget& operator= (AF4ChannelCalibWidget&& src) = delete;
-
+   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelCalibWidget)
 };
 
 #endif // AF4CHANNELCALIBWIDGET_H

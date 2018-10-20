@@ -1,5 +1,5 @@
-#ifndef FFFTWOBOXWIDGET_H
-#define FFFTWOBOXWIDGET_H
+#ifndef AF4SCINOTSPINBOX_H
+#define AF4SCINOTSPINBOX_H
 
 #include <QWidget>
 #include <QSpinBox>
@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <cmath>
 #include <QDebug>
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***
@@ -33,11 +34,6 @@ public:
     * \param parent parent widget
     */
    explicit AF4SciNotSpinBox(const bool signedBox = false, QWidget *parent = nullptr);
-
-   AF4SciNotSpinBox(const AF4SciNotSpinBox& src) = delete;
-   AF4SciNotSpinBox& operator= (AF4SciNotSpinBox& src) = delete;
-   AF4SciNotSpinBox(AF4SciNotSpinBox&& src) = delete;
-   AF4SciNotSpinBox& operator= (AF4SciNotSpinBox&& src) = delete;
 
    /*!
     * \brief ~FFFTwoBoxWidget destructor of this class
@@ -216,6 +212,9 @@ protected:
    int    minExp  = -10;
    double maxSig = 9.99999999999999999999999;
    int    maxExp  = 10;
+
+private:
+   NO_COPY_ASSIGNMENT_CTORS(AF4SciNotSpinBox)
 };
 
-#endif // FFFTWOBOXWIDGET_H
+#endif // AF4SCINOTSPINBOX_H

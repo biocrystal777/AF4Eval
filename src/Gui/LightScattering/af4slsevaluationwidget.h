@@ -19,6 +19,7 @@
 #include "../../Core/af4slsevaluator.h"
 #include "../../Core/af4csvwriter.h"
 #include "../../Core/af4parameterstructs.h"
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***
@@ -48,10 +49,30 @@ public:
     */
    ~AF4SLSEvaluationWidget();
 
-   AF4SLSEvaluationWidget(const AF4SLSEvaluationWidget& src) = delete;
-   AF4SLSEvaluationWidget& operator= (AF4SLSEvaluationWidget& src) = delete;
-   AF4SLSEvaluationWidget(AF4SLSEvaluationWidget&& src) = delete;
-   AF4SLSEvaluationWidget& operator= (AF4SLSEvaluationWidget&& src) = delete;
+signals:
+
+   /*!
+    * \brief concModeChanged
+    */
+   void concModeChanged(SLSConcMode mode);
+
+public slots:
+
+   /*!
+    * \brief saveParameters
+    */
+   void saveParameters() const;
+
+   /*!
+    * \brief startEvaluation
+    */
+   void startEvaluation();
+
+private slots:
+   /*!
+    * \brief emitConcModeChanged
+    */
+   //void emitConcModeChanged();
 
 private:
 
@@ -112,30 +133,9 @@ private:
                          bool diffCoeffIndexChosen = false,
                          bool rSIndexChosen = false
          );
-signals:
 
-   /*!
-    * \brief concModeChanged
-    */
-   void concModeChanged(SLSConcMode mode);
+   NO_COPY_ASSIGNMENT_CTORS(AF4SLSEvaluationWidget)
 
-public slots:
-
-   /*!
-    * \brief saveParameters
-    */
-   void saveParameters() const;
-
-   /*!
-    * \brief startEvaluation
-    */
-   void startEvaluation();
-
-private slots:
-   /*!
-    * \brief emitConcModeChanged
-    */
-   //void emitConcModeChanged();
 };
 
 #endif // AF4SLSEVALUATIONWIDGET_H

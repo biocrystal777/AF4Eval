@@ -11,6 +11,7 @@
 #include "./af4channelcalibwidget.h"
 #include "./a.out.h"
 #include "./af4channeldimswidget.h"
+#include "../../Core/af4evalmacros.h"
 #include "../../Core/af4calibrator.h"
 #include "../../Core/af4csvwriter.h"
 
@@ -149,10 +150,7 @@ private:
     */
    void connectCtrlWithPlotWidget();
 
-   AF4CalibOrgFrame( const      AF4CalibOrgFrame& src)  = delete;
-   AF4CalibOrgFrame& operator= (AF4CalibOrgFrame& src)  = delete;
-   AF4CalibOrgFrame(            AF4CalibOrgFrame&& src) = delete;
-   AF4CalibOrgFrame& operator= (AF4CalibOrgFrame&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4CalibOrgFrame)
 };
 
 #endif // AF4CALIBORGFRAME_H

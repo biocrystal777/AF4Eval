@@ -122,7 +122,8 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     src/Gui/Calibration/af4calibrationdialogs.h \
     src/Gui/Calibration/af4calibparametersframe.h \
     src/Gui/Calibration/af4innercalibrationframe.h \
-    src/Gui/Calibration/af4caliborgframe.h
+    src/Gui/Calibration/af4caliborgframe.h \
+    src/Core/af4evalmacros.h
 
 RESOURCES += \
     ./Resources/images.qrc

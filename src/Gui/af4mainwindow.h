@@ -9,6 +9,7 @@
 #include "./Calibration/af4channeldimswidget.h"
 #include "./Calibration/af4channelconfigurationwidget.h"
 #include "../Core/af4csvwriter.h"
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***
@@ -69,10 +70,7 @@ private:
    AF4SLSEvaluationWidget        *slsEvaluationWidget  = nullptr;
    //int lastChosenTab;
 
-   AF4MainWindow(const AF4MainWindow& src)        = delete;
-   AF4MainWindow& operator= (AF4MainWindow& src)  = delete;
-   AF4MainWindow(AF4MainWindow&& src)             = delete;
-   AF4MainWindow& operator= (AF4MainWindow&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4MainWindow)
 };
 
 #endif // AF4MAINWINDOW_H

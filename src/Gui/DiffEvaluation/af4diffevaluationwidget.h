@@ -13,6 +13,7 @@
 #include "../Calibration/af4channelcalibwidget.h"
 #include "../GeneralWidgets/af4log.h"
 #include "../GeneralWidgets/af4fileinoutwidget.h"
+#include "../Core/af4evalmacros.h"
 #include "../../Core/af4csvparser.h"
 #include "../../Core/af4diffevaluator.h"
 #include "../../Core/af4csvwriter.h"
@@ -108,8 +109,18 @@ public slots:
     */
    //void adaptChannelParameters();
 
-private:
+private slots:
+   /*!
+    * \brief startEvaluation starts the actual calculation
+    */
+   void startEvaluation();
 
+   /*!
+    * \brief saveParameters
+    */
+   void saveParameters() const;
+
+private:
    QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >   channelConfigWidgets;
    //QMap<QString, QMap<QString, AF4ChannelCalibWidget*>*>  *channelCalibWidgets    = nullptr;
    QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
@@ -123,23 +134,7 @@ private:
    QPushButton           *evalStarter            = nullptr;
    QCheckBox             *displayZeroMessages    = nullptr;
 
-   AF4DiffEvaluationWidget(const AF4DiffEvaluationWidget& src) = delete;
-   AF4DiffEvaluationWidget& operator= (AF4DiffEvaluationWidget& src) = delete;
-   AF4DiffEvaluationWidget(AF4DiffEvaluationWidget&& src) = delete;
-   AF4DiffEvaluationWidget& operator= (AF4DiffEvaluationWidget&& src) = delete;
-
-private slots:
-
-   /*!
-    * \brief startEvaluation starts the actual calculation
-    */
-   void startEvaluation();
-
-   /*!
-    * \brief saveParameters
-    */
-   void saveParameters() const;
-
+   NO_COPY_ASSIGNMENT_CTORS(AF4DiffEvaluationWidget)
 };
 
 #endif // AF4DIFFEVALUATIONWIDGET_H

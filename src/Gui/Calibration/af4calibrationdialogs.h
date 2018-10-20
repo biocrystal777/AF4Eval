@@ -7,7 +7,7 @@
 #include <QString>
 #include <QLineEdit>
 #include <QPushButton>
-
+#include "../Core/af4evalmacros.h"
 
 /*! **************************************************************************************************************
 ***
@@ -51,10 +51,7 @@ private:
    QPushButton *accepter     = nullptr;
    QPushButton *decliner     = nullptr;
 
-   AF4CalibNameDialog(const AF4CalibNameDialog& src)        = delete;
-   AF4CalibNameDialog& operator= (AF4CalibNameDialog& src ) = delete;
-   AF4CalibNameDialog(AF4CalibNameDialog&& src)             = delete;
-   AF4CalibNameDialog& operator= (AF4CalibNameDialog&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4CalibNameDialog)
 };
 
 
@@ -84,11 +81,7 @@ private:
    QPushButton *accepter = nullptr;
    QPushButton *decliner = nullptr;
 
-   AF4DeleteCalibDialog(const AF4DeleteCalibDialog& src)        = delete;
-   AF4DeleteCalibDialog& operator= (AF4DeleteCalibDialog& src ) = delete;
-   AF4DeleteCalibDialog(AF4DeleteCalibDialog&& src)             = delete;
-   AF4DeleteCalibDialog& operator= (AF4DeleteCalibDialog&& src) = delete;
-
+   NO_COPY_ASSIGNMENT_CTORS(AF4DeleteCalibDialog)
 };
 
 
@@ -128,10 +121,7 @@ private:
    QPushButton *accepter = nullptr;
    QPushButton *decliner = nullptr;
 
-   AF4DeleteChannelDialog(const AF4DeleteChannelDialog& src)        = delete;
-   AF4DeleteChannelDialog& operator= (AF4DeleteChannelDialog& src)  = delete;
-   AF4DeleteChannelDialog(AF4DeleteChannelDialog&& src)             = delete;
-   AF4DeleteChannelDialog& operator= (AF4DeleteChannelDialog&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4DeleteChannelDialog)
 };
 
 
@@ -179,9 +169,6 @@ private:
    QPushButton *accepter        = nullptr;
    QPushButton *decliner        = nullptr;
 
-   AF4ChannelNameDialog(const AF4ChannelNameDialog& src)        = delete;
-   AF4ChannelNameDialog& operator= (AF4ChannelNameDialog& src ) = delete;
-   AF4ChannelNameDialog(AF4ChannelNameDialog&& src)             = delete;
-   AF4ChannelNameDialog& operator= (AF4ChannelNameDialog&& src) = delete;
+   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelNameDialog)
 };
 #endif // AF4CALIBRATIONDIALOGS_H

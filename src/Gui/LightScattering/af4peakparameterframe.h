@@ -13,7 +13,8 @@
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"
 #include "../smallQDerivates/af4numberedtoolbutton.h"
-#include "../../Core/af4parameterstructs.h"
+#include "../Core/af4parameterstructs.h"
+#include "../Core/af4evalmacros.h"
 
 // forward declaration to use this as exclusive
 // parent widget type for AF4SinglePeakParameterWidget
@@ -51,11 +52,6 @@ public:
     * \brief destructor calls settings;
     */
    ~AF4SinglePeakParameterWidget();
-
-   AF4SinglePeakParameterWidget(const AF4SinglePeakParameterWidget& src)        = delete;
-   AF4SinglePeakParameterWidget& operator= (AF4SinglePeakParameterWidget& src)  = delete;
-   AF4SinglePeakParameterWidget(AF4SinglePeakParameterWidget&& src)             = delete;
-   AF4SinglePeakParameterWidget& operator= (AF4SinglePeakParameterWidget&& src) = delete;
 
    /*!
     * \brief changePeakNo
@@ -161,6 +157,8 @@ private:
     * \brief writeSettings
     */
    void writeSettings();
+
+   NO_COPY_ASSIGNMENT_CTORS(AF4SinglePeakParameterWidget)
 };
 
 
@@ -191,11 +189,6 @@ public:
     * \brief destructor, calls writeSettings
     */
    ~AF4PeakParameterFrame();
-
-   AF4PeakParameterFrame(const AF4PeakParameterFrame& src)        = delete;
-   AF4PeakParameterFrame& operator= (AF4PeakParameterFrame& src)  = delete;
-   AF4PeakParameterFrame(AF4PeakParameterFrame&& src)             = delete;
-   AF4PeakParameterFrame& operator= (AF4PeakParameterFrame&& src) = delete;
 
    /*!
     * \brief getNumberOfPeaks
@@ -275,6 +268,12 @@ public slots:
     */
    void removePeakParWidget(const int peakNo);
 
+private slots:
+   /*!
+    * \brief addPeakParWidget
+    */
+   void addPeakParWidget();
+
 private:
 
    const QString prefix;
@@ -287,11 +286,7 @@ private:
    QPushButton *peakAdder     = nullptr;
    QList<AF4SinglePeakParameterWidget*> peakParWidgets;
 
-private slots:
-   /*!
-    * \brief addPeakParWidget
-    */
-   void addPeakParWidget();
+   NO_COPY_ASSIGNMENT_CTORS(AF4PeakParameterFrame)
 
 };
 

@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QDebug>
 #include "../GeneralWidgets/af4log.h"
+#include "../Core/af4evalmacros.h"
 #include "../../Core/af4parameterstructs.h"
 
 /*! **********************************************************************************************
@@ -36,11 +37,6 @@ public:
     explicit AF4ExpSettingsFrame(const QString& prefix,int id, QWidget* parent = nullptr);
 
    ~AF4ExpSettingsFrame(){writeSettings();}
-
-    AF4ExpSettingsFrame(const AF4ExpSettingsFrame& src)        = delete;
-    AF4ExpSettingsFrame& operator= (AF4ExpSettingsFrame& src)  = delete;
-    AF4ExpSettingsFrame(AF4ExpSettingsFrame&& src)             = delete;
-    AF4ExpSettingsFrame& operator= (AF4ExpSettingsFrame&& src) = delete;
 
     ExpFFFParameters getExpFFFParameters();
 
@@ -150,6 +146,20 @@ public:
      */
     void writeSettings();
 
+signals:
+    /*!
+     * \brief callEnableVolume
+     * \param enable
+     */
+    void callEnableVolume(bool enable);
+
+private slots:
+    /*!
+     * \brief enableVoidPeakTime
+     * \param checked
+     */
+    void enableVoidPeakTime(bool checked);
+
 private:
 
     const QString prefix;
@@ -167,18 +177,6 @@ private:
     QDoubleSpinBox *viscosity        = nullptr;
     QDoubleSpinBox *temperature      = nullptr;
 
-signals:
-    /*!
-     * \brief callEnableVolume
-     * \param enable
-     */
-    void callEnableVolume(bool enable);
-
-private slots:
-    /*!
-     * \brief enableVoidPeakTime
-     * \param checked
-     */
-    void enableVoidPeakTime(bool checked);
+    NO_COPY_ASSIGNMENT_CTORS(AF4ExpSettingsFrame)
 };
 #endif // AF4EXPSETTINGSFRAME_H

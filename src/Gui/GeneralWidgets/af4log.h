@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <string>
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***
@@ -56,9 +57,6 @@ public:
       * \param logMessage message to be logged
       */
    static void logText(QString logMessage, bool qDebugToo = false);
-
-
-
 
    /*!
       * \brief logWarning global overloaded logging function, calls the
@@ -118,16 +116,12 @@ private:
      */
    void clearLogInInstance();
 
-   AF4Log(const AF4Log& src) = delete;
-   AF4Log& operator= (AF4Log& src) = delete;
-   AF4Log(AF4Log&& src) = delete;
-   AF4Log& operator= (AF4Log&& src) = delete;
-
   /*!
    * \brief destructor of this class
    */
   ~AF4Log(){}
 
+   NO_COPY_ASSIGNMENT_CTORS(AF4Log)
 };
 
 #endif // FFFLOGWIDGET_H

@@ -1,5 +1,5 @@
-#ifndef FFFASSIGNDATADIALOG_H
-#define FFFASSIGNDATADIALOG_H
+#ifndef AF4ASSIGNDATADIALOG_H
+#define AF4ASSIGNDATADIALOG_H
 
 #include <QRect>
 #include <QDesktopWidget>
@@ -15,8 +15,9 @@
 #include <limits>
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4numberedcombobox.h"
-#include "../../Core/af4constants.h"
-#include "../../Core/af4parameterstructs.h"
+#include "../Core/af4constants.h"
+#include "../Core/af4parameterstructs.h"
+#include "../Core/af4evalmacros.h"
 
 /*! **********************************************************************************************
 ***
@@ -63,11 +64,6 @@ public:
                                 QWidget *parent = nullptr
                                 );
    ~AF4AssignDataDialog();
-
-    AF4AssignDataDialog(const AF4AssignDataDialog& src) = delete;
-    AF4AssignDataDialog& operator= (const AF4AssignDataDialog& src) = delete;
-    AF4AssignDataDialog(AF4AssignDataDialog&& src) = delete;
-    AF4AssignDataDialog& operator= (AF4AssignDataDialog&& src) = delete;
 
 private:
    QGridLayout *layout;
@@ -118,7 +114,9 @@ public slots:
     * \brief writeUserOptionAndAccept
     */
    void writeUserOptionAndAccept();
+private:
+   NO_COPY_ASSIGNMENT_CTORS(AF4AssignDataDialog)
 };
 
 
-#endif // FFFASSIGNDATADIALOG_H
+#endif // AF4ASSIGNDATADIALOG_H
