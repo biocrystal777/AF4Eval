@@ -43,7 +43,6 @@ AF4DiffEvaluationWidget::AF4DiffEvaluationWidget(QSharedPointer<QMap<QString, AF
                     calibSettingsFrame, &AF4CalibSettingsFrame::enableVolume);
 }
 
-
 void AF4DiffEvaluationWidget::startEvaluation()
 {
 

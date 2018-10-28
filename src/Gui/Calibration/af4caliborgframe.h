@@ -138,12 +138,15 @@ private:
     */
    bool askCalibRenaming(QString &newName, const QString &oldName);
 
+
+   bool calibNameDuplicated(const QString& newName);
+
    /*!
     * \brief askCalibAdding
     * \param newName
     * \return
     */
-   bool askCalibAdding(QString &newName);
+   bool askCalibAdding(const QString &channelName, QString &newName);
 
    /*!
     * \brief connectCtrlWithPlotWidget

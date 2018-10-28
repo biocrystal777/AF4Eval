@@ -69,13 +69,9 @@ public:
 
    CalibErrorCode checkParameters();
 
-
    CalibResult calibrate_classic();
-
    CalibResult calibrate_geometric();
-
    CalibResult calibrate_hydrodynamic();
-
 
    //inline double getChWidth() const { return w;}
    //inline double getHydrodynVolume() const { return V0;}
