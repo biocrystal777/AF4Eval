@@ -86,7 +86,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    // Calibration Frame //
    ///////////////////////
 
-   calibsOrgFrame = new AF4CalibOrgFrame(channelSelection, channelConfigWidgets);
+   calibsOrgFrame = new AF4CalibOrgFrame(channelSelection, channelConfigWidgets, this);
 
 
    //-///////////////////////
@@ -102,16 +102,18 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    // connect orgFrames //
    //\////////////////////
 
-   connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelAdded, calibsOrgFrame, &AF4CalibOrgFrame::addConnectedChannel);
-   calibsOrgFrame->deleteConnectedChannel(channelToRemove,newChannelName);
-
-//   void configWidgetIdsAdapted();     // connect to calibOrgsFrame => adaptAllCalibWidgetIds
-//   void configWidgetNamesAdapted();   // connect to                => adaptAllCalibWidgetIds TO CHECK: or Names?
-//   void channelAdded(const QString oldName, const QString newName);        // connect to calibOrgsFrame =>
-//   void channelRenamed(const QString oldName, const QString newName);
-//   void channelDeleted(const QString oldName, const QString newCurrentName);
-//   void channelSwitched(const QString newName);
-
+   connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::configWidgetIdsAdapted,
+           calibsOrgFrame,      &AF4CalibOrgFrame::adaptAllCalibWidgetIds);
+   connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::configWidgetNamesAdapted,
+           calibsOrgFrame,      &AF4CalibOrgFrame::adaptAllCalibWidgetNames);
+   connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelAdded,        // ...(const QString oldName, const QString newName)
+           calibsOrgFrame,      &AF4CalibOrgFrame::addConnectedChannel);
+   connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelRenamed,      // ...(const QString oldName, const QString newName)
+           calibsOrgFrame,      &AF4CalibOrgFrame::addConnectedChannel);
+   connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelDeleted,      // ...(const QString oldName, const QString newCurrentName)
+           calibsOrgFrame,      &AF4CalibOrgFrame::deleteConnectedChannel);
+   connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelSwitched,     // ...(const QString channelName)
+           calibsOrgFrame,      &AF4CalibOrgFrame::switchToFirstCalibWidget);
 
 
    //\///////////////////////////
@@ -877,7 +879,6 @@ void AF4ChannelDimsOrgFrame::switchChannelWidget(const QString &channelName)
    currentChConfigWidget->show();
 
    //calibsOrgFrame->switchToFirstCalibWidget(channelName);
-
    currentChConfigWidget->show();
 
 }
