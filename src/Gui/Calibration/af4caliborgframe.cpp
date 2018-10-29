@@ -1,9 +1,16 @@
 #include "af4caliborgframe.h"
 
+//-/////////////////
+//  Public stuff //
+//-////////////////
+
 AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
                                    QWeakPointer<QMap<QString, AF4ChannelDimsWidget *> > channelConfigWidgets,
                                    QWidget *parent)
-   : QFrame(parent), channelSelection(channelSelection), channelConfigWidgets(channelConfigWidgets)
+   : QFrame(parent),
+     channelSelection(channelSelection),
+     channelConfigWidgets(channelConfigWidgets),
+     plotWidget(new AF4CalibPlotWidget(this))
 {
    QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
@@ -14,8 +21,8 @@ AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
    allCalibSelections.clear();
    channelCalibWidgets = QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > >(new QMap<QString, QMap<QString, AF4ChannelCalibWidget*> >);
 
+   uint numberOfChannels = channelConfigWidgets.data()->count();//= settings.value("channels/number", 0).toInt(&ok);
    bool ok;
-   uint numberOfChannels = settings.value("channels/number", 0).toInt(&ok);
    if(!ok) AF4Log::logWarning(tr("Could not read parameter channels/number from iniFile. Default Value will be set to 0"));
 
    uint numberOfCalibrations = 0;
@@ -26,37 +33,42 @@ AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
       numberOfCalibrations = settings.value(tr("channels/%1/numberOfCalibrations").arg((i)), 0).toInt(&ok);
       if(!ok) AF4Log::logWarning(tr("Could not read parameter channels/%1/numberOfCalibrations from iniFile. Generate new calibration").arg(i));
       calibSelection =  new QComboBox(this);
+//      qDebug() << "CAaalib7" << calibSelection->count();
+      calibSelection->clear();
+  //    qDebug() << "CAaalib7.5 " << calibSelection->count();
       allCalibSelections.insert(channelSelection.data()->itemText(i), calibSelection);
+    //  qDebug() << "CAaaalib8" << calibSelection->count();
+      calibSelection->setInsertPolicy(QComboBox::NoInsert);
+      calibSelection->setToolTip("Choose a Calibration profile");
+      calibSelection->hide();
+      //qDebug() << "CAaaalib8" << calibSelection->count();
+    //  qDebug() << "CAlib9"<< calibSelection->count();
+      channelName = channelSelection.data()->itemText(i);
+      channelCalibWidgets->insert(channelName, QMap<QString, AF4ChannelCalibWidget*>());
+      lay->addWidget(calibSelection, 0, 11);
       if(numberOfCalibrations == 0){
          if(addCalibration()) ++numberOfCalibrations;
          else                 AF4Log::logWarning(tr("No calibration widget was added. Program might now work!"), true);
       }
-      qDebug() << "CAlib8";
-
-      calibSelection->setToolTip("Choose a Calibration profile");
-      calibSelection->hide();
-      lay->addWidget(calibSelection, 0, 11);
-
-      qDebug() << "CAlib9";
-      channelName = channelSelection.data()->itemText(i);
-      channelCalibWidgets->insert(channelName, QMap<QString, AF4ChannelCalibWidget*>());
-      for(uint j=0; j < numberOfCalibrations; j++){
-         calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();         
-         currentCalibWidget = createNewCalilbWidget(i, j, channelName, calibName);
+      else {
+         for(uint j=0; j < numberOfCalibrations; j++){
+            calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();
+            currentCalibWidget = createNewCalilbWidget(i, j, channelName, calibName);
+         }
       }
-      qDebug() << "CAlib10";
+      //qDebug() << "CAlib10"<< calibSelection->count();
       connect(calibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
               this, &AF4CalibOrgFrame::switchCalibWidget);
    }
 
-   qDebug() << "CAlib11";
-   plotWidget = new AF4CalibPlotWidget(this);
+   //qDebug() << "CAlib11";
+   //plotWidget = new AF4CalibPlotWidget(this);
    lay->addWidget(plotWidget, 2, 7, 7, 7);
 
    renameCalibButton = new QToolButton(this);
    renameCalibButton->setText("R");
    renameCalibButton->setToolTip("Rename the current calibration profile");
-   qDebug() << "CAlib10";
+   //qDebug() << "CAlib12";
    connect(renameCalibButton, &QPushButton::clicked,
            this, &AF4CalibOrgFrame::renameCalibration);
    lay->addWidget(renameCalibButton, 0, 12);
@@ -67,21 +79,21 @@ AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
    connect(addCalibButton, &QPushButton::clicked,
            this, &AF4CalibOrgFrame::addCalibration);
    lay->addWidget(addCalibButton, 0, 13);
-   qDebug() << "CAlib14";
+   //qDebug() << "CAlib14";
    deleteCalibButton = new QToolButton(this);
    deleteCalibButton->setText(tr("-"));
    deleteCalibButton->setToolTip("delete current calibration profile");
    connect(deleteCalibButton, &QPushButton::clicked,
            this, &AF4CalibOrgFrame::deleteCalibration);
-   qDebug() << "CAlib15";
+   //qDebug() << "CAlib15";
    lay->addWidget(deleteCalibButton, 0, 14);
-   qDebug() << "CAlib16";
+   //qDebug() << "CAlib16";
    calibSelection->show();
-   qDebug() << "CAlib17" << currentCalibWidget;
+   //qDebug() << "CAlib17" << currentCalibWidget;
    currentCalibWidget->show();
-   qDebug() << "CAlib18";
+   //qDebug() << "CAlib18";
    connect(this, &AF4CalibOrgFrame::saveButtonClicked, this, &AF4CalibOrgFrame::saveParameters);
-   qDebug() << "CAlib19";
+   //qDebug() << "CAlib19";
 }
 
 AF4CalibOrgFrame::~AF4CalibOrgFrame()
@@ -124,6 +136,11 @@ void AF4CalibOrgFrame::renameConnectedChannel(const QString &oldChName, const QS
 }
 
 
+//-////////////////
+//  Public slots //
+//-////////////////
+
+
 void AF4CalibOrgFrame::adaptPlotData()
 {
    QString fileName = currentCalibWidget->getInputFileName();
@@ -143,6 +160,11 @@ void AF4CalibOrgFrame::switchToFirstCalibWidget(const QString &channelName)
       switchCalibWidget(calibWidgetKey);
    }
 }
+
+//-/////////////////
+//  Private slots //
+//-/////////////////
+
 
 void AF4CalibOrgFrame::addConnectedChannel(const QString &newChName)
 {
@@ -179,31 +201,34 @@ bool AF4CalibOrgFrame::addCalibration()
 {
    QString newName;
    QString channelName = channelSelection.data()->currentText();
-   qDebug() << "CAlib-1";
+   //qDebug() << "CAlib-1";
    if(askCalibAdding(channelName, newName)){
       // add a new Calibration here:      
-      qDebug() << "CAlib0";
+     // qDebug() << "CAlib0";
       if(currentCalibWidget) currentCalibWidget->hide();
       // CalibrationParameters params;
 
       int channelId = channelSelection.data()->currentIndex();
       int newCalibId = channelCalibWidgets->size();
-      qDebug() << "CAlib1";
+     // qDebug() << "CAlib1";
+      //auto* newCalibration = createNewCalilbWidget(channelId, newCalibId, channelName, newName);
       auto* newCalibration = createNewCalilbWidget(channelId, newCalibId, channelName, newName);
-      qDebug() << "CAlib2";
+      //qDebug() << "CAlib2";
+      //if(currentCalibWidget) newCalibration->setAllCalibrationParameters(currentCalibWidget->getAllCalibrationParameters());
       if(currentCalibWidget) newCalibration->setAllCalibrationParameters(currentCalibWidget->getAllCalibrationParameters());
+      currentCalibWidget = newCalibration;
       calibSelection->setCurrentIndex(calibSelection->count()-1);
-      qDebug() << "CAlib3";
+      //qDebug() << "CAlib3";
       adaptCalibWidgetIds(channelName, channelId);
       adaptCalibWidgetNames(channelName);
-      qDebug() << "CAlib4";
+      //qDebug() << "CAlib4";
       AF4Log::logText(tr("New Calibration \"%1\" added.").arg(newName));
       switchCalibWidget(newName);
-      qDebug() << "CAlib5";
-      if(currentCalibWidget) currentCalibWidget->show();
-      qDebug() << "CAlib6";
+      //qDebug() << "CAlib5";
+//      if(currentCalibWidget) currentCalibWidget->show();
+      //qDebug() << "CAlib6";
       saveParameters();
-      qDebug() << "CAlib7";
+      //qDebug() << "CAlib7";
       return true;
    }
    else return false;
@@ -254,20 +279,21 @@ void AF4CalibOrgFrame::deleteCalibration()
 
 void AF4CalibOrgFrame::switchCalibWidget(const QString &calibName)
 {
-   qDebug() << "switchCalibWidget1";
+   //qDebug() << "switchCalibWidget1";
    if(currentCalibWidget){
       currentCalibWidget->hide();
-      qDebug() << "switchCalibWidget1.5";
-      plotWidget->disconnectCurrentMarkers();
-      qDebug() << "switchCalibWidget2";
+     // qDebug() << "switchCalibWidget1.5";
+      if(plotWidget) plotWidget->disconnectCurrentMarkers();
+      //qDebug() << "switchCalibWidget2";
       QString channelName = channelSelection.data()->currentText();
       currentCalibWidget = channelCalibWidgets->value(channelName).value(calibName);
       lay->addWidget(currentCalibWidget, 2, 0, 7, 7);
-      qDebug() << "switchCalibWidget3";
+      //qDebug() << "switchCalibWidget3";
       connectCtrlWithPlotWidget();
       adaptPlotData();
       currentCalibWidget->show();
    }
+   //qDebug() << "switchCalibWidget4";
 }
 
 void AF4CalibOrgFrame::saveParameters() const
@@ -282,21 +308,28 @@ void AF4CalibOrgFrame::saveParameters() const
    }
 }
 
+
+//-/////////////////
+//  Private stuff //
+//-/////////////////
+
+
+
 AF4ChannelCalibWidget *AF4CalibOrgFrame::createNewCalilbWidget(const int channelId, const int calibId, const QString &channelName, const QString &calibName)
 {
-   qDebug() << "New CalibWidget1";
+   //qDebug() << "New CalibWidget1";
    auto* newWidget = new AF4ChannelCalibWidget(channelId, calibId, channelName, calibName, this);
    connect(newWidget, &AF4ChannelCalibWidget::calibrateChannelCalled,
            this, &AF4CalibOrgFrame::calibrateChannelCalled);
    connect(this,  &AF4CalibOrgFrame::saveButtonClicked,
            newWidget, &AF4ChannelCalibWidget::saveButtonClicked);
-   qDebug() << "New CalibWidget2";
+   //qDebug() << "New CalibWidget2";
    calibSelection->addItem(calibName);
    (*channelCalibWidgets.data())[channelName].insert(calibName, newWidget);
-   qDebug() << "New CalibWidget3";
+   //qDebug() << "New CalibWidget3";
    lay->addWidget(newWidget, 2, 0, 7, 7);
    newWidget->hide();
-   qDebug() << "New CalibWidget4";
+   //qDebug() << "New CalibWidget4";
    return newWidget;
 }
 
@@ -338,17 +371,17 @@ bool AF4CalibOrgFrame::askCalibRenaming(QString &newName, const QString &oldName
 
 bool AF4CalibOrgFrame::askCalibAdding(const QString &channelName, QString &newName)
 {
-   qDebug() << "AskCAlib0";
+   //qDebug() << "AskCAlib0";
    bool firstDialog = true;
    do {
       if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
       AF4CalibNameDialog calibNameDialog(&newName, firstDialog);
-      qDebug() << "AskCAlib1";
+     // qDebug() << "AskCAlib1";
       firstDialog = false;
       if(calibNameDialog.exec()){
       } else return false;
    } while(!calibNameDuplicated(newName));
-   qDebug() << "AskCAlib2";
+//   qDebug() << "AskCAlib2";
    return true;
 }
 

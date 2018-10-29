@@ -5,20 +5,26 @@ using std::string;
 AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QWidget(parent), settingsWriter (QSharedPointer<QPushButton>(new QPushButton("Save Parameters", this)))
 {
-   layout = new QGridLayout(this);
 
    //\/////////////////////////
    // Basical initialization //
    //\/////////////////////////
+   layout = new QGridLayout(this);
 
+
+   //  {{{{{{
+
+   ///////////////////////////////////
+   //  channel configuration   -> to be moved to AF4ChannelDimsOrgFrame //
+   ///////////////////////////////////
+
+   channelDimsOrgFrame = new AF4ChannelDimsOrgFrame(this);
+/*
    channelConfigFrame = new QFrame(this);
    channelConfigFrame->setFrameStyle(0x1011);
    channelConfigFrameLayout = new QGridLayout(channelConfigFrame);
    channelConfigFrameLayout->addWidget(new QLabel("<b>Channel Configurations</b>", channelConfigFrame), 0, 0, Qt::AlignLeft);
 
-   ///////////////////////////////////
-   //Constant channel configuration //
-   ///////////////////////////////////
    channelSelection = QSharedPointer<QComboBox>(new QComboBox(channelConfigFrame));
    channelSelection->setToolTip("");
    channelConfigFrameLayout->addWidget(channelSelection.data(), 0, 4);
@@ -54,7 +60,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    for(uint i = 0; i < numberOfChannels; i++){
       // double channelValue;
       QString newChannelName = settings.value(tr("channels/%1/name").arg(i), tr("New Channel %1").arg(i)).toString();
-      currentChConfigWidget = new AF4ChannelDimsWidget(i, newChannelName, channelConfigFrame);
+      currentChConfigWidget = new AF4ChannelDimsWidget(i, newChannelName, false, channelConfigFrame);
       channelConfigWidgets->insert(newChannelName, currentChConfigWidget);
       channelSelection->addItem(newChannelName);
       channelSelection->setCurrentIndex(channelSelection->count() - 1);
@@ -67,27 +73,53 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    channelConfigFrameLayout->addWidget(currentChConfigWidget, 2, 0, 7, 7);
    currentChConfigWidget->show();
 
+*/
+   //  }}}}}}}
+
+   ///////////////////////
+   // channeldims Frame //
+   //////////////////////
+
+   //AF4ChannelDimsOrgFrame *frame;
+
    ///////////////////////
    // Calibration Frame //
    ///////////////////////
 
-   calibsOrgFrame = new AF4CalibOrgFrame(channelSelection, channelConfigWidgets, this);
+   calibsOrgFrame = new AF4CalibOrgFrame(channelSelection, channelConfigWidgets);
 
 
    //-///////////////////////
    // set starting widgets //
    //-///////////////////////
-
+/*
    channelSelection->setCurrentIndex(0);
    QString channelName = channelSelection->currentText();
    currentChConfigWidget = channelConfigWidgets->value(channelName);
    currentChConfigWidget->show();
+*/
+   //\////////////////////
+   // connect orgFrames //
+   //\////////////////////
+
+   connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelAdded, calibsOrgFrame, &AF4CalibOrgFrame::addConnectedChannel);
+   calibsOrgFrame->deleteConnectedChannel(channelToRemove,newChannelName);
+
+//   void configWidgetIdsAdapted();     // connect to calibOrgsFrame => adaptAllCalibWidgetIds
+//   void configWidgetNamesAdapted();   // connect to                => adaptAllCalibWidgetIds TO CHECK: or Names?
+//   void channelAdded(const QString oldName, const QString newName);        // connect to calibOrgsFrame =>
+//   void channelRenamed(const QString oldName, const QString newName);
+//   void channelDeleted(const QString oldName, const QString newCurrentName);
+//   void channelSwitched(const QString newName);
+
+
 
    //\///////////////////////////
    // add Frames to the layout //
    //\///////////////////////////
 
-   layout->addWidget(channelConfigFrame, 0, 0, 2, 10);
+   //layout->addWidget(channelConfigFrame, 0, 0, 2, 10);
+   layout->addWidget(channelDimsOrgFrame, 0, 0, 2, 10);
    layout->addWidget(calibsOrgFrame, 3, 0, 12, 10);
 
    connect(settingsWriter.data(), &QPushButton::clicked,
@@ -102,154 +134,8 @@ AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
    writeSettings();
 }
 
-void AF4ChannelConfigurationWidget::adaptConfigWidgetIds()
-{
-   int i = 0;
-   for(const QString &key : channelConfigWidgets->keys()){
-      AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
-      configWidget->setConfigId(i);
-      ++i;
-   }
-   calibsOrgFrame->adaptAllCalibWidgetIds();
-}
-
-void AF4ChannelConfigurationWidget::adaptConfigWidgetNames()
-{
-   for(const QString &key : channelConfigWidgets->keys()){
-      AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
-      configWidget->setChannelName(key);
-   }
-   calibsOrgFrame->adaptAllCalibWidgetIds();
-}
-
-bool AF4ChannelConfigurationWidget::askChannelRenaming(QString &newName, const QString &oldName)
-{
-   bool nameIsOk;
-   bool firstDialog = true;
-   do {
-      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
-      AF4ChannelNameDialog chNameDialog(&newName, firstDialog, oldName, true);
-      firstDialog = false;
-      if(chNameDialog.exec()){
-         // check if the entered name is already used
-         nameIsOk = true;
-         for (int i=0; i < channelSelection->count() ; i++){
-            QString compName = channelSelection->itemText(i);
-            if(!(QString::compare(newName, compName))){
-               nameIsOk = false;
-               break;
-            }
-         }
-      } else return false;
-   } while(!nameIsOk);
-   return true;
-}
-
-void AF4ChannelConfigurationWidget::renameChannel()
-{
-   QString newName;
-   QString oldName = QString(channelSelection->currentText());
-   if(askChannelRenaming(newName, oldName)){
-      // add a new Channel here:
-      AF4ChannelDimsWidget *oldConfWidget = channelConfigWidgets->value(oldName, nullptr);
-      channelConfigWidgets->remove(oldName);
-      channelConfigWidgets->insert(newName, oldConfWidget);
-      channelSelection->setItemText(channelSelection->currentIndex(), newName);
-      oldConfWidget->setChannelName(newName);
-      // remove and reinsert the calibSelection and the FFFChannelselection
-      // under the new key;
-      //replaced by
-      calibsOrgFrame->renameConnectedChannel(oldName, newName);
-      saveParameters();
-   }
-}
-
-bool AF4ChannelConfigurationWidget::askChannelAdding(QString &newName){
-   bool nameIsOk;
-   bool firstDialog = true;
-   do {
-      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
-      AF4ChannelNameDialog chNameDialog(&newName, firstDialog);
-      firstDialog = false;
-      if(chNameDialog.exec()){
-         // check if the entered name is already used
-         nameIsOk = true;
-         for (int i=0; i < channelSelection->count(); ++i){
-            QString compName = channelSelection->itemText(i);
-            if(!(QString::compare(newName, compName))){
-               nameIsOk = false;
-               break;
-            }
-         }
-      } else return false;
-   } while(!nameIsOk);
-   return true;
-}
-
-bool AF4ChannelConfigurationWidget::addChannel(bool firstInit)
-{
-   QApplication::restoreOverrideCursor();
-   QString newName;
-   if(askChannelAdding(newName)){
-      // add a new Channel here:
-      AF4ChannelDimsWidget* newChannel = new AF4ChannelDimsWidget(channelConfigWidgets->size(), newName, channelConfigFrame);
-      channelConfigWidgets->insert(newName, newChannel);
-      if(currentChConfigWidget) currentChConfigWidget->hide();
-      currentChConfigWidget = newChannel;
-
-      // add new assigned channelCalibWidget, Comboboxes etc.
-
-      channelSelection->blockSignals(true);
-      channelConfigFrameLayout->addWidget(currentChConfigWidget, 2, 0, 7, 7);
-      currentChConfigWidget->show();
-      channelSelection->addItem(newName);
-      channelSelection->setCurrentIndex(channelSelection->count() - 1);
-      channelSelection->blockSignals(false);
-      AF4Log::logText(tr("New Channel \"%1\" added.").arg(newName));
-      if(!firstInit) adaptConfigWidgetIds();
-      saveParameters();
-      return true;
-   }
-   else return false;
-}
 
 
-void AF4ChannelConfigurationWidget::deleteChannel()
-{
-   if(channelSelection->count() > 1){
-      AF4DeleteChannelDialog deleteChDialog;
-      if(deleteChDialog.exec()){
-         const QString channelToRemove = channelSelection->currentText();
-         int indexToRemove = channelSelection->currentIndex();
-         channelSelection->removeItem(indexToRemove);
-         delete (channelConfigWidgets->value(channelToRemove));
-         channelConfigWidgets->remove(channelToRemove);
-         AF4Log::logText(tr("Channel deleted."));
-
-         QString newChannelName = channelSelection->currentText();
-
-         calibsOrgFrame->deleteConnectedChannel(channelToRemove,newChannelName);
-         saveParameters();
-         adaptConfigWidgetIds();
-      }
-   }
-   else AF4Log::logWarning(tr("You cannot remove the last Channel!"));
-
-}
-
-void AF4ChannelConfigurationWidget::switchChannelWidget(const QString &channelName)
-{
-   currentChConfigWidget->hide();
-   currentChConfigWidget = channelConfigWidgets->value(channelName);
-   channelConfigFrameLayout->addWidget(currentChConfigWidget, 2, 0, 7, 7);
-   currentChConfigWidget->show();
-
-   calibsOrgFrame->switchToFirstCalibWidget(channelName);
-
-
-   currentChConfigWidget->show();
-
-}
 
 void AF4ChannelConfigurationWidget::calibrateChannnel()
 {
@@ -311,6 +197,8 @@ void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDim
       }
    }
 }
+
+
 
 CalibResult AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode)
 {
@@ -576,6 +464,177 @@ void AF4ChannelConfigurationWidget::logErrorMessage(CalibErrorCode errorCode)
    }
 }
 
+
+
+
+
+
+
+/**************************************
+ *
+ * Functions To be moved to AF4ChannelDimsOrgFrame
+ *
+ *************************************/
+
+/*
+void AF4ChannelConfigurationWidget::adaptConfigWidgetIds()
+{
+   int i = 0;
+   for(const QString &key : channelConfigWidgets->keys()){
+      AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
+      configWidget->setConfigId(i);
+      ++i;
+   }
+   calibsOrgFrame->adaptAllCalibWidgetIds();
+}
+
+void AF4ChannelConfigurationWidget::adaptConfigWidgetNames()
+{
+   for(const QString &key : channelConfigWidgets->keys()){
+      AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
+      configWidget->setChannelName(key);
+   }
+   calibsOrgFrame->adaptAllCalibWidgetIds();
+}
+
+*/
+/*
+bool AF4ChannelConfigurationWidget::askChannelRenaming(QString &newName, const QString &oldName)
+{
+   bool nameIsOk;
+   bool firstDialog = true;
+   do {
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
+      AF4ChannelNameDialog chNameDialog(&newName, firstDialog, oldName, true);
+      firstDialog = false;
+      if(chNameDialog.exec()){
+         // check if the entered name is already used
+         nameIsOk = true;
+         for (int i=0; i < channelSelection->count() ; i++){
+            QString compName = channelSelection->itemText(i);
+            if(!(QString::compare(newName, compName))){
+               nameIsOk = false;
+               break;
+            }
+         }
+      } else return false;
+   } while(!nameIsOk);
+   return true;
+}
+
+void AF4ChannelConfigurationWidget::renameChannel()
+{
+   QString newName;
+   QString oldName = QString(channelSelection->currentText());
+   if(askChannelRenaming(newName, oldName)){
+      // add a new Channel here:
+      AF4ChannelDimsWidget *oldConfWidget = channelConfigWidgets->value(oldName, nullptr);
+      channelConfigWidgets->remove(oldName);
+      channelConfigWidgets->insert(newName, oldConfWidget);
+      channelSelection->setItemText(channelSelection->currentIndex(), newName);
+      oldConfWidget->setChannelName(newName);
+      // remove and reinsert the calibSelection and the FFFChannelselection
+      // under the new key;
+      //replaced by
+      calibsOrgFrame->renameConnectedChannel(oldName, newName);
+      saveParameters();
+   }
+}
+*/
+
+/*
+bool AF4ChannelConfigurationWidget::askChannelAdding(QString &newName){
+   bool nameIsOk;
+   bool firstDialog = true;
+   do {
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
+      AF4ChannelNameDialog chNameDialog(&newName, firstDialog);
+      firstDialog = false;
+      if(chNameDialog.exec()){
+         // check if the entered name is already used
+         nameIsOk = true;
+         for (int i=0; i < channelSelection->count(); ++i){
+            QString compName = channelSelection->itemText(i);
+            if(!(QString::compare(newName, compName))){
+               nameIsOk = false;
+               break;
+            }
+         }
+      } else return false;
+   } while(!nameIsOk);
+   return true;
+}
+
+bool AF4ChannelConfigurationWidget::addChannel(bool firstInit)
+{
+   QApplication::restoreOverrideCursor();
+   QString newName;
+   if(askChannelAdding(newName)){
+      // add a new Channel here:
+      AF4ChannelDimsWidget* newChannel = new AF4ChannelDimsWidget(channelConfigWidgets->size(), newName, false, channelConfigFrame);
+      channelConfigWidgets->insert(newName, newChannel);
+      if(currentChConfigWidget) currentChConfigWidget->hide();
+      currentChConfigWidget = newChannel;
+
+      // add new assigned channelCalibWidget, Comboboxes etc.
+
+      channelSelection->blockSignals(true);
+      channelConfigFrameLayout->addWidget(currentChConfigWidget, 2, 0, 7, 7);
+      currentChConfigWidget->show();
+      channelSelection->addItem(newName);
+      channelSelection->setCurrentIndex(channelSelection->count() - 1);
+      channelSelection->blockSignals(false);
+      AF4Log::logText(tr("New Channel \"%1\" added.").arg(newName));
+      if(!firstInit) adaptConfigWidgetIds();
+      saveParameters();
+      return true;
+   }
+   else return false;
+}
+*/
+
+
+/*
+void AF4ChannelConfigurationWidget::deleteChannel()
+{
+   if(channelSelection->count() > 1){
+      AF4DeleteChannelDialog deleteChDialog;
+      if(deleteChDialog.exec()){
+         const QString channelToRemove = channelSelection->currentText();
+         int indexToRemove = channelSelection->currentIndex();
+         channelSelection->removeItem(indexToRemove);
+         delete (channelConfigWidgets->value(channelToRemove));
+         channelConfigWidgets->remove(channelToRemove);
+         AF4Log::logText(tr("Channel deleted."));
+
+         QString newChannelName = channelSelection->currentText();
+
+         calibsOrgFrame->deleteConnectedChannel(channelToRemove,newChannelName);
+         saveParameters();
+         adaptConfigWidgetIds();
+      }
+   }
+   else AF4Log::logWarning(tr("You cannot remove the last Channel!"));
+
+}
+
+void AF4ChannelConfigurationWidget::switchChannelWidget(const QString &channelName)
+{
+   currentChConfigWidget->hide();
+   currentChConfigWidget = channelConfigWidgets->value(channelName);
+   channelConfigFrameLayout->addWidget(currentChConfigWidget, 2, 0, 7, 7);
+   currentChConfigWidget->show();
+
+   calibsOrgFrame->switchToFirstCalibWidget(channelName);
+
+   currentChConfigWidget->show();
+
+}
+
+
+*/
+
+
 void AF4ChannelConfigurationWidget::saveParameters() const
 {
    AF4Log::logText(tr("Parameters saved of Channel Calibrations saved."));
@@ -594,6 +653,8 @@ void AF4ChannelConfigurationWidget::writeSettings() const
    settings.setValue("channels/number", numberOfChannels);
 }
 
+
+
 /**************************************
  *
  *
@@ -607,5 +668,234 @@ void AF4ChannelConfigurationWidget::writeSettings() const
 AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
 {
 
+   //channelConfigFrame = new QFrame(this);
+   //channelConfigFrame->setFrameStyle(0x1011);
+   this->setFrameStyle(0x1011);
+   lay = new QGridLayout(this);
+   lay->addWidget(new QLabel("<b>Channel Configurations</b>", this), 0, 0, Qt::AlignLeft);
+
+   channelSelection = QSharedPointer<QComboBox>(new QComboBox(this));
+   channelSelection->setToolTip("");
+   lay->addWidget(channelSelection.data(), 0, 4);
+   renameChButton = new QToolButton(this);
+   renameChButton->setText("R");
+   renameChButton->setToolTip("Rename the current channel");
+   connect(renameChButton, &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::renameChannel);
+   lay->addWidget(renameChButton, 0, 5);
+   addChButton = new QToolButton(this);
+   addChButton->setText(tr("+"));
+   addChButton->setToolTip("Add new Channel");
+   connect(addChButton, &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::addChannel);
+   lay->addWidget(addChButton, 0, 6);
+   deleteChButton = new QToolButton(this);
+   deleteChButton->setText(tr("-"));
+   deleteChButton->setToolTip("delete current Channel");
+   connect(deleteChButton, &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::deleteChannel);
+   lay->addWidget(deleteChButton, 0, 7);
+
+   ////////////////////////////////////////////////////
+   // initialize channels with values from QSettings //
+   ////////////////////////////////////////////////////
+   channelConfigWidgets = QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > (new QMap<QString, AF4ChannelDimsWidget*>() );
+   // make all channel widgets, add them to the QMap
+   // of ChannelWidgets and insert them
+   // into the ComboBox
+
+   QSettings settings("AgCoelfen", "AF4Eval");
+   settings.setIniCodec("UTF-8");
+   bool ok;
+   uint numberOfChannels = settings.value("channels/number", 0).toInt(&ok);
+   if(!ok) AF4Log::logWarning(tr("Could not read parameter channels/number from iniFile."), true);
+   for(uint i = 0; i < numberOfChannels; i++){
+      // double channelValue;
+      QString newChannelName = settings.value(tr("channels/%1/name").arg(i), tr("New Channel %1").arg(i)).toString();
+      currentChConfigWidget = new AF4ChannelDimsWidget(i, newChannelName, true, this);
+      channelConfigWidgets->insert(newChannelName, currentChConfigWidget);
+      channelSelection->addItem(newChannelName);
+      channelSelection->setCurrentIndex(channelSelection->count() - 1);
+      connect(channelSelection.data(), qOverload<const QString&>(&QComboBox::currentIndexChanged),
+              this, &AF4ChannelDimsOrgFrame::switchChannelWidget );
+      currentChConfigWidget->hide();
+   }
+   if(numberOfChannels == 0)
+      while (!addChannel(true));
+   lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
+   currentChConfigWidget->show();
+
+
+   channelSelection->setCurrentIndex(0);
+   QString channelName = channelSelection->currentText();
+   currentChConfigWidget = channelConfigWidgets->value(channelName);
+   currentChConfigWidget->show();
 }
 
+
+void AF4ChannelDimsOrgFrame::adaptConfigWidgetIds()
+{
+   int i = 0;
+   for(const QString &key : channelConfigWidgets->keys()){
+      AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
+      configWidget->setConfigId(i);
+      ++i;
+   }
+   //calibsOrgFrame->adaptAllCalibWidgetIds();
+   emit configWidgetIdsAdapted();
+}
+
+void AF4ChannelDimsOrgFrame::adaptConfigWidgetNames()
+{
+   for(const QString &key : channelConfigWidgets->keys()){
+      AF4ChannelDimsWidget *configWidget = channelConfigWidgets->value(key);
+      configWidget->setChannelName(key);
+   }
+   //calibsOrgFrame->adaptAllCalibWidgetIds();
+   emit configWidgetIdsAdapted();
+}
+
+bool AF4ChannelDimsOrgFrame::askChannelRenaming(QString &newName, const QString &oldName)
+{
+   bool nameIsOk;
+   bool firstDialog = true;
+   do {
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
+      AF4ChannelNameDialog chNameDialog(&newName, firstDialog, oldName, true);
+      firstDialog = false;
+      if(chNameDialog.exec()){
+         // check if the entered name is already used
+         nameIsOk = true;
+         for (int i=0; i < channelSelection->count() ; i++){
+            QString compName = channelSelection->itemText(i);
+            if(!(QString::compare(newName, compName))){
+               nameIsOk = false;
+               break;
+            }
+         }
+      } else return false;
+   } while(!nameIsOk);
+   return true;
+}
+
+void AF4ChannelDimsOrgFrame::renameChannel()
+{
+   QString newName;
+   QString oldName = QString(channelSelection->currentText());
+   if(askChannelRenaming(newName, oldName)){
+      // add a new Channel here:
+      AF4ChannelDimsWidget *oldConfWidget = channelConfigWidgets->value(oldName, nullptr);
+      channelConfigWidgets->remove(oldName);
+      channelConfigWidgets->insert(newName, oldConfWidget);
+      channelSelection->setItemText(channelSelection->currentIndex(), newName);
+      oldConfWidget->setChannelName(newName);
+      // remove and reinsert the calibSelection and the FFFChannelselection
+      // under the new key;
+      //replaced by
+      //calibsOrgFrame->renameConnectedChannel(oldName, newName);
+      emit channelRenamed(oldName, newName);
+      saveParameters();
+   }
+}
+
+bool AF4ChannelDimsOrgFrame::askChannelAdding(QString &newName){
+   bool nameIsOk;
+   bool firstDialog = true;
+   do {
+      if(!firstDialog) AF4Log::logWarning(tr("Other Name has to be entered"));
+      AF4ChannelNameDialog chNameDialog(&newName, firstDialog);
+      firstDialog = false;
+      if(chNameDialog.exec()){
+         // check if the entered name is already used
+         nameIsOk = true;
+         for (int i=0; i < channelSelection->count(); ++i){
+            QString compName = channelSelection->itemText(i);
+            if(!(QString::compare(newName, compName))){
+               nameIsOk = false;
+               break;
+            }
+         }
+      } else return false;
+   } while(!nameIsOk);
+   return true;
+}
+
+bool AF4ChannelDimsOrgFrame::addChannel(bool firstInit)
+{
+   QApplication::restoreOverrideCursor();
+   QString newName;
+   if(askChannelAdding(newName)){
+      // add a new Channel here:
+      AF4ChannelDimsWidget* newChannel = new AF4ChannelDimsWidget(channelConfigWidgets->size(), newName, true, this);
+      channelConfigWidgets->insert(newName, newChannel);
+      if(currentChConfigWidget) currentChConfigWidget->hide();
+      currentChConfigWidget = newChannel;
+
+      // add new assigned channelCalibWidget, Comboboxes etc.
+
+      channelSelection->blockSignals(true);
+      lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
+      currentChConfigWidget->show();
+      channelSelection->addItem(newName);
+      channelSelection->setCurrentIndex(channelSelection->count() - 1);
+      channelSelection->blockSignals(false);
+      AF4Log::logText(tr("New Channel \"%1\" added.").arg(newName));
+      if(!firstInit) adaptConfigWidgetIds();
+      saveParameters();
+      return true;
+   }
+   else return false;
+}
+
+
+void AF4ChannelDimsOrgFrame::deleteChannel()
+{
+   if(channelSelection->count() > 1){
+      AF4DeleteChannelDialog deleteChDialog;
+      if(deleteChDialog.exec()){
+         const QString channelToRemove = channelSelection->currentText();
+         int indexToRemove = channelSelection->currentIndex();
+         channelSelection->removeItem(indexToRemove);
+         delete (channelConfigWidgets->value(channelToRemove));
+         channelConfigWidgets->remove(channelToRemove);
+         AF4Log::logText(tr("Channel deleted."));
+
+         QString newChannelName = channelSelection->currentText();
+
+         //calibsOrgFrame->deleteConnectedChannel(channelToRemove,newChannelName);
+         emit channelDeleted(channelToRemove, newChannelName);
+         saveParameters();
+         adaptConfigWidgetIds();
+      }
+   }
+   else AF4Log::logWarning(tr("You cannot remove the last Channel!"));
+
+}
+
+void AF4ChannelDimsOrgFrame::switchChannelWidget(const QString &channelName)
+{
+   currentChConfigWidget->hide();
+   currentChConfigWidget = channelConfigWidgets->value(channelName);
+   lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
+   currentChConfigWidget->show();
+
+   //calibsOrgFrame->switchToFirstCalibWidget(channelName);
+
+   currentChConfigWidget->show();
+
+}
+
+void AF4ChannelDimsOrgFrame::saveParameters() const
+{
+   AF4Log::logText(tr("Parameters saved of Channel Calibrations saved."));
+   writeSettings();
+   for(const QString &configWidgetKey : channelConfigWidgets->keys()){
+      channelConfigWidgets->value(configWidgetKey)->writeSettings();
+   }
+}
+
+void AF4ChannelDimsOrgFrame::writeSettings() const
+{
+   QSettings settings("AgCoelfen", "AF4Eval");
+   settings.setIniCodec("UTF-8");
+   settings.remove("channels");
+   int numberOfChannels = channelSelection->count();
+   settings.setValue("channels/number", numberOfChannels);
+}

@@ -33,7 +33,7 @@ public:
    explicit AF4ChannelDimsWidget(const int channelId,
                                  const QString &channelName,
                                  const bool loadParameters,
-                                 QWidget *parent = nullptr);
+                                 QWidget *parent);
    ~AF4ChannelDimsWidget();
 
    inline double getChLength() const {return (length1->value() + length2->value() + length3->value());}

@@ -102,20 +102,18 @@ private:
 
    //QFrame calibrationFrame = nullptr;
    AF4CalibPlotWidget *plotWidget                                              = nullptr;
-
+   AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
    QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >                    channelConfigWidgets;
    QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
 
-   AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
+
    QMap<QString, QComboBox*> allCalibSelections;
-   QComboBox                 *calibSelection                            = nullptr;
+   QComboBox                 *calibSelection                                  = nullptr;
    QToolButton               *addCalibButton                                   = nullptr;
    QToolButton *renameCalibButton                                              = nullptr;
    QToolButton *deleteCalibButton                                              = nullptr;
 
    AF4ChannelCalibWidget *createNewCalilbWidget(const int channelId, const int calibId, const QString &channelName, const QString &calibName);
-
-
    /*!
     * \brief adaptCalibWidgetIds
     * \param channelName

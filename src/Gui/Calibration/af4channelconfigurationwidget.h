@@ -15,10 +15,97 @@ class AF4ChannelDimsOrgFrame final : public QFrame {
 public:
    explicit AF4ChannelDimsOrgFrame(QWidget *parent);
 
+   auto getChannelConfigWidgets() const -> QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >   {
+      return channelConfigWidgets;
+   }
+
+   void writeSettings() const;
 signals:
-   void saveButtonClicked();
+   //void saveButtonClicked();
+   void configWidgetIdsAdapted();     // connect to calibOrgsFrame => adaptAllCalibWidgetIds
+   void configWidgetNamesAdapted();   // connect to                => adaptAllCalibWidgetIds TO CHECK: or Names?
+   void channelAdded(const QString oldName, const QString newName);        // connect to calibOrgsFrame =>
+   void channelRenamed(const QString oldName, const QString newName);
+   void channelDeleted(const QString oldName, const QString newCurrentName);
+   void channelSwitched(const QString newName);
+
+public slots:
+
+   //void saveButtonClicked();
+
+   /*!
+    * \brief renameChannel creates a dialog for renaming a channel.
+    *        Adapts keys of internal data structures
+    */
+   void renameChannel();
+
+   /*!
+    * \brief addCalibration creates a dialog and a new channel.
+    *        Adapts internal data structures.
+    */
+   bool addChannel(bool firstInit = false);
+
+   /*!
+    * \brief deleteCalibration removes the current channel
+    *        and its assigned calibration profiles. Adapts
+    *        internal data structures.
+    */
+   void deleteChannel();
+
+private slots:
+
+
+   /*!
+    * \brief saveParameters
+    */
+   void saveParameters() const;
+
+
+   /*!
+    * \brief switchCalibWidget switches to another channel and
+    *        shows its values. Shows a comboBox with its assigned
+    *        calibration profiles as well as the corresponding
+    *        FFFChannelcalibWidgets
+    * \param newWidgetKey
+    */
+   void switchChannelWidget(const QString &newWidgetKey);
+
 
 private:
+
+   /*!
+    * \brief adaptConfigWidgetIds
+    */
+   void adaptConfigWidgetIds();
+
+   /*!
+    * \brief adaptConfigWidgetNames
+    */
+   void adaptConfigWidgetNames();
+
+   /*!
+    * \brief askChannelRenaming
+    * \param newName
+    * \param oldName
+    * \return
+    */
+   bool askChannelRenaming(QString &newName, const QString &oldName);
+
+   /*!
+    * \brief askChannelAdding
+    * \param newName
+    * \return
+    */
+   bool askChannelAdding(QString &newName);
+
+   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;//  = nullptr;
+   QGridLayout *lay                                             = nullptr;
+   AF4ChannelDimsWidget *currentChConfigWidget                  = nullptr;
+   QSharedPointer<QComboBox> channelSelection;
+   QToolButton *addChButton                                     = nullptr;
+   QToolButton *renameChButton                                  = nullptr;
+   QToolButton *deleteChButton                                  = nullptr;
+
    NO_COPY_ASSIGNMENT_CTORS(AF4ChannelDimsOrgFrame)
 };
 
@@ -60,7 +147,8 @@ public:
     * \return map of the channelConfigWidgets
     */
    auto getChannelConfigWidgets() const -> QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >   {
-      return channelConfigWidgets;
+      //return channelConfigWidgets;
+      return channelDimsOrgFrame->getChannelConfigWidgets();
    }
    /*!
     * \brief getChannelCalibWidgets
@@ -76,11 +164,10 @@ public:
 private:
 
    QGridLayout *layout                                          = nullptr;
-   QFrame *channelConfigFrame                                   = nullptr;
+   AF4ChannelDimsOrgFrame *channelDimsOrgFrame = nullptr;
    QGridLayout *channelConfigFrameLayout                        = nullptr;
    QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;//  = nullptr;
    AF4ChannelDimsWidget *currentChConfigWidget                  = nullptr;
-   //QComboBox *channelSelection                                  = nullptr;
    QSharedPointer<QComboBox> channelSelection;
    QToolButton *addChButton                                     = nullptr;
    QToolButton *renameChButton                                  = nullptr;
@@ -89,12 +176,12 @@ private:
    /*!
     * \brief adaptConfigWidgetIds
     */
-   void adaptConfigWidgetIds();
+ //  void adaptConfigWidgetIds();
 
    /*!
     * \brief adaptConfigWidgetNames
     */
-   void adaptConfigWidgetNames();
+ //  void adaptConfigWidgetNames();
 
    /*!
     * \brief askChannelRenaming
@@ -102,14 +189,14 @@ private:
     * \param oldName
     * \return
     */
-   bool askChannelRenaming(QString &newName, const QString &oldName);
+ //  bool askChannelRenaming(QString &newName, const QString &oldName);
 
    /*!
     * \brief askChannelAdding
     * \param newName
     * \return
     */
-   bool askChannelAdding(QString &newName);
+ //  bool askChannelAdding(QString &newName);
 
 
 private slots:
@@ -135,20 +222,20 @@ private slots:
     * \brief renameChannel creates a dialog for renaming a channel.
     *        Adapts keys of internal data structures
     */
-   void renameChannel();
+  // void renameChannel();
 
    /*!
     * \brief addCalibration creates a dialog and a new channel.
     *        Adapts internal data structures.
     */
-   bool addChannel(bool firstInit = false);
+  // bool addChannel(bool firstInit = false);
 
    /*!
     * \brief deleteCalibration removes the current channel
     *        and its assigned calibration profiles. Adapts
     *        internal data structures.
     */
-   void deleteChannel();
+//   void deleteChannel();
 
    /*!
     * \brief switchCalibWidget switches to another channel and
@@ -157,7 +244,7 @@ private slots:
     *        FFFChannelcalibWidgets
     * \param newWidgetKey
     */
-   void switchChannelWidget(const QString &newWidgetKey);
+//   void switchChannelWidget(const QString &newWidgetKey);
 
 private:
    AF4CalibOrgFrame *calibsOrgFrame    = nullptr;
