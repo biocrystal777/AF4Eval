@@ -154,12 +154,15 @@ void AF4CalibOrgFrame::adaptPlotData()
 
 void AF4CalibOrgFrame::switchToFirstCalibWidget(const QString channelName)
 {
+   qDebug() << " hit switch 1" << channelName;
    if(calibSelection && !(allCalibSelections.isEmpty())){
+      qDebug() << " hit switch 2" << calibSelection;
       calibSelection->hide();
       calibSelection = allCalibSelections.value(channelName);
       calibSelection->show();
    }
    if(currentCalibWidget && (!channelCalibWidgets.isNull())){
+      qDebug() << " hit switch 3";
       QString calibWidgetKey = (channelCalibWidgets->value(channelName).keys()).at(0);
       switchCalibWidget(calibWidgetKey);
    }
@@ -168,23 +171,23 @@ void AF4CalibOrgFrame::switchToFirstCalibWidget(const QString channelName)
 
 void AF4CalibOrgFrame::addConnectedChannel(const QString newChName)
 {
-   qDebug() << "hit addConnectedChannel 171" << newChName;
+   //qDebug() << "hit addConnectedChannel 171" << newChName;
    if(calibSelection) calibSelection->hide();
    calibSelection = new QComboBox(this);
    allCalibSelections.insert(newChName, calibSelection);
-   qDebug() << "hit addConnectedChannel 175";
+   //qDebug() << "hit addConnectedChannel 175";
    lay->addWidget(calibSelection, 0, 11);
    //allCalibSelections.insert(newChName, calibSelection);
    //calibSelection->clear();
    channelCalibWidgets->insert(newChName,  QMap<QString, AF4ChannelCalibWidget*>());
-   qDebug() << "hit addConnectedChannel 180";
+   //qDebug() << "hit addConnectedChannel 180";
    while(!addCalibration());
-   qDebug() << "hit addConnectedChannel 182";
+   //qDebug() << "hit addConnectedChannel 182";
    calibSelection->setCurrentIndex(0);
-   qDebug() << "hit addConnectedChannel 183";
+   //qDebug() << "hit addConnectedChannel 183";
    connect(calibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
            this, &AF4CalibOrgFrame::switchCalibWidget);
-   qDebug() << "hit addConnectedChannel 186";
+   //qDebug() << "hit addConnectedChannel 186";
 }
 
 void AF4CalibOrgFrame::deleteConnectedChannel(const QString rmChName, const QString newChToDisplayName)

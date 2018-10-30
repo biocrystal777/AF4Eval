@@ -3,15 +3,16 @@
 using std::string;
 
 AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
-   QWidget(parent), settingsWriter (QSharedPointer<QPushButton>(new QPushButton("Save Parameters", this)))
+   QWidget(parent), // settingsWriter (QSharedPointer<QPushButton>(new QPushButton("Save Parameters", this)))
+   settingsWriter(new QPushButton("Save Parameters", this))
 {
    layout = new QGridLayout(this);
    channelDimsOrgFrame = new AF4ChannelDimsOrgFrame(this);
-   qDebug() << "master1";
+   //qDebug() << "master1";
    calibsOrgFrame = new AF4CalibOrgFrame(channelDimsOrgFrame->getChannelSelection(),
                                          channelDimsOrgFrame->getChannelConfigWidgets(),
                                          this);
-   qDebug() << "master2";
+   //qDebug() << "master2";
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::configWidgetIdsAdapted,
            calibsOrgFrame,      &AF4CalibOrgFrame::adaptAllCalibWidgetIds);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::configWidgetNamesAdapted,
@@ -24,19 +25,32 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
            calibsOrgFrame,      &AF4CalibOrgFrame::deleteConnectedChannel);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelSwitched,     // ...(const QString channelName)
            calibsOrgFrame,      &AF4CalibOrgFrame::switchToFirstCalibWidget);
-   qDebug() << "master5";
+   //qDebug() << "master5";
    layout->addWidget(channelDimsOrgFrame, 0, 0, 2, 10);
    layout->addWidget(calibsOrgFrame, 3, 0, 12, 10);
 
    //connect(settingsWriter.data(), &QPushButton::clicked,
    //        this,                  &AF4ChannelConfigurationWidget::saveParameters);
-   connect(settingsWriter.data(), &QPushButton::clicked,
+   connect(settingsWriter, &QPushButton::clicked,
            channelDimsOrgFrame,   &AF4ChannelDimsOrgFrame::saveButtonClicked);
-   connect(settingsWriter.data(), &QPushButton::clicked,
+   connect(settingsWriter, &QPushButton::clicked,
            calibsOrgFrame,        &AF4CalibOrgFrame::saveButtonClicked);
-   qDebug() << "master8";
-   layout->addWidget(settingsWriter.data(), 15, 0);
-   qDebug() << "master10";
+   //qDebug() << "master8";
+   layout->addWidget(settingsWriter, 15, 0);
+   //qDebug() << "master10";
+}
+
+
+auto AF4ChannelConfigurationWidget::getChannelConfigWidgets() const
+-> QSharedPointer<QMap<QString, AF4ChannelDimsWidget *> >
+{
+   return channelDimsOrgFrame->getChannelConfigWidgets();
+}
+
+auto AF4ChannelConfigurationWidget::getChannelCalibWidgets() const
+-> QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget *> > >
+{
+   return calibsOrgFrame->getChannelCalibWidgets();
 }
 
 AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
@@ -273,7 +287,9 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
 };
 
 /*----------------------------------------------------------------------------------------------------------------
-//Expanded example for Macro with arguments (elutionFlow, params, paramsDeltaMod, classical,"_elutionFlow.csv")
+// Expanded example for Macro with arguments (elutionFlow, params, paramsDeltaMod, classical,"_elutionFlow.csv")
+// ==> Iterates over a linearly distributed of the parameter elutionFlow and conducts the calibration with
+// the respective values
 {
    const double X = params.elutionFlow;
    for(uint i = 0; i < gridSize; ++i){
@@ -374,22 +390,3 @@ void AF4ChannelConfigurationWidget::logErrorMessage(CalibErrorCode errorCode)
       break;
    }
 }
-/*
-void AF4ChannelConfigurationWidget::saveParameters() const
-{
-   AF4Log::logText(tr("Parameters saved of Channel Calibrations saved."));
-   writeSettings();
-   //for(const QString &configWidgetKey : channelConfigWidgets->keys()){
-   //   channelConfigWidgets->value(configWidgetKey)->writeSettings();
-   //}
-}
-
-void AF4ChannelConfigurationWidget::writeSettings() const
-{
-   QSettings settings("AgCoelfen", "AF4Eval");
-   settings.setIniCodec("UTF-8");
-   //settings.remove("channels");
-   //int numberOfChannels = channelSelection->count();
-   //settings.setValue("channels/number", numberOfChannels);
-}
-*/

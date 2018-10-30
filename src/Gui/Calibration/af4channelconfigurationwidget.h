@@ -2,11 +2,12 @@
 #define AF4CHANNELCONFIGUARTIONWIDGET_H
 
 #include <vector>
+#include <string>
 #include "./af4caliborgframe.h"
 #include "../Core/af4evalmacros.h"
 #include "./af4channeldimsorgframe.h"
 
-/*! **************************************************************************************************************
+/*! *********************************************************************************************************************************************
 ***
 ***  \class     AF4ChannelConfigurationWidget "src/Gui/Calibration/af4channelconfigurationwidget.h"
 ***  \brief     master class for calibration functions*
@@ -77,12 +78,12 @@
 ***                                                                    +---------------------------------------------------------+
 ***
 ***  \author    Benedikt Häusele
-***  \version   1.1
-***  \date      2018-08-31
+***  \version   1.2
+***  \date      2018-10-30
 ***  \todo      Put Frames into single classes (started)
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
-*****************************************************************************************************************/
+*******************************************************************************************************************************************/
 
 class AF4ChannelConfigurationWidget final : public QWidget {
 
@@ -97,32 +98,24 @@ public:
    explicit AF4ChannelConfigurationWidget(QWidget *parent);
 
    /*!
-    * \brief getChannelConfigWidgets returns a pointer to the QMap
-    *        that contains the channelConfigWidgets of the program
+    * \brief getChannelConfigWidgets returns a QSharedPointer to the QMap
+    *        that contains the channelConfigWidgets
     * \return map of the channelConfigWidgets
     */
-   auto getChannelConfigWidgets() const -> QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >   {
-      return channelDimsOrgFrame->getChannelConfigWidgets();
-   }
+   auto getChannelConfigWidgets() const
+   -> QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >;
+
    /*!
-    * \brief getChannelCalibWidgets
+    * \brief getChannelCalibWidgets returns a QSharedPointer to the QMap
+    *        that contains the channelConfigWidgets
     */
-   auto getChannelCalibWidgets()  const -> QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > {
-      return calibsOrgFrame->getChannelCalibWidgets();
-   }
+   auto getChannelCalibWidgets() const
+   -> QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > >;
 
-private:
-
-
-
+//signals:
+   //   void calibStuf();
 
 private slots:
-
-   /*!
-    * \brief saveParameters
-    */
-  // void saveParameters() const;
-
 
    /*!
     * \brief calibrateChannnel
@@ -132,10 +125,10 @@ private slots:
    void calibrateChannnel();
 
 private:
-   QGridLayout                *layout              = nullptr;
-   AF4ChannelDimsOrgFrame     *channelDimsOrgFrame = nullptr;
-   AF4CalibOrgFrame           *calibsOrgFrame      = nullptr;
-   QSharedPointer<QPushButton> settingsWriter;  // replace shared reference by signal slot later!
+   QGridLayout            *layout              = nullptr;
+   AF4ChannelDimsOrgFrame *channelDimsOrgFrame = nullptr;
+   AF4CalibOrgFrame       *calibsOrgFrame      = nullptr;
+   QPushButton            *settingsWriter      = nullptr;
    /*!
     * \brief calibRealMeaurement calibrates the Channel with the given Parameters and sets the values
     *                            to the widget
@@ -161,16 +154,6 @@ private:
    CalibResult calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode);
 
    void logErrorMessage(CalibErrorCode errorCode);
-
-   /*!
-    * \brief connectCtrlWithPlotWidget
-    */
-   //void connectCtrlWithPlotWidget();
-
-   /*!
-    * \brief writeSettings writes Parameters to QSettings
-    */
-   //void writeSettings() const;
 
    /*!
     * \brief ~FFFChannelCalConfWidget() default destructor

@@ -103,7 +103,7 @@ private:
    //QFrame calibrationFrame = nullptr;
    AF4CalibPlotWidget *plotWidget                                              = nullptr;
    AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
-   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >                    channelConfigWidgets;
+   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >                  channelConfigWidgets;
    QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
 
 

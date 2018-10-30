@@ -2,10 +2,6 @@
 
 AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
 {
-
-   //channelConfigFrame = new QFrame(this);
-   //channelConfigFrame->setFrameStyle(0x1011);
-   qDebug() << "dimsorg 1";
    this->setFrameStyle(0x1011);
    lay = new QGridLayout(this);
    lay->addWidget(new QLabel("<b>Channel Configurations</b>", this), 0, 0, Qt::AlignLeft);
@@ -16,6 +12,15 @@ AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
    renameChButton = new QToolButton(this);
    renameChButton->setText("R");
    renameChButton->setToolTip("Rename the current channel");
+
+   // red button as long slot is buggy
+   QPalette pal = renameChButton->palette();
+   pal.setColor(QPalette::Button, QColor(Qt::darkRed));
+   renameChButton->setAutoFillBackground(true);
+   renameChButton->setPalette(pal);
+   renameChButton->update();
+   //
+
    connect(renameChButton, &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::renameChannel);
    lay->addWidget(renameChButton, 0, 5);
    addChButton = new QToolButton(this);
@@ -26,9 +31,18 @@ AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
    deleteChButton = new QToolButton(this);
    deleteChButton->setText(tr("-"));
    deleteChButton->setToolTip("delete current Channel");
+
+   // red button
+   pal = deleteChButton->palette();
+   pal.setColor(QPalette::Button, QColor(Qt::darkRed));
+   deleteChButton->setAutoFillBackground(true);
+   deleteChButton->setPalette(pal);
+   deleteChButton->update();
+   //
+
    connect(deleteChButton, &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::deleteChannel);
    lay->addWidget(deleteChButton, 0, 7);
-   qDebug() << "dimsorg 10";
+   //qDebug() << "dimsorg 10";
    ////////////////////////////////////////////////////
    // initialize channels with values from QSettings //
    ////////////////////////////////////////////////////
@@ -49,21 +63,22 @@ AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
       channelConfigWidgets->insert(newChannelName, currentChConfigWidget);
       channelSelection->addItem(newChannelName);
       channelSelection->setCurrentIndex(channelSelection->count() - 1);
-      connect(channelSelection.data(), qOverload<const QString&>(&QComboBox::currentIndexChanged),
-              this, &AF4ChannelDimsOrgFrame::switchChannelWidget );
+
       currentChConfigWidget->hide();
    }
    if(numberOfChannels == 0)
       while (!addChannel(true));
    lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
    currentChConfigWidget->show();
-   qDebug() << "dimsorg 20";
+   //qDebug() << "dimsorg 20";
 
    channelSelection->setCurrentIndex(0);
    QString channelName = channelSelection->currentText();
    currentChConfigWidget = channelConfigWidgets->value(channelName);
    currentChConfigWidget->show();
-   qDebug() << "dimsorg 25";
+   //qDebug() << "dimsorg 25";
+   connect(channelSelection.data(), qOverload<const QString&>(&QComboBox::currentIndexChanged),
+           this, &AF4ChannelDimsOrgFrame::switchChannelWidget );
 }
 
 
@@ -159,37 +174,37 @@ bool AF4ChannelDimsOrgFrame::addChannel(bool firstInit)
    QApplication::restoreOverrideCursor();
    QString newName;
    if(!askChannelAdding(newName)) return false;
-   qDebug() << "hit addcChannel 162";
+   //qDebug() << "hit addcChannel 162";
    // add a new Channel here:
    QString oldName = channelSelection->currentText();
    AF4ChannelDimsWidget* newChannel = new AF4ChannelDimsWidget(channelConfigWidgets->size(), newName, true, this);
    channelConfigWidgets->insert(newName, newChannel);
    if(currentChConfigWidget) currentChConfigWidget->hide();
    currentChConfigWidget = newChannel;
-   qDebug() << "hit addcChannel 169";
+   //qDebug() << "hit addcChannel 169";
    // add new assigned channelCalibWidget, Comboboxes etc.
 
    channelSelection->blockSignals(true);
    lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
    currentChConfigWidget->show();
    channelSelection->addItem(newName);
-   qDebug() << "hit addcChannel 176";
+   //qDebug() << "hit addcChannel 176";
    channelSelection->setCurrentIndex(channelSelection->count() - 1);
-   qDebug() << "hit addcChannel 178";
+   //qDebug() << "hit addcChannel 178";
    channelSelection->blockSignals(false);
    AF4Log::logText(tr("New Channel \"%1\" added.").arg(newName));
-   qDebug() << "hit addcChannel 181";
+   //qDebug() << "hit addcChannel 181";
    //emit channelAdded(oldName, newName);
    emit channelAdded(newName);
-   qDebug() << "hit addcChannel 183";
+   //qDebug() << "hit addcChannel 183";
    if(!firstInit){
-      qDebug() << "hit addcChannel 182";
+      //qDebug() << "hit addcChannel 182";
       adaptConfigWidgetIds();
       adaptConfigWidgetNames();
-      qDebug() << "hit addcChannel 185";
+      //qDebug() << "hit addcChannel 185";
    }
    saveParameters();
-   qDebug() << "hit addcChannel 188";
+   //qDebug() << "hit addcChannel 188";
    return true;
 }
 
@@ -225,9 +240,9 @@ void AF4ChannelDimsOrgFrame::switchChannelWidget(const QString &channelName)
    currentChConfigWidget = channelConfigWidgets->value(channelName);
    lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
    currentChConfigWidget->show();
-
+   emit channelSwitched(channelName);
    //calibsOrgFrame->switchToFirstCalibWidget(channelName);
-   currentChConfigWidget->show();
+   //currentChConfigWidget->show();
 
 }
 

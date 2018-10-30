@@ -44,7 +44,7 @@ public slots:
     * \brief renameChannel creates a dialog for renaming a channel.
     *        Adapts keys of internal data structures
     */
-   void renameChannel();
+   void renameChannel();  // <- can produce bugs
 
    /*!
     * \brief addCalibration creates a dialog and a new channel.
@@ -56,8 +56,9 @@ public slots:
     * \brief deleteCalibration removes the current channel
     *        and its assigned calibration profiles. Adapts
     *        internal data structures.
+    *
     */
-   void deleteChannel();
+   void deleteChannel();   //   <- still kind of buggy
 
 private slots:
 
