@@ -13,14 +13,69 @@
 /*! **************************************************************************************************************
 ***
 ***  \class     AF4ChannelConfigurationWidget "src/Gui/Calibration/af4channelconfigurationwidget.h"
-***  \brief
-***  \details   FFChannelCalConfWidget contains space for a fffchannelconfigwidget and
-***             a fffchannelcalibwidget; Each fffchannelconfigwidget represents a FFF channel profile
-***             and its specific properties. A comboBox is used to switch between the different channels.
-***             Each channel can have a various number of calibration profiles depending on the measurements,
-***             choosable by a comboBox as well. The information about all existing channels and calibrations
-***             is stored on QMaps. Pointers to those QMaps are used to update widgets in other tabs when
-***             the user adds, renames or deletes channels and calibration profiles.
+***  \brief     master class for calibration functions*
+***
+***  \details   AF4ChannelConfigurationWidget coordinates two frames (channelDimsOrgFrame and calibsOrgFrame)
+***             which handle the respective information sets of fixed channel dimensions and calibration
+***             profiles. This class is responsible for the proper linkage of the organzied frames.
+***             As main class, it interprets the configuration of***
+***             In the following, a complete overview of the included classes is given
+***
+***
+***                 .-,(  ),-.
+***              .-(          )-.
+***             (    External    ) <-----+
+***              '-(          ).-'       | provide information about all calibration
+***                  '-.( ).-            | stuff and return references
+***                                      |
+***                                      |
+***                                      |
+***                    +---------------------------------- +
+***                    |   AF4ChannelConfigurationWidget   |◆-------------------------------------+
+***                    +---------------------------------- +                                      |
+***                      ⧫                             🡑                                         |
+***                      |                              \                                         |
+***                      |                               \                                        |
+***                      |                                \  triggers calibration                 |
+***                      |                                 +---------------------+                |
+***                      |                                                        \               |
+***                      |                                                         \              |
+***                      |                                                          \             |
+***                      |                                                           \            |
+***                      | 1                                                          \           | 1
+***  +----------------------------+                                                +----------------------------+
+***  |   AF4ChannelDimsOrgFrame   |                                                |   AF4ChannelDimsOrgFrame   |
+***  |----------------------------|                                                |----------------------------|
+***  |                            | ---------------------------------------------> |                            |
+***  |                            |   adjusts number of channel-associated         |                            |
+***  |      ............          |                                                |        ............        |
+***  |----------------------------|                                                |----------------------------|
+***  |                            |                                                |                            |
+***  |                            |                                                |                            |
+***  |                            |                                                |                            |
+***  |      ............          |                                                |         ............       |
+***  +----------------------------+                                                +----------------------------+
+***    ⧫
+***    |
+***    | 1
+***  +----------------------------+
+***  | QMap<AF4ChannelDimsWidget> |
+***  |----------------------------+
+***  | p entries ()               |
+***  | p = numer of channels      |
+***  +----------------------------+
+***
+***
+***
+***
+***
+***
+***
+***
+***
+***
+***
+***
 ***  \author    Benedikt Häusele
 ***  \version   1.1
 ***  \date      2018-08-31
@@ -56,21 +111,9 @@ public:
       return calibsOrgFrame->getChannelCalibWidgets();
    }
 
-   //\////////////////
-   // channel Frame //
-   //\////////////////
-
 private:
 
-   QGridLayout *layout                                          = nullptr;
-   AF4ChannelDimsOrgFrame *channelDimsOrgFrame = nullptr;
-   //QGridLayout *channelConfigFrameLayout                        = nullptr;
-   //QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;//  = nullptr;
-   AF4ChannelDimsWidget *currentChConfigWidget                  = nullptr;
-   //QSharedPointer<QComboBox> channelSelection;
-   //QToolButton *addChButton                                     = nullptr;
-   //QToolButton *renameChButton                                  = nullptr;
-   //QToolButton *deleteChButton                                  = nullptr;
+
 
 
 private slots:
@@ -89,9 +132,10 @@ private slots:
    void calibrateChannnel();
 
 private:
-   AF4CalibOrgFrame *calibsOrgFrame    = nullptr;
-
-   QSharedPointer<QPushButton> settingsWriter;
+   QGridLayout                *layout              = nullptr;
+   AF4ChannelDimsOrgFrame     *channelDimsOrgFrame = nullptr;
+   AF4CalibOrgFrame           *calibsOrgFrame      = nullptr;
+   QSharedPointer<QPushButton> settingsWriter;  // replace shared reference by signal slot later!
    /*!
     * \brief calibRealMeaurement calibrates the Channel with the given Parameters and sets the values
     *                            to the widget
@@ -115,8 +159,6 @@ private:
     * \param params
     */
    CalibResult calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode);
-
-
 
    void logErrorMessage(CalibErrorCode errorCode);
 

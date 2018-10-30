@@ -41,7 +41,7 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
 
 AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
 {
-   writeSettings();
+   //writeSettings();
 }
 
 
@@ -51,7 +51,8 @@ void AF4ChannelConfigurationWidget::calibrateChannnel()
 {
    AF4Log::logText(tr("Start calibration..."));
    QGuiApplication::setOverrideCursor(Qt::WaitCursor);
-   ChannelDims chDims  = currentChConfigWidget->getChannelDimensions();
+   //ChannelDims chDims  = currentChConfigWidget->getChannelDimensions();
+   ChannelDims chDims = channelDimsOrgFrame->getChannelDimensions();
    ParametersForCalibration params = calibsOrgFrame->getParamsForCalibration();
    CalibModeSettings cModes = calibsOrgFrame->getCalibModes();
 
@@ -373,7 +374,7 @@ void AF4ChannelConfigurationWidget::logErrorMessage(CalibErrorCode errorCode)
       break;
    }
 }
-
+/*
 void AF4ChannelConfigurationWidget::saveParameters() const
 {
    AF4Log::logText(tr("Parameters saved of Channel Calibrations saved."));
@@ -391,3 +392,4 @@ void AF4ChannelConfigurationWidget::writeSettings() const
    //int numberOfChannels = channelSelection->count();
    //settings.setValue("channels/number", numberOfChannels);
 }
+*/

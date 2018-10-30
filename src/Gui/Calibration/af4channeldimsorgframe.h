@@ -21,6 +21,9 @@ public:
    auto getChannelSelection() const -> QWeakPointer<QComboBox >   {
       return channelSelection;
    }
+   ChannelDims getChannelDimensions() const {
+      return currentChConfigWidget->getChannelDimensions();
+   }
 
 
    void writeSettings() const;
