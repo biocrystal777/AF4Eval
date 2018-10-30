@@ -17,7 +17,7 @@
 
 /*! **************************************************************************************************************
 ***
-***  \class     AF4ChannelCalibsOrgFrame "src/Gui/Calibration/af4channelconfigurationwidget.h"
+***  \class     AF4CalibOrgFrame "src/Gui/Calibration/af4channelconfigurationwidget.h"
 ***  \brief
 ***  \details
 ***  \author    Benedikt Häusele

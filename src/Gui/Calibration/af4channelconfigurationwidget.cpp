@@ -28,8 +28,8 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    layout->addWidget(channelDimsOrgFrame, 0, 0, 2, 10);
    layout->addWidget(calibsOrgFrame, 3, 0, 12, 10);
 
-   connect(settingsWriter.data(), &QPushButton::clicked,
-           this,                  &AF4ChannelConfigurationWidget::saveParameters);
+   //connect(settingsWriter.data(), &QPushButton::clicked,
+   //        this,                  &AF4ChannelConfigurationWidget::saveParameters);
    connect(settingsWriter.data(), &QPushButton::clicked,
            channelDimsOrgFrame,   &AF4ChannelDimsOrgFrame::saveButtonClicked);
    connect(settingsWriter.data(), &QPushButton::clicked,

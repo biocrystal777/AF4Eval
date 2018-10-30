@@ -1,10 +1,6 @@
 #ifndef AF4CHANNELCONFIGUARTIONWIDGET_H
 #define AF4CHANNELCONFIGUARTIONWIDGET_H
 
-#include <QComboBox>
-#include <QDialog>
-#include <QGroupBox>
-#include <QRadioButton>
 #include <vector>
 #include "./af4caliborgframe.h"
 #include "../Core/af4evalmacros.h"
@@ -21,60 +17,64 @@
 ***             As main class, it interprets the configuration of***
 ***             In the following, a complete overview of the included classes is given
 ***
-***
 ***                 .-,(  ),-.
 ***              .-(          )-.
 ***             (    External    ) <-----+
 ***              '-(          ).-'       | provide information about all calibration
-***                  '-.( ).-            | stuff and return references
+***                  '-.( ).-            | stuff (and returns references to shared maps)
 ***                                      |
 ***                                      |
 ***                                      |
 ***                    +---------------------------------- +
-***                    |   AF4ChannelConfigurationWidget   |◆-------------------------------------+
-***                    +---------------------------------- +                                      |
-***                      ⧫                             🡑                                         |
-***                      |                              \                                         |
-***                      |                               \                                        |
-***                      |                                \  triggers calibration                 |
-***                      |                                 +---------------------+                |
-***                      |                                                        \               |
-***                      |                                                         \              |
-***                      |                                                          \             |
-***                      |                                                           \            |
-***                      | 1                                                          \           | 1
-***  +----------------------------+                                                +----------------------------+
-***  |   AF4ChannelDimsOrgFrame   |                                                |   AF4ChannelDimsOrgFrame   |
-***  |----------------------------|                                                |----------------------------|
-***  |                            | ---------------------------------------------> |                            |
-***  |                            |   adjusts number of channel-associated         |                            |
-***  |      ............          |                                                |        ............        |
-***  |----------------------------|                                                |----------------------------|
-***  |                            |                                                |                            |
-***  |                            |                                                |                            |
-***  |                            |                                                |                            |
-***  |      ............          |                                                |         ............       |
-***  +----------------------------+                                                +----------------------------+
-***    ⧫
-***    |
-***    | 1
-***  +----------------------------+
-***  | QMap<AF4ChannelDimsWidget> |
-***  |----------------------------+
-***  | p entries ()               |
-***  | p = numer of channels      |
-***  +----------------------------+
-***
-***
-***
-***
-***
-***
-***
-***
-***
-***
-***
+***                    |   AF4ChannelConfigurationWidget   |◆----------------------------------+
+***                    +---------------------------------- +                                   |
+***                      ⧫                             🡑                                      |
+***                      |                              \  triggers calibration                |
+***                      |                               +------------------------+            |
+***                      | 1                                                       \           | 1
+***  +----------------------------+                                             +-------------------------+
+***  |   AF4ChannelDimsOrgFrame   |                                             |   AF4CalibOrgFrame      |
+***  |----------------------------|                                             |-------------------------|
+***  |                            | ------------------------------------------> |                         |
+***  |                            |   adjusts number (p) of                     |                         |
+***  |      ............          |   channel-associated QMaps                  |        ............     |◆------------+
+***  |----------------------------|   with AF4CalibSEttingsFrames               |-------------------------|             | 1
+***  |                            |                                             |                         |   +-----------------------+
+***  |                            |                                             |                         |   |   AF4CalibPlotWidget  |
+***  |                            |                                             |                         |   |-----------------------|
+***  |      ............          |                                             |        ............     |   |       ..........      |
+***  +----------------------------+                                             +-------------------------+   |-----------------------|
+***    ⧫                                                                              ⧫
+***    |                                                                              |
+***    | 1                                                                            | 1
+***  +--------------------------------------+                          +---------------------------------------------------------+
+***  |      QMap<AF4ChannelDimsWidget>      |                          |         QMap<QMap <AF4CalibSettingsFrame> >             |
+***  |--------------------------------------|                          |---------------------------------------------------------|
+***  | p entries                            |                          |  Σc_p  entries                                          |
+***  | p = numer of channels                |                          |  c_i = number of calibrations for ith channel           |
+***  |                                      |                          |                                                         |
+***  |       key   | item                   |                          |  key         | item                                     |
+***  |    ---------+----------------        |                          |  ------------+--------------------------------          |
+***  | "channel 1" | AF4ChannelDimsWidget 1 |                          |  "channel 1" |    key       | item                      |
+***  | "channel 2" | AF4ChannelDimsWidget 2 |                          |              |   -----------+-------------              |
+***  |     ...     |        ...             |                          |              |  "calib 1"   | AF4CalibSettingsFrame 1   |
+***  | "channel p" | AF4ChannelDimsWidget p |                          |              |  "calib 2"   | AF4CalibSettingsFrame 2   |
+***  +--------------------------------------+                          |              |     ...      |         ...               |
+***                                                                    |              |  "calic c_1" | AF4CalibSettingsFrame c_1 |
+***                                                                    |              |              |                           |
+***                                                                    |              |                                          |
+***                                                                    |  "channel 2" |    key       | item                      |
+***                                                                    |              |   -----------+--------------             |
+***                                                                    |              |     ...      |         ...               |
+***                                                                    |              |  "calib c_2" | AF4CalibSettingsFrame c_2 |
+***                                                                    |              |                                          |
+***                                                                    |      ...     |             ...                          |
+***                                                                    |              |                                          |
+***                                                                    |  "channel p" |    key       | item                      |
+***                                                                    |              |   -----------+--------------             |
+***                                                                    |              |     ...      |         ...               |
+***                                                                    |              |  "calib c_p" |         "calib c_p"       |
+***                                                                    +---------------------------------------------------------+
 ***
 ***  \author    Benedikt Häusele
 ***  \version   1.1
@@ -121,7 +121,7 @@ private slots:
    /*!
     * \brief saveParameters
     */
-   void saveParameters() const;
+  // void saveParameters() const;
 
 
    /*!
@@ -170,7 +170,7 @@ private:
    /*!
     * \brief writeSettings writes Parameters to QSettings
     */
-   void writeSettings() const;
+   //void writeSettings() const;
 
    /*!
     * \brief ~FFFChannelCalConfWidget() default destructor
