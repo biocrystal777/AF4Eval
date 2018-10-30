@@ -86,7 +86,8 @@ SOURCES += ./src/Core/main.cpp \
     src/Gui/Calibration/af4calibrationdialogs.cpp \
     src/Gui/Calibration/af4calibparametersframe.cpp \
     src/Gui/Calibration/af4innercalibrationframe.cpp \
-    src/Gui/Calibration/af4caliborgframe.cpp
+    src/Gui/Calibration/af4caliborgframe.cpp \
+    src/Gui/Calibration/af4channeldimsorgframe.cpp
 
 HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4constants.h \
@@ -123,7 +124,8 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     src/Gui/Calibration/af4calibparametersframe.h \
     src/Gui/Calibration/af4innercalibrationframe.h \
     src/Gui/Calibration/af4caliborgframe.h \
-    src/Core/af4evalmacros.h
+    src/Core/af4evalmacros.h \
+    src/Gui/Calibration/af4channeldimsorgframe.h
 
 RESOURCES += \
     ./Resources/images.qrc

@@ -48,15 +48,15 @@ public:
 
    CalibModeSettings getCalibModes() const;
 
+public slots:
+   void adaptPlotData();
+   void switchToFirstCalibWidget(const QString channelName);
 
    void adaptAllCalibWidgetIds();
    void adaptAllCalibWidgetNames();
-   void renameConnectedChannel(const QString &oldChName, const QString &newChName);
-   void addConnectedChannel(const QString &newChName);
-   void deleteConnectedChannel(const QString &rmChName, const QString newChToDisplayName);
-public slots:
-   void adaptPlotData();
-   void switchToFirstCalibWidget(const QString& channelName);
+   void renameConnectedChannel(const QString oldChName, const QString newChName);
+   void addConnectedChannel(const QString newChName);
+   void deleteConnectedChannel(const QString rmChName, const QString newChToDisplayName);
 
 signals:
    void calibrateChannelCalled();
@@ -86,7 +86,7 @@ private slots:
     *        shows its values
     * \param newWidgetKey
     */
-   void switchCalibWidget(const QString &calibName);
+   void switchCalibWidget(const QString calibName);
 
    /*!
     * \brief saveParameters
@@ -113,7 +113,8 @@ private:
    QToolButton *renameCalibButton                                              = nullptr;
    QToolButton *deleteCalibButton                                              = nullptr;
 
-   AF4ChannelCalibWidget *createNewCalilbWidget(const int channelId, const int calibId, const QString &channelName, const QString &calibName);
+   AF4ChannelCalibWidget *createNewCalilbWidget(const int channelId, const int calibId,
+                                                const QString &channelName, const QString &calibName);
    /*!
     * \brief adaptCalibWidgetIds
     * \param channelName
