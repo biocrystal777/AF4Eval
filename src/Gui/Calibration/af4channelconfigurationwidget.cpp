@@ -359,9 +359,7 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       else
          logErrorMessage(refResult.errorCode);
    }
-
 #undef ITERATIVE_PARAMETER_DELTA_ANALYSIS
-
 }
 
 void AF4ChannelConfigurationWidget::logErrorMessage(CalibErrorCode errorCode)

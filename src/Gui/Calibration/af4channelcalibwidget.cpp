@@ -76,9 +76,6 @@ ChannelDimsFromCalib AF4ChannelCalibWidget::getChannelDimsFromCalib() const
             getGeometVolume()
    };
 }
-
-
-
 bool AF4ChannelCalibWidget::setInputFileName(QString path, bool quoted)
 {
    QString testPath = path;

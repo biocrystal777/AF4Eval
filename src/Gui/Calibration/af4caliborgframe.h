@@ -33,35 +33,83 @@ class AF4CalibOrgFrame final : public QFrame {
    Q_OBJECT
 
 public:
-
+   /*!
+    * \brief AF4CalibOrgFrame
+    * \param channelSelection
+    * \param channelConfigWidgets
+    * \param parent
+    */
    explicit AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
                              QWeakPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets,
                              QWidget *parent);
+   /*!
+    */
    ~AF4CalibOrgFrame();
 
-
+   /*!
+    * \brief getChannelCalibWidgets
+    * \return
+    */
    auto getChannelCalibWidgets() const -> QWeakPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > {
       return this->channelCalibWidgets.toWeakRef();
    }
-
+   /*!
+    * \brief getParamsForCalibration
+    * \return
+    */
    ParametersForCalibration getParamsForCalibration() const;
 
+   /*!
+    * \brief getCalibModes
+    * \return
+    */
    CalibModeSettings getCalibModes() const;
 
 public slots:
+   /*!
+    * \brief adaptPlotData
+    */
    void adaptPlotData();
+   /*!
+    * \brief switchToFirstCalibWidget
+    * \param channelName
+    */
    void switchToFirstCalibWidget(const QString channelName);
-
+   /*!
+    * \brief adaptAllCalibWidgetIds
+    */
    void adaptAllCalibWidgetIds();
+   /*!
+    * \brief adaptAllCalibWidgetNames
+    */
    void adaptAllCalibWidgetNames();
+   /*!
+    * \brief renameConnectedChannel
+    * \param oldChName
+    * \param newChName
+    */
    void renameConnectedChannel(const QString oldChName, const QString newChName);
+   /*!
+    * \brief addConnectedChannel
+    * \param newChName
+    */
    void addConnectedChannel(const QString newChName);
+   /*!
+    * \brief deleteConnectedChannel
+    * \param rmChName
+    * \param newChToDisplayName
+    */
    void deleteConnectedChannel(const QString rmChName, const QString newChToDisplayName);
 
 signals:
+   /*!
+    * \brief calibrateChannelCalled
+    */
    void calibrateChannelCalled();
+   /*!
+    * \brief saveButtonClicked
+    */
    void saveButtonClicked();
-
 private slots:
    /*!
     * \brief addCalibration creates a dialog and a new calibration profile
@@ -94,25 +142,15 @@ private slots:
    void saveParameters() const;
 
 private:   
-   QWeakPointer<QComboBox> channelSelection; // transitory solution for class split; replace by slot connnections later
 
-
-   //QFrame *calibrationFrame                                                    = nullptr;
-   QGridLayout *lay                                         = nullptr;
-
-   //QFrame calibrationFrame = nullptr;
-   AF4CalibPlotWidget *plotWidget                                              = nullptr;
-   AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
-   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >                  channelConfigWidgets;
-   QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
-
-
-   QMap<QString, QComboBox*> allCalibSelections;
-   QComboBox                 *calibSelection                                  = nullptr;
-   QToolButton               *addCalibButton                                   = nullptr;
-   QToolButton *renameCalibButton                                              = nullptr;
-   QToolButton *deleteCalibButton                                              = nullptr;
-
+   /*!
+    * \brief createNewCalilbWidget
+    * \param channelId
+    * \param calibId
+    * \param channelName
+    * \param calibName
+    * \return
+    */
    AF4ChannelCalibWidget *createNewCalilbWidget(const int channelId, const int calibId,
                                                 const QString &channelName, const QString &calibName);
    /*!
@@ -137,7 +175,11 @@ private:
     */
    bool askCalibRenaming(QString &newName, const QString &oldName);
 
-
+   /*!
+    * \brief calibNameDuplicated
+    * \param newName
+    * \return
+    */
    bool calibNameDuplicated(const QString& newName);
 
    /*!
@@ -151,6 +193,20 @@ private:
     * \brief connectCtrlWithPlotWidget
     */
    void connectCtrlWithPlotWidget();
+
+   QWeakPointer<QComboBox> channelSelection; // transitory solution for class split; replace by slot connnections later
+   QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >                  channelConfigWidgets;
+   QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
+   QGridLayout *lay                                         = nullptr;
+   AF4CalibPlotWidget *plotWidget                                              = nullptr;
+   AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
+
+
+   QMap<QString, QComboBox*> allCalibSelections;
+   QComboBox                 *calibSelection                                  = nullptr;
+   QToolButton               *addCalibButton                                   = nullptr;
+   QToolButton *renameCalibButton                                              = nullptr;
+   QToolButton *deleteCalibButton                                              = nullptr;
 
    NO_COPY_ASSIGNMENT_CTORS(AF4CalibOrgFrame)
 };

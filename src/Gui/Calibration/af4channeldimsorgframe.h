@@ -11,34 +11,65 @@
 
 class AF4ChannelDimsOrgFrame final : public QFrame {
    Q_OBJECT
-
 public:
+   /*!
+    * \brief AF4ChannelDimsOrgFrame
+    * \param parent
+    */
    explicit AF4ChannelDimsOrgFrame(QWidget *parent);
+   /*!
+    * \brief getChannelConfigWidgets
+    * \return
+    */
+   auto getChannelConfigWidgets() -> QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >;
+   /*!
+    * \brief getChannelSelection
+    * \return
+    */
+   auto getChannelSelection() -> QWeakPointer<QComboBox >;
+   /*!
+    * \brief getChannelDimensions
+    * \return
+    */
+   ChannelDims getChannelDimensions() const;
 
-   auto getChannelConfigWidgets() const -> QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >   {
-      return channelConfigWidgets;
-   }
-   auto getChannelSelection() const -> QWeakPointer<QComboBox >   {
-      return channelSelection;
-   }
-   ChannelDims getChannelDimensions() const {
-      return currentChConfigWidget->getChannelDimensions();
-   }
-
-
-   void writeSettings() const;
 signals:
-   void configWidgetIdsAdapted();     // connect to calibOrgsFrame => adaptAllCalibWidgetIds
+   /*!
+    * \brief configWidgetIdsAdapted
+    */
+   void configWidgetIdsAdapted();     // connect to calibOrgsFrame => adaptAllCalibWidgetIds   
+   /*!
+    * \brief configWidgetNamesAdapted
+    */
    void configWidgetNamesAdapted();   // connect to                => adaptAllCalibWidgetIds TO CHECK: or Names?
-   void channelAdded(const QString newName);        // connect to calibOrgsFrame =>
-   void channelRenamed(const QString oldName, const QString newName);
-   void channelDeleted(const QString oldName, const QString newCurrentName);
-   void channelSwitched(const QString newName);
 
+   /*!
+    * \brief channelAdded
+    * \param newName
+    */
+   void channelAdded(const QString newName);        // connect to calibOrgsFrame =>
+   /*!
+    * \brief channelRenamed
+    * \param oldName
+    * \param newName
+    */
+   void channelRenamed(const QString oldName, const QString newName);
+   /*!
+    * \brief channelDeleted
+    * \param oldName
+    * \param newCurrentName
+    */
+   void channelDeleted(const QString oldName, const QString newCurrentName);
+   /*!
+    * \brief channelSwitched
+    * \param newName
+    */
+   void channelSwitched(const QString newName);
+   /*!
+    * \brief saveButtonClicked
+    */
    void saveButtonClicked();
 public slots:
-
-
 
    /*!
     * \brief renameChannel creates a dialog for renaming a channel.
@@ -62,12 +93,10 @@ public slots:
 
 private slots:
 
-
    /*!
     * \brief saveParameters
     */
    void saveParameters() const;
-
 
    /*!
     * \brief switchCalibWidget switches to another channel and
@@ -77,10 +106,11 @@ private slots:
     * \param newWidgetKey
     */
    void switchChannelWidget(const QString &newWidgetKey);
-
-
 private:
-
+   /*!
+    * \brief writeSettings
+    */
+   void writeSettings() const;
    /*!
     * \brief adaptConfigWidgetIds
     */
@@ -106,6 +136,13 @@ private:
     */
    bool askChannelAdding(QString &newName);
 
+   /*!
+    * \brief channelNameDuplicated
+    * \param newName
+    * \return
+    */
+   bool channelNameDuplicated(const QString &newName) const;
+
    QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> > channelConfigWidgets;//  = nullptr;
    QGridLayout *lay                                             = nullptr;
    AF4ChannelDimsWidget *currentChConfigWidget                  = nullptr;
@@ -114,7 +151,7 @@ private:
    QToolButton *renameChButton                                  = nullptr;
    QToolButton *deleteChButton                                  = nullptr;
 
+   ~AF4ChannelDimsOrgFrame(){}
    NO_COPY_ASSIGNMENT_CTORS(AF4ChannelDimsOrgFrame)
 };
-
 #endif // AF4CHANNELDIMSORGFRAME_H

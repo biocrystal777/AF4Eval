@@ -44,10 +44,21 @@ class AF4CalibParametersFrame final : public QFrame
 {
    Q_OBJECT
 public:
-   AF4CalibParametersFrame(int channelId, int calibId,
+   /*!
+    * \brief AF4CalibParametersFrame
+    * \param channelId
+    * \param calibId
+    * \param channelName
+    * \param calibName
+    * \param parent
+    */
+   AF4CalibParametersFrame(int channelId,
+                           int calibId,
                            const QString &channelName,
                            const QString &calibName,
                            QWidget *parent);
+   /*!
+     */
    ~AF4CalibParametersFrame();
 
    /*!

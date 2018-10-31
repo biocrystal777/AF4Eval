@@ -2,6 +2,10 @@
 
 static AF4Log * global_LogPtr = nullptr;
 
+//-/////////////////////////////
+// public stuff
+//-/////////////////////////////
+
 AF4Log* AF4Log::createSingleInstance(QWidget *parent)
 {
    if(!global_LogPtr){

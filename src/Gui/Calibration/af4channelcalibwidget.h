@@ -66,7 +66,9 @@ public:
     * \return channel width
     */
    //double getChannelWidth() const { return channelWidth->value(); }
+
    int getChannelId() const { return channelId; }
+
    int getCalibId() const { return channelId; }
 
    double getClassicalChannelWidth() const { return innerCalibFrame->getChannelWidth(); }
@@ -271,6 +273,10 @@ public:
     */
    void setAllCalibrationParameters(const AllCalibrationParameters &p);
 
+   /*!
+    * \brief getCtrlBoxRefs
+    * \return
+    */
    CtrlBoxRefs getCtrlBoxRefs () { return calibParFrame->getCtrlBoxRefs(); }
 
 signals:
@@ -306,7 +312,6 @@ private:
    int calibId;
    QString channelName;
    QString calibName;
-
 
    /*!
     * \brief chopStringsQuotMarksToOne if a string has more than one Quotation mark, they are merged

@@ -22,7 +22,6 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    stringValue = settings.value(tr("fileNames/%1/inputFileName").arg(this->identifier), "").toString();
    setInputFilePath(stringValue, true);
 
-
    fileLayout->addWidget(new QLabel("<b>Data Output File</b>", this), 2, 1, 1, 3, Qt::AlignBottom);
    outputFileChooser = new QToolButton(this);
    outputFileChooser->setText("..");

@@ -8,7 +8,6 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
    QFrame(parent), channelId(channelId), calibId(calibId),
    channelName(channelName), calibName(calibName)
 {
-
    lay = new QGridLayout(this);
    this->setFrameStyle(0x1011);
 

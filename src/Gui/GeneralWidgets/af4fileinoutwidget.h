@@ -36,6 +36,9 @@ public:
     * \param parent
     */
    AF4FileInOutWidget(const QString &identifier, const QString &suffix, QWidget *parent);
+
+   /*!
+     */
    ~AF4FileInOutWidget();
 
     /*!
