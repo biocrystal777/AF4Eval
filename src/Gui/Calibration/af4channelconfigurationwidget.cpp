@@ -8,11 +8,9 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
 {
    layout = new QGridLayout(this);
    channelDimsOrgFrame = new AF4ChannelDimsOrgFrame(this);
-   //qDebug() << "master1";
    calibsOrgFrame = new AF4CalibOrgFrame(channelDimsOrgFrame->getChannelSelection(),
                                          channelDimsOrgFrame->getChannelConfigWidgets(),
                                          this);
-   //qDebug() << "master2";
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::configWidgetIdsAdapted,
            calibsOrgFrame,      &AF4CalibOrgFrame::adaptAllCalibWidgetIds, Qt::DirectConnection);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::configWidgetNamesAdapted,
@@ -25,19 +23,17 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
            calibsOrgFrame,      &AF4CalibOrgFrame::deleteConnectedChannel, Qt::DirectConnection);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelSwitched,     // ...(const QString channelName)
            calibsOrgFrame,      &AF4CalibOrgFrame::switchToFirstCalibWidget, Qt::DirectConnection);
-   //qDebug() << "master5";
+
    layout->addWidget(channelDimsOrgFrame, 0, 0, 2, 10);
    layout->addWidget(calibsOrgFrame, 3, 0, 12, 10);
 
-   //connect(settingsWriter.data(), &QPushButton::clicked,
-   //        this,                  &AF4ChannelConfigurationWidget::saveParameters);
+   connect(calibsOrgFrame, &AF4CalibOrgFrame::calibrateChannelCalled,
+           this, &AF4ChannelConfigurationWidget::calibrateChannnel);
    connect(settingsWriter, &QPushButton::clicked,
            channelDimsOrgFrame,   &AF4ChannelDimsOrgFrame::saveButtonClicked);
    connect(settingsWriter, &QPushButton::clicked,
            calibsOrgFrame,        &AF4CalibOrgFrame::saveButtonClicked);
-   //qDebug() << "master8";
    layout->addWidget(settingsWriter, 15, 0);
-   //qDebug() << "master10";
 }
 
 
@@ -328,7 +324,7 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       const double widthRefY = refResult.width;   // Y_width(X)
       const double VolumeRefY = refResult.volume;  // Y_vol(X)
       const string filePathPrefix("/home/bluemage/tests/deltaTests/delta");
-      const std::vector<string> header = {string("delta X"), string("delta width"), string("delta volume") };
+      const std::vector<string> header = {string("delta X"), string("delta width (cla)"), string("delta volume (cla)") };
 
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionFlow,   params, paramsDeltaMod, classical, "_elutionFlow_cla.csv"   );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(crossFlow,     params, paramsDeltaMod, classical, "_crossFlow_cla.csv"     );
@@ -344,17 +340,31 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
          logErrorMessage(refResult.errorCode);
          return;
       }
-      else
-         logErrorMessage(refResult.errorCode);
+      // conduct iterative calibration with modified "uncertainty" values
+
+
+
+
+
+
+
+
    }
    if(cModes.hydrodynamic){
       refResult = calibSingleParamSet(chDims, params, CalibMode::hydrodynamic);
       if(refResult.errorCode != CalibErrorCode::noError){
          logErrorMessage(refResult.errorCode);
          return;
-      }
-      else
-         logErrorMessage(refResult.errorCode);
+      }      
+      // conduct iterative calibrations "uncertainty" values
+
+
+
+
+
+
+
+
    }
 #undef ITERATIVE_PARAMETER_DELTA_ANALYSIS
 }

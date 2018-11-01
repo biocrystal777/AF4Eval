@@ -2,6 +2,7 @@
 #define FFFLOGWIDGET_H
 
 #include <QTextEdit>
+#include <QScrollBar>
 #include <QGridLayout>
 #include <QDebug>
 #include <QPushButton>
@@ -88,9 +89,9 @@ private:
      */
    explicit AF4Log(QWidget *parent = nullptr);
 
-   QGridLayout   *layout       = nullptr;
-   QTextEdit     *logWidget    = nullptr;
-   QPushButton   *clearButton  = nullptr;
+   QGridLayout *layout       = nullptr;
+   QTextEdit   *logWidget    = nullptr;
+   QPushButton *clearButton  = nullptr;
 
    /*!
      * \brief logTextInInstance class internal logging function

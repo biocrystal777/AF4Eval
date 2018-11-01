@@ -48,14 +48,13 @@ AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
       channelConfigWidgets->insert(newChannelName, currentChConfigWidget);
       channelSelection->addItem(newChannelName);
       channelSelection->setCurrentIndex(channelSelection->count() - 1);
-
       currentChConfigWidget->hide();
+      lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
    }
    if(numberOfChannels == 0)
       while (!addChannel(true));
-   lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
-   currentChConfigWidget->show();
 
+   //currentChConfigWidget->show();
    channelSelection->setCurrentIndex(0);
    QString channelName = channelSelection->currentText();
    currentChConfigWidget = channelConfigWidgets->value(channelName);
@@ -219,7 +218,7 @@ void AF4ChannelDimsOrgFrame::switchChannelWidget(const QString &channelName)
 {
    currentChConfigWidget->hide();
    currentChConfigWidget = channelConfigWidgets->value(channelName);
-   lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
+   //lay->addWidget(currentChConfigWidget, 2, 0, 7, 7);
    emit channelSwitched(channelName);
    currentChConfigWidget->show();
 }

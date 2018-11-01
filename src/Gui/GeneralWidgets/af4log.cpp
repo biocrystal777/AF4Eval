@@ -88,17 +88,20 @@ AF4Log::AF4Log(QWidget *parent) :
 
 void AF4Log::logTextInInstance(QString logMessage) const
 {
-   logWidget->append(tr("<b>%1\n").arg(logMessage));
+   logWidget->append(tr("<b>%1\n").arg(logMessage));   
+   logWidget->verticalScrollBar()->setValue(logWidget->verticalScrollBar()->maximum());
 }
 
 void AF4Log::logWarningInInstance(QString logMessage) const
 {
    logWidget->append(tr("<font color=\"#DAA520\"><b>WARNING: %1\n</b></font>").arg(logMessage));
+   logWidget->verticalScrollBar()->setValue(logWidget->verticalScrollBar()->maximum());
 }
 
 void AF4Log::logErrorInInstance(QString logMessage) const
 {
    logWidget->append(tr("<font color=\"#CC0033\"><b>ERROR: %1\n</b></font>").arg(logMessage));
+   logWidget->verticalScrollBar()->setValue(logWidget->verticalScrollBar()->maximum());
 }
 
 void AF4Log::clearLogInInstance()

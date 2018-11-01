@@ -48,7 +48,7 @@ AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
       else {
          for(uint j=0; j < numberOfCalibrations; j++){
             calibName = settings.value(tr("channels/%1/calib/%2/name").arg(i).arg(j), "").toString();
-            currentCalibWidget = createNewCalilbWidget(i, j, channelName, calibName);
+            curCalibWidget = createNewCalilbWidget(i, j, channelName, calibName);
          }
       }
       connect(calibSelection, qOverload<const QString &>(&QComboBox::currentIndexChanged),
@@ -80,9 +80,9 @@ AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
    // set respective combobox to
    QString currentChannel = channelSelection.data()->currentText();
    calibSelection = allCalibSelections.value(currentChannel);
-   currentCalibWidget = channelCalibWidgets.data()->value(currentChannel)[calibSelection->currentText()];
+   curCalibWidget = channelCalibWidgets.data()->value(currentChannel)[calibSelection->currentText()];
    calibSelection->show();
-   currentCalibWidget->show();
+   curCalibWidget->show();
 
    connect(this, &AF4CalibOrgFrame::saveButtonClicked, this, &AF4CalibOrgFrame::saveParameters);
 }
@@ -94,12 +94,12 @@ AF4CalibOrgFrame::~AF4CalibOrgFrame()
 
 ParametersForCalibration AF4CalibOrgFrame::getParamsForCalibration() const
 {
-   return currentCalibWidget->getParametersForCalibration();
+   return curCalibWidget->getParametersForCalibration();
 }
 
 CalibModeSettings AF4CalibOrgFrame::getCalibModes() const
 {
-   return currentCalibWidget->getCalibModes();
+   return curCalibWidget->getCalibModes();
 }
 
 
@@ -144,7 +144,7 @@ void AF4CalibOrgFrame::renameConnectedChannel(const QString oldChName, const QSt
 
 void AF4CalibOrgFrame::adaptPlotData()
 {
-   QString fileName = currentCalibWidget->getInputFileName();
+   QString fileName = curCalibWidget->getInputFileName();
    if(!fileName.isEmpty())
       plotWidget->setPlotData(fileName);
 }
@@ -156,7 +156,7 @@ void AF4CalibOrgFrame::switchToFirstCalibWidget(const QString channelName)
       calibSelection = allCalibSelections.value(channelName);
       calibSelection->show();
    }
-   if(currentCalibWidget && (!channelCalibWidgets.isNull())){
+   if(curCalibWidget && (!channelCalibWidgets.isNull())){
       QString calibWidgetKey = (channelCalibWidgets->value(channelName).keys()).at(0);
       switchCalibWidget(calibWidgetKey);
    }
@@ -183,8 +183,8 @@ void AF4CalibOrgFrame::deleteConnectedChannel(const QString channelToRemove, con
    calibSelection->show();
    // show new widgets
    calibSelection->setCurrentIndex(0);
-   currentCalibWidget = channelCalibWidgets->value(channelToDisplay).value(calibSelection->currentText());
-   currentCalibWidget->show();
+   curCalibWidget = channelCalibWidgets->value(channelToDisplay).value(calibSelection->currentText());
+   curCalibWidget->show();
    //remove old combobox
    QComboBox *rmComboXox = allCalibSelections.value(channelToRemove);
    delete rmComboXox;
@@ -212,13 +212,13 @@ bool AF4CalibOrgFrame::addCalibration()
    QString channelName = channelSelection.data()->currentText();
    if(askCalibAdding(channelName, newName)){
       // add a new Calibration here:
-      if(currentCalibWidget) currentCalibWidget->hide();
+      if(curCalibWidget) curCalibWidget->hide();
       // CalibrationParameters params;
       int channelId = channelSelection.data()->currentIndex();
       int newCalibId = channelCalibWidgets->size();
       auto* newCalibration = createNewCalilbWidget(channelId, newCalibId, channelName, newName);
-      if(currentCalibWidget) newCalibration->setAllCalibrationParameters(currentCalibWidget->getAllCalibrationParameters());
-      currentCalibWidget = newCalibration;
+      if(curCalibWidget) newCalibration->setAllCalibrationParameters(curCalibWidget->getAllCalibrationParameters());
+      curCalibWidget = newCalibration;
       calibSelection->setCurrentIndex(calibSelection->count()-1);
       adaptCalibWidgetIds(channelName, channelId);
       adaptCalibWidgetNames(channelName);
@@ -275,15 +275,15 @@ void AF4CalibOrgFrame::deleteCalibration()
 
 void AF4CalibOrgFrame::switchCalibWidget(const QString calibName)
 {
-   if(currentCalibWidget){
-      currentCalibWidget->hide();
+   if(curCalibWidget){
+      curCalibWidget->hide();
       if(plotWidget) plotWidget->disconnectCurrentMarkers();
       QString channelName = channelSelection.data()->currentText();
-      currentCalibWidget = channelCalibWidgets->value(channelName).value(calibName);
-      lay->addWidget(currentCalibWidget, 2, 0, 7, 7);
+      curCalibWidget = channelCalibWidgets->value(channelName).value(calibName);
+      lay->addWidget(curCalibWidget, 2, 0, 7, 7);
       connectCtrlWithPlotWidget();
       adaptPlotData();
-      currentCalibWidget->show();
+      curCalibWidget->show();
    }
 }
 
@@ -386,6 +386,6 @@ bool AF4CalibOrgFrame::calibNameDuplicated(const QString &newName)
 
 void AF4CalibOrgFrame::connectCtrlWithPlotWidget()
 {
-   auto ctrl =  currentCalibWidget->getCtrlBoxRefs();
+   auto ctrl =  curCalibWidget->getCtrlBoxRefs();
    plotWidget->connectMarkers(ctrl.leftOffset, ctrl.tVoid, ctrl.tElution);
 }

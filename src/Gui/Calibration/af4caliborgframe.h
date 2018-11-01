@@ -199,12 +199,11 @@ private:
    QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
    QGridLayout *lay                                         = nullptr;
    AF4CalibPlotWidget *plotWidget                                              = nullptr;
-   AF4ChannelCalibWidget     *currentCalibWidget                               = nullptr;
-
+   AF4ChannelCalibWidget     *curCalibWidget                               = nullptr; // replace by private getter!
 
    QMap<QString, QComboBox*> allCalibSelections;
    QComboBox                 *calibSelection                                  = nullptr;
-   QToolButton               *addCalibButton                                   = nullptr;
+   QToolButton               *addCalibButton                                   = nullptr; // replace by private getter!
    QToolButton *renameCalibButton                                              = nullptr;
    QToolButton *deleteCalibButton                                              = nullptr;
 
