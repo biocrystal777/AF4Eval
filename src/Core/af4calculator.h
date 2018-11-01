@@ -51,16 +51,97 @@ protected:
     * \param x passed argument x
     * \returns return value
     */
-   inline double coth(double x)  const {  return (1.0 / std::tanh(x)); }
+   inline double coth(double x) const {  return (1.0 / std::tanh(x)); }
 
+   /*!
+    * \brief squared
+    * \param x
+    * \return returns x²
+    */
+   inline double squared(double x) const { return x * x; }
 
+   /*!
+    * \brief (S1) Pol_CF calculates the squared polynom βξ²+γξ+δ for
+    *        for calcuclations making use of the "hydrodynamic" approach
+    * \param beta
+    * \param gamma
+    * \param delta
+    * \param xi
+    * \return P
+    */
+   double Pol_CF(const double beta,
+                 const double gamma,
+                 const double delta,
+                 const double xi);
+   /*!
+    * \brief  IntPosDisc_CF (S2) calculates a conversion factor summand CF_i as integral over dξ
+    *         with the nasty integrand function case that the discriminant Δ_i > 0
+    *         for calcuclations making use of the "hydrodynamic" approach
+    * \param alpha
+    * \param beta
+    * \param gamma
+    * \param delta
+    * \param discr   discriminant of the integrands expression
+    * \param s0      lower integral border (position between ξ=0 and ξ=L and s0 < s1)
+    * \param s1      upper integral border (position between ξ=0 and ξ=L and s1 > s0)
+    * \param mi      i-th slope
+    * \return
+    */
+   double IntPosDisc_CF_i(const double alpha,
+                          const double beta,
+                          const double gamma,
+                          const double delta,
+                          const double discr,
+                          const double s0,
+                          const double s1,
+                          const double m_i);
+
+   /*!
+    * \brief  IntNegDisc_CF (S3) calculates a conversion factor summand CF_i as integral over dξ
+    *         with the nasty integrand function case that the discriminant Δ_i < 0
+    *         for calcuclations making use of the "hydrodynamic" approach
+    * \param alpha
+    * \param beta
+    * \param gamma
+    * \param delta
+    * \param discr   discriminant of the integrands expression
+    * \param s0      lower integral border (position between ξ=0 and ξ=L and s0 < s1)
+    * \param s1      upper integral border (position between ξ=0 and ξ=L and s1 > s0)
+    * \param mi      i-th slope
+    * \return CF_i (i.e. CF_2 or CF_3)
+    */
+   double IntNegDisc_CF_i(const double alpha,
+                          const double beta,
+                          const double gamma,
+                          const double delta,
+                          const double discr,
+                          const double s0,
+                          const double s1,
+                          const double m_i);
+
+   /*!
+    * \brief Int_CF_1 (S4) calculates the integral for channel section 1 over dξ
+    *        with the "simplified" intgerand funtction
+    *        for calcuclations making use of the "hydrodynamic" approach
+    * \param beta
+    * \param delta
+    * \param s0
+    * \param s1
+    * \param m1
+    * \return CF_1
+    */
+   double Int_CF_1(const double beta,
+                   const double delta,
+                   const double s0,
+                   const double s1,
+                   const double m_1);
    /*!
     * \brief  RToLambda implements a simple bisection method to convert
     *         R to λ with the relationship R = 6λ( coth( 1/(2λ) - 2λ ) )
     * \param  R
     * \return λ
     */
-   double RToLambda(const double R);
+   double RToLambda(const double R, double *RMS = nullptr);
 
    /*!
     * \brief  isZero checks if a double x is Zero and return a corresponding bool

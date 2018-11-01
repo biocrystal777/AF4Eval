@@ -17,39 +17,44 @@ CalibErrorCode AF4Calibrator::checkParameters()
 
 CalibResult AF4Calibrator::calibrate_classic()
 {
-   CalibResult result { .width = 0.0, .volume = 0.0 , .errorCode = CalibErrorCode::ParamsNotChecked , .sqDelta = 0.0};
+   CalibResult result { .width = 0.0, .volume = 0.0 , .errorCode = CalibErrorCode::ParamsNotChecked , .sqDelta = 0.0 };
    if(!paramsChecked) return result;
 
    // adjust time axis according to leftOffsetTime
-   const double tvoid      = params.voidPeakTime; // params.leftOffsetTime;  // remove focussing time offset
-   const double te         = params.elutionTime;// - params.leftOffsetTime;   // remove focussing time offset
-   const double D          = params.diffCoeff * 60;                   // cm^2/s => cm^2/min
-   const double Ve         = params.elutionFlow;
-   const double Vc         = params.crossFlow;
-   const double z_perc     = params.relFocusPoint / 100;                // percentage to ratio
+   const double tvoid  = params.voidPeakTime;        // params.leftOffsetTime;  // remove focussing time offset
+   const double te     = params.elutionTime;         // - params.leftOffsetTime;   // remove focussing time offset
+   const double D      = params.diffCoeff * 60.0;                   // cm^2/s => cm^2/min
+   const double Ve     = params.elutionFlow;
+   const double Vc     = params.crossFlow;
+   const double z_perc = params.relFocusPoint / 100.0;                // percentage to ratio
 
+   // (1) Calculate Volume:
+   double V0 =0.0;
    {
    double flowRatio = (Ve + Vc)/ Vc;
    double hydVolumeDivisor = log((z_perc - flowRatio) / (1 - flowRatio));
    V0 = (Vc * tvoid) / hydVolumeDivisor;
    }
 
+   // (2) Calculate RMeas:
    double rMeas = tvoid / te;
-   this->rmsDiff = 1.0;
+
+   // (3) Initialize w and δ
+   double rmsDiff = 1.0;
    double minWidth = 0.00001;
    double maxWidth = 10;
-   w = (minWidth + maxWidth)/ 2;
-   delta = (maxWidth - minWidth)/2;
+   double w = (minWidth + maxWidth)/ 2;
+   double delta = (maxWidth - minWidth)/2;
    const uint maxIterations = 100;
    uint i=0;
 
-   // calculate channel width by bisection
+   // (4) calculate channel width w by bisection that |RMeas - Rcalc| =! min
    while (delta > 0.0 && i < maxIterations ){
       double lambda = (D * V0) / (Vc * w * w);
       double twoLambda = 2 * lambda;
       double rCalc = 6*lambda*(coth(1 / twoLambda) - twoLambda);
       double rDiff = rCalc - rMeas;
-      this->rmsDiff = rDiff * rDiff;
+      rmsDiff = rDiff * rDiff;
       if ( rDiff > 0 )
       {  // rCalc too big => omega has to be increased
          w += delta;
@@ -63,21 +68,74 @@ CalibResult AF4Calibrator::calibrate_classic()
       else break;
       ++i;
    }
-
-   // AF4Log::logText(std::string("Calibration calculated a channel height w of ").append(to_string(w * 10000)).append(" µm.") );
-   //AF4Log::logText(std::string("Geometrically calculated Volume is ").append(to_string(V0)).append(" ml.") );
-
-   //calcGeometVolume(d.length1, d.length2, d.length3, d.chLength, d.b0, d.bL, z_perc * d.chLength);
-
-   //AF4Log::logText(std::string("Hydrodynamically calculated Volume is ").append(to_string(Vg)).append(" ml.") );
+   // -> package results
    result = CalibResult{ w, V0, CalibErrorCode::noError, rmsDiff};
    return result;
 }
 
 CalibResult AF4Calibrator::calibrate_geometric()
 {
-   CalibResult result;
+   CalibResult result { .width = 0.0, .volume = 0.0 , .errorCode = CalibErrorCode::ParamsNotChecked , .sqDelta = 0.0 };
+   if(!paramsChecked) return result;
+
+   // unpack all parameters and adjust units
+   const double tvoid  = params.voidPeakTime;          // min
+   const double te     = params.elutionTime;           // min
+   const double D      = params.diffCoeff * 60.0;      // cm^2/s => cm^2/min
+   //const double Ve   = params.elutionFlow;         // <= not used for this calculation!
+   const double Vc     = params.crossFlow;             // ml/min
+   const double z_perc = params.relFocusPoint / 100.0; // percentage to ratio
+
+
+   const double L1 = chDims.length1; // cm
+   const double L2 = chDims.length2; // cm
+   const double L3 = chDims.length2; // cm
+   const double b0 = chDims.b0; // cm
+   const double bL = chDims.bL; // cm
+
+   // (1) Calculate Rmeas:
+   const double rMeas = tvoid / te;
+   // (2&3) Initialize λ and δ_λ, find λ such that |RMeas - Rcalc| =! min by bisection:
+   double rDiff;
+   const double lambda = RToLambda(rMeas, &rDiff);
+   // (4) calculate substitution term S
+   const double S = lambda * Vc / D;
+   // (5) calculate passed channel area A_z:
+   double Az {0.0};
+   const double A3  = 0.5 * bL *L3;
+   const double L12 = L1 + L2;
+   const double L   = L12 + L3;
+   const double z0  = z_perc * L;
+   if(z0 >= L1){ // focus position within the "long" channel section L2
+      const double bDelta = (b0 - bL);
+      const double m2     = bDelta / (2.0 * L2);
+      const double t2     = 0.5 * (b0 + (L1 / L2) * bDelta );
+      Az = (L12 - z0) * ( m2 * (L12 + z0) + t2 ) + A3;
+   }
+   else {        // focus position within the "short" channel section L3
+      const double m1 = b0 / (2.0 * L1);
+      Az = m1 * (squared(L1) - squared(z0)) + 0.5 * (b0 + bL) * L2 + A3;
+   }
+   // (6) calculate w
+   const double w = Az / S;
+   // (7) calculate V^geo
+   const double Vgeo = Az * w;
+
+   qDebug() << "tvoid" << tvoid;
+   qDebug() << "te"    << te;
+   qDebug() << "rMeas" << rMeas;
+   qDebug() << "lambda" << lambda;
+   qDebug() << "D" << D;
+   qDebug() << "S" << S;
+   qDebug() << "Az" << Az;
+   qDebug() << "w" << w;
+
+   // package results
+   result = { .width = w, .volume = Vgeo, .errorCode = CalibErrorCode::noError , .sqDelta = rDiff };
    return result;
+
+
+
 }
 
 CalibResult AF4Calibrator::calibrate_hydrodynamic()

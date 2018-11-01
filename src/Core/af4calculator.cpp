@@ -12,23 +12,96 @@ uint AF4Calculator::indexFromOrderedVecD(const vecD &v, const double target) con
       return index-1;
 }
 
-double AF4Calculator::RToLambda(const double R)
+// simple math (return βξ²+γξ+δ)
+double AF4Calculator::Pol_CF(const double beta,
+                             const double gamma,
+                             const double delta,
+                             const double xi)
 {
-   const double lambdaMin{1e-8};
+   return beta * squared(xi) + gamma * xi + delta;
+}
+
+
+// nothing to comment, it's just math, I can't help it
+double AF4Calculator::IntPosDisc_CF_i(const double alpha,
+                                      const double beta,
+                                      const double gamma,
+                                      const double delta,
+                                      const double discr,
+                                      const double s0,
+                                      const double s1,
+                                      const double m_i)
+{
+   double CF_i  = log( Pol_CF(beta, delta, gamma, s1) / Pol_CF(beta, delta, gamma, s0) );
+   CF_i /= 2.0 * beta;
+   const double tmp0 = sqrt(discr);
+   const double tmp1 = atan( ( 2.0 * beta * s1 + gamma ) / tmp0 );
+   const double tmp2 = atan( ( 2.0 * beta * s0 + gamma ) / tmp0 );
+   const double tmp3 =  ( 2.0 / tmp0 ) * ( alpha - gamma / beta ) * ( tmp1 - tmp2 );
+   CF_i += tmp3;
+   CF_i *= m_i;
+   return CF_i;
+}
+
+// see comment above
+double AF4Calculator::IntNegDisc_CF_i(const double alpha,
+                                      const double beta,
+                                      const double gamma,
+                                      const double delta,
+                                      const double discr,
+                                      const double s0,
+                                      const double s1,
+                                      const double m_i)
+{
+   double CF_i  = log( Pol_CF(beta, delta, gamma, s1) / Pol_CF(beta, delta, gamma, s0) );
+   CF_i /= 2.0 * beta;
+   const double tmp0 = sqrt(-discr);
+   const double twoBeta = 2.0 * beta;
+   double tmp1 = twoBeta * s1 + gamma;
+   tmp1       *= twoBeta * s0 + gamma;
+   tmp1        = twoBeta * (s1-s0) / tmp1;
+   tmp1        = tmp0 - (tmp1/tmp0);
+   tmp1        = atanh(tmp1);
+   tmp1        = (2.0 / tmp0) * (alpha - gamma/beta) * tmp1;
+   CF_i       -= tmp1;
+   CF_i       *= m_i;
+   return CF_i;
+}
+
+// see comment above
+double AF4Calculator::Int_CF_1(const double beta,
+                               const double delta,
+                               const double s0,
+                               const double s1,
+                               const double m_1)
+{
+   const double tmp0 = delta / beta;
+   double CF_1 = tmp0 + squared(s1);
+   CF_1       /= tmp0 + squared(s0);
+   CF_1        = m_1 / (2.0 * beta) * log( CF_1 );
+   return CF_1;
+}
+
+double AF4Calculator::RToLambda(const double R, double *RMS)
+{
+   const double lambdaMin{1e-4};
    const double lambdaMax{1e2};
    double lambda = (lambdaMin + lambdaMax) * 0.5;
    double delta  = (lambdaMax - lambdaMin) * 0.25;
-   for(uint i = 0; i < 50; ++i){
+   double RTest {0.0};
+   for(uint i = 0; i < 100; ++i){
       // calculate test variable with test λ
-      double RTest = coth( 1.0 / (2.0 * lambda ) );
+      RTest = coth( 1.0 / (2.0 * lambda ) );
       RTest -= 2.0 * lambda;
       RTest *= 6.0 * lambda;
       // adapt with test λ
-      if      (RTest > R) lambda += delta;
-      else if (RTest < R) lambda -= delta;
+      if      (RTest > R) lambda -= delta;
+      else if (RTest < R) lambda += delta;
       else                break;
       delta *= 0.5;
-   }
+      qDebug() << "lambda" << i << lambda;
+   }   
+   if(RMS) *RMS = squared(RTest - R);
    return lambda;
 }
 

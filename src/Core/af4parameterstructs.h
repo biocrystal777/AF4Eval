@@ -127,7 +127,6 @@ struct posPeakPair{
    int peak;      // peakNumber
 };
 
-
 struct SLSParameters {
    //bool cFromRefIndex;
    //bool cFromWaveLength;

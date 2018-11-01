@@ -3,7 +3,8 @@
 #include "af4evalmacros.h"
 #include "af4calculator.h"
 
-enum struct CalibErrorCode : uint {
+enum struct CalibErrorCode : uint
+{
    noError           = 0,
    voidTimeZero      = 1,
    eluFlowZero       = 2,
@@ -15,7 +16,8 @@ enum struct CalibErrorCode : uint {
    ParamsNotChecked  = 8
 };
 
-struct CalibResult {
+struct CalibResult
+{
    double width;
    double volume;
    CalibErrorCode errorCode;
@@ -26,7 +28,13 @@ struct CalibResult {
 ***
 ***  \class     AF4Calibrator "src/Core/af4calibrator.h"
 ***  \author    Benedikt Häusele
-***  \version   1.0
+***  \details   The numbers of the commented steps within the calibration functions refer
+***             to the steps in the corresponding publication
+***             "Automated batch evaluation of diffusion coefficients from Asymmetrical
+***              Flow Field-Flow Fractionation data via void peak determination I –
+***              Theory and measurement uncertainties (Supplementary information)"
+***              (pp. 11-16)
+***  \version   1.1
 ***  \date      2018
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
@@ -46,7 +54,7 @@ public:
       chDims(d), params(p) {}
 
    /*!
-    * \brief ~FFFCalibrator Default destructor
+    * \brief ~FFFCalibrator Default destructor virtual
     */
    virtual ~AF4Calibrator(){}
 
@@ -65,52 +73,17 @@ public:
     * \param ok determines whether the calculation has be performed successfully or not
     * \return
     */
-
-
    CalibErrorCode checkParameters();
 
    CalibResult calibrate_classic();
    CalibResult calibrate_geometric();
    CalibResult calibrate_hydrodynamic();
 
-   //inline double getChWidth() const { return w;}
-   //inline double getHydrodynVolume() const { return V0;}
-   //inline double getGeometVolume() const { return Vg;}
-
-   /*
-   void calcGeometVolume(
-         const double L1,
-         const double L2,
-         const double L3,
-         const double L,
-         const double b0,
-         const double bL,
-         const double zL
-         );
-
-         */
 private:
    const ChannelDims chDims;
    const ParametersForCalibration params;
    bool paramsChecked = false;
 
-
-   double w = 0.0;
-   double rmsDiff = 0.0;
-   double delta = 0.0;
-   double V0 = 0.0;
-   double Vg = 0.0;
-
-//   bool zeroErrorMessage(int pos) const;
-
-   /*!
-    * \brief isZero
-    * \param x determines whether a double is 0.0 or not
-    * \return bool
-    */
-   //inline bool isZero(double x, int pos) const {
-   //   return !(std::abs(x) >= std::numeric_limits<double>::min()) ? false : zeroErrorMessage(pos);
-   //}
    NO_COPY_ASSIGNMENT_CTORS(AF4Calibrator)
 };
 
