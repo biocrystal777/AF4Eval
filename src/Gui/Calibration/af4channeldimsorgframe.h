@@ -59,7 +59,7 @@ signals:
     * \param oldName
     * \param newCurrentName
     */
-   void channelDeleted(const QString oldName, const QString newCurrentName);
+   void channelDeleted(const QString channelToRemove, const QString newCurrentName);
    /*!
     * \brief channelSwitched
     * \param newName
@@ -75,7 +75,7 @@ public slots:
     * \brief renameChannel creates a dialog for renaming a channel.
     *        Adapts keys of internal data structures
     */
-   void renameChannel();  // <- can produce bugs
+   void renameChannel();
 
    /*!
     * \brief addCalibration creates a dialog and a new channel.
@@ -89,7 +89,7 @@ public slots:
     *        internal data structures.
     *
     */
-   void deleteChannel();   //   <- still kind of buggy
+   void deleteChannel();
 
 private slots:
 

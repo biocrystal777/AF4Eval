@@ -3,7 +3,6 @@
 AF4ChannelNameDialog::AF4ChannelNameDialog(QString *const name, bool first, const QString nameSuggestion, bool rename) :
    channelName(name)
 {
-   //channelName = name;
    layout = new QGridLayout(this);
    if(first)
       layout->addWidget(new QLabel("Specify Channel Name:"), 0, 0, 1, 2, Qt::AlignLeft);

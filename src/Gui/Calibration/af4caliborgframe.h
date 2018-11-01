@@ -99,7 +99,7 @@ public slots:
     * \param rmChName
     * \param newChToDisplayName
     */
-   void deleteConnectedChannel(const QString rmChName, const QString newChToDisplayName);
+   void deleteConnectedChannel(const QString channelToRemove, const QString channelToDisplay);
 
 signals:
    /*!

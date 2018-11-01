@@ -25,7 +25,6 @@ AF4ChannelCalibWidget::AF4ChannelCalibWidget(const int channelId,
 
    frameLayout->addWidget(inputFileName, 1, 1, 1, 14);
    QLabel *labelPtr = new QLabel(tr("<b>Notes</b>"), this);
-   //labelPtr->setMaximumHeight(50);
    frameLayout->addWidget(labelPtr, 2, 1, Qt::AlignCenter);
 
    frameLayout->addWidget(new QLabel("Date:", this),   3, 0);

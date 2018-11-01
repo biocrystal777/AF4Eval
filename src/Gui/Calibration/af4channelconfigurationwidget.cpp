@@ -14,17 +14,17 @@ AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
                                          this);
    //qDebug() << "master2";
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::configWidgetIdsAdapted,
-           calibsOrgFrame,      &AF4CalibOrgFrame::adaptAllCalibWidgetIds);
+           calibsOrgFrame,      &AF4CalibOrgFrame::adaptAllCalibWidgetIds, Qt::DirectConnection);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::configWidgetNamesAdapted,
-           calibsOrgFrame,      &AF4CalibOrgFrame::adaptAllCalibWidgetNames);
+           calibsOrgFrame,      &AF4CalibOrgFrame::adaptAllCalibWidgetNames, Qt::DirectConnection);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelAdded,        // ...(const QString oldName, const QString newName)
-           calibsOrgFrame,      &AF4CalibOrgFrame::addConnectedChannel);
+           calibsOrgFrame,      &AF4CalibOrgFrame::addConnectedChannel, Qt::DirectConnection);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelRenamed,      // ...(const QString oldName, const QString newName)
-           calibsOrgFrame,      &AF4CalibOrgFrame::renameConnectedChannel);
+           calibsOrgFrame,      &AF4CalibOrgFrame::renameConnectedChannel, Qt::DirectConnection);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelDeleted,      // ...(const QString oldName, const QString newCurrentName)
-           calibsOrgFrame,      &AF4CalibOrgFrame::deleteConnectedChannel);
+           calibsOrgFrame,      &AF4CalibOrgFrame::deleteConnectedChannel, Qt::DirectConnection);
    connect(channelDimsOrgFrame, &AF4ChannelDimsOrgFrame::channelSwitched,     // ...(const QString channelName)
-           calibsOrgFrame,      &AF4CalibOrgFrame::switchToFirstCalibWidget);
+           calibsOrgFrame,      &AF4CalibOrgFrame::switchToFirstCalibWidget, Qt::DirectConnection);
    //qDebug() << "master5";
    layout->addWidget(channelDimsOrgFrame, 0, 0, 2, 10);
    layout->addWidget(calibsOrgFrame, 3, 0, 12, 10);
@@ -57,9 +57,6 @@ AF4ChannelConfigurationWidget::~AF4ChannelConfigurationWidget()
 {
    //writeSettings();
 }
-
-
-
 
 void AF4ChannelConfigurationWidget::calibrateChannnel()
 {

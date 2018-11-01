@@ -16,19 +16,24 @@
 ***             which handle the respective information sets of fixed channel dimensions and calibration
 ***             profiles. This class is responsible for the proper linkage of the organzied frames.
 ***             As main class, it interprets the configuration of***
-***             In the following, a complete overview of the included classes is given
+***             In the following, a complete Pseudo-UML overview of the included classes is given
 ***
-***                 .-,(  ),-.
-***              .-(          )-.
-***             (    External    ) <-----+
-***              '-(          ).-'       | provide information about all calibration
-***                  '-.( ).-            | stuff (and returns references to shared maps)
+***                                      +-------------------------+
+***                      +---------------|  AF4CalibSettingsFrame  | can be used
+***                      |               +-------------------------+
+***                      |                   🡑
+***                      ⧫                  /
+***                 .-,(  ),-.             / provide information about all calibration
+***              .-(          )-.         /  stuff (and returns references to shared maps
+***             (    External    ) <-----+   to enable choosing calibration settings and data
+***              '-(          ).-'       |   outside from this class
+***                  '-.( ).-            |
 ***                                      |
 ***                                      |
 ***                                      |
-***                    +---------------------------------- +
+***                    +-----------------------------------+
 ***                    |   AF4ChannelConfigurationWidget   |◆----------------------------------+
-***                    +---------------------------------- +                                   |
+***                    +-----------------------------------+                                   |
 ***                      ⧫                             🡑                                      |
 ***                      |                              \  triggers calibration                |
 ***                      |                               +------------------------+            |
@@ -45,11 +50,11 @@
 ***  |                            |                                             |                         |   |-----------------------|
 ***  |      ............          |                                             |        ............     |   |       ..........      |
 ***  +----------------------------+                                             +-------------------------+   |-----------------------|
-***    ⧫                                                                              ⧫
-***    |                                                                              |
-***    | 1                                                                            | 1
+***         ⧫                                                                              ⧫
+***         |                                                                              |
+***         | 1                                                                            | 1
 ***  +--------------------------------------+                          +---------------------------------------------------------+
-***  |      QMap<AF4ChannelDimsWidget>      |                          |         QMap<QMap <AF4CalibSettingsFrame> >             |
+***  |      QMap<AF4ChannelDimsWidget>      |                          |         QMap<QMap <AF4ChannelCalibWidget> >             |
 ***  |--------------------------------------|                          |---------------------------------------------------------|
 ***  | p entries                            |                          |  Σc_p  entries                                          |
 ***  | p = numer of channels                |                          |  c_i = number of calibrations for ith channel           |
@@ -58,16 +63,16 @@
 ***  |    ---------+----------------        |                          |  ------------+--------------------------------          |
 ***  | "channel 1" | AF4ChannelDimsWidget 1 |                          |  "channel 1" |    key       | item                      |
 ***  | "channel 2" | AF4ChannelDimsWidget 2 |                          |              |   -----------+-------------              |
-***  |     ...     |        ...             |                          |              |  "calib 1"   | AF4CalibSettingsFrame 1   |
-***  | "channel p" | AF4ChannelDimsWidget p |                          |              |  "calib 2"   | AF4CalibSettingsFrame 2   |
+***  |     ...     |        ...             |                          |              |  "calib 1"   | AF4ChannelCalibWidget 1   |
+***  | "channel p" | AF4ChannelDimsWidget p |                          |              |  "calib 2"   | AF4ChannelCalibWidget 2   |
 ***  +--------------------------------------+                          |              |     ...      |         ...               |
-***                                                                    |              |  "calic c_1" | AF4CalibSettingsFrame c_1 |
+***                                                                    |              |  "calic c_1" | AF4ChannelCalibWidget c_1 |
 ***                                                                    |              |              |                           |
 ***                                                                    |              |                                          |
 ***                                                                    |  "channel 2" |    key       | item                      |
 ***                                                                    |              |   -----------+--------------             |
 ***                                                                    |              |     ...      |         ...               |
-***                                                                    |              |  "calib c_2" | AF4CalibSettingsFrame c_2 |
+***                                                                    |              |  "calib c_2" | AF4ChannelCalibWidget c_2 |
 ***                                                                    |              |                                          |
 ***                                                                    |      ...     |             ...                          |
 ***                                                                    |              |                                          |
