@@ -74,10 +74,8 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    channelWidthLabel->setToolTip("Channel Width");
    lay->addWidget(channelWidthLabel, 2, 1, Qt::AlignRight);
    channelWidth = new QDoubleSpinBox( this);
-   //channelWidth->setMinimum(1.0, -4);
-   //channelWidth->setMaximum(9.9999, -1);
-   channelWidth->setMinimum(1.0e-4);
-   channelWidth->setMaximum(9.9999e-1);
+   channelWidth->setMinimum(1.0);
+   channelWidth->setMaximum(9.9e3);
    lay->addWidget(channelWidth, 2, 2, Qt::AlignLeft);
 
    channelWidthGeoLabel = new QwtTextLabel(this);
@@ -86,9 +84,7 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    channelWidthGeoLabel->setToolTip("Channel Width");
    lay->addWidget(channelWidthGeoLabel, 3, 1, Qt::AlignRight);
    channelWidthGeo = new QDoubleSpinBox(this);
-   //channelWidth->setMinimum(1.0, -4);
-   //channelWidth->setMaximum(9.9999, -1);
-   channelWidthGeo->setMinimum(1.0e-4);
+   channelWidthGeo->setMinimum(1.0e3);
    channelWidthGeo->setMaximum(9.9999e-1);
    lay->addWidget(channelWidthGeo, 3, 2, Qt::AlignLeft);
 
@@ -98,8 +94,6 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    channelWidthHydroLabel->setToolTip("Channel Width");
    lay->addWidget(channelWidthHydroLabel, 4, 1, Qt::AlignRight);
    channelWidthHydro = new QDoubleSpinBox(this);
-   //channelWidth->setMinimum(1.0, -4);
-   //channelWidth->setMaximum(9.9999, -1);
    channelWidthHydro->setMinimum(1.0e-4);
    channelWidthHydro->setMaximum(9.9999e-1);
    lay->addWidget(channelWidthHydro, 4, 2, Qt::AlignLeft);

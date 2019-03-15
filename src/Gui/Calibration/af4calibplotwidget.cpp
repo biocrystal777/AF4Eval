@@ -41,7 +41,6 @@ void AF4CalibPlotWidget::connectMarkers(QWeakPointer<QDoubleSpinBox> leftOffset,
                                         QWeakPointer<QDoubleSpinBox> tVoid,
                                         QWeakPointer<QDoubleSpinBox> tElution)
 {
-
    plot1->connectToPlotItem(leftOffset.data(), "offset");
    plot1->connectToPlotItem(tVoid.data(),      "voidPeak");
    plot2->connectToPlotItem(tElution.data(),   "elutionPeak");

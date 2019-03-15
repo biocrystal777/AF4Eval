@@ -85,6 +85,9 @@ AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
    curCalibWidget->show();
 
    connect(this, &AF4CalibOrgFrame::saveButtonClicked, this, &AF4CalibOrgFrame::saveParameters);
+
+   connectCtrlWithPlotWidget();
+
 }
 
 AF4CalibOrgFrame::~AF4CalibOrgFrame()
@@ -302,7 +305,6 @@ void AF4CalibOrgFrame::saveParameters() const
 //-/////////////////
 //  Private stuff //
 //-/////////////////
-
 
 
 AF4ChannelCalibWidget *AF4CalibOrgFrame::createNewCalilbWidget(const int channelId, const int calibId, const QString &channelName, const QString &calibName)

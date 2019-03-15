@@ -21,7 +21,6 @@ double AF4Calculator::Pol_CF(const double beta,
    return beta * squared(xi) + gamma * xi + delta;
 }
 
-
 // nothing to comment, it's just math, I can't help it
 double AF4Calculator::IntPosDisc_CF_i(const double alpha,
                                       const double beta,

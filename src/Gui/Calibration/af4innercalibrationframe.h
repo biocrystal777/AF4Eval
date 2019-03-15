@@ -58,21 +58,22 @@ public:
    /*!
    * \brief getDiffCoefficient returns the channel width shown
    *        in the corresponding FFFTwoBoxWidget
+   *
    * \return channel width
    */
-   double getChannelWidth() const { return channelWidth->value(); }
+   double getChannelWidth() const { return channelWidth->value() / 1e4; }    // display in µm, return in cm
 
    /*!
     * \brief getChannelWidthGeo
     * \return
     */
-   double getChannelWidthGeo() const { return channelWidthGeo->value(); }
+   double getChannelWidthGeo() const { return channelWidthGeo->value() / 1e4; }
 
    /*!
     * \brief getChannelWidthHydro
     * \return
     */
-   double getChannelWidthHydro() const { return channelWidthHydro->value(); }
+   double getChannelWidthHydro() const { return channelWidthHydro->value() / 1e4; }
 
    /*!
    * \brief getDiffCoefficient returns the channel width shown
@@ -144,17 +145,17 @@ public:
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
     */
-   void setChannelWidthClassical(double value) { channelWidth->setValue(value); }
+   void setChannelWidthClassical(double value) { channelWidth->setValue(value * 1e4); } // set in cm, display in µm
    /*!
    * \brief setChannelWidthGeo
    * \param value
    */
-   void setChannelWidthGeo(double value) { channelWidthGeo->setValue(value); }
+   void setChannelWidthGeo(double value) { channelWidthGeo->setValue(value * 1e4); }    // set in cm, display in µm
    /*!
    * \brief setChannelWidthHydro
    * \param value
    */
-   void setChannelWidthHydro(double value) { channelWidthHydro->setValue(value); }
+   void setChannelWidthHydro(double value) { channelWidthHydro->setValue(value * 1e4); }// set in cm, display in µm
 
 public slots:
    void saveSettings();
