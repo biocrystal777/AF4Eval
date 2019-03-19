@@ -124,9 +124,6 @@ private:
    NO_COPY_ASSIGNMENT_CTORS(AF4DeleteChannelDialog)
 };
 
-
-
-
 /*! **************************************************************************************************************
 ***
 ***  \class     AF4ChannelNameDialog "src/Gui/Calibration/af4channelconfigurationwidget.h"

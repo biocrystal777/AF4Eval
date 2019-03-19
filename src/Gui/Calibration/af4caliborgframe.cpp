@@ -121,7 +121,6 @@ void AF4CalibOrgFrame::adaptAllCalibWidgetIds()
    }
 }
 
-
 void AF4CalibOrgFrame::adaptAllCalibWidgetNames()
 {
    for(const QString &key : channelCalibWidgets->keys())
@@ -202,7 +201,6 @@ void AF4CalibOrgFrame::deleteConnectedChannel(const QString channelToRemove, con
    adaptAllCalibWidgetIds();
    adaptAllCalibWidgetNames();
 }
-
 
 //-/////////////////
 //  Private slots //
@@ -305,6 +303,7 @@ void AF4CalibOrgFrame::saveParameters() const
 //-/////////////////
 //  Private stuff //
 //-/////////////////
+
 
 
 AF4ChannelCalibWidget *AF4CalibOrgFrame::createNewCalilbWidget(const int channelId, const int calibId, const QString &channelName, const QString &calibName)

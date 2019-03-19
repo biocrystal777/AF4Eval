@@ -89,7 +89,7 @@ CalibResult AF4Calibrator::calibrate_geometric()
 
    const double L1 = chDims.length1; // cm
    const double L2 = chDims.length2; // cm
-   const double L3 = chDims.length2; // cm
+   const double L3 = chDims.length3; // cm
    const double b0 = chDims.b0; // cm
    const double bL = chDims.bL; // cm
 
@@ -125,6 +125,11 @@ CalibResult AF4Calibrator::calibrate_geometric()
    qDebug() << "te"    << te;
    qDebug() << "rMeas" << rMeas;
    qDebug() << "lambda" << lambda;
+   qDebug() << "L1"     << L1;
+   qDebug() << "L2"     << L2;
+   qDebug() << "L3"     << L3;
+   qDebug() << "b0"     << b0;
+   qDebug() << "bL"     << bL;
    qDebug() << "D" << D;
    qDebug() << "S" << S;
    qDebug() << "Az" << Az;
