@@ -79,35 +79,43 @@ void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDim
       AF4Log::logText(tr("Try \"Classical\" calibration..."));
       result = calibSingleParamSet(chDims, params, CalibMode::classical);
       if(result.errorCode == CalibErrorCode::noError){
-         AF4Log::logText(tr("\"Classical\" calibration Finished. w_cla set to %1, V_cla set to %2.").arg(result.width).arg(result.volume));
+         AF4Log::logText(tr("\"Classical\" calibration Finished. w_cla set to %1 µm, V_cla set to %2.").arg(result.width * 10000).arg(result.volume));
          //currentCalibWidget->setChannelWidthClassical(result.width);
          //currentCalibWidget->setClassicalVolume(result.volume);
+         calibsOrgFrame->setChannelWidthClassical(result.width);
+         calibsOrgFrame->setClassicalVolume(result.volume);
       }
       else      {
          AF4Log::logError(tr("\"Classical\" calibration could not be conducted."));
          logErrorMessage(result.errorCode);
       }
    }
+
    if(cModes.geometric){
       AF4Log::logText(tr("Try \"Geometric\" calibration..."));
       result = calibSingleParamSet(chDims, params, CalibMode::geometric);
       if(result.errorCode == CalibErrorCode::noError){
-         AF4Log::logText(tr("\"Geometric\" calibration finished. w_geo set to %1, V_geo set to %2.").arg(result.width).arg(result.volume));
+         AF4Log::logText(tr("\"Geometric\" calibration finished. w_geo set to %1 µm, V_geo set to %2.").arg(result.width * 10000).arg(result.volume));
          //currentCalibWidget->setChannelWidthGeo(result.width);
          //currentCalibWidget->setGeometVolume(result.volume);
+         calibsOrgFrame->setChannelWidthGeo(result.width);
+         calibsOrgFrame->setGeometVolume(result.volume);
       }
       else {
          AF4Log::logError(tr("\"Geometric\" calibration could not be conducted."));
          logErrorMessage(result.errorCode);
       }
    }
+
    if(cModes.hydrodynamic){
       AF4Log::logText(tr("Try \"Hydrodynamic\" calibration..."));
       result = calibSingleParamSet(chDims, params, CalibMode::hydrodynamic);
       if(result.errorCode == CalibErrorCode::noError){
-         AF4Log::logText(tr("\"Hydrodynamic\" calibration Finished. w_hyd set to %1, V_hyd set to %2.").arg(result.width).arg(result.volume));
+         AF4Log::logText(tr("\"Hydrodynamic\" calibration Finished. w_hyd set to %1 µm, V_hyd set to %2.").arg(result.width * 10000).arg(result.volume));
          //currentCalibWidget->setChannelWidthHydro(result.width);
          //currentCalibWidget->setChannelWidthGeo(result.volume);
+         calibsOrgFrame->setChannelWidthHydro(result.width);
+         calibsOrgFrame->setHydrodynVolume(result.volume);
       }
       else {
          AF4Log::logError(tr("\"Hydrodynamic\" calibration could not be conducted."));
@@ -129,11 +137,11 @@ CalibResult AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDim
    case CalibMode::classical:
       result = calibrator.calibrate_classic();
       break;
-   case CalibMode::hydrodynamic:
-      result = calibrator.calibrate_hydrodynamic();
-      break;
    case CalibMode::geometric:
       result = calibrator.calibrate_geometric();
+      break;
+   case CalibMode::hydrodynamic:
+      result = calibrator.calibrate_hydrodynamic();
       break;
    }
   return result;

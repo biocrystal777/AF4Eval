@@ -102,10 +102,6 @@ public:
    */
    //ChannelDimsFromCalib getChannelDimsFromCalib() const;
 
-
-
-
-
 #define SET_MACRO(function, boxPtr) \
    bool function(double value){\
    if(value < boxPtr->minimum()){\

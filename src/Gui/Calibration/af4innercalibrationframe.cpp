@@ -70,33 +70,37 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
 
    channelWidthLabel = new QwtTextLabel(this);
    //channelWidthLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   channelWidthLabel->setText(QString("w_cla / cm"), QwtText::PlainText);
+   channelWidthLabel->setText(QString("w_cla / µm"), QwtText::PlainText);
    channelWidthLabel->setToolTip("Channel Width");
    lay->addWidget(channelWidthLabel, 2, 1, Qt::AlignRight);
    channelWidth = new QDoubleSpinBox( this);
-   channelWidth->setMinimum(1.0);
+   channelWidth->setDecimals(4);
+   channelWidth->setMinimum(1.0e-4);
    channelWidth->setMaximum(9.9e3);
    lay->addWidget(channelWidth, 2, 2, Qt::AlignLeft);
 
    channelWidthGeoLabel = new QwtTextLabel(this);
    //channelWidthGeoLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   channelWidthGeoLabel->setText(QString("w_Hyd / cm"), QwtText::PlainText);
+   channelWidthGeoLabel->setText(QString("w_geo / µm"), QwtText::PlainText);
    channelWidthGeoLabel->setToolTip("Channel Width");
    lay->addWidget(channelWidthGeoLabel, 3, 1, Qt::AlignRight);
    channelWidthGeo = new QDoubleSpinBox(this);
-   channelWidthGeo->setMinimum(1.0e3);
-   channelWidthGeo->setMaximum(9.9999e-1);
+   channelWidthGeo->setDecimals(4);
+   channelWidthGeo->setMinimum(1.0e-3);
+   channelWidthGeo->setMaximum(9.9999e3);
    lay->addWidget(channelWidthGeo, 3, 2, Qt::AlignLeft);
 
    channelWidthHydroLabel = new QwtTextLabel(this);
    //channelWidthHydroLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   channelWidthHydroLabel->setText(QString("w_Geo / cm"), QwtText::PlainText);
+   channelWidthHydroLabel->setText(QString("w_hyd / µm"), QwtText::PlainText);
    channelWidthHydroLabel->setToolTip("Channel Width");
    lay->addWidget(channelWidthHydroLabel, 4, 1, Qt::AlignRight);
    channelWidthHydro = new QDoubleSpinBox(this);
+   channelWidthHydro->setDecimals(4);
    channelWidthHydro->setMinimum(1.0e-4);
-   channelWidthHydro->setMaximum(9.9999e-1);
+   channelWidthHydro->setMaximum(9.9999e3);
    lay->addWidget(channelWidthHydro, 4, 2, Qt::AlignLeft);
+
 
    classicalVolumeLabel = new QwtTextLabel(this);
    //classicalVolumeLabel->setText(QString("<math><msup><mi>V</mi><mtext>0</mtext></msup><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
@@ -104,18 +108,20 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    classicalVolumeLabel->setToolTip("Channel Volume");
    lay->addWidget(classicalVolumeLabel, 2, 3, Qt::AlignLeft);
    classicalVolume = new QDoubleSpinBox(this);
+   classicalVolume->setDecimals(4);
    classicalVolume->setMinimum(1.0e-2);
-   classicalVolume->setMaximum(9.9999e2);
+   classicalVolume->setMaximum(9.9999e0);
    lay->addWidget(classicalVolume, 2, 4, Qt::AlignLeft);
 
    geometVolumeLabel = new QwtTextLabel(this);
    //geometVolumeLabel->setText(QString("<math><msup><mi>V</mi><mtext>0</mtext></msup><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
-   geometVolumeLabel->setText(QString("V_Geo / ml "), QwtText::PlainText);
+   geometVolumeLabel->setText(QString("V_geo / ml "), QwtText::PlainText);
    geometVolumeLabel->setToolTip("Channel Volume");
    lay->addWidget(geometVolumeLabel, 3, 3, Qt::AlignLeft);
    geometVolume = new QDoubleSpinBox(this);
+   geometVolume->setDecimals(4);
    geometVolume->setMinimum(1.0e-2);
-   geometVolume->setMaximum(9.9999e2);
+   geometVolume->setMaximum(9.9999e0);
    lay->addWidget(geometVolume, 3, 4, Qt::AlignLeft);
 
    hydrodynVolumeLabel = new QwtTextLabel(this);
@@ -124,8 +130,9 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    hydrodynVolumeLabel->setToolTip("Channel Volume");
    lay->addWidget(hydrodynVolumeLabel, 4, 3, Qt::AlignLeft);
    hydrodynVolume = new QDoubleSpinBox(this);
+   hydrodynVolume->setDecimals(4);
    hydrodynVolume->setMinimum(1.0e-2);
-   hydrodynVolume->setMaximum(9.9999e2);
+   hydrodynVolume->setMaximum(9.9999e0);
    lay->addWidget(hydrodynVolume, 4, 4, Qt::AlignLeft);
 
    auto adaptReadiness = [this](){

@@ -75,7 +75,6 @@ public:
 
    double getGeometChannelWidth() const { return innerCalibFrame->getChannelWidthGeo(); }
    double getHydrodynChannelWidth() const { return innerCalibFrame->getChannelWidthHydro(); }
-
    double getClassicalVolume() const { return innerCalibFrame->getClassicalVolume(); }
    /*!
     * \brief getDiffCoefficient returns the channel width shown

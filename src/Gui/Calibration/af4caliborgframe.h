@@ -101,6 +101,32 @@ public slots:
     */
    void deleteConnectedChannel(const QString channelToRemove, const QString channelToDisplay);
 
+
+   void setClassicalVolume(double value){ curCalibWidget->setClassicalVolume(value); }
+
+   void setHydrodynVolume(double value){ curCalibWidget->setHydrodynVolume(value); }
+
+   void setGeometVolume(double value){ curCalibWidget->setGeometVolume(value); }
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthClassical(double value) { curCalibWidget->setChannelWidthClassical(value); }
+
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthGeo(double value) { curCalibWidget->setChannelWidthGeo(value); }
+
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthHydro(double value) { curCalibWidget->setChannelWidthHydro(value); }
+
+
+
 signals:
    /*!
     * \brief calibrateChannelCalled

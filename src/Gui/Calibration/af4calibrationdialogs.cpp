@@ -64,7 +64,6 @@ AF4CalibNameDialog::AF4CalibNameDialog(QString *name, bool first, const QString 
    calibNameInput->setFocus();
 }
 
-
 AF4DeleteCalibDialog::AF4DeleteCalibDialog()
 {
    layout = new QGridLayout(this);

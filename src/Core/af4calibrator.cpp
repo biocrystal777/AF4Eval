@@ -23,7 +23,7 @@ CalibResult AF4Calibrator::calibrate_classic()
    // adjust time axis according to leftOffsetTime
    const double tvoid  = params.voidPeakTime;        // params.leftOffsetTime;  // remove focussing time offset
    const double te     = params.elutionTime;         // - params.leftOffsetTime;   // remove focussing time offset
-   const double D      = params.diffCoeff * 60.0;                   // cm^2/s => cm^2/min
+   const double D      = params.diffCoeff * 60.0;    // cm^2/s => cm^2/min
    const double Ve     = params.elutionFlow;
    const double Vc     = params.crossFlow;
    const double z_perc = params.relFocusPoint / 100.0;                // percentage to ratio
@@ -86,12 +86,11 @@ CalibResult AF4Calibrator::calibrate_geometric()
    const double Vc     = params.crossFlow;             // ml/min
    const double z_perc = params.relFocusPoint / 100.0; // percentage to ratio
 
-
    const double L1 = chDims.length1; // cm
    const double L2 = chDims.length2; // cm
    const double L3 = chDims.length3; // cm
-   const double b0 = chDims.b0; // cm
-   const double bL = chDims.bL; // cm
+   const double b0 = chDims.b0;      // cm
+   const double bL = chDims.bL;      // cm
 
    // (1) Calculate Rmeas:
    const double rMeas = tvoid / te;
@@ -99,20 +98,20 @@ CalibResult AF4Calibrator::calibrate_geometric()
    double rDiff;
    const double lambda = RToLambda(rMeas, &rDiff);
    // (4) calculate substitution term S
-   const double S = lambda * Vc / D;
+   const double S = lambda * Vc / D;  // (cm³/min)/(cm²/min) = cm
    // (5) calculate passed channel area A_z:
    double Az {0.0};
    const double A3  = 0.5 * bL *L3;
    const double L12 = L1 + L2;
    const double L   = L12 + L3;
-   const double z0  = z_perc * L;
-   if(z0 >= L1){ // focus position within the "long" channel section L2
+   const double z0  = z_perc * L; // cm
+   if(z0 >= L1){ // focus position within the "long" channel section L2 ("distal focussing")
       const double bDelta = (b0 - bL);
-      const double m2     = bDelta / (2.0 * L2);
+      const double m2     = (-bDelta) / (2.0 * L2);
       const double t2     = 0.5 * (b0 + (L1 / L2) * bDelta );
-      Az = (L12 - z0) * ( m2 * (L12 + z0) + t2 ) + A3;
+      Az = (L12 - z0) * ( m2 * (L12 + z0) + 2.0*t2 ) + A3;
    }
-   else {        // focus position within the "short" channel section L3
+   else {        // focus position within the "short" channel section L1 ("proximal focussing")
       const double m1 = b0 / (2.0 * L1);
       Az = m1 * (squared(L1) - squared(z0)) + 0.5 * (b0 + bL) * L2 + A3;
    }
@@ -121,26 +120,26 @@ CalibResult AF4Calibrator::calibrate_geometric()
    // (7) calculate V^geo
    const double Vgeo = Az * w;
 
-   qDebug() << "tvoid" << tvoid;
-   qDebug() << "te"    << te;
-   qDebug() << "rMeas" << rMeas;
+
+   qDebug() << "tvoid"  << tvoid;
+   qDebug() << "te"     << te;
+   qDebug() << "rMeas"  << rMeas;
    qDebug() << "lambda" << lambda;
+   qDebug() << "z0"     << z0;
    qDebug() << "L1"     << L1;
    qDebug() << "L2"     << L2;
    qDebug() << "L3"     << L3;
    qDebug() << "b0"     << b0;
    qDebug() << "bL"     << bL;
-   qDebug() << "D" << D;
-   qDebug() << "S" << S;
-   qDebug() << "Az" << Az;
-   qDebug() << "w" << w;
+   qDebug() << "D"      << D;
+   qDebug() << "S"      << S;
+   qDebug() << "A3"     << A3;
+   qDebug() << "Az"     << Az;
+   qDebug() << "w"      << w;
 
    // package results
    result = { .width = w, .volume = Vgeo, .errorCode = CalibErrorCode::noError , .sqDelta = rDiff };
    return result;
-
-
-
 }
 
 CalibResult AF4Calibrator::calibrate_hydrodynamic()
