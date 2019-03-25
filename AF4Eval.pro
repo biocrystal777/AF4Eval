@@ -100,7 +100,7 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4slsevaluator.h \
     ./src/Core/omp_qvector.h \
     ./src/Gui/af4mainwindow.h \
-    ./src/Gui/Calibration/af4calibsettingsframe.h \    
+    ./src/Gui/Calibration/af4calibsettingsframe.h \
     ./src/Gui/Calibration/af4channelcalibwidget.h \
     ./src/Gui/Calibration/af4channeldimswidget.h \
     ./src/Gui/Calibration/af4channelconfigurationwidget.h \

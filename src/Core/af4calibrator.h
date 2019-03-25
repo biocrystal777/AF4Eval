@@ -74,7 +74,6 @@ public:
     * \return
     */
    CalibErrorCode checkParameters();
-
    CalibResult calibrate_classic();
    CalibResult calibrate_geometric();
    CalibResult calibrate_hydrodynamic();
