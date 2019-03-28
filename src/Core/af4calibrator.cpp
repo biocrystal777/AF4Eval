@@ -124,7 +124,8 @@ CalibResult AF4Calibrator::calibrate_geometric()
 
    // (7) calculate V^geo
    const double Vgeo = Az * w;
-
+   qDebug() << "===================================";
+   qDebug() << "====== geometric calib\n";
    qDebug() << "tvoid"  << tvoid;
    qDebug() << "te"     << te;
    qDebug() << "rMeas"  << rMeas;
@@ -150,11 +151,14 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
 {
    CalibResult result { .width = 0.0, .volume = 0.0 , .errorCode = CalibErrorCode::ParamsNotChecked , .sqDelta = 0.0 };
 
+   qDebug() << "===================================";
+   qDebug() << "====== hydrodynamic calib\n";
+
    // unpack all parameters and adjust units
    const double tvoid  = params.voidPeakTime;          // min
    const double te     = params.elutionTime;           // min
    const double D      = params.diffCoeff * 60.0;      // cm^2/s => cm^2/min
-   const double Ve   = params.elutionFlow;         // <= not used for this calculation!
+   const double Ve     = params.elutionFlow;         // <= not used for this calculation!
    const double Vc     = params.crossFlow;             // ml/min
    const double z_perc = params.relFocusPoint / 100.0; // percentage to ratio
 
@@ -199,31 +203,79 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double discr3 = 4 * beta3 * delta3 - squared(gamma3);
 
    // (5) Calculate conversion factor CF
-
-   const double CF{0.0};
-   {
-      const double CF2{0.0};
-      const double CF3{0.0};
-      if(discr3 > 0.0)   CF3 = IntPosDisc_CF_i(alpha3, beta3, gamma3, delta3, discr3, L12, L, m3);
-      else               CF3 = IntNegDisc_CF_i(alpha3, beta3, gamma3, delta3, discr3, L12, L, m3);
-      if(z0 >= L1){
-         if(discr2 > 0 ) CF2 = IntPosDisc_CF_i(alpha2, beta2, gamma2, delta2, discr2, z0, L1, m2);
-         else            CF3 = IntNegDisc_CF_i(alpha2, beta2, gamma2, delta2, discr2, z0, L1, m2);
-         CF = CF2 + CF3;
-      }
-      else {
-
-      }
+   double CF{0.0};
+   double CF1{0.0};
+   double CF2{0.0};
+   double CF3{0.0};
+   qDebug() << "--------CF3--------";
+   if(discr3 > 0.0)   CF3 = IntPosDisc_CF_i(alpha3, beta3, gamma3, delta3, discr3, L12, L, m3);
+   else               CF3 = IntNegDisc_CF_i(alpha3, beta3, gamma3, delta3, discr3, L12, L, m3);
+   qDebug() << "--------CF2--------";
+   if(z0 >= L1){
+      if(discr2 > 0 ) CF2 = IntPosDisc_CF_i(alpha2, beta2, gamma2, delta2, discr2, z0, L12, m2);
+      else            CF2 = IntNegDisc_CF_i(alpha2, beta2, gamma2, delta2, discr2, z0, L12, m2);
+      CF = CF2 + CF3;
    }
-
-
+   else {
+      if(discr2 > 0 ) CF2 = IntPosDisc_CF_i(alpha2, beta2, gamma2, delta2, discr2, L1, L12, m2);
+      else            CF2 = IntNegDisc_CF_i(alpha2, beta2, gamma2, delta2, discr2, L1, L12, m2);
+      qDebug() << "--------CF1--------";
+      CF1 = Int_CF_1(beta1, delta1, z0, L1, m1);
+      CF = CF1 + CF2 + CF3;
+   }
+   qDebug() << "--------CF End--------";
    // (6) Calculate w
+   const double w = 0.5 * tvoid / CF;
 
-   // (7) Calculate passed channel area A
+   // (7) Calculate passed channel area A   
+   double Az{0.0};
+   if(z0 >= L1) Az = (L12 - z0) * (m2 * (L12 + z0)) + A3;
+   else         Az = m1 * (squared(L1) - squared(z0) + A2 + A3);
 
    // (8) Calculate Vhyd
+   double Vhyd = Az * w;
+
+   /*
+   const double L12    = L1 + L2;
+   const double L      = L12 + L3;
+   const double z0     = z_perc * L;
+   const double bDelta = b0 - bL;
+   const double Vin    = Ve + Vc;
+
+   // (2) Calculate slopes and offsets of the channel plain border lines
+   const double m1 =  0.5 * b0 * L1;
+   const double m2 = -0.5 * bDelta * L2;
+   const double m3 = -0.5 * bL * L3;
+   const double t2 =  0.5 * (b0 + L1 * bDelta / L2 );
+   const double t3 =  0.5 * (b0 + L1 * bDelta / L2 );
+
+   // (3) Calculate area sections of the channel plain
+   const double A1 = 0.5 * b0 * L1;
+   const double A2 = 0.5 * (b0 + bL) * L2;
+   const double A3 = 0.5 * L3 * bL;
+   const double AL = A1 + A2 + A3;
+   */
+
+   qDebug() << "alpha2" << alpha2;
+   qDebug() << "alpha3" << alpha3;
+   qDebug() << "beta1" << beta1;
+   qDebug() << "beta2" << beta2;
+   qDebug() << "beta3" << beta3;
+   qDebug() << "gamma2" << gamma2;
+   qDebug() << "gamma3" << gamma3;
+   qDebug() << "delta1" << delta1;
+   qDebug() << "delta2" << delta2;
+   qDebug() << "delta3" << delta3;
+   qDebug() << "discr2" << discr2;
+   qDebug() << "discr3" << discr3;
+   qDebug() << "CF1, CF2, CF3" << CF1 << CF2 << CF3;
+   qDebug() << "CF" << CF;
+   qDebug() << "w" << w;
+   qDebug() << "Vhyd" << Vhyd;
 
 
+
+   result = CalibResult{ .width = w, .volume = Vhyd, .errorCode = CalibErrorCode::noError, .sqDelta = 0.0};
    return result;
 }
 
