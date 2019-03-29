@@ -93,10 +93,14 @@ double AF4Calculator::Int_CF_1(const double beta,
                                const double m_1)
 {
    const double tmp0 = delta / beta;
-   double CF_1 = tmp0 + squared(s1);
-   CF_1       /= tmp0 + squared(s0);
-   qDebug() << "CF1 log arg" << CF_1;
-   CF_1        = m_1 / (2.0 * beta) * log( CF_1 );
+   qDebug() << "delta, beta delta/beta" << beta << delta << tmp0;
+   double CF_1 = log(abs(tmp0 + squared(s1)));
+   CF_1       -= log(abs(tmp0 + squared(s0)));
+   CF_1        = m_1 / (2.0 * beta) * CF_1 ;
+   //double CF_1 = tmp0 + squared(s1);
+   //CF_1       /= tmp0 + squared(s0);
+   //qDebug() << "CF1 log arg" << CF_1;
+   //CF_1        = m_1 / (2.0 * beta) * log( CF_1 );
    return CF_1;
 }
 
