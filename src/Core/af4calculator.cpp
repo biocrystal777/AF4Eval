@@ -121,7 +121,7 @@ double AF4Calculator::RToLambda(const double R, double *RMS)
       else if (RTest < R) lambda += delta;
       else                break;
       delta *= 0.5;
-      qDebug() << "lambda" << i << lambda;
+      //qDebug() << "lambda" << i << lambda;
    }   
    if(RMS) *RMS = squared(RTest - R);
    return lambda;

@@ -214,6 +214,14 @@ public:
     */
    SET_MACRO(setElutionFlow, elutionFlow)
 
+   /*!
+    * \brief setLeftOffsetTime set value of the leftOffsetTime
+    * \return bool if value could be set
+    */
+   SET_MACRO(setLeftOffsetTime, leftOffsetTime)
+
+#undef SET_MACRO
+
    public slots:
       void saveSettings();
    /*!
@@ -230,13 +238,7 @@ private slots:
 
 private:
 
-   /*!
-    * \brief setLeftOffsetTime set value of the leftOffsetTime
-    * \return bool if value could be set
-    */
-   SET_MACRO(setLeftOffsetTime, leftOffsetTime);
 
-#undef SET_MACRO
 
    void loadSettings();
 

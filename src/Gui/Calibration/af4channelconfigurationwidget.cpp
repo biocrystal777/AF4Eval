@@ -124,8 +124,6 @@ void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDim
    }
 }
 
-
-
 CalibResult AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode)
 {
    AF4Calibrator calibrator(chDims, params);
@@ -331,7 +329,7 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       }
       const double widthRefY = refResult.width;   // Y_width(X)
       const double VolumeRefY = refResult.volume;  // Y_vol(X)
-      const string filePathPrefix("/home/bluemage/tests/deltaTests/delta");
+      const string filePathPrefix("/home/bluemage/tests/deltaTests/delta_cla");
       const std::vector<string> header = {string("delta X"), string("delta width (cla)"), string("delta volume (cla)") };
 
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionFlow,   params, paramsDeltaMod, classical, "_elutionFlow_cla.csv"   );
@@ -350,12 +348,17 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       }
       // conduct iterative calibration with modified "uncertainty" values
 
+      const double widthRefY = refResult.width;   // Y_width(X)
+      const double VolumeRefY = refResult.volume;  // Y_vol(X)
+      const string filePathPrefix("/home/bluemage/tests/deltaTests/delta_geo");
+      const std::vector<string> header = {string("delta X"), string("delta width (geo)"), string("delta volume (geo)") };
 
-
-
-
-
-
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionFlow,   params, paramsDeltaMod, geometric, "_elutionFlow_geo.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(crossFlow,     params, paramsDeltaMod, geometric, "_crossFlow_geo.csv"     );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(relFocusPoint, params, paramsDeltaMod, geometric, "_relFocusPoint_geo.csv" );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(voidPeakTime,  params, paramsDeltaMod, geometric, "_voidPeakTime_geo.csv"  );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionTime,   params, paramsDeltaMod, geometric, "_elutionTime_geo.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, geometric, "_diffCoeff_geo.csv"     );
 
    }
    if(cModes.hydrodynamic){
@@ -364,9 +367,19 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
          logErrorMessage(refResult.errorCode);
          return;
       }      
-      // conduct iterative calibrations "uncertainty" values
+      // conduct iterative calibration with modified "uncertainty" values
 
+      const double widthRefY = refResult.width;   // Y_width(X)
+      const double VolumeRefY = refResult.volume;  // Y_vol(X)
+      const string filePathPrefix("/home/bluemage/tests/deltaTests/delta_hydro");
+      const std::vector<string> header = {string("delta X"), string("delta width (hydro)"), string("delta volume (hydro)") };
 
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionFlow,   params, paramsDeltaMod, hydrodynamic, "_elutionFlow_hydro.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(crossFlow,     params, paramsDeltaMod, hydrodynamic, "_crossFlow_hydro.csv"     );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(relFocusPoint, params, paramsDeltaMod, hydrodynamic, "_relFocusPoint_hydro.csv" );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(voidPeakTime,  params, paramsDeltaMod, hydrodynamic, "_voidPeakTime_hydro.csv"  );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionTime,   params, paramsDeltaMod, hydrodynamic, "_elutionTime_hydro.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, hydrodynamic, "_diffCoeff_hydro.csv"     );
 
    }
 #undef ITERATIVE_PARAMETER_DELTA_ANALYSIS

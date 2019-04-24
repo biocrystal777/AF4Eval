@@ -17,62 +17,35 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
     *
     *************************************/
 
-   QwtTextLabel *label = new QwtTextLabel(this);
-   // qwtLabel->setText(QString("<math><mi>T</mi><mtext>&nbsp;/&nbsp;K</mtext></math>"), QwtText::MathMLText);
-   label->setText(QString("T / K"), QwtText::PlainText);
-   label->setToolTip("Temperature");
-   lay->addWidget(label, 0, 0, Qt::AlignLeft);
-   temperature = new QDoubleSpinBox(this);
-   temperature->setToolTip("Temperature");
-   temperature->setDecimals(1);
-   temperature->setSingleStep(0.1);
-   temperature->setMaximum(1000.0);
-   temperature->setMinimum(0.001);
-   temperature->setMaximumWidth(100);
-   lay->addWidget(temperature, 0, 1, 1, 2);
+   auto makeSpinBox = [this](QDoubleSpinBox *&spinBox, QString labelString, QString toolTip, int row, int column, int rowSpan, int columnSpan, int maxWidth )  {
+      QwtTextLabel *label = new QwtTextLabel(this);
+      label->setText(labelString, QwtText::PlainText);
+      label->setToolTip(toolTip);
+      lay->addWidget(label, row, 0, Qt::AlignLeft);
+      spinBox = new QDoubleSpinBox(this);
+      spinBox->setToolTip(toolTip);
+      spinBox->setMaximumWidth(maxWidth);
+      lay->addWidget(spinBox, row, column, rowSpan, columnSpan);
+   };
 
+   auto configSpinBox = [this](QDoubleSpinBox *spinBox, int decimals, double singleStep, double minimum, double maximum){
+      spinBox->setDecimals(decimals);
+      spinBox->setSingleStep(singleStep);
+      spinBox->setMinimum(minimum);
+      spinBox->setMaximum(maximum);
+   };
 
-   label = new QwtTextLabel(this);
-   // qwtLabel->setText(QString("<math><msub><mi>V</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;ml/min</mtext></math>"), QwtText::MathMLText);
-   label->setText(QString("Ve / (ml/min)"), QwtText::PlainText);
-   label->setToolTip("Elution Flow");
-   lay->addWidget(label, 1, 0,Qt::AlignLeft);
-   elutionFlow = new QDoubleSpinBox(this);
-   elutionFlow->setToolTip("Elution Flow");
-   elutionFlow->setDecimals(3);
-   elutionFlow->setSingleStep(0.1);
-   elutionFlow->setMaximum(100.0);
-   elutionFlow->setMinimum(0.001);
-   elutionFlow->setMaximumWidth(100);
-   lay->addWidget(elutionFlow, 1, 1, 1, 2);
+   makeSpinBox(temperature, QString("T / K"),         QString("Temperature"), 0, 1, 1, 2, 100);
+   configSpinBox(temperature, 1, 0.1, 0.1, 500.0);
 
-   label = new QwtTextLabel(this);
-   //qwtLabel->setText(QString("<math><msub><mi>V</mi><mtext>c</mtext></msub><mtext>&nbsp;/&nbsp;ml/min</mtext></math>"), QwtText::MathMLText);
-   label->setText(QString("Vc / (ml/min)"), QwtText::PlainText);
-   label->setToolTip("Cross Flow");
-   lay->addWidget(label, 2, 0, Qt::AlignLeft);
-   crossFlow = new QDoubleSpinBox(this);
-   crossFlow->setToolTip("Cross Flow");
-   crossFlow->setDecimals(3);
-   crossFlow->setSingleStep(0.1);
-   crossFlow->setMaximum(100.0);
-   crossFlow->setMinimum(0.001);
-   crossFlow->setMaximumWidth(100);
-   lay->addWidget(crossFlow, 2, 1, 1, 2);
+   makeSpinBox(elutionFlow, QString("Ve / (ml/min)"), QString("Elution Flow"), 1, 1, 1, 2, 100);
+   configSpinBox(elutionFlow, 3, 0.1, 0.1, 10.0);
 
-   label = new QwtTextLabel(this);
-   //qwtLabel->setText(QString("<math><msub><mi>z</mi><mtext>%</mtext></msub><mtext>&nbsp;/&nbsp;%</mtext></math>"), QwtText::MathMLText);
-   label->setText(QString("z% / %"), QwtText::PlainText);
-   label->setToolTip("Relative position of the focussing point\ncompared to the length of the channel");
-   lay->addWidget(label, 3, 0, Qt::AlignLeft);
-   relFocusPoint = new QDoubleSpinBox(this);
-   relFocusPoint->setToolTip("Relative position of the focussing point\ncompared to the length of the channel");
-   relFocusPoint->setDecimals(1);
-   relFocusPoint->setSingleStep(0.1);
-   relFocusPoint->setMaximum(100.0);
-   relFocusPoint->setMinimum(0.1);
-   relFocusPoint->setMaximumWidth(100);
-   lay->addWidget(relFocusPoint, 3, 1, 1, 2);
+   makeSpinBox(crossFlow, QString("Vc / (ml/min)"),   QString("Cross Flow"), 2, 1, 1, 2, 100);
+   configSpinBox(crossFlow, 3, 0.1, 0.1, 10.0);
+
+   makeSpinBox(relFocusPoint, QString("z% / %"),      QString("Relative position of the focussing point\ncompared to the length of the channel"), 3, 1, 1, 2, 100);
+   configSpinBox(relFocusPoint, 1, 0.1, 0.1, 100.0);
 
     /**************************************
     *
@@ -80,50 +53,28 @@ AF4CalibParametersFrame::AF4CalibParametersFrame(int channelId, int calibId,
     *
     *************************************/
 
-   label = new QwtTextLabel(this);
-   // qwtLabel->setText(QString("<math><msub><mi>t</mi><mtext>off</mtext></msub><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
-   label->setText(QString("t_off / min"), QwtText::PlainText);
-   //label->setMinimumWidth(label->size().width() * 1.0);
-   label->setToolTip("Left offset time");
-   lay->addWidget(label, 0, 3, Qt::AlignLeft);
-   leftOffsetTime = QSharedPointer<QDoubleSpinBox>(new QDoubleSpinBox(this));
-   leftOffsetTime->setToolTip("Left offset time");
-   leftOffsetTime->setDecimals(3);
-   leftOffsetTime->setSingleStep(0.005);
-   leftOffsetTime->setMaximum(30.0);
-   leftOffsetTime->setMinimum(0.000);
-   //leftOffsetTime->setMaximumWidth(100);
-   lay->addWidget(leftOffsetTime.data(), 0, 4, 1, 2);
+   auto makeSharedSpinBox = [this](QSharedPointer<QDoubleSpinBox> &spinBox, QString labelString, QString toolTip, int row, int column, int rowSpan, int columnSpan) {
+      QwtTextLabel *label = new QwtTextLabel(this);
+      label->setText(labelString, QwtText::PlainText);
+      label->setToolTip(toolTip);
+      lay->addWidget(label, row, 3, Qt::AlignLeft);
+      spinBox =  QSharedPointer<QDoubleSpinBox>(new QDoubleSpinBox(this));
+      spinBox->setToolTip(toolTip);
+      lay->addWidget(spinBox.data(), row, column, rowSpan, columnSpan);
+   };
 
-   label = new QwtTextLabel(this);
-   label->setText(QString("t_void / min"), QwtText::PlainText);
-   label->setToolTip("Void Peak Time");
-   lay->addWidget(label, 1, 3, Qt::AlignLeft);
-   voidPeakTime = QSharedPointer<QDoubleSpinBox>(new QDoubleSpinBox(this));
-   voidPeakTime->setToolTip("Void Peak Time");
-   voidPeakTime->setDecimals(3);
-   voidPeakTime->setSingleStep(0.005);
-   voidPeakTime->setMaximum(30.0);
-   //voidPeakTime->setMinimum(0.00001);
+   makeSharedSpinBox(leftOffsetTime, QString("t_off / min"), QString("Left offset time"), 0, 4, 1, 2);
+   configSpinBox(leftOffsetTime.data(), 3, 0.005, 0.000, 30.0);
+
+   makeSharedSpinBox(voidPeakTime, QString("t_void / min"), QString("void peak time"), 1, 4, 1, 2);
+   configSpinBox(voidPeakTime.data(), 3, 0.005, 0.001, 30.0);
    connect(leftOffsetTime.data(),qOverload<double>(&QDoubleSpinBox::valueChanged),
            voidPeakTime.data(),  &QDoubleSpinBox::setMinimum);
-   //voidPeakTime->setMaximumWidth(100);
-   lay->addWidget(voidPeakTime.data(), 1, 4, 1, 2);
 
-   label = new QwtTextLabel(this);
-   label->setText(QString("t_e / min"), QwtText::PlainText);
-   label->setToolTip("Elution Time");
-   lay->addWidget(label, 2, 3, Qt::AlignLeft);
-   elutionTime = QSharedPointer<QDoubleSpinBox>(new QDoubleSpinBox(this));
-   elutionTime->setToolTip("Elution Time");
-   elutionTime->setDecimals(3);
-   elutionTime->setSingleStep(0.05);
-   elutionTime->setMaximum(300.0);
+   makeSharedSpinBox(elutionTime, QString("t_e / min"), QString("elution time"), 2, 4, 1, 2);
+   configSpinBox(elutionTime.data(), 3, 0.05, 0.001, 500.0);
    connect(voidPeakTime.data(),qOverload<double>(&QDoubleSpinBox::valueChanged),
            elutionTime.data(),  &QDoubleSpinBox::setMinimum);
-   //elutionTime->setMinimum(0.00001);
-   //elutionTime->setMaximumWidth(100);
-   lay->addWidget(elutionTime.data(), 2, 4, 1, 2);
 
    /**************************************
    *

@@ -169,18 +169,24 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double bL = chDims.bL;      // cm
 
    // (1) Calculate additional "derived "parameters
-   const double L12    = L1 + L2;
-   const double L      = L12 + L3;
-   const double z0     = z_perc * L;
-   const double bDelta = b0 - bL;
-   const double Vin    = Ve + Vc;
+   const double L12    = L1 + L2;    // cm
+   const double L      = L12 + L3;   // cm
+   const double z0     = z_perc * L; // cm
+   const double bDelta = b0 - bL;    // cm
+   const double Vin    = Ve + Vc;    // cm
 
    // (2) Calculate slopes and offsets of the channel plain border lines
-   const double m1 =  0.5 * b0 * L1;
-   const double m2 = -0.5 * bDelta * L2;
-   const double m3 = -0.5 * bL * L3;
-   const double t2 =  0.5 * (b0 + L1 * bDelta / L2 );
-   const double t3 =  0.5 * (b0 + L1 * bDelta / L2 );
+   const double m1 =  0.5 * b0 / L1;                  //
+   const double m2 = -0.5 * bDelta / L2;              //
+   const double m3 = -0.5 * bL / L3;                  //
+   const double t2 =  0.5 * (b0 + L1 * bDelta / L2 ); //
+   const double t3 =  0.5 * L * bL / L3;              //
+
+   qDebug() << "m1" << m1;
+   qDebug() << "m2" << m2;
+   qDebug() << "m3" << m3;
+   qDebug() << "t2" << t2;
+   qDebug() << "t3" << t3;
 
    // (3) Calculate area sections of the channel plain
    const double A1 = 0.5 * b0 * L1;
@@ -197,7 +203,7 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double gamma2 = -2.0 * Vc * t2 / AL;
    const double gamma3 = -2.0 * Vc * t3 / AL;
    const double delta1 = Vin;
-   const double delta2 = Vin - Vc / AL * (A1 -      m2 * squared(L1)  - 2.0 * t2 * L1);
+   const double delta2 = Vin - Vc / AL * (A1      - m2 * squared(L1)  - 2.0 * t2 * L1);
    const double delta3 = Vin - Vc / AL * (A1 + A2 - m3 * squared(L12) - 2.0 * t3 * L12);
    const double discr2 = 4 * beta2 * delta2 - squared(gamma2);
    const double discr3 = 4 * beta3 * delta3 - squared(gamma3);
@@ -273,9 +279,64 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    qDebug() << "w" << w;
    qDebug() << "Vhyd" << Vhyd;
 
+   qDebug() << " --------  Numeric approximation for CF integrals --------";
+   qDebug() << "ξ" << "surface(ξ)" << "V(ξ)" << "E(ξ)/V(ξ)";
+   const uint n = 1000;
+   const double dXi = L / n;
+   double xi = 0.0;
+   // find start:
+   while(xi < z0)
+      xi += dXi;
+
+   // CF1_num
+   double CF1_num = 0.0;
+   double passedSurface = 0.0;
+   double remainingFlow = 0.0;
+   double E_xi = 0.0;
+   while (xi < L1){
+      passedSurface = m1 * squared(xi);
+      remainingFlow = (Vin - Vc / AL * passedSurface);
+      E_xi = m1 * xi;
+      double EV_xi = m1 * xi / remainingFlow;
+      CF1_num += EV_xi * dXi;
+      xi += dXi;
+      qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
+   }
+   qDebug() << "numeric CF1" << CF1_num;
+   // CF2_num
+   double CF2_num = 0.0;
+   while (xi < L12){
+      passedSurface = A1 + m2 * (squared(xi) - squared(L1)) + 2.0 * t2 * (xi - L1);
+      remainingFlow = Vin -     Vc / AL * passedSurface ;
+      E_xi = m2 * xi + t2;
+      double EV_xi = (m2 * xi + t2) / remainingFlow;
+      qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
+      CF2_num += EV_xi * dXi;
+      xi += dXi;
+   }
 
 
-   result = CalibResult{ .width = w, .volume = Vhyd, .errorCode = CalibErrorCode::noError, .sqDelta = 0.0};
+   // CF3_num
+   double CF3_num = 0.0;
+   while (xi < L){
+      passedSurface = A1 +  A2 +  m3 * (squared(xi) - squared(L12))  + 2.0 * t3 * (xi - L12) ;
+      remainingFlow = Vin - Vc / AL  * passedSurface  ;
+      E_xi = m3 * xi + t3;
+      double EV_xi = E_xi / remainingFlow;
+      CF3_num  += EV_xi * dXi;
+      xi += dXi;
+      qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
+   }
+
+   qDebug() << "numeric CF3" << CF3_num;
+   double w_num = 0.5 * tvoid / (CF1_num + CF2_num + CF3_num);
+   double V_num = w_num * AL;
+   qDebug() << "w with numeric CF" << w_num;
+   qDebug() << "V0 with numeric CF" << V_num;
+
+   qDebug() << " -------- End Numeric approximation  --------";
+
+   result = CalibResult{ .width = w_num, .volume = V_num, .errorCode = CalibErrorCode::noError, .sqDelta = 0.0};
    return result;
 }
 

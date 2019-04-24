@@ -10,7 +10,6 @@
 #include "../../Core/af4evalmacros.h"
 #include "../../Core/af4parameterstructs.h"
 
-
 /*! ***************************************************************************************
 ***
 ***  \class     AF4CalibSettingsFrame "src/Gui/Calibration/af4calibsettingsframe.h"
@@ -42,27 +41,27 @@ public:
    }
 
    /*!
-     * \brief getLength1
+     * \brief getL1
      * \return
      */
-   double getLength1() const {
-      return channelConfigWidgets->value(channelChooser->currentText())->getLength1();
+   double getL1() const {
+      return channelConfigWidgets->value(channelChooser->currentText())->getL1();
    }
 
    /*!
-     * \brief getLength2
+     * \brief getL2
      * \return
      */
-   double getLength2() const {
-      return channelConfigWidgets->value(channelChooser->currentText())->getLength2();
+   double getL2() const {
+      return channelConfigWidgets->value(channelChooser->currentText())->getL2();
    }
 
    /*!
-     * \brief getLength3
+     * \brief getL3
      * \return
      */
-   double getLength3() const {
-      return channelConfigWidgets->value(channelChooser->currentText())->getLength3();
+   double getL3() const {
+      return channelConfigWidgets->value(channelChooser->currentText())->getL3();
    }
 
    /*!
@@ -174,9 +173,9 @@ private:
    QString currentCalibKey;
 
    QLabel *chLength                            = nullptr;
-   QLabel *length1                             = nullptr;
-   QLabel *length2                             = nullptr;
-   QLabel *length3                             = nullptr;
+   QLabel *L1                             = nullptr;
+   QLabel *L2                             = nullptr;
+   QLabel *L3                             = nullptr;
    QLabel *b0                                  = nullptr;
    QLabel *bL                                  = nullptr;
    QLabel *channelWidth                        = nullptr;

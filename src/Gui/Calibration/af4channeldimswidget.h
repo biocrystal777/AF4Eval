@@ -36,25 +36,25 @@ public:
                                  QWidget *parent);
    ~AF4ChannelDimsWidget();
 
-   inline double getChLength() const {return (length1->value() + length2->value() + length3->value());}
+   inline double getChLength() const {return (L1->value() + L2->value() + L3->value());}
 
    /*!
-    * \brief getLength1
+    * \brief getL1
     * \return
     */
-   inline double getLength1() const {return length1->value();}
+   inline double getL1() const {return L1->value();}
 
    /*!
-    * \brief getLength2
+    * \brief getL2
     * \return
     */
-   inline double getLength2() const {return length2->value();}
+   inline double getL2() const {return L2->value();}
 
    /*!
-    * \brief getLength3
+    * \brief getL3
     * \return
     */
-   inline double getLength3() const {return length3->value();}
+   inline double getL3() const {return L3->value();}
 
    /*!
     * \brief getB0
@@ -103,23 +103,23 @@ public:
 }\
 };
    /*!
-   * \brief setLength1
+   * \brief setL1
    * \param value
    * \return
    */
-   SET_MACRO(setLength1, length1)
+   SET_MACRO(setL1, L1)
    /*!
-    * \brief setLength2
+    * \brief setL2
     * \param value
     * \return
     */
-   SET_MACRO(setLength2, length2)
+   SET_MACRO(setL2, L2)
    /*!
-   * \brief setLength3
+   * \brief setL3
    * \param value
    * \return
    */
-   SET_MACRO(setLength3, length3)
+   SET_MACRO(setL3, L3)
    /*!
    * \brief setB0
    * \param value
@@ -154,16 +154,16 @@ public:
 private:
    QFrame *widgetFrame       = nullptr;
    QGridLayout *widgetLayout = nullptr;
-   QGridLayout *frameLayout  = nullptr;
+   QGridLayout *lay  = nullptr;
 
-   QDoubleSpinBox *bL        = nullptr;
-   QDoubleSpinBox *b0        = nullptr;
+   QDoubleSpinBox *bL   = nullptr;
+   QDoubleSpinBox *b0   = nullptr;
 
-   QDoubleSpinBox *length1   = nullptr;
-   QDoubleSpinBox *length2   = nullptr;
-   QDoubleSpinBox *length3   = nullptr;
+   QDoubleSpinBox *L1   = nullptr;
+   QDoubleSpinBox *L2   = nullptr;
+   QDoubleSpinBox *L3   = nullptr;
 
-   int channelId;
+   int     channelId;
    QString channelName;
 
    /*!

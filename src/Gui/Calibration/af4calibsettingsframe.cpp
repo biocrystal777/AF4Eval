@@ -55,24 +55,24 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
    qwtLabel->setText(QString("L1 / cm"), QwtText::PlainText);
    qwtLabel->setToolTip(QString("Channel Length 1"));
    layout->addWidget(qwtLabel, 2, 0, 1, 1, Qt::AlignLeft);
-   length1 = new QLabel(this);
-   layout->addWidget(length1, 2, 1, 1, 2, Qt::AlignLeft);
+   L1 = new QLabel(this);
+   layout->addWidget(L1, 2, 1, 1, 2, Qt::AlignLeft);
 
    qwtLabel = new QwtTextLabel(this);
    // qwtLabel->setText(QString(" <math><mi>L</mi><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
    qwtLabel->setText(QString("L2 / cm"), QwtText::PlainText);
    qwtLabel->setToolTip(QString("Channel Length 2"));
    layout->addWidget(qwtLabel, 2, 5, 1, 1, Qt::AlignLeft);
-   length2 = new QLabel(this);
-   layout->addWidget(length2, 2, 6, 1, 2, Qt::AlignLeft);
+   L2 = new QLabel(this);
+   layout->addWidget(L2, 2, 6, 1, 2, Qt::AlignLeft);
 
    qwtLabel = new QwtTextLabel(this);
    // qwtLabel->setText(QString(" <math><mi>L</mi><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
    qwtLabel->setText(QString("L3 / cm"), QwtText::PlainText);
    qwtLabel->setToolTip(QString("Channel Length 3"));
    layout->addWidget(qwtLabel, 2, 10, 1, 1, Qt::AlignLeft);
-   length3 = new QLabel(this);
-   layout->addWidget(length3, 2, 11, 1, 2, Qt::AlignLeft);
+   L3 = new QLabel(this);
+   layout->addWidget(L3, 2, 11, 1, 2, Qt::AlignLeft);
 
    updateChannelValues(channelKeyList->at(channelChooser->currentIndex()));
    allCalibChoosers = new QMap<QString, QComboBox*>();
@@ -121,8 +121,8 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
    qwtLabel->setText(("Vg / cm"), QwtText::TeXText);
    qwtLabel->setToolTip(QString("Geometrical Volume"));
    layout->addWidget(qwtLabel, 10, 0, 1, 1, Qt::AlignRight);
-   length3 = new QLabel(this);
-   layout->addWidget(length3, 10, 1, 1, 2, Qt::AlignRight);
+   L3 = new QLabel(this);
+   layout->addWidget(L3, 10, 1, 1, 2, Qt::AlignRight);
 
    updateChannelValues(channelKeyList->at(channelChooser->currentIndex()));
    this->setFrameStyle(0x1011);
@@ -158,9 +158,9 @@ void AF4CalibSettingsFrame::updateChannelValues(QString channelKey)
    // update values:
    AF4ChannelDimsWidget* configWidget = channelConfigWidgets->value(channelKey);
    chLength->setText(QString::number(configWidget->getChLength(), 'E'));
-   length1->setText( QString::number(configWidget->getLength1(), 'E')  );
-   length2->setText( QString::number(configWidget->getLength2(), 'E')  );
-   length3->setText( QString::number(configWidget->getLength3(), 'E')  );
+   L1->setText( QString::number(configWidget->getL1(), 'E')  );
+   L2->setText( QString::number(configWidget->getL2(), 'E')  );
+   L3->setText( QString::number(configWidget->getL3(), 'E')  );
    b0->setText(QString::number(configWidget->getB0(), 'E'));
    bL->setText(QString::number(configWidget->getBL(), 'E'));
 }
