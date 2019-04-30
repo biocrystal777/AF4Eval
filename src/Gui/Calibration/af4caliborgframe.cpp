@@ -57,25 +57,19 @@ AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
 
    lay->addWidget(plotWidget, 2, 7, 7, 7);
 
-   renameCalibButton = new QToolButton(this);
-   renameCalibButton->setText("R");
-   renameCalibButton->setToolTip("Rename the current calibration profile");
-   connect(renameCalibButton, &QPushButton::clicked,
-           this, &AF4CalibOrgFrame::renameCalibration);
-   lay->addWidget(renameCalibButton, 0, 12);
+   auto makeButton = [this](QToolButton *&button, QString text, QString toolTip, int row, int column){
+      button = new QToolButton(this);
+      button->setText(text);
+      button->setToolTip(toolTip);
+      lay->addWidget(button, row, column);
+   };
 
-   addCalibButton = new QToolButton(this);
-   addCalibButton->setText(tr("+"));
-   addCalibButton->setToolTip("Add new calibration profile");
-   connect(addCalibButton, &QPushButton::clicked,
-           this, &AF4CalibOrgFrame::addCalibration);
-   lay->addWidget(addCalibButton, 0, 13);
-   deleteCalibButton = new QToolButton(this);
-   deleteCalibButton->setText(tr("-"));
-   deleteCalibButton->setToolTip("delete current calibration profile");
-   connect(deleteCalibButton, &QPushButton::clicked,
-           this, &AF4CalibOrgFrame::deleteCalibration);
-   lay->addWidget(deleteCalibButton, 0, 14);
+   makeButton(renameCalibButton, "R", "Rename the current calibration profile", 0, 12);
+   connect(renameCalibButton, &QPushButton::clicked, this, &AF4CalibOrgFrame::renameCalibration);
+   makeButton(addCalibButton,    "+", "Add new calibration profile",            0, 13);
+   connect(addCalibButton,    &QPushButton::clicked, this, &AF4CalibOrgFrame::addCalibration);
+   makeButton(deleteCalibButton, "-", "Delete current calibration profile",     0, 14);
+   connect(deleteCalibButton, &QPushButton::clicked, this, &AF4CalibOrgFrame::deleteCalibration);
 
    // set respective combobox to
    QString currentChannel = channelSelection.data()->currentText();

@@ -165,69 +165,30 @@ void AF4CalibParametersFrame::adaptEnablingStatus(CalibModeSettings m)
 
 void AF4CalibParametersFrame::loadSettings()
 {
-
    QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
-   double calibValue;
-   //QString calibStringValue;
-   bool ok;
 
-#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
-   if(!ok){ \
-   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
-   .arg(keyName).arg(defaultValueName)); \
-}\
-};
+   auto loadSetting = [this, &settings](QString paramKey, std::function< bool (double) > setVal, double defaultVal) {
+      bool ok;
+      QString settingsKey = tr("channels/%1/calib/%2/%3").arg(this->channelId).arg(this->calibId).arg(paramKey);
+      double settingsVal = settings.value(settingsKey).toDouble(&ok);
+      if(!ok)
+         AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2")
+                                 .arg(paramKey).arg(defaultVal)
+                            );
+      if(! setVal(settingsVal) )
+         AF4Log::logWarning(tr("Error while setting calib Value (diffusion Coefficient, %1, %2).")
+                            .arg(this->channelName).arg(this->calibName));
+   };
 
-   calibValue = settings.value(tr("channels/%1/calib/%2/diffCoefficient").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../diffCoefficient", "0.0e0");
-   if(!(this->setDiffCoefficient(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (diffusion Coefficient, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/crossFlow").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../crossFlow", "0.0e0");
-   if(!(this->setCrossFlow(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (crossFlow, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/relFocusPoint").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../relFocusPoint", "0.0e0");
-   if(!(this->setRelFocusPoint(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (relFocusPoint, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/temperature").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../temperature", "0.0e0");
-   if(!(this->setTemperature(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (temperature, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/elutionFlow").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../elutionFlow", "0.0e0");
-   if(!(this->setElutionFlow(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (elutionFlow, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/leftOffsetTime").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../leftOffsetTime", "1.0e0");
-   if(!(this->setLeftOffsetTime(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (leftOffsetTime t0, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/voidPeakTime").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../voidPeakTime", "1.0e0");
-   if(!(this->setVoidPeakTime(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (voidPeakTime, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/elutionTime").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../elutionTime", "1.0e0");
-   if(!(this->setElutionTime(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (elutionTime, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-#undef CHECK_SETTINGS_CONVERSION //
+   loadSetting(QString("diffCoefficient"), [this](double v) -> bool { return this->setDiffCoefficient(v);}, 1e-9 );
+   loadSetting(QString("crossFlow"),       [this](double v) -> bool { return this->setCrossFlow(v)      ;}, 1.0  );
+   loadSetting(QString("relFocusPoint"),   [this](double v) -> bool { return this->setRelFocusPoint(v)  ;}, 0.1  );
+   loadSetting(QString("temperature"),     [this](double v) -> bool { return this->setTemperature(v)    ;}, 300  );
+   loadSetting(QString("elutionFlow"),     [this](double v) -> bool { return this->setElutionFlow(v)    ;}, 1    );
+   loadSetting(QString("leftOffsetTime"),  [this](double v) -> bool { return this->setLeftOffsetTime(v) ;}, 10   );
+   loadSetting(QString("voidPeakTime"),    [this](double v) -> bool { return this->setVoidPeakTime(v)   ;}, 12   );
+   loadSetting(QString("elutionTime"),     [this](double v) -> bool { return this->setElutionTime(v)    ;}, 20   );
 }
 
 

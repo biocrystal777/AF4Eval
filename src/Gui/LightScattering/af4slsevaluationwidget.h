@@ -99,7 +99,7 @@ private:
 
    QCheckBox* calculateShapeFactor           = nullptr;
    QCheckBox* evalPeaksSeparately            = nullptr;
-   AF4SciNotSpinBox *concentrationCut         = nullptr;
+   AF4SciNotSpinBox *concentrationCut        = nullptr;
    QDoubleSpinBox *laserWaveLength           = nullptr;
    QDoubleSpinBox* refIndexSolvent           = nullptr;
 

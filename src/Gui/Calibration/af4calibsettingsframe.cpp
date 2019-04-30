@@ -26,53 +26,22 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
       channelChooser->addItem(channelKeyList->at(i));
    layout->addWidget(channelChooser, 0, 0, 1, 3);
 
-   QwtTextLabel *qwtLabel = new QwtTextLabel(this);
-   //qwtLabel->setText(QString("b</mi><mtext>0</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("b_0 / cm"), QwtText::PlainText);
-   qwtLabel->setToolTip(QString("Minimal trapezoidal width"));
-   layout->addWidget(qwtLabel, 1, 0, 1, 1, Qt::AlignLeft);
-   b0 = new QLabel(this);
-   layout->addWidget(b0, 1, 1, 1, 2, Qt::AlignLeft);
+   auto makeLabel = [this](QLabel *&label, QString labelText, QString toolTip, int row, int column){
+      QwtTextLabel *qwtLabel = new QwtTextLabel(this);
+      qwtLabel->setText(labelText, QwtText::PlainText);
+      qwtLabel->setToolTip(toolTip);
+      layout->addWidget(qwtLabel, row, column-1, 1, 1, Qt::AlignLeft);
+      label = new QLabel(this);
+      label->setToolTip(toolTip);
+      layout->addWidget(label, row, column, 1, 2, Qt::AlignLeft);
+   };
 
-   qwtLabel = new QwtTextLabel(this);
-   //qwtLabel->setText(QString("b</mi><mtext>L</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("b_L / cm"), QwtText::PlainText);
-   qwtLabel->setToolTip(QString("Maximal trapezoidal width"));
-   layout->addWidget(qwtLabel, 1, 5, 1, 1, Qt::AlignLeft);
-   bL = new QLabel(this);
-   layout->addWidget(bL, 1, 6, 1, 2, Qt::AlignLeft);
-
-   qwtLabel = new QwtTextLabel(this);
-   // qwtLabel->setText(QString(" <math><mi>L</mi><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("L_Σ / cm"), QwtText::PlainText);
-   qwtLabel->setToolTip(QString("Channel Length 3"));
-   layout->addWidget(qwtLabel, 1, 10, 1, 1, Qt::AlignLeft);
-   chLength = new QLabel(this);
-   layout->addWidget(chLength, 1, 11, 1, 2, Qt::AlignLeft);
-
-   qwtLabel = new QwtTextLabel(this);
-   // qwtLabel->setText(QString(" <math><mi>L</mi><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("L1 / cm"), QwtText::PlainText);
-   qwtLabel->setToolTip(QString("Channel Length 1"));
-   layout->addWidget(qwtLabel, 2, 0, 1, 1, Qt::AlignLeft);
-   L1 = new QLabel(this);
-   layout->addWidget(L1, 2, 1, 1, 2, Qt::AlignLeft);
-
-   qwtLabel = new QwtTextLabel(this);
-   // qwtLabel->setText(QString(" <math><mi>L</mi><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("L2 / cm"), QwtText::PlainText);
-   qwtLabel->setToolTip(QString("Channel Length 2"));
-   layout->addWidget(qwtLabel, 2, 5, 1, 1, Qt::AlignLeft);
-   L2 = new QLabel(this);
-   layout->addWidget(L2, 2, 6, 1, 2, Qt::AlignLeft);
-
-   qwtLabel = new QwtTextLabel(this);
-   // qwtLabel->setText(QString(" <math><mi>L</mi><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("L3 / cm"), QwtText::PlainText);
-   qwtLabel->setToolTip(QString("Channel Length 3"));
-   layout->addWidget(qwtLabel, 2, 10, 1, 1, Qt::AlignLeft);
-   L3 = new QLabel(this);
-   layout->addWidget(L3, 2, 11, 1, 2, Qt::AlignLeft);
+   makeLabel(b0,   "b_0 / cm", "Maximal trapezoidal width", 1, 1);
+   makeLabel(bL,   "b_L / cm", "Minimal trapezoidal width", 1, 6);
+   makeLabel(LTot, "L_Σ / cm", "Total channel length",      1, 11);
+   makeLabel(L1,   "L1  / cm", "Length 1",                  2, 1);
+   makeLabel(L2,   "L2  / cm", "Length 2",                  2, 6);
+   makeLabel(L3,   "L3  / cm", "Length 3",                  2, 11);
 
    updateChannelValues(channelKeyList->at(channelChooser->currentIndex()));
    allCalibChoosers = new QMap<QString, QComboBox*>();
@@ -100,11 +69,10 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
    layout->addWidget(currentCalibChooser, 7, 0, 1, 3);
    currentCalibChooser->show();
 
-   qwtLabel = new QwtTextLabel(this);
+   QwtTextLabel *qwtLabel = new QwtTextLabel(this);
    qwtLabel->setText(QString("w / cm"), QwtText::PlainText);
    qwtLabel->setToolTip(QString("channel height"));
    layout->addWidget(qwtLabel, 8, 0, 1, 1, Qt::AlignRight);
-
 
    channelWidth = new QLabel(this);
    layout->addWidget(channelWidth, 8, 1, 1, 2, Qt::AlignRight);
@@ -157,12 +125,12 @@ void AF4CalibSettingsFrame::updateChannelValues(QString channelKey)
    }
    // update values:
    AF4ChannelDimsWidget* configWidget = channelConfigWidgets->value(channelKey);
-   chLength->setText(QString::number(configWidget->getChLength(), 'E'));
-   L1->setText( QString::number(configWidget->getL1(), 'E')  );
-   L2->setText( QString::number(configWidget->getL2(), 'E')  );
-   L3->setText( QString::number(configWidget->getL3(), 'E')  );
-   b0->setText(QString::number(configWidget->getB0(), 'E'));
-   bL->setText(QString::number(configWidget->getBL(), 'E'));
+   LTot->setText(QString::number(configWidget->getChLength(), 'E'));
+   L1->setText(QString::number(configWidget->getL1(), 'E') );
+   L2->setText(QString::number(configWidget->getL2(), 'E') );
+   L3->setText(QString::number(configWidget->getL3(), 'E') );
+   b0->setText(QString::number(configWidget->getB0(), 'E') );
+   bL->setText(QString::number(configWidget->getBL(), 'E') );
 }
 
 void AF4CalibSettingsFrame::updateCalibValues(QString calibKey)

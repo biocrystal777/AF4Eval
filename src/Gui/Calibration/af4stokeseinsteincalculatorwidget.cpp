@@ -7,52 +7,36 @@ AF4StokesEinsteinCalculatorWidget::AF4StokesEinsteinCalculatorWidget(QWidget *pa
    this->setWindowTitle("D Calculator");
    lay = new QGridLayout(this);
 
-   QwtTextLabel *qwtLabel = new QwtTextLabel(this);
-   //qwtLabel->setText(QString(" <math><msub><mi>R</mi><mtext>S</mtext></msub><mtext>&nbsp;/&nbsp;&mu;m</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("R_S / nm"), QwtText::PlainText);
-   //qwtLabel->setMinimumWidth(qwtLabel->size().width() * 1.2);
-   qwtLabel->setToolTip(QString("Stokes Radius"));
-   lay->addWidget(qwtLabel, 0, 0, 1, 1, Qt::AlignRight);
-   stokesRad = new QDoubleSpinBox(this);
-   stokesRad->setToolTip("Stokes Radius");
-   stokesRad->setDecimals(2);
-   stokesRad->setMaximum(990.0);
-   stokesRad->setMinimum(0.1);
-   stokesRad->setSingleStep(0.1);
-   lay->addWidget(stokesRad, 0, 1, 1, 3);
+   auto makeSpinBox =
+         [this](QDoubleSpinBox *&spinBox, QString labelString, QString toolTip,
+         int row, int column, int rowSpan, int columnSpan) {
+      QwtTextLabel *label = new QwtTextLabel(this);
+      label->setText(labelString, QwtText::PlainText);
+      label->setToolTip(toolTip);
+      lay->addWidget(label, row, column-1, Qt::AlignRight);
+      spinBox = new QDoubleSpinBox(this);
+      spinBox->setToolTip(toolTip);
+      lay->addWidget(spinBox, row, column, rowSpan, columnSpan);
+   };
 
-   qwtLabel = new QwtTextLabel(this);
-   //qwtLabel->setText(QString("<math><mi>T</mi><mtext>&nbsp;/&nbsp;K</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("T / K"), QwtText::PlainText);
-   //qwtLabel->setMinimumWidth(qwtLabel->size().width() * 1.2);
-   qwtLabel->setToolTip(QString("Temperature"));
-   lay->addWidget(qwtLabel, 1, 0, 1, 1, Qt::AlignRight);
-   temperature = new QDoubleSpinBox(this);
-   temperature->setToolTip("Temperature");
-   temperature->setDecimals(1);
-   temperature->setSingleStep(0.1);
-   temperature->setMaximum(400);
-   temperature->setMinimum(250);   
-   lay->addWidget(temperature, 1, 1, 1, 3);
+   auto configSpinBox = [this](QDoubleSpinBox *spinBox, int decimals, double singleStep, double minimum, double maximum){
+      spinBox->setDecimals(decimals);
+      spinBox->setSingleStep(singleStep);
+      spinBox->setMinimum(minimum);
+      spinBox->setMaximum(maximum);
+   };
 
-   //labelPtr = new QLabel("visc [mPa*s]", this);
-   qwtLabel = new QwtTextLabel(this);
-   //qwtLabel->setText(QString("<math><mi>&eta;</mi><mtext>&nbsp;/&nbsp;cP</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(QString("η / cP"), QwtText::PlainText);
-   //qwtLabel->setMinimumWidth(qwtLabel->size().width() * 1.2);
-   qwtLabel->setToolTip(QString("Viscosity"));
-   lay->addWidget(qwtLabel, 2, 0, 1, 1, Qt::AlignRight);
-   viscosity = new QDoubleSpinBox(this);
-   viscosity->setDecimals(5);
-   viscosity->setMaximum(1e2);
-   viscosity->setMinimum(1e-3);
-   viscosity->setSingleStep(0.01);
-   lay->addWidget(viscosity, 2, 1, 1, 3);
+   makeSpinBox  (stokesRad,   "R_S / nm",   "Stokes Radius",  1, 1, 1, 3);
+   configSpinBox(stokesRad,         1, 0.1, 0.1, 9.9e2);
+   makeSpinBox  (temperature, "T / K",     "Temperature",     2, 1, 1, 3);
+   configSpinBox(temperature,       1, 0.1, 0.1, 9.9e3);
+   makeSpinBox  (viscosity,   "η / cP",   "Viscosity",        3, 1, 1, 3);
+   configSpinBox(viscosity,         4, 0.001, 0.1, 9.9e2);
 
    dFrame = new QFrame(this);
    dFrame->setFrameStyle(0x1011);
    frameLay = new QHBoxLayout(dFrame);
-   qwtLabel = new QwtTextLabel(dFrame);
+   QwtTextLabel *qwtLabel = new QwtTextLabel(dFrame);
    //qwtLabel->setText(QString("<math><mi>D</mi><mtext>&nbsp; /&nbsp; cm²/s </mtext></math>"), QwtText::MathMLText);
    qwtLabel->setText(QString("D / (cm²/s) "), QwtText::PlainText);
    qwtLabel->setToolTip(QString("Diffusion coefficient"));
@@ -98,7 +82,7 @@ void AF4StokesEinsteinCalculatorWidget::saveParameters()
 {
    QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
-   settings.setValue(tr("AF4StokesEinsteinCalculatorWidget/RS"),  stokesRad->value());
+   settings.setValue("AF4StokesEinsteinCalculatorWidget/RS",      stokesRad->value());
    settings.setValue(tr("AF4StokesEinsteinCalculatorWidget/T"),   temperature->value());
    settings.setValue(tr("AF4StokesEinsteinCalculatorWidget/eta"), viscosity->value());
 }
@@ -107,14 +91,15 @@ void AF4StokesEinsteinCalculatorWidget::loadParameters()
 {
    QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
-   bool ok;
-   double val = settings.value(tr("AF4StokesEinsteinCalculatorWidget/RS"), 10.0).toDouble(&ok);
-   if(ok) stokesRad->setValue(val);
-   else AF4Log::logWarning(tr("Stokes Radius could not found, set to default"));
-   val = settings.value(tr("AF4StokesEinsteinCalculatorWidget/T"), 300.0).toDouble(&ok);
-   if(ok) temperature->setValue(val);
-   else AF4Log::logWarning(tr("Temperature could not be found, set to default"));
-   val = settings.value(tr("AF4StokesEinsteinCalculatorWidget/eta"), 10.0).toDouble(&ok);
-   if(ok) viscosity->setValue(val);
-   else AF4Log::logWarning(tr("Viscosity could not be found, set to default"));
+
+   auto loadSetting = [this, &settings](QString paramKey, std::function< void (double) > setVal, double defaultVal){
+      bool ok;
+      double val = settings.value(tr("AF4StokesEinsteinCalculatorWidget/%1").arg(paramKey), defaultVal).toDouble(&ok);
+      setVal(val);
+      if(!ok) AF4Log::logWarning(tr("%1 could not found, set to %2").arg(paramKey).arg(defaultVal));
+   };
+
+   loadSetting("RS",  [this](double v){ stokesRad->setValue(v);   },  77.7);
+   loadSetting("T",   [this](double v){ temperature->setValue(v); }, 333.3);
+   loadSetting("eta", [this](double v){ viscosity->setValue(v);   },  11.1);
 }

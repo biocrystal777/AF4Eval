@@ -10,23 +10,19 @@ AF4ChannelDimsOrgFrame::AF4ChannelDimsOrgFrame(QWidget *parent) : QFrame(parent)
    channelSelection->setToolTip("");
    lay->addWidget(channelSelection.data(), 0, 4);
 
-   renameChButton = new QToolButton(this);
-   renameChButton->setText("R");
-   renameChButton->setToolTip("Rename the current channel");   
+   auto makeButton = [this](QToolButton *&button, QString text, QString toolTip, int row, int column){
+      button = new QToolButton(this);
+      button->setText(text);
+      button->setToolTip(toolTip);
+      lay->addWidget(button, row, column);
+   };
+
+   makeButton(renameChButton, "R", "Rename the current channel", 0, 5);
    connect(renameChButton, &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::renameChannel);
-   lay->addWidget(renameChButton, 0, 5);
-
-   addChButton = new QToolButton(this);
-   addChButton->setText(tr("+"));
-   addChButton->setToolTip("Add new Channel");
-   connect(addChButton, &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::addChannel);
-   lay->addWidget(addChButton, 0, 6);
-   deleteChButton = new QToolButton(this);
-   deleteChButton->setText(tr("-"));
-   deleteChButton->setToolTip("delete current Channel");
-
+   makeButton(addChButton,    "+", "Add new channel",            0, 6);
+   connect(addChButton,    &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::addChannel);
+   makeButton(deleteChButton, "-", "Delete current channel",     0, 7);
    connect(deleteChButton, &QPushButton::clicked, this, &AF4ChannelDimsOrgFrame::deleteChannel);
-   lay->addWidget(deleteChButton, 0, 7);
 
    ////////////////////////////////////////////////////
    // initialize channels with values from QSettings //

@@ -1,9 +1,9 @@
 #include "af4channeldimswidget.h"
 
 AF4ChannelDimsWidget::AF4ChannelDimsWidget(const int channelId,
-                                               const QString &channelName,
-                                               const bool loadParameters,
-                                               QWidget *parent) :
+                                           const QString &channelName,
+                                           const bool loadParameters,
+                                           QWidget *parent) :
    QWidget(parent),
    channelId(channelId),
    channelName(channelName)
@@ -55,8 +55,7 @@ AF4ChannelDimsWidget::AF4ChannelDimsWidget(const int channelId,
    labelPtr->setToolTip(QString("Channel plane AF4"));
    lay->addWidget(labelPtr, 0, 0, 2, 5, Qt::AlignLeft);
 
-   if(loadParameters) loadSettings();
-   else defaultInit();
+   loadSettings();
 }
 
 AF4ChannelDimsWidget::~AF4ChannelDimsWidget()
@@ -66,53 +65,30 @@ AF4ChannelDimsWidget::~AF4ChannelDimsWidget()
 
 void AF4ChannelDimsWidget::loadSettings()
 {
-#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
-   if(!ok){ \
-   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
-   .arg(keyName).arg(defaultValueName)); \
-}\
-};
    QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
-   double channelValue;
-   QString newChannelName;
-   bool ok;
-
-   channelValue = settings.value(tr("channels/%1/L1").arg(channelId), 2.0).toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");
-   if(!(this->setL1(channelValue)))
-      AF4Log::logWarning(tr("Error while setting L1, 51.")
-                         .arg(newChannelName));
-
-   channelValue = settings.value(tr("channels/%1/L2").arg(channelId), 2.0).toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");
-   if(!(this->setL2(channelValue)))
-      AF4Log::logWarning(tr("Error while setting L2, 51.")
-                         .arg(newChannelName));
-
-   channelValue = settings.value(tr("channels/%1/L3").arg(channelId), 2.0).toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");
-   if(!(this->setL3(channelValue)))
-      AF4Log::logWarning(tr("Error while setting L3, 51.")
-                         .arg(newChannelName));
 
 
-   channelValue = settings.value(tr("channels/%1/b0").arg(channelId), 2.0).toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");
-   if(!(this->setB0(channelValue)))
-      AF4Log::logWarning(tr("Error while setting chLenght, 51.")
-                         .arg(newChannelName));
 
-   channelValue = settings.value(tr("channels/%1/bL").arg(channelId), 2.0).toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/number", "0.0e0");   
-   if(!(this->setBL(channelValue)))
-      AF4Log::logWarning(tr("Error while setting chLenght, 51.")
-                         .arg(newChannelName));
-#undef CHECK_SETTINGS_CONVERSION
-}
 
-void AF4ChannelDimsWidget::defaultInit()
-{
+   auto loadSetting = [this, &settings](QString paramKey, std::function< bool (double) > setVal, double defaultVal) {
+      bool ok;
+      QString settingsKey = tr("channels/%1/%2").arg(channelId).arg(paramKey);
+      double settingsVal = settings.value(settingsKey).toDouble(&ok);
+      if(!ok)
+         AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2")
+                            .arg(paramKey).arg(defaultVal)
+                            );
+      if(! setVal(settingsVal) )
+         AF4Log::logWarning(tr("Error while setting channel dimensions.")
+                            .arg(channelName));
+   };
+
+   loadSetting(QString("L1"), [this](double v) -> bool { return this->setL1(v);}, 1.0 );
+   loadSetting(QString("L2"), [this](double v) -> bool { return this->setL2(v);}, 1.0 );
+   loadSetting(QString("L3"), [this](double v) -> bool { return this->setL3(v);}, 1.0 );
+   loadSetting(QString("b0"), [this](double v) -> bool { return this->setB0(v);}, 1.0 );
+   loadSetting(QString("bL"), [this](double v) -> bool { return this->setBL(v);}, 1.0 );
 }
 
 void AF4ChannelDimsWidget::writeSettings()
@@ -127,7 +103,6 @@ void AF4ChannelDimsWidget::writeSettings()
    settings.setValue(tr("channels/%1/L3").arg(channelId), this->getL3());
    settings.setValue(tr("channels/%1/b0").arg(channelId), this->getB0());
    settings.setValue(tr("channels/%1/bL").arg(channelId), this->getBL());
-
 }
 
 ChannelDims AF4ChannelDimsWidget::getChannelDimensions(){

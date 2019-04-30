@@ -68,72 +68,36 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    hydMode->setChecked(true);
    lay->addWidget(hydMode, 4, 0);
 
-   channelWidthLabel = new QwtTextLabel(this);
-   //channelWidthLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   channelWidthLabel->setText(QString("w_cla / µm"), QwtText::PlainText);
-   channelWidthLabel->setToolTip("Channel Width");
-   lay->addWidget(channelWidthLabel, 2, 1, Qt::AlignRight);
-   channelWidth = new QDoubleSpinBox( this);
-   channelWidth->setDecimals(4);
-   channelWidth->setMinimum(1.0e-4);
-   channelWidth->setMaximum(9.9e3);
-   lay->addWidget(channelWidth, 2, 2, Qt::AlignLeft);
+   auto makeSpinBox = [this](QDoubleSpinBox *&spinBox, QwtTextLabel *&label, QString labelString, QString toolTip, int row, int column) {
+      label = new QwtTextLabel(this);
+      label->setText(labelString, QwtText::PlainText);
+      label->setToolTip(toolTip);
+      lay->addWidget(label, row, column-1, Qt::AlignLeft);
+      spinBox = new QDoubleSpinBox(this);
+      spinBox->setToolTip(toolTip);
+      lay->addWidget(spinBox, row, column);
+   };
 
-   channelWidthGeoLabel = new QwtTextLabel(this);
-   //channelWidthGeoLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   channelWidthGeoLabel->setText(QString("w_geo / µm"), QwtText::PlainText);
-   channelWidthGeoLabel->setToolTip("Channel Width");
-   lay->addWidget(channelWidthGeoLabel, 3, 1, Qt::AlignRight);
-   channelWidthGeo = new QDoubleSpinBox(this);
-   channelWidthGeo->setDecimals(4);
-   channelWidthGeo->setMinimum(1.0e-3);
-   channelWidthGeo->setMaximum(9.9999e3);
-   lay->addWidget(channelWidthGeo, 3, 2, Qt::AlignLeft);
+   auto configSpinBox = [this](QDoubleSpinBox *spinBox, int decimals, double singleStep, double minimum, double maximum){
+      spinBox->setDecimals(decimals);
+      spinBox->setSingleStep(singleStep);
+      spinBox->setMinimum(minimum);
+      spinBox->setMaximum(maximum);
+   };
 
-   channelWidthHydroLabel = new QwtTextLabel(this);
-   //channelWidthHydroLabel->setText(QString("<math><msub><mi>&omega;</mi><mtext>e</mtext></msub><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   channelWidthHydroLabel->setText(QString("w_hyd / µm"), QwtText::PlainText);
-   channelWidthHydroLabel->setToolTip("Channel Width");
-   lay->addWidget(channelWidthHydroLabel, 4, 1, Qt::AlignRight);
-   channelWidthHydro = new QDoubleSpinBox(this);
-   channelWidthHydro->setDecimals(4);
-   channelWidthHydro->setMinimum(1.0e-4);
-   channelWidthHydro->setMaximum(9.9999e3);
-   lay->addWidget(channelWidthHydro, 4, 2, Qt::AlignLeft);
+   makeSpinBox(  channelWidth,     channelWidthLabel,       "w_cla / µm",   "Channel width",  2, 2);
+   configSpinBox(channelWidth,           2, 1e-2, 1e-2, 9.9e3);
+   makeSpinBox(  channelWidthGeo,   channelWidthGeoLabel,   "w_geo / µm",   "Channel width",  3, 2);
+   configSpinBox(channelWidthGeo,        2, 1e-2, 1e-2, 9.9e3);
+   makeSpinBox(  channelWidthHydro, channelWidthHydroLabel, "w_hyd / µm",   "Channel width",  4, 2);
+   configSpinBox(channelWidthHydro,      2, 1e-2, 1e-2, 9.9e3);
 
-
-   classicalVolumeLabel = new QwtTextLabel(this);
-   //classicalVolumeLabel->setText(QString("<math><msup><mi>V</mi><mtext>0</mtext></msup><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
-   classicalVolumeLabel->setText(QString("V_cla / ml "), QwtText::PlainText);
-   classicalVolumeLabel->setToolTip("Channel Volume");
-   lay->addWidget(classicalVolumeLabel, 2, 3, Qt::AlignLeft);
-   classicalVolume = new QDoubleSpinBox(this);
-   classicalVolume->setDecimals(4);
-   classicalVolume->setMinimum(1.0e-2);
-   classicalVolume->setMaximum(9.9999e0);
-   lay->addWidget(classicalVolume, 2, 4, Qt::AlignLeft);
-
-   geometVolumeLabel = new QwtTextLabel(this);
-   //geometVolumeLabel->setText(QString("<math><msup><mi>V</mi><mtext>0</mtext></msup><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
-   geometVolumeLabel->setText(QString("V_geo / ml "), QwtText::PlainText);
-   geometVolumeLabel->setToolTip("Channel Volume");
-   lay->addWidget(geometVolumeLabel, 3, 3, Qt::AlignLeft);
-   geometVolume = new QDoubleSpinBox(this);
-   geometVolume->setDecimals(4);
-   geometVolume->setMinimum(1.0e-2);
-   geometVolume->setMaximum(9.9999e0);
-   lay->addWidget(geometVolume, 3, 4, Qt::AlignLeft);
-
-   hydrodynVolumeLabel = new QwtTextLabel(this);
-   //hydrodynVolumeLabel->setText(QString("<math><msup><mi>V</mi><mtext>0</mtext></msup><mtext>&nbsp;/&nbsp;min</mtext></math>"), QwtText::MathMLText);
-   hydrodynVolumeLabel->setText(QString("V_hyd / ml "), QwtText::PlainText);
-   hydrodynVolumeLabel->setToolTip("Channel Volume");
-   lay->addWidget(hydrodynVolumeLabel, 4, 3, Qt::AlignLeft);
-   hydrodynVolume = new QDoubleSpinBox(this);
-   hydrodynVolume->setDecimals(4);
-   hydrodynVolume->setMinimum(1.0e-2);
-   hydrodynVolume->setMaximum(9.9999e0);
-   lay->addWidget(hydrodynVolume, 4, 4, Qt::AlignLeft);
+   makeSpinBox(  classicalVolume, classicalVolumeLabel,     "V_cla / ml",   "Channel Volume", 2, 4);
+   configSpinBox(classicalVolume,        4, 1e-4, 1e-4, 9.9e2);
+   makeSpinBox(  geometVolume, geometVolumeLabel,           "V_geo / ml",   "Channel Volume", 3, 4);
+   configSpinBox(geometVolume,           4, 1e-4, 1e-4, 9.9e2);
+   makeSpinBox(  hydrodynVolume, hydrodynVolumeLabel,       "V_hydro / ml", "Channel Volume", 4, 4);
+   configSpinBox(hydrodynVolume,         4, 1e-4, 1e-4, 9.9e2);
 
    auto adaptReadiness = [this](){
       if(classicMode->isChecked() || geoMode->isChecked() || hydMode->isChecked()) calibButton->setEnabled(true);
@@ -193,14 +157,14 @@ void AF4InnerCalibrationFrame::saveSettings()
 {
    QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
-   settings.setValue(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId),      QVariant(uncertRange->value()));
-   settings.setValue(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId),      QVariant(uncertGrid->value()));
+   settings.setValue(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId),       QVariant(uncertRange->value()));
+   settings.setValue(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId),    QVariant(uncertGrid->value()));
    settings.setValue(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId),      QVariant(getChannelWidth()));
    settings.setValue(tr("channels/%1/calib/%2/channelWidthGeo").arg(channelId).arg(calibId),   QVariant(getChannelWidthGeo()));
    settings.setValue(tr("channels/%1/calib/%2/channelWidthHydro").arg(channelId).arg(calibId), QVariant(getChannelWidthHydro()));
-   settings.setValue(tr("channels/%1/calib/%2/classicalVolume").arg(channelId).arg(calibId), QVariant(getClassicalVolume()));
-   settings.setValue(tr("channels/%1/calib/%2/hydrodynVolume").arg(channelId).arg(calibId),  QVariant(getHydrodynVolume()));
-   settings.setValue(tr("channels/%1/calib/%2/geometVolume").arg(channelId).arg(calibId),    QVariant(getGeometVolume()));
+   settings.setValue(tr("channels/%1/calib/%2/classicalVolume").arg(channelId).arg(calibId),   QVariant(getClassicalVolume()));
+   settings.setValue(tr("channels/%1/calib/%2/geometVolume").arg(channelId).arg(calibId),      QVariant(getGeometVolume()));
+   settings.setValue(tr("channels/%1/calib/%2/hydrodynVolume").arg(channelId).arg(calibId),    QVariant(getHydrodynVolume()));
    //settings.setValue(tr("channels/%1/calib/%2/calibFileName").arg(channelId).arg(calibId), QVariant(this->getInputFilePath(true)));
 }
 
@@ -209,55 +173,36 @@ void AF4InnerCalibrationFrame::loadSettings()
 
    QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
-   double calibValue;
+   //double calibValue;
    //QString calibStringValue;
+
+
+
+   auto loadSetting = [this, &settings](QString paramKey, std::function< bool (double) > setVal, double defaultVal) {
+      bool ok;
+      QString settingsKey = tr("channels/%1/calib/%2/%3").arg(this->channelId).arg(this->calibId).arg(paramKey);
+      double settingsVal = settings.value(settingsKey).toDouble(&ok);
+      if(!ok)
+         AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2")
+                                 .arg(paramKey).arg(defaultVal)
+                            );
+      if(! setVal(settingsVal) )
+         AF4Log::logWarning(tr("Error while setting calib Value (diffusion Coefficient, %1, %2).")
+                            .arg(this->channelName).arg(this->calibName));
+   };
+
+   loadSetting("uncertRange",       [this](double v) -> bool { this->uncertRange->setValue(v);    return true;} , 1.0 );
+   loadSetting("channelWidth",      [this](double v) -> bool { this->setChannelWidthClassical(v); return true;},  1.0 );
+   loadSetting("channelWidthGeo",   [this](double v) -> bool { this->setChannelWidthGeo(v);       return true;},  1.0 );
+   loadSetting("channelWidthHydro", [this](double v) -> bool { this->setChannelWidthHydro(v);     return true;},  1.0 );
+   loadSetting("classicalVolume",   [this](double v) -> bool { return setClassicalVolume(v);                  },  1.0 );
+   loadSetting("geometVolume",      [this](double v) -> bool { return setGeometVolume(v);                     },  1.0 );
+   loadSetting("hydrodynVolume",    [this](double v) -> bool { return setHydrodynVolume(v);                   },  1.0 );
+
    bool ok;
-#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
-   if(!ok){ \
-   AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
-   .arg(keyName).arg(defaultValueName)); \
-}\
-};
-   calibValue = settings.value(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../uncertRange", "0.0e0");
-   this->uncertRange->setValue(calibValue);
-
    int calibValInt = settings.value(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId), "").toInt(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../uncertGridSize", "0.0e0");
+   if(!ok)
+      AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2")
+                         .arg("channels/.../calib/.../uncertGridSize").arg("0.0e0"));
    this->uncertGrid->setValue(calibValInt);
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidth", "0.0e0");
-   this->setChannelWidthClassical(calibValue);
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/channelWidthGeo").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidthGeo", "0.0e0");
-   this->setChannelWidthGeo(calibValue);
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/channelWidthHydro").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../channelWidthHydro", "0.0e0");
-   this->setChannelWidthHydro(calibValue);
-      //AF4Log::logWarning(tr("Error while setting calib Value (channelWidth, %1, %2).")
-      //                   .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/classicalVolume").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../classicalVolume", "0.0e0");
-   if(!(this->setClassicalVolume(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (classicalVolume, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/hydrodynVolume").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../hydrodynVolume", "0.0e0");
-   if(!(this->setHydrodynVolume(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (hydrodynVolume, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-   calibValue = settings.value(tr("channels/%1/calib/%2/geometVolume").arg(channelId).arg(calibId), "").toDouble(&ok);
-   CHECK_SETTINGS_CONVERSION("channels/.../calib/.../hydrodynVolume", "0.0e0");
-   if(!(this->setGeometVolume(calibValue)))
-      AF4Log::logWarning(tr("Error while setting calib Value (geometVolume, %1, %2).")
-                         .arg(channelName).arg(calibName));
-
-#undef CHECK_SETTINGS_CONVERSION //
 }

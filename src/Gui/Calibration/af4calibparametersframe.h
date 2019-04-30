@@ -6,6 +6,7 @@
 #include <QToolButton>
 #include <QGroupBox>
 #include <QRadioButton>
+#include <functional>
 #include <vector>
 #include "af4calibrationdialogs.h"
 #include "./af4calibplotwidget.h"

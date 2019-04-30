@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QSvgRenderer>
 #include <QPainter>
+#include <functional>
 #include <qwt_text_label.h>
 //#include <qwt_mathml_text_engine.h>     renderer too slow, unfortunately
 #include "../Core/af4evalmacros.h"
@@ -171,10 +172,7 @@ private:
     */
    void loadSettings();
 
-   /*!
-    * \brief defaultInit
-    */
-   void defaultInit();   
+
    NO_COPY_ASSIGNMENT_CTORS(AF4ChannelDimsWidget)
 };
 

@@ -8,6 +8,8 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QDebug>
+#include <functional>
+#include <qwt_text_label.h>
 #include "../GeneralWidgets/af4log.h"
 #include "../Core/af4evalmacros.h"
 #include "../../Core/af4parameterstructs.h"
@@ -170,7 +172,7 @@ private:
     QDoubleSpinBox *crossFlow        = nullptr;
     QDoubleSpinBox *leftOffsetTime   = nullptr;
     QCheckBox      *useVoidPeakBox   = nullptr;
-    QLabel         *voidPeakLabel    = nullptr;
+    QwtTextLabel         *voidPeakLabel    = nullptr;
     QDoubleSpinBox *voidPeakTime     = nullptr;
     QDoubleSpinBox *relFocusPoint    = nullptr;
 

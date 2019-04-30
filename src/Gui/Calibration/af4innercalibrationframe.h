@@ -8,6 +8,7 @@
 #include <QCheckBox>
 #include <QDoubleSpinBox>
 #include <QSettings>
+#include <functional>
 #include <qwt/qwt_text_label.h>
 #include "../Core/af4evalmacros.h"
 #include "../GeneralWidgets/af4log.h"

@@ -12,98 +12,49 @@ AF4ExpSettingsFrame::AF4ExpSettingsFrame(const QString &prefix, int id, QWidget 
     labelPtr = new QLabel("<b>Experimental FFF settings</b>", this);
     lay->addWidget(labelPtr, 0, 0, 1, 3);
 
-    labelPtr = new QLabel(this);
-    pixMap = QPixmap(":/images/VE.png");
-    pixMap = pixMap.scaledToHeight(16, Qt::SmoothTransformation);
-    labelPtr = new QLabel(this);
-    labelPtr->setPixmap(pixMap);
-    lay->addWidget(labelPtr, 2, 0);
-    elutionFlow = new QDoubleSpinBox(this);
-    elutionFlow->setToolTip("Elution Flow");
-    elutionFlow->setDecimals(2);
-    elutionFlow->setMaximum(20);
-    elutionFlow->setMinimum(0.01);
-    lay->addWidget(elutionFlow, 2, 1, 1, 2);
+    auto makeSpinBox = [this](QDoubleSpinBox *&spinBox, QString labelString, QString toolTip, int row, int column, int rowSpan, int columnSpan)  {
+       QwtTextLabel *label = new QwtTextLabel(this);
+       label->setText(labelString, QwtText::PlainText);
+       label->setToolTip(toolTip);
+       lay->addWidget(label, row, column-1, Qt::AlignRight);
+       spinBox = new QDoubleSpinBox(this);
+       spinBox->setToolTip(toolTip);
+       lay->addWidget(spinBox, row, column, rowSpan, columnSpan);
+    };
 
-    labelPtr = new QLabel(this);
-    pixMap = QPixmap(":/images/Vc.png");
-    pixMap = pixMap.scaledToHeight(16, Qt::SmoothTransformation);
-    labelPtr = new QLabel(this);
-    labelPtr->setPixmap(pixMap);
-    lay->addWidget(labelPtr, 3, 0);
-    crossFlow = new QDoubleSpinBox(this);
-    crossFlow->setToolTip("CrossFlow");
-    crossFlow->setDecimals(2);
-    crossFlow->setMaximum(20.0);
-    crossFlow->setMinimum(0.01);
-    lay->addWidget(crossFlow, 3, 1, 1, 2);
+    auto configSpinBox = [this](QDoubleSpinBox *spinBox, int decimals, double singleStep, double minimum, double maximum){
+       spinBox->setDecimals(decimals);
+       spinBox->setSingleStep(singleStep);
+       spinBox->setMinimum(minimum);
+       spinBox->setMaximum(maximum);
+    };
 
-    labelPtr = new QLabel(this);
-    pixMap = QPixmap(":/images/t0.png");
-    pixMap = pixMap.scaledToHeight(16, Qt::SmoothTransformation);
-    labelPtr = new QLabel(this);
-    labelPtr->setPixmap(pixMap);
-    lay->addWidget(labelPtr, 4, 0);
-    leftOffsetTime = new QDoubleSpinBox(this);
-    leftOffsetTime->setToolTip("left Offset");
-    leftOffsetTime->setDecimals(5);
-    leftOffsetTime->setMaximum(100000.0);
-    leftOffsetTime->setMinimum(0.00001);
-    lay->addWidget(leftOffsetTime, 4, 1, 1, 2);
+    makeSpinBox  (elutionFlow,   "Ve / (ml/min)", "Elution Flow",   2, 1, 1, 2);
+    configSpinBox(elutionFlow,    2, 0.1, 0.0, 10);
+    makeSpinBox  (crossFlow,     "Vc / (ml/min)", "Cross Flow",     3, 1, 1, 2);
+    configSpinBox(crossFlow,      2, 0.1, 0.0, 10);
+    makeSpinBox  (leftOffsetTime, "t0 / min",     "left Offset",    4, 1, 1, 2);
+    configSpinBox(leftOffsetTime, 3, 0.1, 1e-3, 1e2);
+    makeSpinBox  (temperature,    "T / K",        "temperature",    2, 5, 1, 2);
+    configSpinBox(temperature,    1, 0.1, 1e-3, 1e2);
+    makeSpinBox  (viscosity,      "η / cP",       "viscosity",      3, 5, 1, 2);
+    configSpinBox(viscosity,      4, 1e-3, 1e-3, 1e1);
+    makeSpinBox  (relFocusPoint,  "z% / %",       "Relative focus position",  4, 5, 1, 2);
+    configSpinBox(relFocusPoint,  1, 0.1, 0.0, 1e2);
 
-
-    labelPtr = new QLabel(this);
-    pixMap = QPixmap(":/images/T.png");
-    pixMap = pixMap.scaledToHeight(16, Qt::SmoothTransformation);
-    labelPtr = new QLabel(this);
-    labelPtr->setPixmap(pixMap);
-    lay->addWidget(labelPtr, 2, 4);
-    temperature = new QDoubleSpinBox(this);
-    temperature->setToolTip("Temperature");
-    temperature->setDecimals(2);
-    temperature->setMaximum(1000);
-    temperature->setMinimum(0.01);
-    lay->addWidget(temperature, 2, 5, 1, 2);
-
-    labelPtr = new QLabel("viscosity [mPa*s]", this);
-    lay->addWidget(labelPtr, 3, 4);
-    viscosity = new QDoubleSpinBox(this);
-    viscosity->setDecimals(5);
-    viscosity->setMaximum(100.0);
-    viscosity->setMinimum(0.0001);
-    viscosity->setSingleStep(0.01);
-    lay->addWidget(viscosity, 3, 5, 1, 2);
-
-
-    labelPtr = new QLabel(this);
-    pixMap = QPixmap(":/images/zPerc.png");
-    pixMap = pixMap.scaledToHeight(16, Qt::SmoothTransformation);
-    labelPtr->setPixmap(pixMap);
-    lay->addWidget(labelPtr, 4, 4);
-    relFocusPoint = new QDoubleSpinBox(this);
-    relFocusPoint->setMaximum(100.0);
-    relFocusPoint->setMinimum(0.1);
-    relFocusPoint->setDecimals(1);
-    relFocusPoint->setSingleStep(0.1);
-    lay->addWidget(relFocusPoint, 4, 5, 1, 2);
-
-    voidPeakLabel = new QLabel(this);
-    pixMap = QPixmap(":/images/tvoid.png");
-    pixMap = pixMap.scaledToHeight(16, Qt::SmoothTransformation);
-    voidPeakLabel = new QLabel(this);
-    voidPeakLabel->setPixmap(pixMap);
-    lay->addWidget(voidPeakLabel, 5, 3, 1, 2);
-
-    voidPeakTime = new QDoubleSpinBox(this);
-    voidPeakTime->setToolTip("void peak");
-    voidPeakTime->setMaximum(100000.0);
-    voidPeakTime->setMinimum(0.01);
-    voidPeakTime->setSingleStep(0.01);
-    lay->addWidget(voidPeakTime, 5, 5, 1, 2);
 
     useVoidPeakBox = new QCheckBox(this);
     lay->addWidget(useVoidPeakBox, 5, 0, 1, 1);
-    //QObject::connect(useVoidPeakBox, SIGNAL(toggled(bool)), this, SLOT(enableVoidPeakTime(bool)));
+    voidPeakLabel = new QwtTextLabel(this);
+    voidPeakLabel->setText("tvoid / min", QwtText::PlainText);
+    voidPeakLabel->setToolTip("void peak time");
+    lay->addWidget(voidPeakLabel, 5, 4, 1, 2);
+
+    voidPeakTime = new QDoubleSpinBox(this);    
+    voidPeakTime->setToolTip("void peak");
+    lay->addWidget(voidPeakTime, 5, 5, 1, 2);
+    configSpinBox(voidPeakTime, 1, 0.1, 0, 1e2);
+
     connect(useVoidPeakBox, &QCheckBox::toggled,
             this, &AF4ExpSettingsFrame::enableVoidPeakTime);
     labelPtr =  new QLabel("Recalculate <i>V</i><sup>0</sup>", this);
@@ -115,60 +66,33 @@ AF4ExpSettingsFrame::AF4ExpSettingsFrame(const QString &prefix, int id, QWidget 
 
 void AF4ExpSettingsFrame::loadSettings()
 {
-#ifndef CHECK_SETTINGS_CONVERSION
-#define CHECK_SETTINGS_CONVERSION(keyName, defaultValueName) { \
-    if(!ok){ \
-    AF4Log::logWarning(tr("Could not read parameter %1 from iniFile. Value will be set to %2") \
-    .arg(keyName).arg(defaultValueName)); \
-}\
-};
-#endif // CHECK_SETTINGS_CONVERSION
-    QSettings settings("AgCoelfen", "AF4Eval");
-    bool ok{false};
-    settings.setIniCodec("UTF-8");
+   QSettings settings("AgCoelfen", "AF4Eval");
+   settings.setIniCodec("UTF-8");
 
-    double initValue = settings.value(tr("%1/expSettings/%2/temperature").arg(prefix).arg(id), "300.0").toDouble(&ok);
-    CHECK_SETTINGS_CONVERSION(tr("%1/expSettings/%2/temperature").arg(prefix).arg(id), "3.0e2");
-    temperature->setValue(initValue);
+   auto loadSetting = [this, &settings](QString paramKey, std::function< void (double) > setVal, double defaultVal){
+      bool ok;
+      double val = settings.value(tr("%1/expSettings/%2/%3").arg(prefix).arg(id).arg(paramKey), defaultVal).toDouble(&ok);
+      setVal(val);
+      if(!ok) AF4Log::logWarning(tr("%1 could not be found, set to default = %2").arg(paramKey).arg(defaultVal));
+   };
 
-    initValue = settings.value(tr("%1/expSettings/%2/elutionFlow").arg(prefix).arg(id), "1.0").toDouble(&ok);
-    CHECK_SETTINGS_CONVERSION(tr("%1/expSettings/%2/elutionFlow").arg(prefix).arg(id), "1.0");
-    elutionFlow->setValue(initValue);
+   loadSetting("temperature",    [this](double v){ temperature->setValue(v); },  333.3);
+   loadSetting("elutionFlow",    [this](double v){ elutionFlow->setValue(v); },  333.3);
+   loadSetting("crossFlow",      [this](double v){ crossFlow->setValue(v); },  333.3);
+   loadSetting("leftOffsetTime", [this](double v){ leftOffsetTime->setValue(v); },  333.3);
+   loadSetting("voidPeakTime",   [this](double v){ voidPeakTime->setValue(v); },  333.3);
+   loadSetting("relFocusPoint",   [this](double v){ relFocusPoint->setValue(v); },  333.3);
+   loadSetting("viscosity",   [this](double v){ viscosity->setValue(v); },  333.3);
 
-    initValue = settings.value(tr("%1/expSettings/%2/crossFlow").arg(prefix).arg(id), "1.0").toDouble(&ok);
-    CHECK_SETTINGS_CONVERSION(tr("%1/expSettings/%2/crossFlow").arg(prefix).arg(id), "1.0");
-    crossFlow->setValue(initValue);
-
-    initValue = settings.value(tr("%1/expSettings/%2/leftOffsetTime").arg(prefix).arg(id), "1.0").toDouble(&ok);
-    CHECK_SETTINGS_CONVERSION(tr("%1/expSettings/%2/leftOffsetTime").arg(prefix).arg(id), "1.0");
-    leftOffsetTime->setValue(initValue);
-
-    initValue = settings.value(tr("%1/expSettings/%2/voidPeakTime").arg(prefix).arg(id), "1.0").toDouble(&ok);
-    CHECK_SETTINGS_CONVERSION(tr("%1/expSettings/%2/voidPeakTime").arg(prefix).arg(id), "1.0");
-    voidPeakTime->setValue(initValue);
-
-    initValue = settings.value(tr("%1/expSettings/%2/relFocusPoint").arg(prefix).arg(id), "10.0").toDouble(&ok);
-    CHECK_SETTINGS_CONVERSION(tr("%1/expSettings/%2/relFocusPoint").arg(prefix).arg(id), "10.0");
-    relFocusPoint->setValue(initValue);
-
-    initValue = settings.value(tr("%1/expSettings/%2/viscosity").arg(prefix).arg(id), "10.0").toDouble(&ok);
-    CHECK_SETTINGS_CONVERSION(tr("%1/expSettings/%2/viscosity").arg(prefix).arg(id), "10.0");
-    viscosity->setValue(initValue);
-
-    bool checked = settings.value(tr("%1/expSettings/%2/useManualVoidPeak").arg(prefix).arg(id), "true").toBool();
-    checked ? useVoidPeakBox->setCheckState(Qt::Checked) : useVoidPeakBox->setCheckState(Qt::Unchecked);
-    this->enableVoidPeakTime(checked);
-
-
-#undef CHECK_SETTINGS_CONVERSION
+   bool checked = settings.value(tr("%1/expSettings/%2/useManualVoidPeak").arg(prefix).arg(id), "true").toBool();
+   checked ? useVoidPeakBox->setCheckState(Qt::Checked) : useVoidPeakBox->setCheckState(Qt::Unchecked);
+   this->enableVoidPeakTime(checked);
 }
 
 void AF4ExpSettingsFrame::writeSettings()
 {
     QSettings settings("AgCoelfen", "AF4Eval");
     settings.setIniCodec("UTF-8");
-
-//    QString prefix = (id >= 0 ? QString("project") : QString("other"));
 
     settings.setValue(tr("%1/expSettings/%2/temperature").arg(prefix).arg(id), temperature->value());
     settings.setValue(tr("%1/expSettings/%2/elutionFlow").arg(prefix).arg(id), elutionFlow->value());
@@ -188,7 +112,6 @@ void AF4ExpSettingsFrame::enableVoidPeakTime(bool checked)
       emit callEnableVolume(!checked);
    }
 }
-
 
 bool AF4ExpSettingsFrame::setTemperatureVal(double val) const
 {

@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <QLineEdit>
 #include <QDoubleSpinBox>
+#include <functional>
 #include <qwt_text_label.h>
 #include "../GeneralWidgets/af4log.h"
 #include "../smallQDerivates/af4scinotspinbox.h"

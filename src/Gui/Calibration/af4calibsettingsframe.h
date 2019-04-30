@@ -172,7 +172,7 @@ private:
    QString currentChannelKey;
    QString currentCalibKey;
 
-   QLabel *chLength                            = nullptr;
+   QLabel *LTot                            = nullptr;
    QLabel *L1                             = nullptr;
    QLabel *L2                             = nullptr;
    QLabel *L3                             = nullptr;
