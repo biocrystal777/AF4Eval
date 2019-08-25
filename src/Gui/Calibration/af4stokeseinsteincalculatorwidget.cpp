@@ -47,7 +47,7 @@ AF4StokesEinsteinCalculatorWidget::AF4StokesEinsteinCalculatorWidget(QWidget *pa
    diffCoefficient->setMaximum(1e10);
    diffCoefficient->setReadOnly(true);
    frameLay->addWidget(diffCoefficient);
-   lay->addWidget(dFrame, 3, 0, 1, 4);
+   lay->addWidget(dFrame, 4, 0, 1, 4);
 
    loadParameters();
    connect(stokesRad,   qOverload<double>(&QDoubleSpinBox::valueChanged), this, &AF4StokesEinsteinCalculatorWidget::reCalculate);
@@ -57,11 +57,11 @@ AF4StokesEinsteinCalculatorWidget::AF4StokesEinsteinCalculatorWidget(QWidget *pa
 
    accepter = new QPushButton("Take this D", this);
    connect(accepter, &QPushButton::clicked, [this](){ emit newDiffCoeff(diffCoefficient->value()); accept(); } );
-   lay->addWidget(accepter, 4, 0, 1, 2);
+   lay->addWidget(accepter, 5, 0, 1, 2);
 
    rejecter = new QPushButton("Cancel", this);
    connect(rejecter, &QPushButton::clicked, this, &AF4StokesEinsteinCalculatorWidget::reject );
-   lay->addWidget(rejecter, 4, 2, 1, 2);
+   lay->addWidget(rejecter, 5, 2, 1, 2);
 }
 
 AF4StokesEinsteinCalculatorWidget::~AF4StokesEinsteinCalculatorWidget()

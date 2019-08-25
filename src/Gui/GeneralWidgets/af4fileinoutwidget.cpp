@@ -9,6 +9,7 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
 
    this->setFrameStyle(0x1011);
    fileLayout = new QGridLayout(this);
+
    fileLayout->addWidget(new QLabel("<b>Data Input File</b>", this), 0, 1, 1, 3, Qt::AlignBottom);
    inputFileChooser = new QToolButton(this);
    inputFileChooser->setText("..");
@@ -16,11 +17,13 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    connect(inputFileChooser, &QToolButton::clicked, this, &AF4FileInOutWidget::chooseInputFile);
    fileLayout->addWidget(inputFileChooser, 1, 0, 1, 1);
    inputFileName = new QLineEdit(this);
-   inputFileName->setMinimumWidth(300);
-   inputFileName->setMaximumWidth(800);
+   inputFileName->setMinimumWidth(800);
+   //inputFileName->setMaximumWidth(800);
    fileLayout->addWidget(inputFileName, 1, 1, 1, 12);
    stringValue = settings.value(tr("fileNames/%1/inputFileName").arg(this->identifier), "").toString();
    setInputFilePath(stringValue, true);
+
+
 
    fileLayout->addWidget(new QLabel("<b>Data Output File</b>", this), 2, 1, 1, 3, Qt::AlignBottom);
    outputFileChooser = new QToolButton(this);
@@ -29,8 +32,8 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    connect(outputFileChooser, &QToolButton::clicked, this, &AF4FileInOutWidget::chooseOutputFile);
    fileLayout->addWidget(outputFileChooser, 3, 0, 1, 1);
    outputFileName = new QLineEdit(this);
-   outputFileName->setMinimumWidth(300);
-   outputFileName->setMaximumWidth(800);
+   outputFileName->setMinimumWidth(800);
+   //outputFileName->setMaximumWidth(800);
    fileLayout->addWidget(outputFileName, 3, 1, 1, 12);
    stringValue = settings.value(tr("fileNames/%1/outputFileName").arg(identifier), "").toString();
    setOutputFilePath(stringValue, true);
@@ -43,6 +46,11 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    autoGenName->setChecked(settings.value(tr("fileNames/%1/autoGen").arg(identifier), false).toBool());
    connect(inputFileName, &QLineEdit::textChanged, this, &AF4FileInOutWidget::adoptOutputName);
    fileLayout->addWidget(autoGenName, 3, 14, 1, 3, Qt::AlignLeft);
+
+   fileLayout->setColumnStretch(18, 1);
+   fileLayout->setRowStretch(4, 1);
+
+
 }
 
 AF4FileInOutWidget::~AF4FileInOutWidget()

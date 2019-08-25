@@ -23,7 +23,7 @@
 ***  \author    Benedikt Häusele
 ***  \version   1.1
 ***  \date      2018-08-31
-***  \todo      Put Frames into single classes
+***  \todo
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 *****************************************************************************************************************/

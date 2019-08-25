@@ -19,7 +19,8 @@ AF4DiffEvaluationWidget::AF4DiffEvaluationWidget(QSharedPointer<QMap<QString, AF
    widgetLayout = new QGridLayout(this);
 
    fileWidget = new AF4FileInOutWidget(QString("diffEvaluation"), "_eval", this);
-   widgetLayout->addWidget(fileWidget, 0, 0, 5, 15);
+   widgetLayout->addWidget(fileWidget, 0, 0, 5, 15);   
+
 
    calibSettingsFrame = new AF4CalibSettingsFrame(channelConfigWidgets, channelCalibWidgets, QString("diffEval"), this);
    widgetLayout->addWidget(calibSettingsFrame, 5, 0, 5, 5);
@@ -39,6 +40,7 @@ AF4DiffEvaluationWidget::AF4DiffEvaluationWidget(QSharedPointer<QMap<QString, AF
    expSettingsFrame = new AF4ExpSettingsFrame(tr("diffEvaluation"), -1, this);
    widgetLayout->addWidget(expSettingsFrame, 5, 6, 10, 5);
 
+   //widgetLayout->setColumnStretch(16,12);
    QObject::connect(expSettingsFrame, &AF4ExpSettingsFrame::callEnableVolume,
                     calibSettingsFrame, &AF4CalibSettingsFrame::enableVolume);
 }
