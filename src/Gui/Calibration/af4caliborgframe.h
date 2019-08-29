@@ -9,7 +9,6 @@
 #include "af4calibrationdialogs.h"
 #include "./af4calibplotwidget.h"
 #include "./af4channelcalibwidget.h"
-#include "./a.out.h"
 #include "./af4channeldimswidget.h"
 #include "../../Core/af4evalmacros.h"
 #include "../../Core/af4calibrator.h"

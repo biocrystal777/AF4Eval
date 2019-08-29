@@ -9,7 +9,7 @@
 #include <QDoubleSpinBox>
 #include <QSettings>
 #include <functional>
-#include <qwt/qwt_text_label.h>
+#include <qwt_text_label.h>
 #include "../Core/af4evalmacros.h"
 #include "../GeneralWidgets/af4log.h"
 #include "../Core/af4parameterstructs.h"

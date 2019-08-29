@@ -12,7 +12,6 @@
 #include "./af4calibplotwidget.h"
 #include "./af4innercalibrationframe.h"
 #include "./af4stokeseinsteincalculatorwidget.h"
-#include "./a.out.h"
 #include "./af4channeldimswidget.h"
 #include "../../Core/af4evalmacros.h"
 #include "../../Core/af4calibrator.h"
