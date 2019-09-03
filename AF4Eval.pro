@@ -35,6 +35,7 @@ GSLDIR = /usr/lib
 
 win32|win64 {
 QWTDIR  = C:/Qwt-6.1.2
+include (QWTDIR/features/qwt.prf)
 }
 
 linux {
