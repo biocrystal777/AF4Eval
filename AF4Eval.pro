@@ -4,7 +4,7 @@
 #
 #  \author    Benedikt Häusele, (Emre Brooks)
 #  \version   1.0
-#  \date      2018
+#  \date      2018{
 #  \copyright CC CC BY-NC-ND 4.0
 #
 #-------------------------------------------------
@@ -35,7 +35,7 @@ GSLDIR = /usr/lib
 
 win32|win64 {
 QWTDIR  = C:/Qwt-6.1.2
-include (QWTDIR/features/qwt.prf)
+include ( C:/Qwt-6.1.2/features/qwt.prf )
 }
 
 linux {
