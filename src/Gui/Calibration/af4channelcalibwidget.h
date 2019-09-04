@@ -279,11 +279,23 @@ public:
    CtrlBoxRefs getCtrlBoxRefs () { return calibParFrame->getCtrlBoxRefs(); }
 
 signals:
+
+   /*!
+    * \brief inputFileChosen will be emitted when a new file is chosen by the user
+    *
+    */
+
+   void inputFileChosen();
+
    /*!
     * \brief calibrateChannelCalled signal will be emitted when the
     *        calibButton has been pressed
     */
    void calibrateChannelCalled();
+
+   /*!
+    * \brief saveButtonClicked
+    */
    void saveButtonClicked();
 
 private:

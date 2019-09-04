@@ -62,6 +62,7 @@ void AF4CalibPlotWidget::disconnectCurrentMarkers()
 int AF4CalibPlotWidget::setPlotData(const QString &fileName)
 {
    if(!QFile::exists(fileName)){
+      qDebug() << fileName;
       AF4Log::logWarning(QString("Calibration file does not exist!"));
       return 1;
    }

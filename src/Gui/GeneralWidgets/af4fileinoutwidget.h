@@ -1,7 +1,7 @@
 #ifndef AF4FILEINOUTWIDGET_H
 #define AF4FILEINOUTWIDGET_H
 
-#include <QFile>
+//#include <QFile>
 #include <QPushButton>
 #include <QCheckBox>
 #include <QDir>
@@ -9,8 +9,9 @@
 #include <QSettings>
 #include <QLabel>
 #include <QToolButton>
-#include <QLineEdit>
+//#include <QLineEdit>
 #include "../Core/af4evalmacros.h"
+#include "af4filenamelineedit.h"
 #include "./af4log.h"
 
 /*! **********************************************************************************************
@@ -107,9 +108,9 @@ private:
    QGridLayout *widgetLayout;
    QGridLayout *fileLayout;
    QToolButton *inputFileChooser;
-   QLineEdit *inputFileName;
+   AF4FilenameLineEdit *inputFileName;
    QToolButton *outputFileChooser;
-   QLineEdit *outputFileName;
+   AF4FilenameLineEdit *outputFileName;
 
    /*!
     * \brief chopStringsQuotMarksToOne if a string has more than one Quotation mark, they are merged

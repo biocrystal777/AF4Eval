@@ -16,14 +16,12 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    inputFileChooser->setToolTip("Browse Files");
    connect(inputFileChooser, &QToolButton::clicked, this, &AF4FileInOutWidget::chooseInputFile);
    fileLayout->addWidget(inputFileChooser, 1, 0, 1, 1);
-   inputFileName = new QLineEdit(this);
+   inputFileName = new AF4FilenameLineEdit(this);
    inputFileName->setMinimumWidth(800);
    //inputFileName->setMaximumWidth(800);
    fileLayout->addWidget(inputFileName, 1, 1, 1, 12);
    stringValue = settings.value(tr("fileNames/%1/inputFileName").arg(this->identifier), "").toString();
    setInputFilePath(stringValue, true);
-
-
 
    fileLayout->addWidget(new QLabel("<b>Data Output File</b>", this), 2, 1, 1, 3, Qt::AlignBottom);
    outputFileChooser = new QToolButton(this);
@@ -31,7 +29,7 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    outputFileChooser->setToolTip("Browse Files");
    connect(outputFileChooser, &QToolButton::clicked, this, &AF4FileInOutWidget::chooseOutputFile);
    fileLayout->addWidget(outputFileChooser, 3, 0, 1, 1);
-   outputFileName = new QLineEdit(this);
+   outputFileName = new AF4FilenameLineEdit(this);
    outputFileName->setMinimumWidth(800);
    //outputFileName->setMaximumWidth(800);
    fileLayout->addWidget(outputFileName, 3, 1, 1, 12);
@@ -44,7 +42,7 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
 
    autoGenName = new QCheckBox(QString("Autogenerate"), this);
    autoGenName->setChecked(settings.value(tr("fileNames/%1/autoGen").arg(identifier), false).toBool());
-   connect(inputFileName, &QLineEdit::textChanged, this, &AF4FileInOutWidget::adoptOutputName);
+   connect(inputFileName, &AF4FilenameLineEdit::textChanged, this, &AF4FileInOutWidget::adoptOutputName);
    fileLayout->addWidget(autoGenName, 3, 14, 1, 3, Qt::AlignLeft);
 
    fileLayout->setColumnStretch(18, 1);
@@ -60,29 +58,21 @@ AF4FileInOutWidget::~AF4FileInOutWidget()
 
 QString AF4FileInOutWidget::getOutputFilePath(bool quoted)
 {
-      QString path = outputFileName->text();
-      if(quoted)
-         chopStringsQuotMarksToOne(path);
-      else
-         chopStringsQuotMarksEntirely(path);
-      return path;
+   if(quoted) return outputFileName->singleQuotMarkText();
+   else       return outputFileName->noQuotMarkText();
 }
 
 QString AF4FileInOutWidget::getInputFilePath(bool quoted)
 {
-   QString path = inputFileName->text();
-   if(quoted)
-      chopStringsQuotMarksToOne(path);
-   else
-      chopStringsQuotMarksEntirely(path);
-   return path;
+   if(quoted) return inputFileName->singleQuotMarkText();
+   else       return inputFileName->noQuotMarkText();
 }
 
 bool AF4FileInOutWidget::setInputFilePath(QString path, bool quoted)
 {
    bool ok(true);
-   QString testPath = path;
-   chopStringsQuotMarksEntirely(testPath);
+   //QString testPath = path;
+   QString testPath = inputFileName->noQuotMarks(path);
    if(!QFile::exists(testPath)){
       path = QDir::homePath();
       path.prepend('"');
@@ -90,9 +80,9 @@ bool AF4FileInOutWidget::setInputFilePath(QString path, bool quoted)
       ok = false;
    }
    else {
-      if(quoted) chopStringsQuotMarksToOne(path);
-      else chopStringsQuotMarksEntirely(path);
-      inputFileName->setText(path);
+      if(quoted) inputFileName->setSingleQuotMarkText(path);  // chopStringsQuotMarksToOne(path);
+      else       inputFileName->setNoQuotMarkText(path); // chopStringsQuotMarksEntirely(path);
+      //inputFileName->setText(path);
    }
    return ok;
 }
@@ -127,10 +117,10 @@ void AF4FileInOutWidget::chooseInputFile()
                                       QFileDialog::ReadOnly |
                                       QFileDialog::HideNameFilterDetails )
                                     );
-   if(QFile::exists(s)) inputFileName->setText(chopStringsQuotMarksToOne(s));
-   else AF4Log::logWarning(tr("Chosen input file does not exist."));
+   inputFileName->setSingleQuotMarkText(s, true);  //setText(chopStringsQuotMarksToOne(s));
 }
 
+// check for simplification
 void AF4FileInOutWidget::chooseOutputFile()
 {
    QString oldOutputFile = outputFileName->text();
@@ -142,7 +132,7 @@ void AF4FileInOutWidget::chooseOutputFile()
    QObject::connect(&dialog, SIGNAL(fileSelected(QString)), outputFileName, SLOT(setText(QString)));
    dialog.exec();
    QString s = outputFileName->text();
-   chopStringsQuotMarksToOne(s);
+   outputFileName->chopStringsQuotMarksToOne(s);
    outputFileName->setText(s);
 }
 
@@ -173,7 +163,7 @@ void AF4FileInOutWidget::generateOutputName()
 }
 
 QString AF4FileInOutWidget::chopStringsQuotMarksToOne(QString & string) const
-{
+{    
    chopStringsQuotMarksEntirely(string);
    string.prepend('\"');
    string.append('\"');

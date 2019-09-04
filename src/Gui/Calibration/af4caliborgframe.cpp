@@ -81,7 +81,7 @@ AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
    connect(this, &AF4CalibOrgFrame::saveButtonClicked, this, &AF4CalibOrgFrame::saveParameters);
 
    connectCtrlWithPlotWidget();
-
+   adaptPlotData();
 }
 
 AF4CalibOrgFrame::~AF4CalibOrgFrame()
@@ -141,8 +141,22 @@ void AF4CalibOrgFrame::renameConnectedChannel(const QString oldChName, const QSt
 void AF4CalibOrgFrame::adaptPlotData()
 {
    QString fileName = curCalibWidget->getInputFileName();
-   if(!fileName.isEmpty())
+
+   if(!fileName.isEmpty()){
+///////////////// remove asap
+      auto chop = [] (QString & string){
+        const QChar quotMark('\"');
+      while(!string.isEmpty() && string.at(0) == quotMark)
+         string.remove(0, 1);
+      while(!string.isEmpty() && string.at(string.length()-1) == quotMark)
+         string.remove(string.length()-1, 1);
+      return string;
+      };
+
+      chop(fileName);
       plotWidget->setPlotData(fileName);
+   }
+   // else set default to be added
 }
 
 void AF4CalibOrgFrame::switchToFirstCalibWidget(const QString channelName)
@@ -303,8 +317,10 @@ void AF4CalibOrgFrame::saveParameters() const
 AF4ChannelCalibWidget *AF4CalibOrgFrame::createNewCalilbWidget(const int channelId, const int calibId, const QString &channelName, const QString &calibName)
 {
    auto* newWidget = new AF4ChannelCalibWidget(channelId, calibId, channelName, calibName, this);
+   connect(newWidget, &AF4ChannelCalibWidget::inputFileChosen,
+           this, &AF4CalibOrgFrame::adaptPlotData);
    connect(newWidget, &AF4ChannelCalibWidget::calibrateChannelCalled,
-           this, &AF4CalibOrgFrame::calibrateChannelCalled);
+           this, &AF4CalibOrgFrame::calibrateChannelCalled);   
    connect(this,  &AF4CalibOrgFrame::saveButtonClicked,
            newWidget, &AF4ChannelCalibWidget::saveButtonClicked);
    calibSelection->addItem(calibName);

@@ -204,7 +204,10 @@ void AF4ChannelCalibWidget::chooseInputFile()
                                       QFileDialog::ReadOnly |
                                       QFileDialog::HideNameFilterDetails )
                                     );
-   if(QFile::exists(s)) inputFileName->setText(chopStringsQuotMarksToOne(s));
+   if(QFile::exists(s)) {
+      inputFileName->setText(chopStringsQuotMarksToOne(s));
+      emit inputFileChosen();
+   }
    else AF4Log::logWarning(tr("Chosen input file does not exist."));
 }
 

@@ -219,6 +219,8 @@ private:
     */
    void connectCtrlWithPlotWidget();
 
+   void connectInputFileWithPlotWidget();
+
    QWeakPointer<QComboBox> channelSelection; // transitory solution for class split; replace by slot connnections later
    QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >                  channelConfigWidgets;
    QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;

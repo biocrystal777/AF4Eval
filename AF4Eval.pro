@@ -34,8 +34,8 @@ GSLDIR = /usr/lib
 }
 
 win32|win64 {
-QWTDIR  = C:/Qwt-6.1.2
-include ( C:/Qwt-6.1.2/features/qwt.prf )
+#QWTDIR  = C:/Qwt-6.1.2
+#include ( C:/Qwt-6.1.2/features/qwt.prf )
 }
 
 linux {
@@ -55,7 +55,7 @@ DEPENDPATH += ./src/Gui \
               ./src/Gui/Deconvolution \
               ./src/Gui/smallQDerivates \
               ./src/Core
-
+include (QWTDIR/features/qwt.prf)
 SOURCES += ./src/Core/main.cpp \
     ./src/Core/af4calibrator.cpp \
     ./src/Core/af4calculator.cpp \
@@ -88,7 +88,8 @@ SOURCES += ./src/Core/main.cpp \
     src/Gui/Calibration/af4calibparametersframe.cpp \
     src/Gui/Calibration/af4innercalibrationframe.cpp \
     src/Gui/Calibration/af4caliborgframe.cpp \
-    src/Gui/Calibration/af4channeldimsorgframe.cpp
+    src/Gui/Calibration/af4channeldimsorgframe.cpp \
+    src/Gui/smallQDerivates/af4filenamelineedit.cpp
 
 HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4constants.h \
@@ -126,7 +127,8 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     src/Gui/Calibration/af4innercalibrationframe.h \
     src/Gui/Calibration/af4caliborgframe.h \
     src/Core/af4evalmacros.h \
-    src/Gui/Calibration/af4channeldimsorgframe.h
+    src/Gui/Calibration/af4channeldimsorgframe.h \
+    src/Gui/smallQDerivates/af4filenamelineedit.h
 
 RESOURCES += \
     ./Resources/images.qrc
