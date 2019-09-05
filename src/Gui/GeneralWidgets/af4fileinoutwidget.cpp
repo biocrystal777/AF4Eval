@@ -36,7 +36,7 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    stringValue = settings.value(tr("fileNames/%1/outputFileName").arg(identifier), "").toString();
    setOutputFilePath(stringValue, true);
 
-   nameGenButton = new QPushButton("имя", this);
+   nameGenButton = new QPushButton("gen.", this);
    connect(nameGenButton, &QPushButton::clicked, this, &AF4FileInOutWidget::generateOutputName);
    fileLayout->addWidget(nameGenButton, 3, 13, 1, 1, Qt::AlignLeft);
 
@@ -70,28 +70,14 @@ QString AF4FileInOutWidget::getInputFilePath(bool quoted)
 
 bool AF4FileInOutWidget::setInputFilePath(QString path, bool quoted)
 {
-   bool ok(true);
-   //QString testPath = path;
-   QString testPath = inputFileName->noQuotMarks(path);
-   if(!QFile::exists(testPath)){
-      path = QDir::homePath();
-      path.prepend('"');
-      path.append('"');
-      ok = false;
-   }
-   else {
-      if(quoted) inputFileName->setSingleQuotMarkText(path);  // chopStringsQuotMarksToOne(path);
-      else       inputFileName->setNoQuotMarkText(path); // chopStringsQuotMarksEntirely(path);
-      //inputFileName->setText(path);
-   }
-   return ok;
+   if(quoted) return inputFileName->setSingleQuotMarkText(path, true);
+   else       return inputFileName->setNoQuotMarkText(path, true);
 }
 
 void AF4FileInOutWidget::setOutputFilePath(QString path, bool quoted)
 {
-   if(quoted) chopStringsQuotMarksToOne(path);
-   else chopStringsQuotMarksEntirely(path);
-   outputFileName->setText(path);
+   if(quoted) outputFileName->setSingleQuotMarkText(path);
+   else       outputFileName->setNoQuotMarkText(path);
 }
 
 void AF4FileInOutWidget::writeSettings()
@@ -105,19 +91,19 @@ void AF4FileInOutWidget::writeSettings()
 
 void AF4FileInOutWidget::chooseInputFile()
 {
-   QString s;
-   QString oldInputFile = inputFileName->text();
-   chopStringsQuotMarksEntirely(oldInputFile);
+   // check for existing input file
+   QString oldInputFile = inputFileName->noQuotMarkText();
    if(!QFile::exists(oldInputFile)){
       oldInputFile = QDir::homePath();
    }
-   s = QFileDialog::getOpenFileName(this, tr("Choose a File to evaluate"), oldInputFile,
-                                    QString(), nullptr,
-                                    ( QFileDialog::DontConfirmOverwrite |
-                                      QFileDialog::ReadOnly |
-                                      QFileDialog::HideNameFilterDetails )
-                                    );
-   inputFileName->setSingleQuotMarkText(s, true);  //setText(chopStringsQuotMarksToOne(s));
+   // open dialog in same directory as the old entry and set the file name
+   QString s = QFileDialog::getOpenFileName(this, tr("Choose a File to evaluate"), oldInputFile,
+                                            QString(), nullptr,
+                                            ( QFileDialog::DontConfirmOverwrite |
+                                              QFileDialog::ReadOnly |
+                                              QFileDialog::HideNameFilterDetails )
+                                            );
+   setInputFilePath(s, true);
 }
 
 // check for simplification
@@ -132,7 +118,7 @@ void AF4FileInOutWidget::chooseOutputFile()
    QObject::connect(&dialog, SIGNAL(fileSelected(QString)), outputFileName, SLOT(setText(QString)));
    dialog.exec();
    QString s = outputFileName->text();
-   outputFileName->chopStringsQuotMarksToOne(s);
+   outputFileName->singleQuotMarks(s);
    outputFileName->setText(s);
 }
 
@@ -143,8 +129,7 @@ void AF4FileInOutWidget::adoptOutputName()
 
 void AF4FileInOutWidget::generateOutputName()
 {
-   QString outName = inputFileName->text();
-   chopStringsQuotMarksEntirely(outName);
+   QString outName = inputFileName->noQuotMarkText();
    QStringList l = outName.split(".", QString::SkipEmptyParts);
 
    if(l.empty())
@@ -160,23 +145,4 @@ void AF4FileInOutWidget::generateOutputName()
       outName.append(suffix).append(".").append(l.last());
    }
    this->setOutputFilePath(outName, true);
-}
-
-QString AF4FileInOutWidget::chopStringsQuotMarksToOne(QString & string) const
-{    
-   chopStringsQuotMarksEntirely(string);
-   string.prepend('\"');
-   string.append('\"');
-   return string;
-}
-
-QString AF4FileInOutWidget::chopStringsQuotMarksEntirely(QString & string) const
-{
-   const QChar quotMark('\"');
-   while(!string.isEmpty() && string.at(0) == quotMark)
-      string.remove(0, 1);
-   while(!string.isEmpty() && string.at(string.length()-1) == quotMark)
-      string.remove(string.length()-1, 1);
-
-   return string;
 }

@@ -1,6 +1,7 @@
 #include "af4csvparser.h"
 #include <locale>
 
+using std::invalid_argument;
 using std::string;
 using std::wstring;
 using std::stringstream;
@@ -42,21 +43,26 @@ int AF4CsvParser::parseFileASCII(ifstream &inpFile, uint* badLineNo)
    dataLine.erase(std::remove(dataLine.begin(), dataLine.end(), '\n'), dataLine.end());
    dataLine.erase(std::remove(dataLine.begin(), dataLine.end(), '\r'), dataLine.end());
    headLineEntries = split(dataLine, sep); // first line = header
+   const uint noOfColumns = headLineEntries.size();
 
+   if(badLineNo) *badLineNo = 1; // initialize facultative monitor
 
-   if(badLineNo) *badLineNo = 1;
-   dataVectorList.resize(headLineEntries.size());
-
-   while(std::getline(inpFile, dataLine))
-   {
-      vector<string> dataSplit = split(dataLine, sep);
-      for(uint i = 0; i < dataSplit.size(); ++i){
-         double d = std::strtod(dataSplit[i].c_str(), nullptr);
-         dataVectorList[i].push_back(d);
+   dataVectorList.resize(noOfColumns);
+   try {
+      while(std::getline(inpFile, dataLine)) {
+         vector<string> dataSplit = split(dataLine, sep);
+         // check for potentially malformed entries
+         if(dataSplit.size() != noOfColumns) return 2;
+         for(uint i = 0; i < dataSplit.size(); ++i){
+            double d = std::strtod(dataSplit[i].c_str(), nullptr);
+            dataVectorList[i].push_back(d);
+         }
+         if(badLineNo) ++(*badLineNo);// adapt facultative monitor
       }
-      if(badLineNo) ++(*badLineNo);
    }
-
+   catch(invalid_argument &e) {
+      return 3;
+   }
    return 0;
 }
 

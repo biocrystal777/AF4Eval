@@ -5,7 +5,7 @@
 #include <fstream>
 #include <list>
 #include <vector>
-#include <stdlib.h>
+#include <exception>
 #include <sstream>
 #include <algorithm>
 #include <stdexcept>
@@ -18,9 +18,11 @@
 /*! ***********************************************************
 ***
 ***  \class     AF4CSVParser "src/Core/af4csvparser.h"
+***  \brief     Small simple parser for complete .csv files
+***             No empty entries are allowed!
 ***  \author    Benedikt Häusele
-***  \version   1.0
-***  \date      2018
+***  \version   1.1
+***  \date      2019
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 **************************************************************/
@@ -103,5 +105,4 @@ private:
 
    NO_COPY_ASSIGNMENT_CTORS(AF4CsvParser)
 };
-
 #endif // AF4CSVPARSER_H

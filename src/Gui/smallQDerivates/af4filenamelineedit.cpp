@@ -1,30 +1,31 @@
 #include "af4filenamelineedit.h"
 
-bool AF4FilenameLineEdit::setSingleQuotMarkText(const QString &string, bool checkExistency)
+bool AF4FilenameLineEdit::setSingleQuotMarkText(const QString &filePath, bool checkFileExistency)
 {
-   if(checkExistency && !fileExists(string))
+   if(checkFileExistency && !fileExists(filePath))
       return false;
-   setText(singleQuotMarks(string));
+   setText(singleQuotMarks(filePath));
    return true;
 }
 
-bool AF4FilenameLineEdit::setNoQuotMarkText(const QString &string, bool checkExistency)
+bool AF4FilenameLineEdit::setNoQuotMarkText(const QString &filePath, bool checkFileExistency)
 {
-   if(checkExistency && !fileExists(string))
+   if(checkFileExistency && !fileExists(filePath))
       return false;
-   setText(noQuotMarks(string));
+   setText(noQuotMarks(filePath));
    return true;
 }
 
 bool AF4FilenameLineEdit::fileExists(const QString &path)
 {
-   if(QFile::exists(noQuotMarks(path)))
+   QString noQuotPath = noQuotMarks(path);
+   if(QFile::exists(noQuotPath))
       return true;
-   else {
-      AF4Log::logWarning(tr("Chosen input file does not exist."));
-      return false;
-   }
-
+   else if (noQuotPath.isEmpty())
+      AF4Log::logWarning(tr("No file path."));
+   else
+      AF4Log::logWarning(tr("File path %1 does not exist.").arg(noQuotPath));
+   return false;
 }
 
 QString AF4FilenameLineEdit::singleQuotMarks(const QString &string) const

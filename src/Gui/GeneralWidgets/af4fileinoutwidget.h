@@ -1,7 +1,7 @@
 #ifndef AF4FILEINOUTWIDGET_H
 #define AF4FILEINOUTWIDGET_H
 
-//#include <QFile>
+#include <QFile>
 #include <QPushButton>
 #include <QCheckBox>
 #include <QDir>
@@ -9,7 +9,6 @@
 #include <QSettings>
 #include <QLabel>
 #include <QToolButton>
-//#include <QLineEdit>
 #include "../Core/af4evalmacros.h"
 #include "af4filenamelineedit.h"
 #include "./af4log.h"
@@ -19,7 +18,7 @@
 ***  \class     AF4FileInOutWidget "src/Gui/Calibration/af4diffevaluationwidget.h"
 ***  \brief     AF4FileInOutWidget
 ***  \author    Benedikt Häusele
-***  \version   1.0
+***  \version   1.1
 ***  \date      2018-08-31
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
@@ -98,7 +97,6 @@ private slots:
     */
    void generateOutputName();
 
-
 private:
 
    QString identifier;
@@ -111,22 +109,6 @@ private:
    AF4FilenameLineEdit *inputFileName;
    QToolButton *outputFileChooser;
    AF4FilenameLineEdit *outputFileName;
-
-   /*!
-    * \brief chopStringsQuotMarksToOne if a string has more than one Quotation mark, they are merged
-    * \example """this string"""   =>    "this string"
-    * \param string to be processed
-    * \return processed string
-    */
-   QString chopStringsQuotMarksToOne(QString &string) const;
-
-   /*!
-    * \brief chopStringsQuotMarksEntirely removes quotation marks of strings
-    * \example """this string"""   =>    this string
-    * \param string to be processed
-    * \return processed string
-    */
-   QString chopStringsQuotMarksEntirely(QString &string) const;
 
    NO_COPY_ASSIGNMENT_CTORS(AF4FileInOutWidget)
 };
