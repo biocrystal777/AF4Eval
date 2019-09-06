@@ -97,7 +97,7 @@ void AF4FileInOutWidget::chooseInputFile()
       oldInputFile = QDir::homePath();
    }
    // open dialog in same directory as the old entry and set the file name
-   QString s = QFileDialog::getOpenFileName(this, tr("Choose a File to evaluate"), oldInputFile,
+   QString s = QFileDialog::getOpenFileName(this, tr("Choose a file for evaluatation"), oldInputFile,
                                             QString(), nullptr,
                                             ( QFileDialog::DontConfirmOverwrite |
                                               QFileDialog::ReadOnly |
@@ -106,20 +106,18 @@ void AF4FileInOutWidget::chooseInputFile()
    setInputFilePath(s, true, false);
 }
 
-// check for simplification
+
 void AF4FileInOutWidget::chooseOutputFile()
 {
-   QString oldOutputFile = outputFileName->text();
-
-   if(!QFile::exists(oldOutputFile) || QFileInfo( oldOutputFile ).isDir() ) oldOutputFile = QFileInfo( inputFileName->text() ).path();
-   QFileDialog dialog(this, tr("Choose an file Name for your results,"), oldOutputFile);
+   QString oldOutputFile = outputFileName->noQuotMarkText();
+   if(!QFile::exists(oldOutputFile) || QFileInfo( oldOutputFile ).isDir() )
+      oldOutputFile = QFileInfo( inputFileName->text() ).path();
+   QFileDialog dialog(this, tr("Choose an file name for your results"), oldOutputFile);
    dialog.setFileMode(QFileDialog::AnyFile);
    dialog.setOption(QFileDialog::DontConfirmOverwrite, false);
-   QObject::connect(&dialog, SIGNAL(fileSelected(QString)), outputFileName, SLOT(setText(QString)));
+   connect(&dialog,        &QFileDialog::fileSelected,
+           outputFileName, [this](const QString &s){ outputFileName->setSingleQuotMarkText(s);} );
    dialog.exec();
-   QString s = outputFileName->text();
-   outputFileName->singleQuotMarks(s);
-   outputFileName->setText(s);
 }
 
 void AF4FileInOutWidget::adoptOutputName()
@@ -144,5 +142,5 @@ void AF4FileInOutWidget::generateOutputName()
       outName.append(l[l.size() - 2]);
       outName.append(suffix).append(".").append(l.last());
    }
-   this->setOutputFilePath(outName, true, false);
+   setOutputFilePath(outName, true, false);
 }
