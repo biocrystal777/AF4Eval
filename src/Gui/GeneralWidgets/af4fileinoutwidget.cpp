@@ -21,7 +21,7 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    //inputFileName->setMaximumWidth(800);
    fileLayout->addWidget(inputFileName, 1, 1, 1, 12);
    stringValue = settings.value(tr("fileNames/%1/inputFileName").arg(this->identifier), "").toString();
-   setInputFilePath(stringValue, true);
+   setInputFilePath(stringValue, true, true);
 
    fileLayout->addWidget(new QLabel("<b>Data Output File</b>", this), 2, 1, 1, 3, Qt::AlignBottom);
    outputFileChooser = new QToolButton(this);
@@ -34,7 +34,7 @@ AF4FileInOutWidget::AF4FileInOutWidget(const QString &identifier, const QString 
    //outputFileName->setMaximumWidth(800);
    fileLayout->addWidget(outputFileName, 3, 1, 1, 12);
    stringValue = settings.value(tr("fileNames/%1/outputFileName").arg(identifier), "").toString();
-   setOutputFilePath(stringValue, true);
+   setOutputFilePath(stringValue, true, true);
 
    nameGenButton = new QPushButton("gen.", this);
    connect(nameGenButton, &QPushButton::clicked, this, &AF4FileInOutWidget::generateOutputName);
@@ -68,16 +68,16 @@ QString AF4FileInOutWidget::getInputFilePath(bool quoted)
    else       return inputFileName->noQuotMarkText();
 }
 
-bool AF4FileInOutWidget::setInputFilePath(QString path, bool quoted)
+bool AF4FileInOutWidget::setInputFilePath(QString path, bool quoted, bool silent)
 {
-   if(quoted) return inputFileName->setSingleQuotMarkText(path, true);
-   else       return inputFileName->setNoQuotMarkText(path, true);
+   if(quoted) return inputFileName->setSingleQuotMarkText(path, true, silent);
+   else       return inputFileName->setNoQuotMarkText(path, true, silent);
 }
 
-void AF4FileInOutWidget::setOutputFilePath(QString path, bool quoted)
+void AF4FileInOutWidget::setOutputFilePath(QString path, bool quoted, bool silent)
 {
-   if(quoted) outputFileName->setSingleQuotMarkText(path);
-   else       outputFileName->setNoQuotMarkText(path);
+   if(quoted) outputFileName->setSingleQuotMarkText(path, false, silent);
+   else       outputFileName->setNoQuotMarkText(path, false, silent);
 }
 
 void AF4FileInOutWidget::writeSettings()
@@ -103,7 +103,7 @@ void AF4FileInOutWidget::chooseInputFile()
                                               QFileDialog::ReadOnly |
                                               QFileDialog::HideNameFilterDetails )
                                             );
-   setInputFilePath(s, true);
+   setInputFilePath(s, true, false);
 }
 
 // check for simplification
@@ -144,5 +144,5 @@ void AF4FileInOutWidget::generateOutputName()
       outName.append(l[l.size() - 2]);
       outName.append(suffix).append(".").append(l.last());
    }
-   this->setOutputFilePath(outName, true);
+   this->setOutputFilePath(outName, true, false);
 }

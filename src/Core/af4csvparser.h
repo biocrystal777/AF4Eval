@@ -103,6 +103,6 @@ private:
                                            std::string::const_iterator end,
                                            const char c) const;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4CsvParser)
+   NO_COPY_MOVE_CTORS(AF4CsvParser)
 };
 #endif // AF4CSVPARSER_H

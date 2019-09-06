@@ -165,6 +165,6 @@ private:
     */
    ~AF4ChannelConfigurationWidget();
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelConfigurationWidget)
+   NO_COPY_MOVE_CTORS(AF4ChannelConfigurationWidget)
 };
 #endif // AF4CHANNELCONFIGUARTIONWIDGET_H

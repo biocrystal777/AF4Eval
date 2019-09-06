@@ -51,7 +51,7 @@ private:
    QPushButton *accepter     = nullptr;
    QPushButton *decliner     = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4CalibNameDialog)
+   NO_COPY_MOVE_CTORS(AF4CalibNameDialog)
 };
 
 
@@ -81,7 +81,7 @@ private:
    QPushButton *accepter = nullptr;
    QPushButton *decliner = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4DeleteCalibDialog)
+   NO_COPY_MOVE_CTORS(AF4DeleteCalibDialog)
 };
 
 /*! **************************************************************************************************************
@@ -116,7 +116,7 @@ private:
    QPushButton *accepter = nullptr;
    QPushButton *decliner = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4DeleteChannelDialog)
+   NO_COPY_MOVE_CTORS(AF4DeleteChannelDialog)
 };
 
 /*! **************************************************************************************************************
@@ -161,6 +161,6 @@ private:
    QPushButton *accepter        = nullptr;
    QPushButton *decliner        = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelNameDialog)
+   NO_COPY_MOVE_CTORS(AF4ChannelNameDialog)
 };
 #endif // AF4CALIBRATIONDIALOGS_H

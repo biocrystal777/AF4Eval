@@ -65,7 +65,7 @@ public slots:
     * \return The result of the existency test of the given file. If no existency test was required
     *         the result will always be true.
     */
-   bool setSingleQuotMarkText(const QString &filePath, bool checkFileExistency = false);
+   bool setSingleQuotMarkText(const QString &filePath, bool checkFileExistency = false, bool silent = false);
 
    /*!
     * \brief setNoQuotMarkText sets the text of the without any embracing quotation marks
@@ -74,7 +74,7 @@ public slots:
     * \return The result of the existency test of the given file. If no existency test was required
     *         the result will always be true.
     */
-   bool setNoQuotMarkText(const QString &filePath, bool checkFileExistency = false);
+   bool setNoQuotMarkText(const QString &filePath, bool checkFileExistency = false, bool silent = false);
 
 private:
 
@@ -85,8 +85,8 @@ private:
     * \param path
     * \return result of the existency test
     */
-   bool fileExists(const QString &path);
+   bool fileExists(const QString &path, bool silent = false);
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4FilenameLineEdit)
+   NO_COPY_MOVE_CTORS(AF4FilenameLineEdit)
 };
 #endif // AF4FILENAMELINEEDIT_H

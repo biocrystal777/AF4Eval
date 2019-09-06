@@ -193,6 +193,6 @@ private:
     */
    ~AF4CalibSettingsFrame();
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4CalibSettingsFrame)
+   NO_COPY_MOVE_CTORS(AF4CalibSettingsFrame)
 };
 #endif // AF4CALIBSETTINGSFRAME_H

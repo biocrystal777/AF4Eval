@@ -122,7 +122,7 @@ private:
    */
   ~AF4Log(){}
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4Log)
+   NO_COPY_MOVE_CTORS(AF4Log)
 };
 
 #endif // FFFLOGWIDGET_H

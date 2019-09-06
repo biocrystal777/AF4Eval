@@ -32,7 +32,7 @@ private:
    QWeakPointer<QDoubleSpinBox> tVoid;
    QWeakPointer<QDoubleSpinBox> tElution;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4CalibPlotWidget)
+   NO_COPY_MOVE_CTORS(AF4CalibPlotWidget)
 };
 
 #endif // AF4CALIBPLOTWIDGET_H

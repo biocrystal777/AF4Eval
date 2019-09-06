@@ -31,7 +31,7 @@ signals:
    void currentIndexChanged(int index, int id);
 
 private:
-   NO_COPY_ASSIGNMENT_CTORS(AF4NumberedComboBox)
+   NO_COPY_MOVE_CTORS(AF4NumberedComboBox)
 };
 
 #endif // AF4NUMBEREDCOMBOBOX_H

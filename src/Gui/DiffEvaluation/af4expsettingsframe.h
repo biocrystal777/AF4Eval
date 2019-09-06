@@ -179,6 +179,6 @@ private:
     QDoubleSpinBox *viscosity        = nullptr;
     QDoubleSpinBox *temperature      = nullptr;
 
-    NO_COPY_ASSIGNMENT_CTORS(AF4ExpSettingsFrame)
+    NO_COPY_MOVE_CTORS(AF4ExpSettingsFrame)
 };
 #endif // AF4EXPSETTINGSFRAME_H

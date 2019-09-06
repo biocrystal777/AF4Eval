@@ -216,7 +216,7 @@ private:
     */
    int setNegativeToZero(vecD &values);
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4SLSEvaluator)
+   NO_COPY_MOVE_CTORS(AF4SLSEvaluator)
 };
 
 #endif // FFFSLSEVALUATOR_H

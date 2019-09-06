@@ -103,7 +103,7 @@ private slots:
    void enableRefIndex ()         const;
    void enableWaveLength ()       const;   
    */
-   NO_COPY_ASSIGNMENT_CTORS(AF4SLSParameterFrame)
+   NO_COPY_MOVE_CTORS(AF4SLSParameterFrame)
 };
 
 #endif // FFFSLSPARAMETERFRAME_H

@@ -234,7 +234,7 @@ private:
    QToolButton *renameCalibButton                                              = nullptr;
    QToolButton *deleteCalibButton                                              = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4CalibOrgFrame)
+   NO_COPY_MOVE_CTORS(AF4CalibOrgFrame)
 };
 
 #endif // AF4CALIBORGFRAME_H

@@ -259,6 +259,6 @@ private:
    QToolButton      *diffCoeffCalcButton       = nullptr;
    AF4StokesEinsteinCalculatorWidget *diffCoeffCalcWidget = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4CalibParametersFrame)
+   NO_COPY_MOVE_CTORS(AF4CalibParametersFrame)
 };
 #endif // AF4CALIBPARAMETERSFRAME_H

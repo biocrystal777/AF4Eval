@@ -70,7 +70,7 @@ private:
    AF4SLSEvaluationWidget        *slsEvaluationWidget  = nullptr;
    //int lastChosenTab;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4MainWindow)
+   NO_COPY_MOVE_CTORS(AF4MainWindow)
 };
 
 #endif // AF4MAINWINDOW_H

@@ -173,7 +173,7 @@ private:
    void loadSettings();
 
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelDimsWidget)
+   NO_COPY_MOVE_CTORS(AF4ChannelDimsWidget)
 };
 
 #endif // AF4CHANNELCONFIGWIDGET_H

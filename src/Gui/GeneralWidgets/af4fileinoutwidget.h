@@ -56,20 +56,24 @@ public:
 
    /*!
    * \brief setInputFilePath
+   * \param path
    * \param quoted
+   * \param silent
    * \return
    */
-   bool setInputFilePath(QString path, bool quoted = true);
+   bool setInputFilePath(QString path, bool quoted, bool silent = false);
 
    /*!
     * \brief setOutputFilePath
     * \param path
     * \param quoted
+    * \param silent
     */
-   void setOutputFilePath(QString path, bool quoted);
+   void setOutputFilePath(QString path, bool quoted, bool silent = false);
 
    /*!
     * \brief writeSettings
+    *
     */
    void writeSettings();
 
@@ -99,18 +103,19 @@ private slots:
 
 private:
 
-   QString identifier;
-   QString suffix;
-   QPushButton *nameGenButton;
-   QCheckBox   *autoGenName;
-   QGridLayout *widgetLayout;
-   QGridLayout *fileLayout;
-   QToolButton *inputFileChooser;
-   AF4FilenameLineEdit *inputFileName;
-   QToolButton *outputFileChooser;
-   AF4FilenameLineEdit *outputFileName;
+   const QString identifier;
+   const QString suffix;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4FileInOutWidget)
+   QPushButton         *nameGenButton     = nullptr;
+   QCheckBox           *autoGenName       = nullptr;
+   QGridLayout         *widgetLayout      = nullptr;
+   QGridLayout         *fileLayout        = nullptr;
+   QToolButton         *inputFileChooser  = nullptr;
+   AF4FilenameLineEdit *inputFileName     = nullptr;
+   QToolButton         *outputFileChooser = nullptr;
+   AF4FilenameLineEdit *outputFileName    = nullptr;
+
+   NO_COPY_MOVE_CTORS(AF4FileInOutWidget)
 };
 
 #endif // AF4FILEINOUTWIDGET_H

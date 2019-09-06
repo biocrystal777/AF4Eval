@@ -33,7 +33,7 @@ protected:
     int id;
 
 private:
-    NO_COPY_ASSIGNMENT_CTORS(AF4NumberedCheckBox)
+    NO_COPY_MOVE_CTORS(AF4NumberedCheckBox)
 };
 
 #endif // AF4NUMBEREDCHECKBOX_H

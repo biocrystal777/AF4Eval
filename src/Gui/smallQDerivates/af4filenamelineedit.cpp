@@ -1,30 +1,30 @@
 #include "af4filenamelineedit.h"
 
-bool AF4FilenameLineEdit::setSingleQuotMarkText(const QString &filePath, bool checkFileExistency)
+bool AF4FilenameLineEdit::setSingleQuotMarkText(const QString &filePath, bool checkFileExistency, bool silent)
 {
-   if(checkFileExistency && !fileExists(filePath))
+   if(checkFileExistency && !fileExists(filePath, silent))
       return false;
    setText(singleQuotMarks(filePath));
    return true;
 }
 
-bool AF4FilenameLineEdit::setNoQuotMarkText(const QString &filePath, bool checkFileExistency)
+bool AF4FilenameLineEdit::setNoQuotMarkText(const QString &filePath, bool checkFileExistency, bool silent)
 {
-   if(checkFileExistency && !fileExists(filePath))
+   if(checkFileExistency && !fileExists(filePath, silent))
       return false;
    setText(noQuotMarks(filePath));
    return true;
 }
 
-bool AF4FilenameLineEdit::fileExists(const QString &path)
+bool AF4FilenameLineEdit::fileExists(const QString &path, bool silent)
 {
    QString noQuotPath = noQuotMarks(path);
-   if(QFile::exists(noQuotPath))
-      return true;
-   else if (noQuotPath.isEmpty())
-      AF4Log::logWarning(tr("No file path."));
-   else
-      AF4Log::logWarning(tr("File path %1 does not exist.").arg(noQuotPath));
+   if(QFile::exists(noQuotPath)) return true;
+   if(!silent)
+      if (noQuotPath.isEmpty())
+         AF4Log::logWarning(tr("No file path."));
+      else
+         AF4Log::logWarning(tr("%1 does not exist.").arg(singleQuotMarks(noQuotPath)));
    return false;
 }
 

@@ -352,7 +352,7 @@ private slots:
     */
    void saveParameters();
 private:
-   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelCalibWidget)
+   NO_COPY_MOVE_CTORS(AF4ChannelCalibWidget)
 };
 
 #endif // AF4CHANNELCALIBWIDGET_H

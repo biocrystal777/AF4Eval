@@ -72,7 +72,7 @@ private:
    QPushButton *accepter             = nullptr;
    QPushButton *rejecter             = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4StokesEinsteinCalculatorWidget)
+   NO_COPY_MOVE_CTORS(AF4StokesEinsteinCalculatorWidget)
 };
 
 #endif // AF4STOKESEINSTEINCALCULATORWIDGET_H

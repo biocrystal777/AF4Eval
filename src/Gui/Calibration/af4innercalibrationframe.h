@@ -195,7 +195,7 @@ private:
    QDoubleSpinBox *hydrodynVolume    = nullptr;
    QDoubleSpinBox *geometVolume      = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4InnerCalibrationFrame)
+   NO_COPY_MOVE_CTORS(AF4InnerCalibrationFrame)
 };
 
 

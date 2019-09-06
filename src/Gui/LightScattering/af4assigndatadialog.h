@@ -115,7 +115,7 @@ public slots:
     */
    void writeUserOptionAndAccept();
 private:
-   NO_COPY_ASSIGNMENT_CTORS(AF4AssignDataDialog)
+   NO_COPY_MOVE_CTORS(AF4AssignDataDialog)
 };
 
 

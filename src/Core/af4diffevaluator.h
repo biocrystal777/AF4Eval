@@ -121,7 +121,7 @@ private:
    vecD resDiffCoeff;
    vecD resStokesRadii;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4DiffEvaluator)
+   NO_COPY_MOVE_CTORS(AF4DiffEvaluator)
 };
 
 #endif // AF4DIFFEVALUATOR_H

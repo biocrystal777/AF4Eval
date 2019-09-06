@@ -152,6 +152,6 @@ private:
    QToolButton *deleteChButton                                  = nullptr;
 
    ~AF4ChannelDimsOrgFrame(){}
-   NO_COPY_ASSIGNMENT_CTORS(AF4ChannelDimsOrgFrame)
+   NO_COPY_MOVE_CTORS(AF4ChannelDimsOrgFrame)
 };
 #endif // AF4CHANNELDIMSORGFRAME_H

@@ -207,6 +207,6 @@ private:
    QMap<QString, QwtDynPlotMarker*> plotMarkers;
    QMap<QString, QwtSymbol*>        symbols;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4SignalPlot)
+   NO_COPY_MOVE_CTORS(AF4SignalPlot)
 };
 #endif // AF4SIGNALPLOT_H

@@ -64,7 +64,7 @@ private:
    const char dec;
    const char lineSep;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4CsvWriter)
+   NO_COPY_MOVE_CTORS(AF4CsvWriter)
 };
 
 #endif // AF4CSVWRITER_H

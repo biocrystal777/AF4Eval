@@ -214,7 +214,7 @@ protected:
    int    maxExp  = 10;
 
 private:
-   NO_COPY_ASSIGNMENT_CTORS(AF4SciNotSpinBox)
+   NO_COPY_MOVE_CTORS(AF4SciNotSpinBox)
 };
 
 #endif // AF4SCINOTSPINBOX_H

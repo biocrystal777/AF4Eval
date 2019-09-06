@@ -83,7 +83,7 @@ private:
    const ParametersForCalibration params;
    bool paramsChecked = false;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4Calibrator)
+   NO_COPY_MOVE_CTORS(AF4Calibrator)
 };
 
 #endif // AF4CALIBRATOR_H

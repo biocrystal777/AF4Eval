@@ -158,7 +158,7 @@ private:
     */
    void writeSettings();
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4SinglePeakParameterWidget)
+   NO_COPY_MOVE_CTORS(AF4SinglePeakParameterWidget)
 };
 
 
@@ -286,7 +286,7 @@ private:
    QPushButton *peakAdder     = nullptr;
    QList<AF4SinglePeakParameterWidget*> peakParWidgets;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4PeakParameterFrame)
+   NO_COPY_MOVE_CTORS(AF4PeakParameterFrame)
 
 };
 

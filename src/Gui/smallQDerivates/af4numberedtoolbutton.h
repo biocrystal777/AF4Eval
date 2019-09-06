@@ -49,6 +49,6 @@ signals:
    void clicked(int id);
 
 private:
-   NO_COPY_ASSIGNMENT_CTORS(AF4NumberedToolButton)
+   NO_COPY_MOVE_CTORS(AF4NumberedToolButton)
 };
 #endif // AF4NUMBEREDTOOLBUTTON_H

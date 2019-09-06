@@ -134,7 +134,7 @@ private:
    QPushButton           *evalStarter            = nullptr;
    QCheckBox             *displayZeroMessages    = nullptr;
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4DiffEvaluationWidget)
+   NO_COPY_MOVE_CTORS(AF4DiffEvaluationWidget)
 };
 
 #endif // AF4DIFFEVALUATIONWIDGET_H

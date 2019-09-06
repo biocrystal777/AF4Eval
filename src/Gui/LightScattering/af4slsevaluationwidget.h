@@ -134,7 +134,7 @@ private:
                          bool rSIndexChosen = false
          );
 
-   NO_COPY_ASSIGNMENT_CTORS(AF4SLSEvaluationWidget)
+   NO_COPY_MOVE_CTORS(AF4SLSEvaluationWidget)
 
 };
 
