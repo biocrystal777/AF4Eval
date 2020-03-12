@@ -3,7 +3,7 @@
 # AF4 Evaluation software
 #
 #  \author    Benedikt Häusele, (Emre Brooks)
-#  \version   1.0
+#  \version   0.1
 #  \date      2018{
 #  \copyright CC CC BY-NC-ND 4.0
 #
@@ -89,7 +89,8 @@ SOURCES += ./src/Core/main.cpp \
     src/Gui/Calibration/af4innercalibrationframe.cpp \
     src/Gui/Calibration/af4caliborgframe.cpp \
     src/Gui/Calibration/af4channeldimsorgframe.cpp \
-    src/Gui/smallQDerivates/af4filenamelineedit.cpp
+    src/Gui/smallQDerivates/af4filenamelineedit.cpp \
+    src/Gui/smallQDerivates/af4numberdisplay.cpp
 
 HEADERS  += ./src/Core/af4parameterstructs.h \
     ./src/Core/af4constants.h \
@@ -128,7 +129,8 @@ HEADERS  += ./src/Core/af4parameterstructs.h \
     src/Gui/Calibration/af4caliborgframe.h \
     src/Core/af4evalmacros.h \
     src/Gui/Calibration/af4channeldimsorgframe.h \
-    src/Gui/smallQDerivates/af4filenamelineedit.h
+    src/Gui/smallQDerivates/af4filenamelineedit.h \
+    src/Gui/smallQDerivates/af4numberdisplay.h
 
 RESOURCES += \
     ./Resources/images.qrc
