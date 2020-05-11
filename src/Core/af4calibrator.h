@@ -74,7 +74,12 @@ public:
     * \return
     */
    CalibErrorCode checkParameters();
+   /*!
+    * \brief calibrate_classic implements the basic AF4 calibrtaion with tvoid for volume calibration
+    * \return
+    */
    CalibResult calibrate_classic();
+   CalibResult calibrate_approxGeo();
    CalibResult calibrate_geometric();
    CalibResult calibrate_hydrodynamic();
 

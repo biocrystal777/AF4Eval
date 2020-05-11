@@ -73,6 +73,64 @@ CalibResult AF4Calibrator::calibrate_classic()
    return result;
 }
 
+CalibResult AF4Calibrator::calibrate_approxGeo()
+{
+   CalibResult result { .width = 0.0, .volume = 0.0 , .errorCode = CalibErrorCode::ParamsNotChecked , .sqDelta = 0.0 };
+   if(!paramsChecked) return result;
+
+   // adjust time axis according to leftOffsetTime
+   const double tvoid  = params.voidPeakTime;        // params.leftOffsetTime;  // remove focussing time offset
+   const double te     = params.elutionTime;         // - params.leftOffsetTime;   // remove focussing time offset
+   const double D      = params.diffCoeff * 60.0;    // cm^2/s => cm^2/min
+   const double Ve     = params.elutionFlow;
+   const double Vc     = params.crossFlow;
+   const double z_perc = params.relFocusPoint / 100.0;                // percentage to ratio
+
+   // (1) Calculate Volume:
+   double V0 =0.0;
+   {
+      double flowRatio = (Ve + Vc)/ Vc;
+   double hydVolumeDivisor = log((z_perc - flowRatio) / (1.0 - flowRatio));
+   V0 = (Vc * tvoid) / hydVolumeDivisor;
+   }
+
+   // (2) Calculate RMeas:
+   double rMeas = tvoid / te;
+
+   // (3) Initialize w and δ
+   double rmsDiff = 1.0;
+   double minWidth = 0.00001;
+   double maxWidth = 10;
+   double w = (minWidth + maxWidth)/ 2;
+   double delta = (maxWidth - minWidth)/2;
+   const uint maxIterations = 100;
+   uint i=0;
+
+   // (4) calculate channel width w by bisection that |RMeas - Rcalc| =! min
+   while (delta > 0.0 && i < maxIterations ){
+      double lambda = (D * V0) / (Vc * w * w);
+      double twoLambda = 2 * lambda;
+      double rCalc = 6*lambda*(coth(1 / twoLambda) - twoLambda);
+      double rDiff = rCalc - rMeas;
+      rmsDiff = rDiff * rDiff;
+      if ( rDiff > 0 )
+      {  // rCalc too big => omega has to be increased
+         w += delta;
+         delta /= 2;
+      }
+      else if ( rDiff < 0 )
+      {  // rCalc too small => omega has to be decreased
+         w -= delta;
+         delta /= 2;
+      }
+      else break;
+      ++i;
+   }
+   // -> package results
+   result = CalibResult{ w, V0, CalibErrorCode::noError, rmsDiff};
+   return result;
+}
+
 CalibResult AF4Calibrator::calibrate_geometric()
 {
    CalibResult result { .width = 0.0, .volume = 0.0 , .errorCode = CalibErrorCode::ParamsNotChecked , .sqDelta = 0.0 };

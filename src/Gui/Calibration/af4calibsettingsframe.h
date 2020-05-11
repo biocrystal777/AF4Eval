@@ -173,6 +173,7 @@ private:
    QString currentCalibKey;
 
    QLabel *LTot                            = nullptr;
+
    QLabel *L1                             = nullptr;
    QLabel *L2                             = nullptr;
    QLabel *L3                             = nullptr;

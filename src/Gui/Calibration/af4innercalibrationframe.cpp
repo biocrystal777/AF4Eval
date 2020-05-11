@@ -61,12 +61,18 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    classicMode = new QCheckBox(this);
    classicMode->setChecked(true);
    lay->addWidget(classicMode, 2, 0);
+
+   approxGeoMode = new QCheckBox(this);
+   approxGeoMode->setChecked(true);
+   lay->addWidget(approxGeoMode, 3, 0);
+
    geoMode = new QCheckBox(this);
    geoMode->setChecked(true);
-   lay->addWidget(geoMode, 3, 0);
+   lay->addWidget(geoMode, 4, 0);
+
    hydMode = new QCheckBox(this);
    hydMode->setChecked(true);
-   lay->addWidget(hydMode, 4, 0);
+   lay->addWidget(hydMode, 5, 0);
 
    auto makeSpinBox = [this](QDoubleSpinBox *&spinBox, QwtTextLabel *&label, QString labelString, QString toolTip, int row, int column) {
       label = new QwtTextLabel(this);
@@ -85,18 +91,22 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
       spinBox->setMaximum(maximum);
    };
 
-   makeSpinBox(  channelWidth,     channelWidthLabel,       "w_cla / µm",   "Channel width",  2, 2);
+   makeSpinBox(  channelWidth,          channelWidthLabel,          "w_cla / µm",   "Channel width",  2, 2);
    configSpinBox(channelWidth,           2, 1e-2, 1e-2, 9.9e3);
-   makeSpinBox(  channelWidthGeo,   channelWidthGeoLabel,   "w_geo / µm",   "Channel width",  3, 2);
+   makeSpinBox(  channelWidthApproxGeo, channelWidthApproxGeoLabel, "w_app / µm",   "Channel width",  3, 2);
+   configSpinBox(channelWidth,           2, 1e-2, 1e-2, 9.9e3);
+   makeSpinBox(  channelWidthGeo,       channelWidthGeoLabel,       "w_geo / µm",   "Channel width",  4, 2);
    configSpinBox(channelWidthGeo,        2, 1e-2, 1e-2, 9.9e3);
-   makeSpinBox(  channelWidthHydro, channelWidthHydroLabel, "w_hyd / µm",   "Channel width",  4, 2);
+   makeSpinBox(  channelWidthHydro,     channelWidthHydroLabel,     "w_hyd / µm",   "Channel width",  5, 2);
    configSpinBox(channelWidthHydro,      2, 1e-2, 1e-2, 9.9e3);
 
-   makeSpinBox(  classicalVolume, classicalVolumeLabel,     "V_cla / ml",   "Channel Volume", 2, 4);
+   makeSpinBox(  classicalVolume,    classicalVolumeLabel,          "V_cla / ml",   "Channel Volume", 2, 4);
    configSpinBox(classicalVolume,        4, 1e-4, 1e-4, 9.9e2);
-   makeSpinBox(  geometVolume, geometVolumeLabel,           "V_geo / ml",   "Channel Volume", 3, 4);
+   makeSpinBox(  approxGeometVolume, approxGeometVolumeLabel,       "V_cla / ml",   "Channel Volume", 3, 4);
+   configSpinBox(classicalVolume,        4, 1e-4, 1e-4, 9.9e2);
+   makeSpinBox(  geometVolume,       geometVolumeLabel,             "V_geo / ml",   "Channel Volume", 4, 4);
    configSpinBox(geometVolume,           4, 1e-4, 1e-4, 9.9e2);
-   makeSpinBox(  hydrodynVolume, hydrodynVolumeLabel,       "V_hydro / ml", "Channel Volume", 4, 4);
+   makeSpinBox(  hydrodynVolume,     hydrodynVolumeLabel,           "V_hydro / ml", "Channel Volume", 5, 4);
    configSpinBox(hydrodynVolume,         4, 1e-4, 1e-4, 9.9e2);
 
    auto adaptReadiness = [this](){
@@ -115,6 +125,16 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    });
    connect(classicMode, &QCheckBox::toggled, adaptReadiness);
    connect(classicMode, &QCheckBox::toggled, callCalibModeSettingsChanged);
+
+   connect(approxGeoMode, &QCheckBox::toggled, [this](bool enable){
+      channelWidthApproxGeo->     setEnabled(enable);
+      channelWidthApproxGeoLabel->setEnabled(enable);
+      approxGeometVolume->        setEnabled(enable);
+      approxGeometVolumeLabel->   setEnabled(enable);
+   });
+   connect(geoMode, &QCheckBox::toggled, adaptReadiness);
+   connect(geoMode, &QCheckBox::toggled, callCalibModeSettingsChanged);
+
    connect(geoMode, &QCheckBox::toggled, [this](bool enable){
       channelWidthGeo->     setEnabled(enable);
       channelWidthGeoLabel->setEnabled(enable);
@@ -159,10 +179,12 @@ void AF4InnerCalibrationFrame::saveSettings()
    settings.setIniCodec("UTF-8");
    settings.setValue(tr("channels/%1/calib/%2/uncertRange").arg(channelId).arg(calibId),       QVariant(uncertRange->value()));
    settings.setValue(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId),    QVariant(uncertGrid->value()));
-   settings.setValue(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId),      QVariant(getChannelWidth()));
+   settings.setValue(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId),      QVariant(getChannelWidth()));   
    settings.setValue(tr("channels/%1/calib/%2/channelWidthGeo").arg(channelId).arg(calibId),   QVariant(getChannelWidthGeo()));
+   settings.setValue(tr("channels/%1/calib/%2/channelWidthApproxGeo").arg(channelId).arg(calibId),   QVariant(getChannelWidthApproxGeo()));
    settings.setValue(tr("channels/%1/calib/%2/channelWidthHydro").arg(channelId).arg(calibId), QVariant(getChannelWidthHydro()));
    settings.setValue(tr("channels/%1/calib/%2/classicalVolume").arg(channelId).arg(calibId),   QVariant(getClassicalVolume()));
+   settings.setValue(tr("channels/%1/calib/%2/approxGeometVolume").arg(channelId).arg(calibId),      QVariant(getApproxGeometVolume()));
    settings.setValue(tr("channels/%1/calib/%2/geometVolume").arg(channelId).arg(calibId),      QVariant(getGeometVolume()));
    settings.setValue(tr("channels/%1/calib/%2/hydrodynVolume").arg(channelId).arg(calibId),    QVariant(getHydrodynVolume()));
    //settings.setValue(tr("channels/%1/calib/%2/calibFileName").arg(channelId).arg(calibId), QVariant(this->getInputFilePath(true)));
@@ -193,9 +215,11 @@ void AF4InnerCalibrationFrame::loadSettings()
 
    loadSetting("uncertRange",       [this](double v) -> bool { this->uncertRange->setValue(v);    return true;} , 1.0 );
    loadSetting("channelWidth",      [this](double v) -> bool { this->setChannelWidthClassical(v); return true;},  1.0 );
+   loadSetting("channelWidthApproxGeo",   [this](double v) -> bool { this->setChannelWidthApproxGeo(v);       return true;},  1.0 );
    loadSetting("channelWidthGeo",   [this](double v) -> bool { this->setChannelWidthGeo(v);       return true;},  1.0 );
    loadSetting("channelWidthHydro", [this](double v) -> bool { this->setChannelWidthHydro(v);     return true;},  1.0 );
    loadSetting("classicalVolume",   [this](double v) -> bool { return setClassicalVolume(v);                  },  1.0 );
+   loadSetting("approxGeometVolume",      [this](double v) -> bool { return setApproxGeometVolume(v);                     },  1.0 );
    loadSetting("geometVolume",      [this](double v) -> bool { return setGeometVolume(v);                     },  1.0 );
    loadSetting("hydrodynVolume",    [this](double v) -> bool { return setHydrodynVolume(v);                   },  1.0 );
 

@@ -16,6 +16,7 @@
 
 enum struct CalibMode {
    classical,
+   approxGeometric,
    geometric,
    hydrodynamic
 };
@@ -28,6 +29,10 @@ struct CalibModeSettings {
    const bool   geometric;
    const bool   hydrodynamic;
 };
+
+//class AF4InnerCalibResultLine
+
+
 
 /*! ***************************************************************************************
 ***
@@ -68,6 +73,12 @@ public:
     * \brief getChannelWidthGeo
     * \return
     */
+   double getChannelWidthApproxGeo() const { return channelWidthApproxGeo->value() / 1e4; }
+
+   /*!
+    * \brief getChannelWidthGeo
+    * \return
+    */
    double getChannelWidthGeo() const { return channelWidthGeo->value() / 1e4; }
 
    /*!
@@ -89,6 +100,14 @@ public:
    * \return hydrodynVolume
    */
    double getHydrodynVolume() const { return hydrodynVolume->value(); }
+
+   /*!
+   * \brief getGeometVolume returns the channel width shown
+   *        in the corresponding FFFTwoBoxWidget
+   * \return geometVolume
+   */
+   double getApproxGeometVolume() const { return approxGeometVolume->value(); }
+
 
    /*!
    * \brief getGeometVolume returns the channel width shown
@@ -137,6 +156,13 @@ public:
     */
    SET_MACRO(setGeometVolume, geometVolume)
 
+   /*!
+    * \brief hydrodynVolume set value of the channelWidth
+    * \return bool if value could be set
+    */
+   SET_MACRO(setApproxGeometVolume, approxGeometVolume)
+
+
 #undef SET_MACRO
    /*!
     * \brief setChannelWidth set value of the channelWidth
@@ -148,6 +174,13 @@ public:
    * \param value
    */
    void setChannelWidthGeo(double value) { channelWidthGeo->setValue(value * 1e4); }    // set in cm, display in µm
+
+   /*!
+   * \brief setChannelWidthGeo
+   * \param value
+   */
+   void setChannelWidthApproxGeo(double value) { channelWidthApproxGeo->setValue(value * 1e4); }    // set in cm, display in µm
+
    /*!
    * \brief setChannelWidthHydro
    * \param value
@@ -178,20 +211,25 @@ private:
    QGridLayout    *lay               = nullptr;
    QPushButton    *calibButton       = nullptr;
    QCheckBox      *classicMode       = nullptr;
+   QCheckBox      *approxGeoMode     = nullptr;
    QCheckBox      *geoMode           = nullptr;
    QCheckBox      *hydMode           = nullptr;
 
    QwtTextLabel *channelWidthLabel      = nullptr;
+   QwtTextLabel *channelWidthApproxGeoLabel = nullptr;
+   QwtTextLabel *channelWidthGeoLabel   = nullptr;   
    QwtTextLabel *channelWidthHydroLabel = nullptr;
-   QwtTextLabel *channelWidthGeoLabel   = nullptr;
-   QwtTextLabel *classicalVolumeLabel   = nullptr;
-   QwtTextLabel *hydrodynVolumeLabel    = nullptr;
+   QwtTextLabel *classicalVolumeLabel   = nullptr;   
+   QwtTextLabel *approxGeometVolumeLabel = nullptr;
    QwtTextLabel *geometVolumeLabel      = nullptr;
+   QwtTextLabel *hydrodynVolumeLabel    = nullptr;
 
    QDoubleSpinBox *channelWidth      = nullptr;
-   QDoubleSpinBox *channelWidthHydro = nullptr;
+   QDoubleSpinBox *channelWidthApproxGeo = nullptr;
    QDoubleSpinBox *channelWidthGeo   = nullptr;
+   QDoubleSpinBox *channelWidthHydro = nullptr;
    QDoubleSpinBox *classicalVolume   = nullptr;
+   QDoubleSpinBox *approxGeometVolume = nullptr;
    QDoubleSpinBox *hydrodynVolume    = nullptr;
    QDoubleSpinBox *geometVolume      = nullptr;
 
