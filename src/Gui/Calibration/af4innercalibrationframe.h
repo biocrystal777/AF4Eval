@@ -27,11 +27,57 @@ struct CalibModeSettings {
    const uint   uncertGridSize;
    const bool   classical;
    const bool   geometric;
+   const bool   approxGeometric;
    const bool   hydrodynamic;
 };
 
-//class AF4InnerCalibResultLine
 
+/*! ***************************************************************************************
+***
+***  \class     AF4InnerCalibrationFrame "src/Gui/Calibration/af4channelcalibwidget.h"
+***  \brief     AF4InnerCalibrationFrame  displays results (width and volume) from one calibration algorithm
+***
+******************************************************************************************/
+
+class AF4InnerCalibResultLine final : public QWidget {
+   Q_OBJECT
+public:
+   AF4InnerCalibResultLine( CalibMode calibMode,
+                            QWidget *parent);
+   ~AF4InnerCalibResultLine(){}
+
+   double getWidth() const { return width->value() / 1e4; } // display in µm, return in cm
+   double getVolume() const { return volume->value(); }
+   void setWidth(double value) { width->setValue(value * 1e4); } // set in cm, display in µm
+   bool setVolume(double value) {
+      if(value < volume->minimum()){
+         volume->setValue(volume->minimum());
+         return false;
+      }
+      else if(value > volume->maximum()){
+         volume->setValue(volume->maximum());
+         return false;
+      }
+      else{
+         volume->setValue(value);
+         return false;
+      }
+   }
+
+signals:
+   void useBoxToggled();
+
+private:
+   CalibMode calibMode;
+   QHBoxLayout    *lay         = nullptr;
+   QCheckBox      *useBox      = nullptr;
+   QwtTextLabel   *widthLabel  = nullptr;
+   QwtTextLabel   *volumeLabel = nullptr;
+   QDoubleSpinBox *volume      = nullptr;
+   QDoubleSpinBox *width       = nullptr;
+
+   NO_COPY_MOVE_CTORS(AF4InnerCalibResultLine)
+};
 
 
 /*! ***************************************************************************************

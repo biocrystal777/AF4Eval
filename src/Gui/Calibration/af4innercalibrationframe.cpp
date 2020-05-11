@@ -230,3 +230,43 @@ void AF4InnerCalibrationFrame::loadSettings()
                          .arg("channels/.../calib/.../uncertGridSize").arg("0.0e0"));
    this->uncertGrid->setValue(calibValInt);
 }
+
+AF4InnerCalibResultLine::AF4InnerCalibResultLine(CalibMode calibMode,QWidget *parent) : calibMode(calibMode), QWidget(parent)
+{
+   lay = new QHBoxLayout(this);
+
+   useBox = new QCheckBox(this);
+   useBox->setChecked(true);
+   lay->addWidget(useBox);
+
+   auto makeSpinBox = [this](QDoubleSpinBox *&spinBox, QwtTextLabel *&label, QString labelString, QString toolTip) {
+      label = new QwtTextLabel(this);
+      label->setText(labelString, QwtText::PlainText);
+      label->setToolTip(toolTip);
+      lay->addWidget(label, Qt::AlignLeft);
+      spinBox = new QDoubleSpinBox(this);
+      spinBox->setToolTip(toolTip);
+      lay->addWidget(spinBox);
+   };
+
+   auto configSpinBox = [this](QDoubleSpinBox *spinBox, int decimals, double singleStep, double minimum, double maximum){
+      spinBox->setDecimals(decimals);
+      spinBox->setSingleStep(singleStep);
+      spinBox->setMinimum(minimum);
+      spinBox->setMaximum(maximum);
+   };
+
+   makeSpinBox( width, widthLabel, "w_cla / µm",   "Channel width");
+   configSpinBox(width, 2, 1e-2, 1e-2, 9.9e3);
+
+   makeSpinBox( volume, volumeLabel, "V_cla / ml",   "Channel Volume");
+   configSpinBox( volume, 4, 1e-4, 1e-4, 9.9e2);
+
+   connect(useBox, &QCheckBox::toggled, [this](bool enable){
+      width->        setEnabled(enable);
+      widthLabel->   setEnabled(enable);
+      volume->     setEnabled(enable);
+      volumeLabel->setEnabled(enable);
+      emit useBoxToggled();
+   });
+}
