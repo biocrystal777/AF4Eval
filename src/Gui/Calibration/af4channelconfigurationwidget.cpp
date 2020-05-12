@@ -135,6 +135,9 @@ CalibResult AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDim
    case CalibMode::classical:
       result = calibrator.calibrate_classic();
       break;
+   case CalibMode::approxGeometric:
+      result = calibrator.calibrate_approxGeo();
+      break;
    case CalibMode::geometric:
       result = calibrator.calibrate_geometric();
       break;

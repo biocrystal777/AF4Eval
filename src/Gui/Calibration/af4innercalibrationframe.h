@@ -63,7 +63,7 @@ public:
       }
       else{
          volume->setValue(value);
-         return false;
+         return true;
       }
    }
 

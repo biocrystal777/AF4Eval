@@ -140,7 +140,7 @@ void AF4InnerCalibrationFrame::loadSettings()
    QSettings settings("AgCoelfen", "AF4Eval");
    settings.setIniCodec("UTF-8");
 
-   auto loadSetting = [this, &settings](QString paramKey, std::function< bool (double) > setVal, double defaultVal) {
+   auto loadSetting = [this, &settings](const QString &paramKey, std::function< bool (double) > setVal, double defaultVal) {
       bool ok;
       QString settingsKey = tr("channels/%1/calib/%2/%3").arg(this->channelId).arg(this->calibId).arg(paramKey);
       double settingsVal = settings.value(settingsKey).toDouble(&ok);
@@ -149,8 +149,8 @@ void AF4InnerCalibrationFrame::loadSettings()
                                  .arg(paramKey).arg(defaultVal)
                             );
       if(! setVal(settingsVal) )
-         AF4Log::logWarning(tr("Error while setting calib Value (diffusion Coefficient, %1, %2).")
-                            .arg(this->channelName).arg(this->calibName));
+         AF4Log::logWarning(tr("Error while setting calibration value in AF4InnerCalibrationFrame (%1, %2, %3).")
+                            .arg(paramKey).arg(this->channelName).arg(this->calibName));
    };
 
    loadSetting("uncertRange",           [this](double v) -> bool { this->uncertRange->setValue(v);    return true;} , 1.0 );
