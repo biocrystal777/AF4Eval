@@ -31,7 +31,6 @@ struct CalibModeSettings {
    const bool   hydrodynamic;
 };
 
-
 /*! ***************************************************************************************
 ***
 ***  \class     AF4InnerCalibrationFrame "src/Gui/Calibration/af4channelcalibwidget.h"
@@ -42,13 +41,17 @@ struct CalibModeSettings {
 class AF4InnerCalibResultLine final : public QWidget {
    Q_OBJECT
 public:
-   AF4InnerCalibResultLine( CalibMode calibMode,
-                            QWidget *parent);
+   AF4InnerCalibResultLine(const QString &wLabelStr,
+                           const QString &wtoolTipStr,
+                           const QString &vLabelStr,
+                           const QString &vtoolTipStr,
+                           QWidget *parent);
    ~AF4InnerCalibResultLine(){}
 
+   bool isUsed() const { return useBox->isChecked(); }
    double getWidth() const { return width->value() / 1e4; } // display in µm, return in cm
    double getVolume() const { return volume->value(); }
-   void setWidth(double value) { width->setValue(value * 1e4); } // set in cm, display in µm
+   void setWidth(double value) { width->setValue(value * 1e4); } // set in cm, display in µm   
    bool setVolume(double value) {
       if(value < volume->minimum()){
          volume->setValue(volume->minimum());
@@ -65,10 +68,10 @@ public:
    }
 
 signals:
-   void useBoxToggled();
+   void useBoxToggled(bool enable);
 
 private:
-   CalibMode calibMode;
+   //const CalibMode calibMode;
    QHBoxLayout    *lay         = nullptr;
    QCheckBox      *useBox      = nullptr;
    QwtTextLabel   *widthLabel  = nullptr;
@@ -99,8 +102,7 @@ public:
    AF4InnerCalibrationFrame(const int channelId,
                             const int calibId,
                             const QString channelName,
-                            const QString calibName,
-                            //QWeakPointer<QPushButton> saveButton,
+                            const QString calibName,                            
                             QWidget *parent);
    ~AF4InnerCalibrationFrame();
 
@@ -112,55 +114,55 @@ public:
    *        in the corresponding FFFTwoBoxWidget
    *
    * \return channel width
-   */
-   double getChannelWidth() const { return channelWidth->value() / 1e4; }    // display in µm, return in cm
+   */   
+   double getChannelWidth() const { return classicCalibLine->getWidth(); }
 
    /*!
     * \brief getChannelWidthGeo
     * \return
-    */
-   double getChannelWidthApproxGeo() const { return channelWidthApproxGeo->value() / 1e4; }
+    */   
+   double getChannelWidthApproxGeo() const { return approxGeoCalibLine->getWidth(); }
 
    /*!
     * \brief getChannelWidthGeo
     * \return
-    */
-   double getChannelWidthGeo() const { return channelWidthGeo->value() / 1e4; }
+    */   
+   double getChannelWidthGeo() const { return geometCalibLine->getWidth(); }
 
    /*!
     * \brief getChannelWidthHydro
     * \return
-    */
-   double getChannelWidthHydro() const { return channelWidthHydro->value() / 1e4; }
+    */   
+   double getChannelWidthHydro() const { return hydrodynCalibLine->getWidth(); }
 
    /*!
    * \brief getDiffCoefficient returns the channel width shown
    *        in the corresponding FFFTwoBoxWidget
    * \return hydrodynVolume
-   */
-   double getClassicalVolume() const { return classicalVolume->value(); }
-
-   /*!
-   * \brief getDiffCoefficient returns the channel width shown
-   *        in the corresponding FFFTwoBoxWidget
-   * \return hydrodynVolume
-   */
-   double getHydrodynVolume() const { return hydrodynVolume->value(); }
-
-   /*!
-   * \brief getGeometVolume returns the channel width shown
-   *        in the corresponding FFFTwoBoxWidget
-   * \return geometVolume
-   */
-   double getApproxGeometVolume() const { return approxGeometVolume->value(); }
+   */   
+   double getClassicalVolume() const { return classicCalibLine->getVolume(); }
 
 
    /*!
    * \brief getGeometVolume returns the channel width shown
    *        in the corresponding FFFTwoBoxWidget
    * \return geometVolume
+   */   
+   double getApproxGeometVolume() const { return approxGeoCalibLine->getVolume(); }
+
+   /*!
+   * \brief getGeometVolume returns the channel width shown
+   *        in the corresponding FFFTwoBoxWidget
+   * \return geometVolume
    */
-   double getGeometVolume() const { return geometVolume->value(); }
+   double getGeometVolume() const { return geometCalibLine->getVolume(); }
+
+   /*!
+   * \brief getDiffCoefficient returns the channel width shown
+   *        in the corresponding FFFTwoBoxWidget
+   * \return hydrodynVolume
+   */
+   double getHydrodynVolume() const { return hydrodynCalibLine->getVolume(); }
 
    /*!
    * \brief getChannelDimsFromCalib
@@ -168,70 +170,55 @@ public:
    */
    //ChannelDimsFromCalib getChannelDimsFromCalib() const;
 
-#define SET_MACRO(function, boxPtr) \
-   bool function(double value){\
-   if(value < boxPtr->minimum()){\
-   boxPtr->setValue(boxPtr->minimum());\
-   return false;\
-}\
-   else if (value > boxPtr->maximum()){\
-   boxPtr->setValue(boxPtr->maximum());\
-   return false;\
-}\
-   else {\
-   boxPtr->setValue(value);\
-   return true;\
-}\
-};
-
    /*!
    * \brief hydrodynVolume set value of the channelWidth
    * \return bool if value could be set
-   */
-   SET_MACRO(setClassicalVolume, classicalVolume)
+   */   
+   bool setClassicalVolume(double value){ return classicCalibLine->setVolume(value); }
 
    /*!
     * \brief hydrodynVolume set value of the channelWidth
     * \return bool if value could be set
     */
-   SET_MACRO(setHydrodynVolume, hydrodynVolume)
+   bool setApproxGeometVolume(double value){ return approxGeoCalibLine->setVolume(value); }
+
+
+   /*!
+    * \brief hydrodynVolume set value of the channelWidth
+    * \return bool if value could be set
+    */   
+   bool setGeometVolume(double value){ return geometCalibLine->setVolume(value); }
 
    /*!
     * \brief hydrodynVolume set value of the channelWidth
     * \return bool if value could be set
     */
-   SET_MACRO(setGeometVolume, geometVolume)
-
-   /*!
-    * \brief hydrodynVolume set value of the channelWidth
-    * \return bool if value could be set
-    */
-   SET_MACRO(setApproxGeometVolume, approxGeometVolume)
+   bool setHydrodynVolume(double value){ return hydrodynCalibLine->setVolume(value); }
 
 
-#undef SET_MACRO
    /*!
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
-    */
-   void setChannelWidthClassical(double value) { channelWidth->setValue(value * 1e4); } // set in cm, display in µm
-   /*!
-   * \brief setChannelWidthGeo
-   * \param value
-   */
-   void setChannelWidthGeo(double value) { channelWidthGeo->setValue(value * 1e4); }    // set in cm, display in µm
+    */   
+   void setChannelWidthClassical(double value) { classicCalibLine->setWidth(value); }
 
    /*!
    * \brief setChannelWidthGeo
    * \param value
    */
-   void setChannelWidthApproxGeo(double value) { channelWidthApproxGeo->setValue(value * 1e4); }    // set in cm, display in µm
+   void setChannelWidthApproxGeo(double value) { approxGeoCalibLine->setWidth(value); }
+
+   /*!
+    * \brief setChannelWidthGeo
+    * \param value
+    */
+   void setChannelWidthGeo(double value) { geometCalibLine->setWidth(value); }
 
    /*!
    * \brief setChannelWidthHydro
    * \param value
    */
-   void setChannelWidthHydro(double value) { channelWidthHydro->setValue(value * 1e4); }// set in cm, display in µm
+   void setChannelWidthHydro(double value) { approxGeoCalibLine->setWidth(value); }
 
 public slots:
    void saveSettings();
@@ -256,31 +243,13 @@ private:
 
    QGridLayout    *lay               = nullptr;
    QPushButton    *calibButton       = nullptr;
-   QCheckBox      *classicMode       = nullptr;
-   QCheckBox      *approxGeoMode     = nullptr;
-   QCheckBox      *geoMode           = nullptr;
-   QCheckBox      *hydMode           = nullptr;
 
-   QwtTextLabel *channelWidthLabel      = nullptr;
-   QwtTextLabel *channelWidthApproxGeoLabel = nullptr;
-   QwtTextLabel *channelWidthGeoLabel   = nullptr;   
-   QwtTextLabel *channelWidthHydroLabel = nullptr;
-   QwtTextLabel *classicalVolumeLabel   = nullptr;   
-   QwtTextLabel *approxGeometVolumeLabel = nullptr;
-   QwtTextLabel *geometVolumeLabel      = nullptr;
-   QwtTextLabel *hydrodynVolumeLabel    = nullptr;
-
-   QDoubleSpinBox *channelWidth      = nullptr;
-   QDoubleSpinBox *channelWidthApproxGeo = nullptr;
-   QDoubleSpinBox *channelWidthGeo   = nullptr;
-   QDoubleSpinBox *channelWidthHydro = nullptr;
-   QDoubleSpinBox *classicalVolume   = nullptr;
-   QDoubleSpinBox *approxGeometVolume = nullptr;
-   QDoubleSpinBox *hydrodynVolume    = nullptr;
-   QDoubleSpinBox *geometVolume      = nullptr;
+   AF4InnerCalibResultLine *classicCalibLine   = nullptr;
+   AF4InnerCalibResultLine *approxGeoCalibLine = nullptr;
+   AF4InnerCalibResultLine *geometCalibLine    = nullptr;
+   AF4InnerCalibResultLine *hydrodynCalibLine  = nullptr;
 
    NO_COPY_MOVE_CTORS(AF4InnerCalibrationFrame)
 };
-
 
 #endif // AF4INNERCALIBRATIONFRAME_H
