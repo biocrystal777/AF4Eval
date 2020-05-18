@@ -214,4 +214,3 @@ AF4InnerCalibResultLine::AF4InnerCalibResultLine(
       emit useBoxToggled(enable);
    });
 }
-

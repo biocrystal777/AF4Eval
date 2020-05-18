@@ -2,6 +2,7 @@
 #include <locale>
 
 using std::invalid_argument;
+using std::list;
 using std::string;
 using std::wstring;
 using std::stringstream;
@@ -88,7 +89,8 @@ bool AF4CsvParser::dataIsComplete(matD &data)
 vector<string> AF4CsvParser::split(const string& s,
                                    const char delim,
                                    const bool keepEmpty) const {
-   vector<string> result;
+   //vector<string> result;
+   list<string> result;
    string::const_iterator substart = s.begin();
    string::const_iterator subend = substart;
    while (subend != s.end()) {
@@ -98,7 +100,10 @@ vector<string> AF4CsvParser::split(const string& s,
          result.push_back(std::move(subElem));
       substart = subend + 1;
    }
-   return result;
+   //return result;
+   return vector<string>{std::make_move_iterator(result.begin()),
+            std::make_move_iterator(result.end())
+   };
 }
 
 auto AF4CsvParser::findCharPos(std::string::const_iterator start,
