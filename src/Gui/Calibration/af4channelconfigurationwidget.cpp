@@ -1,6 +1,7 @@
 #include "af4channelconfigurationwidget.h"
 
 using std::string;
+using std::function;
 
 AF4ChannelConfigurationWidget::AF4ChannelConfigurationWidget(QWidget *parent) :
    QWidget(parent), // settingsWriter (QSharedPointer<QPushButton>(new QPushButton("Save Parameters", this)))
@@ -75,13 +76,51 @@ void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDim
 {
    AF4Log::logText(tr("Calibrate with measured values..."));
    CalibResult result;
+
+   auto calibSingleAlgo = [this, chDims, params](CalibMode mode, bool conduct, const QString &algoName, function<void(double)> chWidthSetter, function<void(double)> volumeSetter){
+      if(conduct){
+         AF4Log::logText(tr("Try \"%1\" calibration...").arg(algoName));
+         CalibResult result = calibSingleParamSet(chDims, params, mode);
+         if(result.errorCode == CalibErrorCode::noError){
+            AF4Log::logText(tr("\"%1\" calibration Finished. w set to %2 µm, V set to %3.")
+                            .arg(algoName).arg(result.width * 10000).arg(result.volume));
+            chWidthSetter(result.width);
+            volumeSetter(result.volume);
+         }
+         else {
+            AF4Log::logError(tr("\"%1\" calibration could not be conducted.").arg(algoName));
+            logErrorMessage(result.errorCode);
+         }
+      }
+   };
+
+   calibSingleAlgo(CalibMode::classical, cModes.classical, QString("classical"),
+                   [this](double val){ calibsOrgFrame->setChannelWidthClassical(val); },
+                   [this](double val){ calibsOrgFrame->setClassicalVolume(val); }
+   );
+
+   calibSingleAlgo(CalibMode::approxGeometric, cModes.approxGeometric, QString("approxGeometric"),
+                   [this](double val){ calibsOrgFrame->setChannelWidthApproxGeo(val); },
+                   [this](double val){ calibsOrgFrame->setApproxGeometVolume(val); }
+   );
+
+   calibSingleAlgo(CalibMode::geometric, cModes.geometric, QString("geometric"),
+                   [this](double val){ calibsOrgFrame->setChannelWidthGeo(val); },
+                   [this](double val){ calibsOrgFrame->setGeometVolume(val); }
+   );
+
+   calibSingleAlgo(CalibMode::hydrodynamic, cModes.classical, QString("hydrodynamic"),
+                   [this](double val){ calibsOrgFrame->setChannelWidthHydro(val); },
+                   [this](double val){ calibsOrgFrame->setHydrodynVolume(val); }
+   );
+
+
+/*
    if(cModes.classical){
       AF4Log::logText(tr("Try \"Classical\" calibration..."));
       result = calibSingleParamSet(chDims, params, CalibMode::classical);
       if(result.errorCode == CalibErrorCode::noError){
-         AF4Log::logText(tr("\"Classical\" calibration Finished. w_cla set to %1 µm, V_cla set to %2.").arg(result.width * 10000).arg(result.volume));
-         //currentCalibWidget->setChannelWidthClassical(result.width);
-         //currentCalibWidget->setClassicalVolume(result.volume);
+         AF4Log::logText(tr("\"Classical\" calibration Finished. w_cla set to %1 µm, V_cla set to %2.").arg(result.width * 10000).arg(result.volume));         
          calibsOrgFrame->setChannelWidthClassical(result.width);
          calibsOrgFrame->setClassicalVolume(result.volume);
       }
@@ -96,8 +135,21 @@ void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDim
       result = calibSingleParamSet(chDims, params, CalibMode::geometric);
       if(result.errorCode == CalibErrorCode::noError){
          AF4Log::logText(tr("\"Geometric\" calibration finished. w_geo set to %1 µm, V_geo set to %2.").arg(result.width * 10000).arg(result.volume));
-         //currentCalibWidget->setChannelWidthGeo(result.width);
-         //currentCalibWidget->setGeometVolume(result.volume);
+         calibsOrgFrame->setChannelWidthGeo(result.width);
+         calibsOrgFrame->setGeometVolume(result.volume);
+      }
+      else {
+         AF4Log::logError(tr("\"Geometric\" calibration could not be conducted."));
+         logErrorMessage(result.errorCode);
+      }
+   }
+
+
+   if(cModes.geometric){
+      AF4Log::logText(tr("Try \"Geometric\" calibration..."));
+      result = calibSingleParamSet(chDims, params, CalibMode::geometric);
+      if(result.errorCode == CalibErrorCode::noError){
+         AF4Log::logText(tr("\"Geometric\" calibration finished. w_geo set to %1 µm, V_geo set to %2.").arg(result.width * 10000).arg(result.volume));         
          calibsOrgFrame->setChannelWidthGeo(result.width);
          calibsOrgFrame->setGeometVolume(result.volume);
       }
@@ -111,9 +163,7 @@ void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDim
       AF4Log::logText(tr("Try \"Hydrodynamic\" calibration..."));
       result = calibSingleParamSet(chDims, params, CalibMode::hydrodynamic);
       if(result.errorCode == CalibErrorCode::noError){
-         AF4Log::logText(tr("\"Hydrodynamic\" calibration Finished. w_hyd set to %1 µm, V_hyd set to %2.").arg(result.width * 10000).arg(result.volume));
-         //currentCalibWidget->setChannelWidthHydro(result.width);
-         //currentCalibWidget->setChannelWidthGeo(result.volume);
+         AF4Log::logText(tr("\"Hydrodynamic\" calibration Finished. w_hyd set to %1 µm, V_hyd set to %2.").arg(result.width * 10000).arg(result.volume));         
          calibsOrgFrame->setChannelWidthHydro(result.width);
          calibsOrgFrame->setHydrodynVolume(result.volume);
       }
@@ -122,6 +172,7 @@ void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDim
          logErrorMessage(result.errorCode);
       }
    }
+   */
 }
 
 CalibResult AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDims, ParametersForCalibration params, CalibMode mode)
@@ -323,6 +374,7 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
 -------------------------------------------------------------------------------------------------------------------*/
 
    CalibResult refResult;
+
    if(cModes.classical){
       // try a single test calibration to
       refResult = calibSingleParamSet(chDims, params, CalibMode::classical);
@@ -330,6 +382,9 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
          logErrorMessage(refResult.errorCode);
          return;
       }
+
+        // conduct iterative calibration with modified "uncertainty" values
+
       const double widthRefY = refResult.width;   // Y_width(X)
       const double VolumeRefY = refResult.volume;  // Y_vol(X)
       const string filePathPrefix("/home/bluemage/tests/deltaTests/delta_cla");
@@ -341,8 +396,29 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(voidPeakTime,  params, paramsDeltaMod, classical, "_voidPeakTime_cla.csv"  );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionTime,   params, paramsDeltaMod, classical, "_elutionTime_cla.csv"   );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, classical, "_diffCoeff_cla.csv"     );
-
    }
+
+   if(cModes.approxGeometric){
+      refResult = calibSingleParamSet(chDims, params, CalibMode::approxGeometric);
+      if(refResult.errorCode != CalibErrorCode::noError){
+         logErrorMessage(refResult.errorCode);
+         return;
+      }
+      // conduct iterative calibration with modified "uncertainty" values
+
+      const double widthRefY = refResult.width;   // Y_width(X)
+      const double VolumeRefY = refResult.volume;  // Y_vol(X)
+      const string filePathPrefix("/home/bluemage/tests/deltaTests/delta_appGeo");
+      const std::vector<string> header = {string("delta X"), string("delta width (geo)"), string("delta volume (appGeo)") };
+
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionFlow,   params, paramsDeltaMod, approxGeometric, "_elutionFlow_appGeo.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(crossFlow,     params, paramsDeltaMod, approxGeometric, "_crossFlow_appGeo.csv"     );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(relFocusPoint, params, paramsDeltaMod, approxGeometric, "_relFocusPoint_appGeo.csv" );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(voidPeakTime,  params, paramsDeltaMod, approxGeometric, "_voidPeakTime_appGeo.csv"  );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionTime,   params, paramsDeltaMod, approxGeometric, "_elutionTime_appGeo.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, approxGeometric, "_diffCoeff_appGeo.csv"     );
+   }
+
    if(cModes.geometric){
       refResult = calibSingleParamSet(chDims, params, CalibMode::geometric);
       if(refResult.errorCode != CalibErrorCode::noError){
@@ -362,8 +438,8 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(voidPeakTime,  params, paramsDeltaMod, geometric, "_voidPeakTime_geo.csv"  );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionTime,   params, paramsDeltaMod, geometric, "_elutionTime_geo.csv"   );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, geometric, "_diffCoeff_geo.csv"     );
-
    }
+
    if(cModes.hydrodynamic){
       refResult = calibSingleParamSet(chDims, params, CalibMode::hydrodynamic);
       if(refResult.errorCode != CalibErrorCode::noError){
@@ -383,8 +459,8 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(voidPeakTime,  params, paramsDeltaMod, hydrodynamic, "_voidPeakTime_hydro.csv"  );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionTime,   params, paramsDeltaMod, hydrodynamic, "_elutionTime_hydro.csv"   );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, hydrodynamic, "_diffCoeff_hydro.csv"     );
-
    }
+
 #undef ITERATIVE_PARAMETER_DELTA_ANALYSIS
 }
 

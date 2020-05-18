@@ -85,13 +85,26 @@ CalibResult AF4Calibrator::calibrate_approxGeo()
    const double Ve     = params.elutionFlow;
    const double Vc     = params.crossFlow;
    const double z_perc = params.relFocusPoint / 100.0;                // percentage to ratio
+   const double L1     = chDims.length1;
+   const double L23    = chDims.length2 + chDims.length3;
+   const double L      = chDims.chLength;
+   const double z0     = z_perc * chDims.chLength;
+   const double b0     = chDims.b0;
+   const double bDelta = b0 - chDims.bL;
 
    // (1) Calculate Volume:
-   double V0 =0.0;
+   double VApproxGeo =0.0;
    {
-      double flowRatio = (Ve + Vc)/ Vc;
-   double hydVolumeDivisor = log((z_perc - flowRatio) / (1.0 - flowRatio));
-   V0 = (Vc * tvoid) / hydVolumeDivisor;
+      const double Y = 0.5 * ( b0 + L1 / L23 ) * L1;
+      double T1 = b0 * z0;
+      T1 -= z0 * z0 * bDelta / ( 2 * L);
+      T1 -= Y;
+      if (z0 >= L1)
+         T1 /= 0.5 * bDelta * (L23 - z0);
+      else
+         T1 /= 0.5 * b0 / L1 * ( L1*L1 - z0*z0 ) + 0.5 * bDelta * L23;
+      T1 = 1.0 - T1;
+      T1 = log(1.0 + T1 * Vc / Ve);
    }
 
    // (2) Calculate RMeas:
@@ -108,7 +121,7 @@ CalibResult AF4Calibrator::calibrate_approxGeo()
 
    // (4) calculate channel width w by bisection that |RMeas - Rcalc| =! min
    while (delta > 0.0 && i < maxIterations ){
-      double lambda = (D * V0) / (Vc * w * w);
+      double lambda = (D * VApproxGeo) / (Vc * w * w);
       double twoLambda = 2 * lambda;
       double rCalc = 6*lambda*(coth(1 / twoLambda) - twoLambda);
       double rDiff = rCalc - rMeas;
@@ -127,7 +140,7 @@ CalibResult AF4Calibrator::calibrate_approxGeo()
       ++i;
    }
    // -> package results
-   result = CalibResult{ w, V0, CalibErrorCode::noError, rmsDiff};
+   result = CalibResult{ w, VApproxGeo, CalibErrorCode::noError, rmsDiff};
    return result;
 }
 

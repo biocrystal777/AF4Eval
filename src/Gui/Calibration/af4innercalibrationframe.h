@@ -26,8 +26,8 @@ struct CalibModeSettings {
    const double uncertRange;
    const uint   uncertGridSize;
    const bool   classical;
-   const bool   geometric;
    const bool   approxGeometric;
+   const bool   geometric;
    const bool   hydrodynamic;
 };
 
@@ -218,7 +218,7 @@ public:
    * \brief setChannelWidthHydro
    * \param value
    */
-   void setChannelWidthHydro(double value) { approxGeoCalibLine->setWidth(value); }
+   void setChannelWidthHydro(double value) { hydrodynCalibLine->setWidth(value); }
 
 public slots:
    void saveSettings();

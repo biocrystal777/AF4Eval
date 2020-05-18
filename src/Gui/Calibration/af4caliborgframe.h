@@ -103,14 +103,26 @@ public slots:
 
    void setClassicalVolume(double value){ curCalibWidget->setClassicalVolume(value); }
 
-   void setHydrodynVolume(double value){ curCalibWidget->setHydrodynVolume(value); }
+   void setApproxGeometVolume(double value){ curCalibWidget->setApproxGeometVolume(value); }
 
    void setGeometVolume(double value){ curCalibWidget->setGeometVolume(value); }
+
+   void setHydrodynVolume(double value){ curCalibWidget->setHydrodynVolume(value); }
+
+
    /*!
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
     */
    void setChannelWidthClassical(double value) { curCalibWidget->setChannelWidthClassical(value); }
+
+
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthApproxGeo(double value) { curCalibWidget->setChannelWidthApproxGeo(value); }
+
 
    /*!
     * \brief setChannelWidth set value of the channelWidth
@@ -224,9 +236,9 @@ private:
    QWeakPointer<QComboBox> channelSelection; // transitory solution for class split; replace by slot connnections later
    QSharedPointer<QMap<QString, AF4ChannelDimsWidget*> >                  channelConfigWidgets;
    QSharedPointer<QMap<QString, QMap<QString, AF4ChannelCalibWidget*> > > channelCalibWidgets;
-   QGridLayout *lay                                         = nullptr;
+   QGridLayout *lay                               = nullptr;
    AF4CalibPlotWidget *plotWidget                                              = nullptr;
-   AF4ChannelCalibWidget     *curCalibWidget                               = nullptr; // replace by private getter!
+   AF4ChannelCalibWidget     *curCalibWidget                          = nullptr; // replace by private getter!
 
    QMap<QString, QComboBox*> allCalibSelections;
    QComboBox                 *calibSelection                                  = nullptr;

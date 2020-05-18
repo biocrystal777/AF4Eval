@@ -178,14 +178,23 @@ public:
 
    void setClassicalVolume(double value){ innerCalibFrame->setClassicalVolume(value); }
 
-   void setHydrodynVolume(double value){ innerCalibFrame->setHydrodynVolume(value); }
+   void setApproxGeometVolume(double value){ innerCalibFrame->setApproxGeometVolume(value); }
 
    void setGeometVolume(double value){ innerCalibFrame->setGeometVolume(value); }
+
+   void setHydrodynVolume(double value){ innerCalibFrame->setHydrodynVolume(value); }
    /*!
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
     */
    void setChannelWidthClassical(double value) { innerCalibFrame->setChannelWidthClassical(value); }
+
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthApproxGeo(double value) { innerCalibFrame->setChannelWidthApproxGeo(value); }
+
 
    /*!
     * \brief setChannelWidth set value of the channelWidth
