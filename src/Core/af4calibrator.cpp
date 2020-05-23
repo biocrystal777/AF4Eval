@@ -90,21 +90,25 @@ CalibResult AF4Calibrator::calibrate_approxGeo()
    const double L      = chDims.chLength;
    const double z0     = z_perc * chDims.chLength;
    const double b0     = chDims.b0;
-   const double bDelta = b0 - chDims.bL;
+   const double bL     = chDims.bL;
+   const double bDelta = b0 - bL;
 
    // (1) Calculate Volume:
-   double VApproxGeo =0.0;
+   double VApproxGeo = 0.0;
    {
+      const double AL = 0.5 * b0 * L1 + bL * L23 + 0.5 * bDelta * L23;
       const double Y = 0.5 * ( b0 + L1 / L23 ) * L1;
       double T1 = b0 * z0;
       T1 -= z0 * z0 * bDelta / ( 2 * L);
       T1 -= Y;
-      if (z0 >= L1)
-         T1 /= 0.5 * bDelta * (L23 - z0);
-      else
-         T1 /= 0.5 * b0 / L1 * ( L1*L1 - z0*z0 ) + 0.5 * bDelta * L23;
+      //if (z0 >= L1)
+//         T1 /= 0.5 * bDelta * (L23 - z0);
+//      else
+//         T1 /= 0.5 * b0 / L1 * ( L1*L1 - z0*z0 ) + 0.5 * bDelta * L23;
       T1 = 1.0 - T1;
+      T1 = 1.0 - T1 / AL;
       T1 = log(1.0 + T1 * Vc / Ve);
+      VApproxGeo = Vc * tvoid / T1;
    }
 
    // (2) Calculate RMeas:
