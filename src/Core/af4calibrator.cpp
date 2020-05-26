@@ -231,8 +231,8 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
 
    // unpack all parameters and adjust units
    const double tvoid  = params.voidPeakTime;          // min
-   const double te     = params.elutionTime;           // min
-   const double D      = params.diffCoeff * 60.0;      // cm^2/s => cm^2/min
+   //const double te     = params.elutionTime;           // min
+   //const double D      = params.diffCoeff * 60.0;      // cm^2/s => cm^2/min
    const double Ve     = params.elutionFlow;         // <= not used for this calculation!
    const double Vc     = params.crossFlow;             // ml/min
    const double z_perc = params.relFocusPoint / 100.0; // percentage to ratio
@@ -268,6 +268,10 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double A2 = 0.5 * (b0 + bL) * L2;
    const double A3 = 0.5 * L3 * bL;
    const double AL = A1 + A2 + A3;
+
+
+   /* Start Analytical version
+   */
 
    // (4) Calculate substitution parameters and discriminants
    const double alpha2 =  t2 / m2;
@@ -305,6 +309,10 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
       CF = CF1 + CF2 + CF3;
    }
    qDebug() << "--------CF End--------";
+
+
+
+
    // (6) Calculate w
    const double w = 0.5 * tvoid / CF;
 
@@ -337,6 +345,7 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double AL = A1 + A2 + A3;
    */
 
+
    qDebug() << "alpha2" << alpha2;
    qDebug() << "alpha3" << alpha3;
    qDebug() << "beta1" << beta1;
@@ -353,6 +362,12 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    qDebug() << "CF" << CF;
    qDebug() << "w" << w;
    qDebug() << "Vhyd" << Vhyd;
+
+
+   /* End Analytical version
+   */
+
+
 
    qDebug() << " --------  Numeric approximation for CF integrals --------";
    qDebug() << "ξ" << "surface(ξ)" << "V(ξ)" << "E(ξ)/V(ξ)";
@@ -390,7 +405,6 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
       xi += dXi;
    }
 
-
    // CF3_num
    double CF3_num = 0.0;
    while (xi < L){
@@ -405,15 +419,180 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
 
    qDebug() << "numeric CF3" << CF3_num;
    double w_num = 0.5 * tvoid / (CF1_num + CF2_num + CF3_num);
-   double V_num = w_num * AL;
-   qDebug() << "w with numeric CF" << w_num;
-   qDebug() << "V0 with numeric CF" << V_num;
+   //double V_num = w_num * AL;
+   double V_num = w_num * passedSurface;
+   qDebug() << "w with numeric CF" << w_num << "cm";
+   qDebug() << "V0 with numeric CF" << V_num << "ml";
 
    qDebug() << " -------- End Numeric approximation  --------";
 
    result = CalibResult{ .width = w_num, .volume = V_num, .errorCode = CalibErrorCode::noError, .sqDelta = 0.0};
    return result;
 }
+
+
+CalibResult AF4Calibrator::calibrate_tVoidFree()
+{
+   CalibResult result { .width = 0.0, .volume = 0.0 , .errorCode = CalibErrorCode::ParamsNotChecked , .sqDelta = 0.0 };
+
+   qDebug() << "===================================";
+   qDebug() << "====== tvoid free calib\n";
+
+   // unpack all parameters and adjust units
+
+   // const double tvoid  = params.voidPeakTime;          // min, not used here!
+   const double te     = params.elutionTime;           // min
+   const double D      = params.diffCoeff * 60.0;      // cm^2/s => cm^2/min
+   const double Ve     = params.elutionFlow;         // <= not used for this calculation!
+   const double Vc     = params.crossFlow;             // ml/min
+   const double z_perc = params.relFocusPoint / 100.0; // percentage to ratio
+
+   const double L1 = chDims.length1; // cm
+   const double L2 = chDims.length2; // cm
+   const double L3 = chDims.length3; // cm
+   const double b0 = chDims.b0;      // cm
+   const double bL = chDims.bL;      // cm
+
+   // (1) Calculate additional "derived "parameters
+   const double L12    = L1 + L2;    // cm
+   const double L      = L12 + L3;   // cm
+   const double z0     = z_perc * L; // cm
+   const double bDelta = b0 - bL;    // cm
+   const double Vin    = Ve + Vc;    // cm
+
+   // (2) Calculate slopes and offsets of the channel plain border lines
+   const double m1 =  0.5 * b0 / L1;                  //
+   const double m2 = -0.5 * bDelta / L2;              //
+   const double m3 = -0.5 * bL / L3;                  //
+   const double t2 =  0.5 * (b0 + L1 * bDelta / L2 ); //
+   const double t3 =  0.5 * L * bL / L3;              //
+
+
+   // (3) Calculate area sections of the channel plain
+   const double A1 = 0.5 * b0 * L1;
+   const double A2 = 0.5 * (b0 + bL) * L2;
+   const double A3 = 0.5 * L3 * bL;
+   const double AL = A1 + A2 + A3;
+
+   qDebug() << " --------  Numeric approximation for CF integrals --------";
+   qDebug() << "ξ" << "surface(ξ)" << "V(ξ)" << "E(ξ)/V(ξ)";
+   const uint n = 1000;
+   const double dXi = L / n;
+   double xi = 0.0;
+   // find start:
+   while(xi < z0)
+      xi += dXi;
+
+   // CF1_num
+   double CF1_num = 0.0;
+   double Az = 0.0;     // passed surface A(z)
+   double VinZ = 0.0;   // remaining flow from Vz
+   double E_xi = 0.0;
+   while (xi < L1){
+      Az = m1 * squared(xi);
+      VinZ = (Vin - Vc / AL * Az);
+      E_xi = m1 * xi;
+      double EV_xi = m1 * xi / VinZ;
+      CF1_num += EV_xi * dXi;
+      xi += dXi;
+      qDebug() << xi << Az << VinZ << EV_xi << E_xi;
+   }
+   qDebug() << "numeric CF1" << CF1_num;
+   // CF2_num
+   double CF2_num = 0.0;
+   while (xi < L12){
+      Az = A1 + m2 * (squared(xi) - squared(L1)) + 2.0 * t2 * (xi - L1);
+      VinZ = Vin -     Vc / AL * Az ;
+      E_xi = m2 * xi + t2;
+      double EV_xi = (m2 * xi + t2) / VinZ;
+      qDebug() << xi << Az << VinZ << EV_xi << E_xi;
+      CF2_num += EV_xi * dXi;
+      xi += dXi;
+   }
+
+   // CF3_num
+   double CF3_num = 0.0;
+   while (xi < L){
+      Az = A1 +  A2 +  m3 * (squared(xi) - squared(L12))  + 2.0 * t3 * (xi - L12) ;
+      VinZ = Vin - Vc / AL  * Az  ;
+      E_xi = m3 * xi + t3;
+      double EV_xi = E_xi / VinZ;
+      CF3_num  += EV_xi * dXi;
+      xi += dXi;
+      qDebug() << xi << Az << VinZ << EV_xi << E_xi;
+   }
+
+   qDebug() << "numeric CF3" << CF3_num;
+   const double CF = CF1_num + CF2_num + CF3_num;
+   //double w_num = 0.5 * tvoid / (CF1_num + CF2_num + CF3_num);
+   //double V_num = w_num * AL;
+   //double V_num = w_num * passedSurface;
+   //qDebug() << "w with numeric CF" << w;
+   //qDebug() << "V0 with numeric CF" << V;
+
+   qDebug() << " -------- End Numeric approximation of CF  --------";
+
+   qDebug() << " -------- Calculate w  --------";
+
+   auto RDiff = [D, CF, te, Az, Vc, this](double w) -> double {
+      double Rte = 2.0 * CF * w;
+      double lambda = D * Az / ( Vc * w) ;
+      double twoLambda = 2.0 * lambda;
+      double RD = 6.0 * lambda * ( coth( 1 / twoLambda ) - twoLambda );
+      return squared(Rte - RD);
+   };
+
+   double wL = 1e-5;
+   double wR = 1.0;
+   double wM = 0.5 * (wL + wR);
+
+   double dWL = RDiff(wL);
+   double dWR = RDiff(wR);
+   double dWM = RDiff(wM);
+
+   const double convLimit = 1e-15;
+   //double conv = 1e9;
+
+   while(dWM > convLimit){
+      if(dWL > dWM && dWM > dWR){
+         wL  = wM;
+         dWL = dWM;
+         wM  = wR;
+         dWM = dWR;
+         wR  = wR + abs(wL-wM);
+         dWR = RDiff(wR);
+      }
+      else if(dWL < dWM && dWM < dWR){
+         wR  = wM;
+         dWR = dWM;
+         wM  = wL;
+         dWM = dWL;
+         wL  = wL + abs(wR-wM);
+         dWL = RDiff(wL);
+      }
+      else if(dWL > dWM && dWM < dWR){
+         wL  = 0.5 * (wL + wM);
+         dWL = RDiff(wL);
+         wR  = 0.5 * (wR + wM);
+         dWR = RDiff(wR);
+      }
+         else
+      {
+         AF4Log::logError(std::string("convergenceError"));
+         break;
+      }
+
+   }
+
+   double Vol = wM * Az;
+   result = CalibResult{ .width = wM, .volume = Vol, .errorCode = CalibErrorCode::noError, .sqDelta = dWM};
+   return result;
+}
+
+
+
+
+
 
 //void AF4Calibrator::calcGeometVolume(const double L1, const double L2, const double L3, const double L, const double b0, const double bL, const double zL)
 //{

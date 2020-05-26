@@ -18,8 +18,8 @@ enum struct CalibErrorCode : uint
 
 struct CalibResult
 {
-   double width;
-   double volume;
+   double width; // in cm
+   double volume; // in mm
    CalibErrorCode errorCode;
    double sqDelta;
 };
@@ -36,6 +36,7 @@ struct CalibResult
 ***              (pp. 11-16)
 ***  \version   1.1
 ***  \date      2018
+***  \todo      Restructure and parts like numerical CF calculations from extract functions!
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
 **************************************************************/
@@ -82,6 +83,7 @@ public:
    CalibResult calibrate_approxGeo();
    CalibResult calibrate_geometric();
    CalibResult calibrate_hydrodynamic();
+   CalibResult calibrate_tVoidFree();
 
 private:
    const ChannelDims chDims;
@@ -90,5 +92,6 @@ private:
 
    NO_COPY_MOVE_CTORS(AF4Calibrator)
 };
+
 
 #endif // AF4CALIBRATOR_H
