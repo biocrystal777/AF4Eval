@@ -532,10 +532,10 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
 
    qDebug() << " -------- End Numeric approximation of CF  --------";
 
-   qDebug() << " -------- Calculate w  --------";
+   qDebug() << " -------- Approximate w numerically  --------";
 
    auto RDiff = [D, CF, te, Az, Vc, this](double w) -> double {
-      double Rte = 2.0 * CF * w;
+      double Rte = 2.0 * CF * w / te;
       double lambda = D * Az / ( Vc * w) ;
       double twoLambda = 2.0 * lambda;
       double RD = 6.0 * lambda * ( coth( 1 / twoLambda ) - twoLambda );
@@ -550,48 +550,50 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
    double dWR = RDiff(wR);
    double dWM = RDiff(wM);
 
-   const double convLimit = 1e-15;
+   const double convLimit = 1e-8;
    //double conv = 1e9;
 
-   while(dWM > convLimit){
-      if(dWL > dWM && dWM > dWR){
-         wL  = wM;
-         dWL = dWM;
-         wM  = wR;
-         dWM = dWR;
-         wR  = wR + abs(wL-wM);
-         dWR = RDiff(wR);
-      }
-      else if(dWL < dWM && dWM < dWR){
-         wR  = wM;
-         dWR = dWM;
-         wM  = wL;
-         dWM = dWL;
-         wL  = wL + abs(wR-wM);
-         dWL = RDiff(wL);
-      }
-      else if(dWL > dWM && dWM < dWR){
-         wL  = 0.5 * (wL + wM);
-         dWL = RDiff(wL);
-         wR  = 0.5 * (wR + wM);
-         dWR = RDiff(wR);
-      }
-         else
-      {
-         AF4Log::logError(std::string("convergenceError"));
-         break;
-      }
 
-   }
+  qDebug() << "wL" << "dWL" << "wM" << "dWM" << "wR" << "dWR";
+  qDebug() << wL << dWL << wM << dWM << wR << dWR;
+  while(dWM > convLimit){
+     if(dWL > dWM && dWM > dWR){
+        wL  = wM;
+        dWL = dWM;
+        wM  = wR;
+        dWM = dWR;
+        wR  = wR + abs(wL-wM);
+        dWR = RDiff(wR);
+        qDebug() << "-> Right;";
+     }
+     else if(dWL < dWM && dWM < dWR){
+        wR  = wM;
+        dWR = dWM;
+        wM  = wL;
+        dWM = dWL;
+        wL  = wL > abs(wR-wM) ?  wL - abs(wR-wM) : 0.5*wL;
+        dWL = RDiff(wL);
+        qDebug() << "-> Left;";
+     }
+     else if(dWL > dWM && dWM < dWR){
+        wL  = 0.5 * (wL + wM);
+        dWL = RDiff(wL);
+        wR  = 0.5 * (wR + wM);
+        dWR = RDiff(wR);
+        qDebug() << "-> Center";
+     }
+     else
+     {
+        AF4Log::logError(std::string("convergenceError"));
+        break;
+     }
+     qDebug() << wL << dWL << wM << dWM << wR << dWR;
+  }
 
    double Vol = wM * Az;
    result = CalibResult{ .width = wM, .volume = Vol, .errorCode = CalibErrorCode::noError, .sqDelta = dWM};
    return result;
 }
-
-
-
-
 
 
 //void AF4Calibrator::calcGeometVolume(const double L1, const double L2, const double L3, const double L, const double b0, const double bL, const double zL)

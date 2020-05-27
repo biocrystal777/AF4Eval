@@ -109,11 +109,15 @@ void AF4ChannelConfigurationWidget::calibRealMeaurement(const ChannelDims &chDim
                    [this](double val){ calibsOrgFrame->setGeometVolume(val); }
    );
 
-   calibSingleAlgo(CalibMode::hydrodynamic, cModes.classical, QString("hydrodynamic"),
+   calibSingleAlgo(CalibMode::hydrodynamic, cModes.hydrodynamic, QString("hydrodynamic"),
                    [this](double val){ calibsOrgFrame->setChannelWidthHydro(val); },
                    [this](double val){ calibsOrgFrame->setHydrodynVolume(val); }
    );
 
+   calibSingleAlgo(CalibMode::tVoidFree, cModes.tVoidFree, QString("tVoidFree"),
+                   [this](double val){ calibsOrgFrame->setChannelWidthTVoidFree(val); },
+                   [this](double val){ calibsOrgFrame->setTVoidFreeVolume(val); }
+   );
 
 /*
    if(cModes.classical){
@@ -194,6 +198,9 @@ CalibResult AF4ChannelConfigurationWidget::calibSingleParamSet(ChannelDims chDim
       break;
    case CalibMode::hydrodynamic:
       result = calibrator.calibrate_hydrodynamic();
+      break;
+   case CalibMode::tVoidFree:
+      result = calibrator.calibrate_tVoidFree();
       break;
    }
   return result;

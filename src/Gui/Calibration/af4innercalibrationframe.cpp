@@ -69,6 +69,10 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    hydrodynCalibLine = new AF4InnerCalibResultLine("w_hyd / µm", "Channel width", "V_hyd / ml",   "Channel Volume", this);
    lay->addWidget(hydrodynCalibLine, 5, 0, 1, 7, Qt::AlignLeft );
 
+   tvoidfreeCalibLine = new AF4InnerCalibResultLine("w_noT / µm", "Channel width", "V_noT / ml",   "Channel Volume", this);
+   lay->addWidget(tvoidfreeCalibLine, 6, 0, 1, 7, Qt::AlignLeft );
+
+
    auto adaptReadiness = [this](){
       if(classicCalibLine->isUsed()
             || approxGeoCalibLine->isUsed()
@@ -95,6 +99,9 @@ AF4InnerCalibrationFrame::AF4InnerCalibrationFrame(const int channelId,
    connect(hydrodynCalibLine, &AF4InnerCalibResultLine::useBoxToggled, adaptReadiness);
    connect(hydrodynCalibLine, &AF4InnerCalibResultLine::useBoxToggled, callCalibModeSettingsChanged);
 
+   connect(tvoidfreeCalibLine, &AF4InnerCalibResultLine::useBoxToggled, adaptReadiness);
+   connect(tvoidfreeCalibLine, &AF4InnerCalibResultLine::useBoxToggled, callCalibModeSettingsChanged);
+
    loadSettings();
    connect(this, &AF4InnerCalibrationFrame::saveButtonClicked, this, &AF4InnerCalibrationFrame::saveSettings);   
 }
@@ -113,7 +120,8 @@ CalibModeSettings AF4InnerCalibrationFrame::getCalibModes() const
             classicCalibLine->isUsed(),
             approxGeoCalibLine->isUsed(),
             geometCalibLine->isUsed(),
-            hydrodynCalibLine->isUsed()
+            hydrodynCalibLine->isUsed(),
+            tvoidfreeCalibLine->isUsed()
    };
 }
 
@@ -125,13 +133,15 @@ void AF4InnerCalibrationFrame::saveSettings()
    settings.setValue(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId),    QVariant(uncertGrid->value()));
 
    settings.setValue(tr("channels/%1/calib/%2/channelWidth").arg(channelId).arg(calibId),          QVariant(getChannelWidth()));
-   settings.setValue(tr("channels/%1/calib/%2/channelWidthGeo").arg(channelId).arg(calibId),       QVariant(getChannelWidthGeo()));
    settings.setValue(tr("channels/%1/calib/%2/channelWidthApproxGeo").arg(channelId).arg(calibId), QVariant(getChannelWidthApproxGeo()));
+   settings.setValue(tr("channels/%1/calib/%2/channelWidthGeo").arg(channelId).arg(calibId),       QVariant(getChannelWidthGeo()));   
    settings.setValue(tr("channels/%1/calib/%2/channelWidthHydro").arg(channelId).arg(calibId),     QVariant(getChannelWidthHydro()));
+   settings.setValue(tr("channels/%1/calib/%2/channelWidthtvoidFree").arg(channelId).arg(calibId),     QVariant(getChannelWidthTvoidFree()));
    settings.setValue(tr("channels/%1/calib/%2/classicalVolume").arg(channelId).arg(calibId),       QVariant(getClassicalVolume()));
    settings.setValue(tr("channels/%1/calib/%2/approxGeometVolume").arg(channelId).arg(calibId),    QVariant(getApproxGeometVolume()));
    settings.setValue(tr("channels/%1/calib/%2/geometVolume").arg(channelId).arg(calibId),          QVariant(getGeometVolume()));
    settings.setValue(tr("channels/%1/calib/%2/hydrodynVolume").arg(channelId).arg(calibId),        QVariant(getHydrodynVolume()));
+   settings.setValue(tr("channels/%1/calib/%2/tvoidFreeVolume").arg(channelId).arg(calibId),        QVariant(getTvoidFreeVolume()));
 }
 
 void AF4InnerCalibrationFrame::loadSettings()
@@ -158,10 +168,12 @@ void AF4InnerCalibrationFrame::loadSettings()
    loadSetting("channelWidthApproxGeo", [this](double v) -> bool { this->setChannelWidthApproxGeo(v); return true;},  1.0 );
    loadSetting("channelWidthGeo",       [this](double v) -> bool { this->setChannelWidthGeo(v);       return true;},  1.0 );
    loadSetting("channelWidthHydro",     [this](double v) -> bool { this->setChannelWidthHydro(v);     return true;},  1.0 );
+   loadSetting("channelWidthtvoidFree", [this](double v) -> bool { this->setChannelWidthTvoidFree(v); return true;},  1.0 );
    loadSetting("classicalVolume",       [this](double v) -> bool { return setClassicalVolume(v);                  },  1.0 );
    loadSetting("approxGeometVolume",    [this](double v) -> bool { return setApproxGeometVolume(v);               },  1.0 );
    loadSetting("geometVolume",          [this](double v) -> bool { return setGeometVolume(v);                     },  1.0 );
    loadSetting("hydrodynVolume",        [this](double v) -> bool { return setHydrodynVolume(v);                   },  1.0 );
+   loadSetting("tvoidFreeVolume",       [this](double v) -> bool { return setTvoidFreeVolume(v);                  },  1.0 );
 
    bool ok;
    int calibValInt = settings.value(tr("channels/%1/calib/%2/uncertGridSize").arg(channelId).arg(calibId), "").toInt(&ok);

@@ -18,7 +18,8 @@ enum struct CalibMode {
    classical,
    approxGeometric,
    geometric,
-   hydrodynamic
+   hydrodynamic,
+   tVoidFree
 };
 
 struct CalibModeSettings {
@@ -29,6 +30,7 @@ struct CalibModeSettings {
    const bool   approxGeometric;
    const bool   geometric;
    const bool   hydrodynamic;
+   const bool   tVoidFree;
 };
 
 /*! ***************************************************************************************
@@ -136,6 +138,13 @@ public:
    double getChannelWidthHydro() const { return hydrodynCalibLine->getWidth(); }
 
    /*!
+    * \brief getChannelWidthTvoidFree
+    * \return
+    */
+   double getChannelWidthTvoidFree() const { return tvoidfreeCalibLine->getWidth(); }
+
+
+   /*!
    * \brief getDiffCoefficient returns the channel width shown
    *        in the corresponding FFFTwoBoxWidget
    * \return hydrodynVolume
@@ -163,6 +172,14 @@ public:
    * \return hydrodynVolume
    */
    double getHydrodynVolume() const { return hydrodynCalibLine->getVolume(); }
+
+
+   /*!
+   * \brief getDiffCoefficient returns the channel width shown
+   *        in the corresponding FFFTwoBoxWidget
+   * \return hydrodynVolume
+   */
+   double getTvoidFreeVolume() const { return tvoidfreeCalibLine->getVolume(); }
 
    /*!
    * \brief getChannelDimsFromCalib
@@ -195,6 +212,12 @@ public:
     */
    bool setHydrodynVolume(double value){ return hydrodynCalibLine->setVolume(value); }
 
+   /*!
+    * \brief hydrodynVolume set value of the channelWidth
+    * \return bool if value could be set
+    */
+   bool setTvoidFreeVolume(double value){ return tvoidfreeCalibLine->setVolume(value); }
+
 
    /*!
     * \brief setChannelWidth set value of the channelWidth
@@ -219,6 +242,12 @@ public:
    * \param value
    */
    void setChannelWidthHydro(double value) { hydrodynCalibLine->setWidth(value); }
+
+   /*!
+   * \brief setChannelWidthHydro
+   * \param value
+   */
+   void setChannelWidthTvoidFree(double value) { tvoidfreeCalibLine->setWidth(value); }
 
 public slots:
    void saveSettings();
@@ -246,8 +275,9 @@ private:
 
    AF4InnerCalibResultLine *classicCalibLine   = nullptr;
    AF4InnerCalibResultLine *approxGeoCalibLine = nullptr;
-   AF4InnerCalibResultLine *geometCalibLine    = nullptr;
-   AF4InnerCalibResultLine *hydrodynCalibLine  = nullptr;
+   AF4InnerCalibResultLine *geometCalibLine     = nullptr;
+   AF4InnerCalibResultLine *hydrodynCalibLine   = nullptr;
+   AF4InnerCalibResultLine *tvoidfreeCalibLine  = nullptr;
 
    NO_COPY_MOVE_CTORS(AF4InnerCalibrationFrame)
 };

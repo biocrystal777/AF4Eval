@@ -183,6 +183,8 @@ public:
    void setGeometVolume(double value){ innerCalibFrame->setGeometVolume(value); }
 
    void setHydrodynVolume(double value){ innerCalibFrame->setHydrodynVolume(value); }
+
+   void setTVoidFreeVolume(double value){ innerCalibFrame->setTvoidFreeVolume(value); }
    /*!
     * \brief setChannelWidth set value of the channelWidth
     * \return bool if value could be set
@@ -207,6 +209,12 @@ public:
     * \return bool if value could be set
     */
    void setChannelWidthHydro(double value) { innerCalibFrame->setChannelWidthHydro(value); }
+
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthTVoidFree(double value) { innerCalibFrame->setChannelWidthTvoidFree(value); }
 
 
    /*!

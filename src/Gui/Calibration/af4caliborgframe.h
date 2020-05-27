@@ -56,13 +56,13 @@ public:
     * \brief getParamsForCalibration
     * \return
     */
-   ParametersForCalibration getParamsForCalibration() const;
+   ParametersForCalibration getParamsForCalibration() const {  return curCalibWidget->getParametersForCalibration(); }
 
    /*!
     * \brief getCalibModes
     * \return
     */
-   CalibModeSettings getCalibModes() const;
+   CalibModeSettings getCalibModes() const { return curCalibWidget->getCalibModes(); }
 
 public slots:
    /*!
@@ -109,6 +109,7 @@ public slots:
 
    void setHydrodynVolume(double value){ curCalibWidget->setHydrodynVolume(value); }
 
+   void setTVoidFreeVolume(double value){ curCalibWidget->setTVoidFreeVolume(value); }
 
    /*!
     * \brief setChannelWidth set value of the channelWidth
@@ -135,6 +136,12 @@ public slots:
     * \return bool if value could be set
     */
    void setChannelWidthHydro(double value) { curCalibWidget->setChannelWidthHydro(value); }
+
+   /*!
+    * \brief setChannelWidth set value of the channelWidth
+    * \return bool if value could be set
+    */
+   void setChannelWidthTVoidFree(double value) { curCalibWidget->setChannelWidthTVoidFree(value); }
 
 
 

@@ -89,6 +89,7 @@ AF4CalibOrgFrame::~AF4CalibOrgFrame()
    saveParameters();
 }
 
+/*
 ParametersForCalibration AF4CalibOrgFrame::getParamsForCalibration() const
 {
    return curCalibWidget->getParametersForCalibration();
@@ -98,7 +99,7 @@ CalibModeSettings AF4CalibOrgFrame::getCalibModes() const
 {
    return curCalibWidget->getCalibModes();
 }
-
+*/
 
 //-////////////////
 //  Public slots //
