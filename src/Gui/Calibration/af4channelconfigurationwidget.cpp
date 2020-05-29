@@ -468,6 +468,27 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, hydrodynamic, "_diffCoeff_hydro.csv"     );
    }
 
+   if(cModes.tVoidFree){
+      refResult = calibSingleParamSet(chDims, params, CalibMode::tVoidFree);
+      if(refResult.errorCode != CalibErrorCode::noError){
+         logErrorMessage(refResult.errorCode);
+         return;
+      }
+      // conduct iterative calibration with modified "uncertainty" values
+
+      const double widthRefY = refResult.width;   // Y_width(X)
+      const double VolumeRefY = refResult.volume;  // Y_vol(X)
+      const string filePathPrefix("/home/bluemage/tests/deltaTests/delta_tvoidFree");
+      const std::vector<string> header = {string("delta X"), string("delta width (tvoidFree)"), string("delta volume (tvoidFree)") };
+
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionFlow,   params, paramsDeltaMod, tVoidFree, "_elutionFlow_tvoidFree.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(crossFlow,     params, paramsDeltaMod, tVoidFree, "_crossFlow_tvoidFree.csv"     );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(relFocusPoint, params, paramsDeltaMod, tVoidFree, "_relFocusPoint_tvoidFreeo.csv" );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(voidPeakTime,  params, paramsDeltaMod, tVoidFree, "_voidPeakTime_tvoidFree.csv"  );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(elutionTime,   params, paramsDeltaMod, tVoidFree, "_elutionTime_tvoidFree.csv"   );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, tVoidFree, "_diffCoeff_tvoidFree.csv"     );
+   }
+
 #undef ITERATIVE_PARAMETER_DELTA_ANALYSIS
 }
 
