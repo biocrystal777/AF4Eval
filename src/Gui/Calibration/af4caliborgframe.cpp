@@ -4,6 +4,8 @@
 //  Public stuff //
 //-////////////////
 
+
+
 AF4CalibOrgFrame::AF4CalibOrgFrame(QWeakPointer<QComboBox> channelSelection,
                                    QWeakPointer<QMap<QString, AF4ChannelDimsWidget *> > channelConfigWidgets,
                                    QWidget *parent)
