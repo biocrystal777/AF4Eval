@@ -159,7 +159,7 @@ CalibResult AF4Calibrator::calibrate_geometric()
    const double D      = params.diffCoeff * 60.0;      // cm^2/s => cm^2/min
    //const double Ve   = params.elutionFlow;         // <= not used for this calculation!
    const double Vc     = params.crossFlow;             // ml/min
-   const double z_perc = params.relFocusPoint / 100.0; // percentage to ratio
+//   const double z_perc = params.relFocusPoint / 100.0; // percentage to ratio
 
    const double L1 = chDims.length1; // cm
    const double L2 = chDims.length2; // cm
@@ -178,6 +178,7 @@ CalibResult AF4Calibrator::calibrate_geometric()
    const double S = lambda * Vc / D;  // (cm³/min)/(cm²/min) = cm
 
    // (5) calculate passed channel area A_z:
+   /*
    double Az {0.0};
    const double A3  = 0.5 * bL *L3;
    const double L12 = L1 + L2;
@@ -193,19 +194,24 @@ CalibResult AF4Calibrator::calibrate_geometric()
       const double m1 = b0 / (2.0 * L1);
       Az = m1 * (squared(L1) - squared(z0)) + 0.5 * (b0 + bL) * L2 + A3;
    }
+*/
+   const double A1 = 0.5 * b0 * L1;
+   const double A2 = 0.5 * (b0 + bL) * L2;
+   const double A3 = 0.5 * L3 * bL;
+   const double AL = A1 + A2 + A3;
 
    // (6) calculate w
-   const double w = Az / S;
+   const double w = AL / S;
 
    // (7) calculate V^geo
-   const double Vgeo = Az * w;
+   const double Vgeo = AL * w;
    qDebug() << "===================================";
    qDebug() << "====== geometric calib\n";
    qDebug() << "tvoid"  << tvoid;
    qDebug() << "te"     << te;
    qDebug() << "rMeas"  << rMeas;
    qDebug() << "lambda" << lambda;
-   qDebug() << "z0"     << z0;
+   //qDebug() << "z0"     << z0;
    qDebug() << "L1"     << L1;
    qDebug() << "L2"     << L2;
    qDebug() << "L3"     << L3;
@@ -214,7 +220,7 @@ CalibResult AF4Calibrator::calibrate_geometric()
    qDebug() << "D"      << D;
    qDebug() << "S"      << S;
    qDebug() << "A3"     << A3;
-   qDebug() << "Az"     << Az;
+   //qDebug() << "Az"     << Az;
    qDebug() << "w"      << w;
 
    // package results
@@ -316,13 +322,13 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    // (6) Calculate w
    const double w = 0.5 * tvoid / CF;
 
-   // (7) Calculate passed channel area A   
+   // (7) Calculate passed channel area A
    double Az{0.0};
    if(z0 >= L1) Az = (L12 - z0) * (m2 * (L12 + z0)) + A3;
    else         Az = m1 * (squared(L1) - squared(z0) + A2 + A3);
 
    // (8) Calculate Vhyd
-   double Vhyd = Az * w;
+   double Vhyd = AL * w;
 
    /*
    const double L12    = L1 + L2;
@@ -330,14 +336,12 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double z0     = z_perc * L;
    const double bDelta = b0 - bL;
    const double Vin    = Ve + Vc;
-
    // (2) Calculate slopes and offsets of the channel plain border lines
    const double m1 =  0.5 * b0 * L1;
    const double m2 = -0.5 * bDelta * L2;
    const double m3 = -0.5 * bL * L3;
    const double t2 =  0.5 * (b0 + L1 * bDelta / L2 );
    const double t3 =  0.5 * (b0 + L1 * bDelta / L2 );
-
    // (3) Calculate area sections of the channel plain
    const double A1 = 0.5 * b0 * L1;
    const double A2 = 0.5 * (b0 + bL) * L2;
@@ -419,8 +423,8 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
 
    qDebug() << "numeric CF3" << CF3_num;
    double w_num = 0.5 * tvoid / (CF1_num + CF2_num + CF3_num);
-   //double V_num = w_num * AL;
-   double V_num = w_num * passedSurface;
+   double V_num = w_num * AL;
+   //double V_num = w_num * passedSurface;
    qDebug() << "w with numeric CF" << w_num << "cm";
    qDebug() << "V0 with numeric CF" << V_num << "ml";
 
@@ -590,7 +594,7 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
      qDebug() << wL << dWL << wM << dWM << wR << dWR;
   }
 
-   double Vol = wM * Az;
+   double Vol = wM * AL;
    result = CalibResult{ .width = wM, .volume = Vol, .errorCode = CalibErrorCode::noError, .sqDelta = dWM};
    return result;
 }
