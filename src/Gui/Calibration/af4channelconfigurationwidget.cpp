@@ -221,8 +221,8 @@ void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims &chDi
       double length2;
       double length3;
       double chLength;
-      double b0;
-      double bL;
+      double b1;
+      double b2;
    };
    struct ParamsForCalibration_nonConst {
       double elutionFlow;
@@ -247,8 +247,8 @@ void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims &chDi
                constDims.length2,
                constDims.length3,
                constDims.chLength,
-               constDims.b0,
-               constDims.bL
+               constDims.b1,
+               constDims.b2
       };
    };
    auto dimsToConst = [](const ChannelDims_nonConst &nonConstDims)
@@ -258,8 +258,8 @@ void AF4ChannelConfigurationWidget::calibUncertaintyGrid(const ChannelDims &chDi
                nonConstDims.length2,
                nonConstDims.length3,
                nonConstDims.chLength,
-               nonConstDims.b0,
-               nonConstDims.bL
+               nonConstDims.b1,
+               nonConstDims.b2
       };
    };
    auto paramsToNonConst = [](const ParametersForCalibration &nonConstParams)
@@ -405,8 +405,8 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, classical, "_diffCoeff_cla.csv"     );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length1,       chDims, chDimsDeltaMod, classical, "_length1_cla.csv"       );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length2,       chDims, chDimsDeltaMod, classical, "_length2_cla.csv"       );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b0,            chDims, chDimsDeltaMod, classical, "_b0_cla.csv"            );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(bL,            chDims, chDimsDeltaMod, classical, "_bL_cla.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b1,            chDims, chDimsDeltaMod, classical, "_b1_cla.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b2,            chDims, chDimsDeltaMod, classical, "_b2_cla.csv"            );
    }
 
    if(cModes.approxGeometric){
@@ -430,8 +430,8 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, approxGeometric, "_diffCoeff_appGeo.csv"     );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length1,       chDims, chDimsDeltaMod, approxGeometric, "_length1_appGeo.csv"       );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length2,       chDims, chDimsDeltaMod, approxGeometric, "_length2_appGeo.csv"       );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b0,            chDims, chDimsDeltaMod, approxGeometric, "_b0_appGeo.csv"            );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(bL,            chDims, chDimsDeltaMod, approxGeometric, "_bL_appGeo.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b1,            chDims, chDimsDeltaMod, approxGeometric, "_b1_appGeo.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b2,            chDims, chDimsDeltaMod, approxGeometric, "_b2_appGeo.csv"            );
    }
 
    if(cModes.geometric){
@@ -455,8 +455,8 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, geometric, "_diffCoeff_geo.csv"     );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length1,       chDims, chDimsDeltaMod, geometric, "_length1_geo.csv"       );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length2,       chDims, chDimsDeltaMod, geometric, "_length2_geo.csv"       );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b0,            chDims, chDimsDeltaMod, geometric, "_b0_geo.csv"            );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(bL,            chDims, chDimsDeltaMod, geometric, "_bL_geo.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b1,            chDims, chDimsDeltaMod, geometric, "_b1_geo.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b2,            chDims, chDimsDeltaMod, geometric, "_b2_geo.csv"            );
    }
 
    if(cModes.hydrodynamic){
@@ -480,8 +480,8 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, hydrodynamic, "_diffCoeff_hydro.csv"     );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length1,       chDims, chDimsDeltaMod, hydrodynamic, "_length1_hydro.csv"       );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length2,       chDims, chDimsDeltaMod, hydrodynamic, "_length2_hydro.csv"       );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b0,            chDims, chDimsDeltaMod, hydrodynamic, "_b0_hydro.csv"            );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(bL,            chDims, chDimsDeltaMod, hydrodynamic, "_bL_hydro.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b1,            chDims, chDimsDeltaMod, hydrodynamic, "_b1_hydro.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b2,            chDims, chDimsDeltaMod, hydrodynamic, "_b2_hydro.csv"            );
    }
 
    if(cModes.tVoidFree){
@@ -505,8 +505,8 @@ csvWriter.writeFile(matD{devXRel, deltaWidth, deltaVolume} , header);         \
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(diffCoeff,     params, paramsDeltaMod, tVoidFree, "_diffCoeff_tvoidFree.csv"     );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length1,       chDims, chDimsDeltaMod, tVoidFree, "_length1_tvoidFree.csv"       );
       ITERATIVE_PARAMETER_DELTA_ANALYSIS(length2,       chDims, chDimsDeltaMod, tVoidFree, "_length2_tvoidFree.csv"       );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b0,            chDims, chDimsDeltaMod, tVoidFree, "_b0_tvoidFree.csv"            );
-      ITERATIVE_PARAMETER_DELTA_ANALYSIS(bL,            chDims, chDimsDeltaMod, tVoidFree, "_bL_tvoidFree.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b1,            chDims, chDimsDeltaMod, tVoidFree, "_b1_tvoidFree.csv"            );
+      ITERATIVE_PARAMETER_DELTA_ANALYSIS(b2,            chDims, chDimsDeltaMod, tVoidFree, "_b2_tvoidFree.csv"            );
    }
 
 #undef ITERATIVE_PARAMETER_DELTA_ANALYSIS

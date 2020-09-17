@@ -65,19 +65,19 @@ public:
    }
 
    /*!
-     * \brief getB0
+     * \brief getB1
      * \return
      */
-   double getB0() const {
-      return channelConfigWidgets->value(channelChooser->currentText())->getB0();
+   double getB1() const {
+      return channelConfigWidgets->value(channelChooser->currentText())->getB1();
    }
 
    /*!
-     * \brief getBL
+     * \brief getB2
      * \return
      */
-   double getBL() const {
-      return channelConfigWidgets->value(channelChooser->currentText())->getBL();
+   double getB2() const {
+      return channelConfigWidgets->value(channelChooser->currentText())->getB2();
    }
 
    /*!
@@ -177,8 +177,8 @@ private:
    QLabel *L1                             = nullptr;
    QLabel *L2                             = nullptr;
    QLabel *L3                             = nullptr;
-   QLabel *b0                                  = nullptr;
-   QLabel *bL                                  = nullptr;
+   QLabel *b1                                  = nullptr;
+   QLabel *b2                                  = nullptr;
    QLabel *channelWidth                        = nullptr;
    QLabel *channelVolumeDef                    = nullptr;
    QLabel *channelVolume                       = nullptr;

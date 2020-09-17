@@ -49,8 +49,8 @@ struct ChannelDims {
    const double length2;
    const double length3;
    const double chLength;
-   const double b0;
-   const double bL;
+   const double b1;
+   const double b2;
 };
 
 struct ChannelDimsFromCalib {

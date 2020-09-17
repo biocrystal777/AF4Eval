@@ -89,22 +89,22 @@ CalibResult AF4Calibrator::calibrate_approxGeo()
    const double L23    = chDims.length2 + chDims.length3;
    const double L      = chDims.chLength;
    const double z0     = z_perc * chDims.chLength;
-   const double b0     = chDims.b0;
-   const double bL     = chDims.bL;
-   const double bDelta = b0 - bL;
+   const double b1     = chDims.b1;
+   const double b2     = chDims.b2;
+   const double bDelta = b1 - b2;
 
    // (1) Calculate Volume:
    double VApproxGeo = 0.0;
    {
-      const double AL = 0.5 * b0 * L1 + bL * L23 + 0.5 * bDelta * L23;
-      const double Y = 0.5 * ( b0 + L1 / L23 ) * L1;
-      double T1 = b0 * z0;
+      const double AL = 0.5 * b1 * L1 + b2 * L23 + 0.5 * bDelta * L23;
+      const double Y = 0.5 * ( b1 + L1 / L23 ) * L1;
+      double T1 = b1 * z0;
       T1 -= z0 * z0 * bDelta / ( 2 * L);
       T1 -= Y;
       //if (z0 >= L1)
 //         T1 /= 0.5 * bDelta * (L23 - z0);
 //      else
-//         T1 /= 0.5 * b0 / L1 * ( L1*L1 - z0*z0 ) + 0.5 * bDelta * L23;
+//         T1 /= 0.5 * b1 / L1 * ( L1*L1 - z0*z0 ) + 0.5 * bDelta * L23;
       T1 = 1.0 - T1;
       T1 = 1.0 - T1 / AL;
       T1 = log(1.0 + T1 * Vc / Ve);
@@ -164,8 +164,8 @@ CalibResult AF4Calibrator::calibrate_geometric()
    const double L1 = chDims.length1; // cm
    const double L2 = chDims.length2; // cm
    const double L3 = chDims.length3; // cm
-   const double b0 = chDims.b0;      // cm
-   const double bL = chDims.bL;      // cm
+   const double b1 = chDims.b1;      // cm
+   const double b2 = chDims.b2;      // cm
 
    // (1) Calculate Rmeas:
    const double rMeas = tvoid / te;
@@ -180,24 +180,24 @@ CalibResult AF4Calibrator::calibrate_geometric()
    // (5) calculate passed channel area A_z:
    /*
    double Az {0.0};
-   const double A3  = 0.5 * bL *L3;
+   const double A3  = 0.5 * b2 *L3;
    const double L12 = L1 + L2;
    const double L   = L12 + L3;
    const double z0  = z_perc * L; // cm
    if(z0 >= L1){ // focus position within the "long" channel section L2 ("distal focussing")
-      const double bDelta = (b0 - bL);
+      const double bDelta = (b1 - b2);
       const double m2     = (-bDelta) / (2.0 * L2);
-      const double t2     = 0.5 * (b0 + (L1 / L2) * bDelta );
+      const double t2     = 0.5 * (b1 + (L1 / L2) * bDelta );
       Az = (L12 - z0) * ( m2 * (L12 + z0) + 2.0*t2 ) + A3;
    }
    else {        // focus position within the "short" channel section L1 ("proximal focussing")
-      const double m1 = b0 / (2.0 * L1);
-      Az = m1 * (squared(L1) - squared(z0)) + 0.5 * (b0 + bL) * L2 + A3;
+      const double m1 = b1 / (2.0 * L1);
+      Az = m1 * (squared(L1) - squared(z0)) + 0.5 * (b1 + b2) * L2 + A3;
    }
 */
-   const double A1 = 0.5 * b0 * L1;
-   const double A2 = 0.5 * (b0 + bL) * L2;
-   const double A3 = 0.5 * L3 * bL;
+   const double A1 = 0.5 * b1 * L1;
+   const double A2 = 0.5 * (b1 + b2) * L2;
+   const double A3 = 0.5 * L3 * b2;
    const double AL = A1 + A2 + A3;
 
    // (6) calculate w
@@ -215,8 +215,8 @@ CalibResult AF4Calibrator::calibrate_geometric()
    qDebug() << "L1"     << L1;
    qDebug() << "L2"     << L2;
    qDebug() << "L3"     << L3;
-   qDebug() << "b0"     << b0;
-   qDebug() << "bL"     << bL;
+   qDebug() << "b1"     << b1;
+   qDebug() << "b2"     << b2;
    qDebug() << "D"      << D;
    qDebug() << "S"      << S;
    qDebug() << "A3"     << A3;
@@ -246,22 +246,22 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double L1 = chDims.length1; // cm
    const double L2 = chDims.length2; // cm
    const double L3 = chDims.length3; // cm
-   const double b0 = chDims.b0;      // cm
-   const double bL = chDims.bL;      // cm
+   const double b1 = chDims.b1;      // cm
+   const double b2 = chDims.b2;      // cm
 
    // (1) Calculate additional "derived "parameters
    const double L12    = L1 + L2;    // cm
    const double L      = L12 + L3;   // cm
    const double z0     = z_perc * L; // cm
-   const double bDelta = b0 - bL;    // cm
+   const double bDelta = b1 - b2;    // cm
    const double Vin    = Ve + Vc;    // cm
 
    // (2) Calculate slopes and offsets of the channel plain border lines
-   const double m1 =  0.5 * b0 / L1;                  //
+   const double m1 =  0.5 * b1 / L1;                  //
    const double m2 = -0.5 * bDelta / L2;              //
-   const double m3 = -0.5 * bL / L3;                  //
-   const double t2 =  0.5 * (b0 + L1 * bDelta / L2 ); //
-   const double t3 =  0.5 * L * bL / L3;              //
+   const double m3 = -0.5 * b2 / L3;                  //
+   const double t2 =  0.5 * (b1 + L1 * bDelta / L2 ); //
+   const double t3 =  0.5 * L * b2 / L3;              //
 
    qDebug() << "m1" << m1;
    qDebug() << "m2" << m2;
@@ -270,9 +270,9 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    qDebug() << "t3" << t3;
 
    // (3) Calculate area sections of the channel plain
-   const double A1 = 0.5 * b0 * L1;
-   const double A2 = 0.5 * (b0 + bL) * L2;
-   const double A3 = 0.5 * L3 * bL;
+   const double A1 = 0.5 * b1 * L1;
+   const double A2 = 0.5 * (b1 + b2) * L2;
+   const double A3 = 0.5 * L3 * b2;
    const double AL = A1 + A2 + A3;
 
 
@@ -334,18 +334,18 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double L12    = L1 + L2;
    const double L      = L12 + L3;
    const double z0     = z_perc * L;
-   const double bDelta = b0 - bL;
+   const double bDelta = b1 - b2;
    const double Vin    = Ve + Vc;
    // (2) Calculate slopes and offsets of the channel plain border lines
-   const double m1 =  0.5 * b0 * L1;
+   const double m1 =  0.5 * b1 * L1;
    const double m2 = -0.5 * bDelta * L2;
-   const double m3 = -0.5 * bL * L3;
-   const double t2 =  0.5 * (b0 + L1 * bDelta / L2 );
-   const double t3 =  0.5 * (b0 + L1 * bDelta / L2 );
+   const double m3 = -0.5 * b2 * L3;
+   const double t2 =  0.5 * (b1 + L1 * bDelta / L2 );
+   const double t3 =  0.5 * (b1 + L1 * bDelta / L2 );
    // (3) Calculate area sections of the channel plain
-   const double A1 = 0.5 * b0 * L1;
-   const double A2 = 0.5 * (b0 + bL) * L2;
-   const double A3 = 0.5 * L3 * bL;
+   const double A1 = 0.5 * b1 * L1;
+   const double A2 = 0.5 * (b1 + b2) * L2;
+   const double A3 = 0.5 * L3 * b2;
    const double AL = A1 + A2 + A3;
    */
 
@@ -370,8 +370,6 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
 
    /* End Analytical version
    */
-
-
 
    qDebug() << " --------  Numeric approximation for CF integrals --------";
    qDebug() << "ξ" << "surface(ξ)" << "V(ξ)" << "E(ξ)/V(ξ)";
@@ -454,28 +452,28 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
    const double L1 = chDims.length1; // cm
    const double L2 = chDims.length2; // cm
    const double L3 = chDims.length3; // cm
-   const double b0 = chDims.b0;      // cm
-   const double bL = chDims.bL;      // cm
+   const double b1 = chDims.b1;      // cm
+   const double b2 = chDims.b2;      // cm
 
    // (1) Calculate additional "derived "parameters
    const double L12    = L1 + L2;    // cm
    const double L      = L12 + L3;   // cm
    const double z0     = z_perc * L; // cm
-   const double bDelta = b0 - bL;    // cm
+   const double bDelta = b1 - b2;    // cm
    const double Vin    = Ve + Vc;    // cm
 
    // (2) Calculate slopes and offsets of the channel plain border lines
-   const double m1 =  0.5 * b0 / L1;                  //
+   const double m1 =  0.5 * b1 / L1;                  //
    const double m2 = -0.5 * bDelta / L2;              //
-   const double m3 = -0.5 * bL / L3;                  //
-   const double t2 =  0.5 * (b0 + L1 * bDelta / L2 ); //
-   const double t3 =  0.5 * L * bL / L3;              //
+   const double m3 = -0.5 * b2 / L3;                  //
+   const double t2 =  0.5 * (b1 + L1 * bDelta / L2 ); //
+   const double t3 =  0.5 * L * b2 / L3;              //
 
 
    // (3) Calculate area sections of the channel plain
-   const double A1 = 0.5 * b0 * L1;
-   const double A2 = 0.5 * (b0 + bL) * L2;
-   const double A3 = 0.5 * L3 * bL;
+   const double A1 = 0.5 * b1 * L1;
+   const double A2 = 0.5 * (b1 + b2) * L2;
+   const double A3 = 0.5 * L3 * b2;
    const double AL = A1 + A2 + A3;
 
    qDebug() << " --------  Numeric approximation for CF integrals --------";
@@ -600,7 +598,7 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
 }
 
 
-//void AF4Calibrator::calcGeometVolume(const double L1, const double L2, const double L3, const double L, const double b0, const double bL, const double zL)
+//void AF4Calibrator::calcGeometVolume(const double L1, const double L2, const double L3, const double L, const double b1, const double b2, const double zL)
 //{
 
 //}

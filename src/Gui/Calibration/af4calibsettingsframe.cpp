@@ -36,8 +36,8 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
       layout->addWidget(label, row, column, 1, 2, Qt::AlignLeft);
    };
 
-   makeLabel(b0,   "b_0 / cm", "Maximal trapezoidal width", 1, 1);
-   makeLabel(bL,   "b_L / cm", "Minimal trapezoidal width", 1, 6);
+   makeLabel(b1,   "b_1 / cm", "Maximal trapezoidal width", 1, 1);
+   makeLabel(b2,   "b_2 / cm", "Minimal trapezoidal width", 1, 6);
    makeLabel(LTot, "L_Σ / cm", "Total channel length",      1, 11);
    makeLabel(L1,   "L1  / cm", "Length 1",                  2, 1);
    makeLabel(L2,   "L2  / cm", "Length 2",                  2, 6);
@@ -129,8 +129,8 @@ void AF4CalibSettingsFrame::updateChannelValues(QString channelKey)
    L1->setText(QString::number(configWidget->getL1(), 'E') );
    L2->setText(QString::number(configWidget->getL2(), 'E') );
    L3->setText(QString::number(configWidget->getL3(), 'E') );
-   b0->setText(QString::number(configWidget->getB0(), 'E') );
-   bL->setText(QString::number(configWidget->getBL(), 'E') );
+   b1->setText(QString::number(configWidget->getB1(), 'E') );
+   b2->setText(QString::number(configWidget->getB2(), 'E') );
 }
 
 void AF4CalibSettingsFrame::updateCalibValues(QString calibKey)

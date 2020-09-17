@@ -58,16 +58,16 @@ public:
    inline double getL3() const {return L3->value();}
 
    /*!
-    * \brief getB0
+    * \brief getB1
     * \return
     */
-   inline double getB0() const { return b0->value(); }
+   inline double getB1() const { return b1->value(); }
 
    /*!
-    * \brief getBL
+    * \brief getB2
     * \return
     */
-   inline double getBL() const { return bL->value(); }
+   inline double getB2() const { return b2->value(); }
 
    /*!
     * \brief getChannelName
@@ -122,17 +122,17 @@ public:
    */
    SET_MACRO(setL3, L3)
    /*!
-   * \brief setB0
+   * \brief setB1
    * \param value
    * \return
    */
-   SET_MACRO(setB0, b0)
+   SET_MACRO(setB1, b1)
    /*!
-   * \brief setB0
+   * \brief setB1
    * \param value
    * \return
    */
-   SET_MACRO(setBL, bL)
+   SET_MACRO(setB2, b2)
 #undef SET_MACRO
 
    /*!
@@ -157,8 +157,8 @@ private:
    QGridLayout *widgetLayout = nullptr;
    QGridLayout *lay  = nullptr;
 
-   QDoubleSpinBox *bL   = nullptr;
-   QDoubleSpinBox *b0   = nullptr;
+   QDoubleSpinBox *b1   = nullptr;
+   QDoubleSpinBox *b2   = nullptr;
 
    QDoubleSpinBox *L1   = nullptr;
    QDoubleSpinBox *L2   = nullptr;
