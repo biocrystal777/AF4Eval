@@ -5,11 +5,32 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    viewBox="0 0 720.67181 114.0466"
    width="720.67181"
    height="114.0466"
    id="svg2"
-   version="1.1">
+   version="1.1"
+   sodipodi:docname="ChannelDims.svg"
+   inkscape:version="0.92.1 r15371">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview187"
+     showgrid="false"
+     inkscape:zoom="2.8459556"
+     inkscape:cx="416.73173"
+     inkscape:cy="45.076522"
+     inkscape:current-layer="layer1" />
   <defs
      id="defs4">
     <marker
@@ -920,7 +941,7 @@
          y="119.28572"
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.39785004px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';fill:#800080;stroke-width:1.71032739">b<tspan
    style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.70890808px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Italic';baseline-shift:sub;fill:#800080;stroke-width:1.71032739"
-   id="tspan4306">0</tspan></tspan></text>
+   id="tspan4306">1</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.39387321px;line-height:0%;font-family:cmr10;-inkscape-font-specification:cmr10;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;stroke-width:1.12240231;stroke-miterlimit:4;stroke-dasharray:none"
@@ -995,6 +1016,6 @@
          x="684.34125"
          id="tspan4935">b<tspan
    style="font-size:21.708601px;baseline-shift:sub;fill:#800080;stroke-width:1.71032739"
-   id="tspan4939">L</tspan></tspan></text>
+   id="tspan4939">2</tspan></tspan></text>
   </g>
 </svg>
