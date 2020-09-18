@@ -32,21 +32,21 @@ double AF4Calculator::IntPosDisc_CF_i(const double alpha,
                                       const double m_i)
 {
 
-   qDebug() << "Int pos Disc s0 to s1: " << s0 << s1 ;
+   //qDebug() << "Int pos Disc s0 to s1: " << s0 << s1 ;
    double CF_i  = log( Pol_CF(beta, gamma, delta, s1) / Pol_CF(beta, gamma, delta, s0) );
-   qDebug() << " Pol s0 " << Pol_CF(beta, gamma, delta, s0);
-   qDebug() << " Pol s1 " << Pol_CF(beta, gamma, delta, s1);
-   qDebug() << "ln Pol/lnPol " << CF_i;
+   //qDebug() << " Pol s0 " << Pol_CF(beta, gamma, delta, s0);
+   //qDebug() << " Pol s1 " << Pol_CF(beta, gamma, delta, s1);
+   //qDebug() << "ln Pol/lnPol " << CF_i;
    CF_i /= 2.0 * beta;
    const double tmp0 = sqrt(discr);
-   qDebug() << "sqrt disc " << tmp0;
+   //qDebug() << "sqrt disc " << tmp0;
    const double tmp1 = atan( ( 2.0 * beta * s1 + gamma ) / tmp0 );
-   qDebug() << "atan s1" << tmp1;
+   //qDebug() << "atan s1" << tmp1;
    const double tmp2 = atan( ( 2.0 * beta * s0 + gamma ) / tmp0 );
-   qDebug() << "atan s0" << tmp2;
+   //qDebug() << "atan s0" << tmp2;
    const double tmp3 =  ( 2.0 / tmp0 ) * ( alpha - gamma / beta ) * ( tmp1 - tmp2 );
-   qDebug() << "tmp3" << tmp3;
-   qDebug() << "___________";
+   //qDebug() << "tmp3" << tmp3;
+   //qDebug() << "___________";
    CF_i += tmp3;
    CF_i *= m_i;
    return CF_i;
@@ -62,21 +62,21 @@ double AF4Calculator::IntNegDisc_CF_i(const double alpha,
                                       const double s1,
                                       const double m_i)
 {
-   qDebug() << "Int NEG Disc s0 to s1: " << s0 << s1;
+ //  qDebug() << "Int NEG Disc s0 to s1: " << s0 << s1;
    double CF_i  = log( Pol_CF(beta, gamma, delta, s1) / Pol_CF(beta, gamma, delta, s0) );
-   qDebug() << " Pol s0 " << Pol_CF(beta, gamma, delta, s0);
-   qDebug() << " Pol s1 " << Pol_CF(beta, gamma, delta, s1);
-   qDebug() << "ln Pol/lnPol " << CF_i;
+//   qDebug() << " Pol s0 " << Pol_CF(beta, gamma, delta, s0);
+//   qDebug() << " Pol s1 " << Pol_CF(beta, gamma, delta, s1);
+ //  qDebug() << "ln Pol/lnPol " << CF_i;
    CF_i /= 2.0 * beta;
 
    const double tmp0 = sqrt(-discr);
-   qDebug() << "sqrt(-discr)" << CF_i;
+   //qDebug() << "sqrt(-discr)" << CF_i;
    const double twoBeta = 2.0 * beta;
    double tmp1 = twoBeta * s1 + gamma;
    tmp1       *= twoBeta * s0 + gamma;   
    tmp1        = tmp0 - (tmp1/tmp0);
    tmp1        = twoBeta * (s1 - s0) / tmp1;
-   qDebug() << "arg atanh" << tmp1;
+   //qDebug() << "arg atanh" << tmp1;
    tmp1        = atanh(tmp1);
    tmp1        = (2.0 / tmp0) * (alpha - gamma/beta) * tmp1;
    CF_i       -= tmp1;

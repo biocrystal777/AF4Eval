@@ -32,8 +32,8 @@ CalibResult AF4Calibrator::calibrate_classic()
    double V0 =0.0;
    {
       double flowRatio = (Ve + Vc)/ Vc;
-   double hydVolumeDivisor = log((z_perc - flowRatio) / (1.0 - flowRatio));
-   V0 = (Vc * tvoid) / hydVolumeDivisor;
+      double hydVolumeDivisor = log((z_perc - flowRatio) / (1.0 - flowRatio));
+      V0 = (Vc * tvoid) / hydVolumeDivisor;
    }
 
    // (2) Calculate RMeas:
@@ -86,9 +86,10 @@ CalibResult AF4Calibrator::calibrate_approxGeo()
    const double Vc     = params.crossFlow;
    const double z_perc = params.relFocusPoint / 100.0;                // percentage to ratio
    const double L1     = chDims.length1;
+   const double L2     = chDims.length2;
    const double L23    = chDims.length2 + chDims.length3;
    const double L      = chDims.chLength;
-   const double z0     = z_perc * chDims.chLength;
+   const double z0     = z_perc * L;
    const double b1     = chDims.b1;
    const double b2     = chDims.b2;
    const double bDelta = b1 - b2;
@@ -96,19 +97,26 @@ CalibResult AF4Calibrator::calibrate_approxGeo()
    // (1) Calculate Volume:
    double VApproxGeo = 0.0;
    {
-      const double AL = 0.5 * b1 * L1 + b2 * L23 + 0.5 * bDelta * L23;
-      const double Y = 0.5 * ( b1 + L1 / L23 ) * L1;
-      double T1 = b1 * z0;
-      T1 -= z0 * z0 * bDelta / ( 2 * L);
-      T1 -= Y;
-      //if (z0 >= L1)
-//         T1 /= 0.5 * bDelta * (L23 - z0);
-//      else
-//         T1 /= 0.5 * b1 / L1 * ( L1*L1 - z0*z0 ) + 0.5 * bDelta * L23;
-      T1 = 1.0 - T1;
+      const double AL = 0.5 * b1 * L1  +  b2 * L23  +  0.5 * bDelta * L23;
+      const double b0 = b1 + L1/L2 * bDelta;
+      const double bL = b1 -L23/L2 * bDelta;
+
+      double T1 {0.0};
+      if(z0 >= L1){
+         T1 = b0 * z0;
+         const double Y = 0.5 * b0 * L1;
+         T1 -= z0 * z0 * (b0 - bL) / ( 2 * L);
+         T1 -= Y;
+         qDebug() << "Az" << T1;
+      }
+      else {
+         T1 = 0.5 * ( b1 / L1 ) * z0 * z0;
+         qDebug() << "Az" << T1;
+      }
       T1 = 1.0 - T1 / AL;
       T1 = log(1.0 + T1 * Vc / Ve);
       VApproxGeo = Vc * tvoid / T1;
+      qDebug() << "AL" << AL;
    }
 
    // (2) Calculate RMeas:
@@ -274,7 +282,7 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double A2 = 0.5 * (b1 + b2) * L2;
    const double A3 = 0.5 * L3 * b2;
    const double AL = A1 + A2 + A3;
-
+   qDebug() << "AL" << AL;
 
    /* Start Analytical version
    */
@@ -310,11 +318,11 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    else {
       if(discr2 > 0 ) CF2 = IntPosDisc_CF_i(alpha2, beta2, gamma2, delta2, discr2, L1, L12, m2);
       else            CF2 = IntNegDisc_CF_i(alpha2, beta2, gamma2, delta2, discr2, L1, L12, m2);
-      qDebug() << "--------CF1--------";
+     // qDebug() << "--------CF1--------";
       CF1 = Int_CF_1(beta1, delta1, z0, L1, m1);
       CF = CF1 + CF2 + CF3;
    }
-   qDebug() << "--------CF End--------";
+   //qDebug() << "--------CF End--------";
 
 
 
@@ -323,10 +331,10 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double w = 0.5 * tvoid / CF;
 
    // (7) Calculate passed channel area A
-   double Az{0.0};
-   if(z0 >= L1) Az = (L12 - z0) * (m2 * (L12 + z0)) + A3;
-   else         Az = m1 * (squared(L1) - squared(z0) + A2 + A3);
-
+   //double Az{0.0};
+   //if(z0 >= L1) Az = (L12 - z0) * (m2 * (L12 + z0)) + A3;
+   //else         Az = m1 * (squared(L1) - squared(z0) + A2 + A3);
+   //qDebug() << "Az" << Az;
    // (8) Calculate Vhyd
    double Vhyd = AL * w;
 
@@ -348,7 +356,7 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    const double A3 = 0.5 * L3 * b2;
    const double AL = A1 + A2 + A3;
    */
-
+/*
 
    qDebug() << "alpha2" << alpha2;
    qDebug() << "alpha3" << alpha3;
@@ -366,13 +374,13 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
    qDebug() << "CF" << CF;
    qDebug() << "w" << w;
    qDebug() << "Vhyd" << Vhyd;
-
+*/
 
    /* End Analytical version
    */
 
    qDebug() << " --------  Numeric approximation for CF integrals --------";
-   qDebug() << "ξ" << "surface(ξ)" << "V(ξ)" << "E(ξ)/V(ξ)";
+   //qDebug() << "ξ" << "surface(ξ)" << "V(ξ)" << "E(ξ)/V(ξ)";
    const uint n = 1000;
    const double dXi = L / n;
    double xi = 0.0;
@@ -392,9 +400,9 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
       double EV_xi = m1 * xi / remainingFlow;
       CF1_num += EV_xi * dXi;
       xi += dXi;
-      qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
+     // qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
    }
-   qDebug() << "numeric CF1" << CF1_num;
+   //qDebug() << "numeric CF1" << CF1_num;
    // CF2_num
    double CF2_num = 0.0;
    while (xi < L12){
@@ -402,7 +410,7 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
       remainingFlow = Vin -     Vc / AL * passedSurface ;
       E_xi = m2 * xi + t2;
       double EV_xi = (m2 * xi + t2) / remainingFlow;
-      qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
+      //qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
       CF2_num += EV_xi * dXi;
       xi += dXi;
    }
@@ -416,22 +424,23 @@ CalibResult AF4Calibrator::calibrate_hydrodynamic()
       double EV_xi = E_xi / remainingFlow;
       CF3_num  += EV_xi * dXi;
       xi += dXi;
-      qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
+     // qDebug() << xi << passedSurface << remainingFlow << EV_xi << E_xi;
    }
 
-   qDebug() << "numeric CF3" << CF3_num;
+   //qDebug() << "numeric CF3" << CF3_num;
    double w_num = 0.5 * tvoid / (CF1_num + CF2_num + CF3_num);
    double V_num = w_num * AL;
+   qDebug() << "CF" << CF1_num + CF2_num + CF3_num;
+   qDebug() << "AL" << AL;
    //double V_num = w_num * passedSurface;
-   qDebug() << "w with numeric CF" << w_num << "cm";
-   qDebug() << "V0 with numeric CF" << V_num << "ml";
+   //qDebug() << "w with numeric CF" << w_num << "cm";
+   //qDebug() << "V0 with numeric CF" << V_num << "ml";
 
    qDebug() << " -------- End Numeric approximation  --------";
 
    result = CalibResult{ .width = w_num, .volume = V_num, .errorCode = CalibErrorCode::noError, .sqDelta = 0.0};
    return result;
 }
-
 
 CalibResult AF4Calibrator::calibrate_tVoidFree()
 {
@@ -476,8 +485,8 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
    const double A3 = 0.5 * L3 * b2;
    const double AL = A1 + A2 + A3;
 
-   qDebug() << " --------  Numeric approximation for CF integrals --------";
-   qDebug() << "ξ" << "surface(ξ)" << "V(ξ)" << "E(ξ)/V(ξ)";
+   //qDebug() << " --------  Numeric approximation for CF integrals --------";
+   //qDebug() << "ξ" << "surface(ξ)" << "V(ξ)" << "E(ξ)/V(ξ)";
    const uint n = 1000;
    const double dXi = L / n;
    double xi = 0.0;
@@ -497,9 +506,9 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
       double EV_xi = m1 * xi / VinZ;
       CF1_num += EV_xi * dXi;
       xi += dXi;
-      qDebug() << xi << Az << VinZ << EV_xi << E_xi;
+     // qDebug() << xi << Az << VinZ << EV_xi << E_xi;
    }
-   qDebug() << "numeric CF1" << CF1_num;
+   //qDebug() << "numeric CF1" << CF1_num;
    // CF2_num
    double CF2_num = 0.0;
    while (xi < L12){
@@ -507,7 +516,7 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
       VinZ = Vin -     Vc / AL * Az ;
       E_xi = m2 * xi + t2;
       double EV_xi = (m2 * xi + t2) / VinZ;
-      qDebug() << xi << Az << VinZ << EV_xi << E_xi;
+      //qDebug() << xi << Az << VinZ << EV_xi << E_xi;
       CF2_num += EV_xi * dXi;
       xi += dXi;
    }
@@ -521,10 +530,10 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
       double EV_xi = E_xi / VinZ;
       CF3_num  += EV_xi * dXi;
       xi += dXi;
-      qDebug() << xi << Az << VinZ << EV_xi << E_xi;
+//      qDebug() << xi << Az << VinZ << EV_xi << E_xi;
    }
 
-   qDebug() << "numeric CF3" << CF3_num;
+   //qDebug() << "numeric CF3" << CF3_num;
    const double CF = CF1_num + CF2_num + CF3_num;
    //double w_num = 0.5 * tvoid / (CF1_num + CF2_num + CF3_num);
    //double V_num = w_num * AL;
@@ -556,8 +565,8 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
    //double conv = 1e9;
 
 
-  qDebug() << "wL" << "dWL" << "wM" << "dWM" << "wR" << "dWR";
-  qDebug() << wL << dWL << wM << dWM << wR << dWR;
+  //qDebug() << "wL" << "dWL" << "wM" << "dWM" << "wR" << "dWR";
+  //qDebug() << wL << dWL << wM << dWM << wR << dWR;
   while(dWM > convLimit){
      if(dWL > dWM && dWM > dWR){
         wL  = wM;
@@ -566,7 +575,7 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
         dWM = dWR;
         wR  = wR + abs(wL-wM);
         dWR = RDiff(wR);
-        qDebug() << "-> Right;";
+        //qDebug() << "-> Right;";
      }
      else if(dWL < dWM && dWM < dWR){
         wR  = wM;
@@ -575,21 +584,21 @@ CalibResult AF4Calibrator::calibrate_tVoidFree()
         dWM = dWL;
         wL  = wL > abs(wR-wM) ?  wL - abs(wR-wM) : 0.5*wL;
         dWL = RDiff(wL);
-        qDebug() << "-> Left;";
+        //qDebug() << "-> Left;";
      }
      else if(dWL > dWM && dWM < dWR){
         wL  = 0.5 * (wL + wM);
         dWL = RDiff(wL);
         wR  = 0.5 * (wR + wM);
         dWR = RDiff(wR);
-        qDebug() << "-> Center";
+        //qDebug() << "-> Center";
      }
      else
      {
         AF4Log::logError(std::string("convergenceError"));
         break;
      }
-     qDebug() << wL << dWL << wM << dWM << wR << dWR;
+     //qDebug() << wL << dWL << wM << dWM << wR << dWR;
   }
 
    double Vol = wM * AL;
