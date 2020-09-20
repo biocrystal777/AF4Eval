@@ -34,8 +34,8 @@ struct CalibResult
 ***              Flow Field-Flow Fractionation data via void peak determination I –
 ***              Theory and measurement uncertainties (Supplementary information)"
 ***              (pp. 11-16)
-***  \version   1.1
-***  \date      2018
+***  \version   1.2
+***  \date      2020
 ***  \todo      Restructure and parts like numerical CF calculations from extract functions!
 ***  \copyright CC CC BY-NC-ND 4.0
 ***
@@ -75,14 +75,39 @@ public:
     * \return
     */
    CalibErrorCode checkParameters();
+
    /*!
-    * \brief calibrate_classic implements the basic AF4 calibrtaion with tvoid for volume calibration
+    * \brief calibrate_classic implements the basic AF4 calibrtaion using tvoid, D and z%
+    *        for volume calibration
     * \return
     */
    CalibResult calibrate_classic();
+
+   /*!
+    * \brief calibrate_approxGeo implements a variant of calibrate_classic under consideration o
+    *         of the complete
+    * \return
+    */
    CalibResult calibrate_approxGeo();
+
+   /*!
+    * \brief calibrate_geometric() implements a calibration using the geometric properties and skips the
+    *        focus information
+    * \return
+    */
    CalibResult calibrate_geometric();
+
+   /*!
+    * \brief calibrate_hydrodynamic calibration using the direct relationship of tvoid and w via a linear conversion factor
+    *                               which encapsulated all geometric and hydrodynamic information without external calibration measurement
+    * \return
+    */
    CalibResult calibrate_hydrodynamic();
+
+   /*!
+    * \brief calibrate_tVoidFree calibration using geometrical propertioes and a linear conversion factor in order to substitute tvoid
+    * \return
+    */
    CalibResult calibrate_tVoidFree();
 
 private:
