@@ -32,19 +32,19 @@ AF4ChannelDimsWidget::AF4ChannelDimsWidget(const int channelId,
    };
 
    makeSpinBox(b1, QString("b_0 / cm"), QString("Maximal trapezoidal width"), 0, 11, 1, 4);
-   configSpinBox(b1, 3, 0.1, 0.0, 1000.0);
+   configSpinBox(b1, 2, 0.1, 0.0, 1000.0);
 
    makeSpinBox(b2, QString("b_L / cm"), QString("Minimal trapezoidal width"), 0, 16, 1, 4);
-   configSpinBox(b2, 3, 0.1, 0.0, 1000.0);
+   configSpinBox(b2, 2, 0.1, 0.0, 1000.0);
 
    makeSpinBox(L1, QString("L1 / cm"), QString("Length of channel section 1"), 1, 6, 1, 4);
-   configSpinBox(L1, 3, 0.1, 0.0, 1000.0);
+   configSpinBox(L1, 2, 0.1, 0.0, 1000.0);
 
    makeSpinBox(L2, QString("L2 / cm"), QString("Length of channel section 2"), 1, 11, 1, 4);
-   configSpinBox(L2, 3, 0.1, 0.0, 1000.0);
+   configSpinBox(L2, 2, 0.1, 0.0, 1000.0);
 
    makeSpinBox(L3, QString("L3 / cm"), QString("Length of channel section 3"), 1, 16, 1, 4);
-   configSpinBox(L3, 3, 0.1, 0.0, 1000.0);
+   configSpinBox(L3, 2, 0.1, 0.0, 1000.0);
 
    //QSvgRenderer renderer(QString(":/images/ChannelDims.svg"));
    QImage image(500, 100, QImage::Format_ARGB32);

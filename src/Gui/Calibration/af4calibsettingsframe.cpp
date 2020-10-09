@@ -26,13 +26,14 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
       channelChooser->addItem(channelKeyList->at(i));
    layout->addWidget(channelChooser, 0, 0, 1, 3);
 
-   auto makeLabel = [this](QLabel *&label, QString labelText, QString toolTip, int row, int column){
+   auto makeLabel = [this](QLineEdit *&label, QString labelText, QString toolTip, int row, int column){
       QwtTextLabel *qwtLabel = new QwtTextLabel(this);
       qwtLabel->setText(labelText, QwtText::PlainText);
       qwtLabel->setToolTip(toolTip);
       layout->addWidget(qwtLabel, row, column-1, 1, 1, Qt::AlignLeft);
-      label = new QLabel(this);
+      label = new QLineEdit(this);
       label->setToolTip(toolTip);
+      label->setReadOnly(true);
       layout->addWidget(label, row, column, 1, 2, Qt::AlignLeft);
    };
 
@@ -70,29 +71,34 @@ AF4CalibSettingsFrame::AF4CalibSettingsFrame(QSharedPointer<QMap<QString, AF4Cha
    currentCalibChooser->show();
 
    QwtTextLabel *qwtLabel = new QwtTextLabel(this);
-   qwtLabel->setText(QString("w / cm"), QwtText::PlainText);
+   qwtLabel->setText(QString("w_cla / µm"), QwtText::PlainText);
    qwtLabel->setToolTip(QString("channel height"));
    layout->addWidget(qwtLabel, 8, 0, 1, 1, Qt::AlignRight);
 
-   channelWidth = new QLabel(this);
-   layout->addWidget(channelWidth, 8, 1, 1, 2, Qt::AlignRight);
+   channelWidthCla = new QLineEdit(this);
+   layout->addWidget(channelWidthCla, 8, 1, 1, 2, Qt::AlignRight);
 
-
-   channelVolumeDef = new QLabel(QString("V<sup> 0</sup>"), this);
+   channelVolumeDef = new QLabel(QString("V_Cla / ml"), this);
    channelVolumeDef->setToolTip("hydrodynamic volume");
    layout->addWidget(channelVolumeDef, 9, 0, 1, 1, Qt::AlignRight);
-   channelVolume = new QLabel(this);
-   layout->addWidget(channelVolume, 9, 1, 1, 2, Qt::AlignRight);
+   channelVolumeCla = new QLineEdit(this);
+   layout->addWidget(channelVolumeCla, 9, 1, 1, 2, Qt::AlignRight);
 
    qwtLabel = new QwtTextLabel(this);
-   // qwtLabel->setText(QString(" <math><mi>L</mi><mtext>&nbsp;/&nbsp;cm</mtext></math>"), QwtText::MathMLText);
-   qwtLabel->setText(("Vg / cm"), QwtText::TeXText);
-   qwtLabel->setToolTip(QString("Geometrical Volume"));
-   layout->addWidget(qwtLabel, 10, 0, 1, 1, Qt::AlignRight);
-   L3 = new QLabel(this);
-   layout->addWidget(L3, 10, 1, 1, 2, Qt::AlignRight);
+   qwtLabel->setText(QString("w_NoT / µm"), QwtText::PlainText);
+   qwtLabel->setToolTip(QString("channel height"));
+   layout->addWidget(qwtLabel, 8, 5, 1, 1, Qt::AlignRight);
+   channelWidthNoT = new QLineEdit(this);
+   layout->addWidget(channelWidthNoT, 8, 6, 1, 2, Qt::AlignRight);
+
+   qwtLabel = new QwtTextLabel(QString("V_NoT / ml"), this);
+   qwtLabel->setToolTip("hydrodynamic volume");
+   layout->addWidget(qwtLabel, 9, 5, 1, 1, Qt::AlignRight);
+   channelVolumeNoT = new QLineEdit(this);
+   layout->addWidget(channelVolumeNoT, 9, 6, 1, 2, Qt::AlignRight);
 
    updateChannelValues(channelKeyList->at(channelChooser->currentIndex()));
+
    this->setFrameStyle(0x1011);
    loadParameters();
 }
@@ -125,28 +131,29 @@ void AF4CalibSettingsFrame::updateChannelValues(QString channelKey)
    }
    // update values:
    AF4ChannelDimsWidget* configWidget = channelConfigWidgets->value(channelKey);
-   LTot->setText(QString::number(configWidget->getChLength(), 'E'));
-   L1->setText(QString::number(configWidget->getL1(), 'E') );
-   L2->setText(QString::number(configWidget->getL2(), 'E') );
-   L3->setText(QString::number(configWidget->getL3(), 'E') );
-   b1->setText(QString::number(configWidget->getB1(), 'E') );
-   b2->setText(QString::number(configWidget->getB2(), 'E') );
+   LTot->setText(QString::number(configWidget->getChLength(), 'f', 2));
+   L1->setText(QString::number(configWidget->getL1(), 'f', 2) );
+   L2->setText(QString::number(configWidget->getL2(), 'f', 2) );
+   L3->setText(QString::number(configWidget->getL3(), 'f', 2) );
+   b1->setText(QString::number(configWidget->getB1(), 'f', 2) );
+   b2->setText(QString::number(configWidget->getB2(), 'f', 2) );
 }
 
 void AF4CalibSettingsFrame::updateCalibValues(QString calibKey)
 {
    currentCalibKey = calibKey;
-   AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText()).value(calibKey);
-   channelWidth->setText(QString::number(calibWidget->getClassicalChannelWidth(), 'E'));
-   channelVolume->setText(QString::number(calibWidget->getHydrodynVolume(), 'E'));
+   adaptCalibValues(currentCalibKey);
 }
 
 void AF4CalibSettingsFrame::adaptCalibValues(QString calibKey)
 {
    AF4ChannelCalibWidget* calibWidget = channelCalibWidgets->value(channelChooser->currentText()).value(calibKey);
-   channelWidth->setText(QString::number(calibWidget->getClassicalChannelWidth(), 'E'));
-   channelVolume->setText(QString::number(calibWidget->getHydrodynVolume(), 'E'));
+   channelWidthCla->setText(QString::number(calibWidget->getClassicalChannelWidth() * 1e4, 'f',2)); // cm to µm
+   channelVolumeCla->setText(QString::number(calibWidget->getClassicalVolume(), 'f',4));
+   channelWidthNoT->setText(QString::number(calibWidget->getTvoidFreeChannelWidth() * 1e4, 'f',2)); // cm to µm
+   channelVolumeNoT->setText(QString::number(calibWidget->getTvoidFreeVolume(), 'f',4));
 }
+
 
 void AF4CalibSettingsFrame::adaptChannelParameters()
 {
@@ -202,7 +209,7 @@ void AF4CalibSettingsFrame::adaptChannelParameters()
 void AF4CalibSettingsFrame::enableVolume(bool enable)
 {
    this->channelVolumeDef->setEnabled(enable);
-   this->channelVolume->setEnabled(enable);
+   this->channelVolumeCla->setEnabled(enable);
 }
 
 //-/////////////////////////////////

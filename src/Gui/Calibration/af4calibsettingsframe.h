@@ -172,18 +172,17 @@ private:
    QString currentChannelKey;
    QString currentCalibKey;
 
-   QLabel *LTot                            = nullptr;
-
-   QLabel *L1                             = nullptr;
-   QLabel *L2                             = nullptr;
-   QLabel *L3                             = nullptr;
-   QLabel *b1                                  = nullptr;
-   QLabel *b2                                  = nullptr;
-   QLabel *channelWidth                        = nullptr;
+   QLineEdit *LTot                             = nullptr;
+   QLineEdit *L1                               = nullptr;
+   QLineEdit *L2                               = nullptr;
+   QLineEdit *L3                               = nullptr;
+   QLineEdit *b1                               = nullptr;
+   QLineEdit *b2                               = nullptr;
+   QLineEdit *channelWidthCla                  = nullptr;
+   QLineEdit *channelVolumeCla                 = nullptr;
+   QLineEdit *channelWidthNoT                  = nullptr;
+   QLineEdit *channelVolumeNoT                 = nullptr;
    QLabel *channelVolumeDef                    = nullptr;
-   QLabel *channelVolume                       = nullptr;
-   QLabel *channelVolumeGeo                    = nullptr;
-
    /*!
      * \brief loadParameters
      */

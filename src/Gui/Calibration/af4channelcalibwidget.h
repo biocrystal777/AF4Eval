@@ -72,7 +72,7 @@ public:
    int getCalibId() const { return channelId; }
 
    double getClassicalChannelWidth() const { return innerCalibFrame->getChannelWidth(); }
-
+   double getTvoidFreeChannelWidth() const { return innerCalibFrame->getChannelWidthTvoidFree(); }
    double getGeometChannelWidth() const { return innerCalibFrame->getChannelWidthGeo(); }
    double getHydrodynChannelWidth() const { return innerCalibFrame->getChannelWidthHydro(); }
    double getClassicalVolume() const { return innerCalibFrame->getClassicalVolume(); }
@@ -91,6 +91,8 @@ public:
     */
    //double getGeometVolume() const { return geometVolume->value(); }
    double getGeometVolume() const { return innerCalibFrame->getGeometVolume(); }
+
+   double getTvoidFreeVolume() const { return innerCalibFrame->getTvoidFreeVolume(); }
 
 
    CalibModeSettings getCalibModes() const { return innerCalibFrame->getCalibModes(); }
